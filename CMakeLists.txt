@@ -38,8 +38,8 @@ WkProject( WkCocos CXX )
 #Configuration of custom directories
 WkSrcDir ( "Classes" )
 WkIncludeDir ( "Include" )
-WkDataDir ( "Resources")
 WkTestDir ( "Tests" )
+WkTestDataDir ( "Resources")
 WkDocDir ( "Docs" )
 
 #Build rules
@@ -69,6 +69,11 @@ elseif (CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
 endif()
 
 #Testing
-#WkTestBuild( maintestB )
-#WkTestData( maintestB data.txt )
-#WkTestRun( ProjectB maintestB )
+if(WIN32)
+    WkTestBuild( maintest win32/main.cpp )
+    WkTestRun( WkCocos maintest WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/${${PROJECT_NAME}_TEST_DIR}/${${PROJECT_NAME}_TEST_DATA_DIR} )
+elseif (UNIX) #assumed linux
+    WkTestBuild( maintest linux/main.cpp )
+    WkTestRun( WkCocos maintest WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/${${PROJECT_NAME}_TEST_DIR}/${${PROJECT_NAME}_TEST_DATA_DIR} )
+endif()
+
