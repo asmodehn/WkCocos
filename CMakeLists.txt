@@ -72,8 +72,20 @@ endif()
 if(WIN32)
     WkTestBuild( maintest win32/main.cpp )
     WkTestRun( WkCocos maintest WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/${${PROJECT_NAME}_TEST_DIR}/${${PROJECT_NAME}_TEST_DATA_DIR} )
+	#also copying dlls to binary directory for the executable to run
+	ADD_CUSTOM_COMMAND( TARGET maintest POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
+				"${COCOS2D_ROOT}/external/win32-specific/gles/prebuilt/glew32.dll"
+				"${PROJECT_BINARY_DIR}/${${PROJECT_NAME}_TEST_DIR}/${CMAKE_BUILD_TYPE}"
+			    COMMENT
+			    "Copying ${COCOS2D_ROOT}/external/win32-specific/gles/prebuilt/glew32.dll to ${PROJECT_BINARY_DIR}/${${PROJECT_NAME}_TEST_DIR}/${CMAKE_BUILD_TYPE}"
+			    VERBATIM)
+	ADD_CUSTOM_COMMAND( TARGET maintest POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
+				"${COCOS2D_ROOT}/external/win32-specific/zlib/prebuilt/zlib1.dll"
+				"${PROJECT_BINARY_DIR}/${${PROJECT_NAME}_TEST_DIR}/${CMAKE_BUILD_TYPE}"
+			    COMMENT
+			    "Copying ${COCOS2D_ROOT}/external/win32-specific/gles/prebuilt/glew32.dll to ${PROJECT_BINARY_DIR}/${${PROJECT_NAME}_TEST_DIR}/${CMAKE_BUILD_TYPE}"
+			    VERBATIM)
 elseif (UNIX) #assumed linux
     WkTestBuild( maintest linux/main.cpp )
     WkTestRun( WkCocos maintest WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/${${PROJECT_NAME}_TEST_DIR}/${${PROJECT_NAME}_TEST_DATA_DIR} )
 endif()
-
