@@ -1,4 +1,4 @@
 [submodule "depends/cocos2d-x"]
 	path = depends/cocos2d-x
-	url = git@github.com:asmodehn/cocos2d-x.git
+	url = https://github.com/asmodehn/cocos2d-x.git
 	branch = v3
