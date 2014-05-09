@@ -1,5 +1,5 @@
 #include "main.h"
-#include "AppDelegate.h"
+#include "WkCocos/AppDelegate.h"
 #include "cocos2d.h"
 
 USING_NS_CC;

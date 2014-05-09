@@ -241,8 +241,10 @@ else()
 set(FMOD_LIB "fmodex")
 endif()
 
-#Setting variable for auto dependency detection by wkcmake
-set (${PROJECT_NAME}_LIBRARY
+WkLibraryBuild(WkCocos "Classes")
+  
+#Linking with all libraries
+target_link_libraries(WkCocos 
   cocosbase
   cocosmath
   chipmunk_static
@@ -260,24 +262,19 @@ set (${PROJECT_NAME}_LIBRARY
   cocos2d
   )
 
-WkLibraryBuild(WkCocos "Classes")
-  
-#Linking with all libraries
-target_link_libraries(${PROJECT_NAME} ${${PROJECT_NAME}_LIBRARIES})
-
 if (MSVC)
-	WkAddCFlags(Debug "-DCOCOS2D_DEBUG=1")
-	WkAddCXXFlags(Debug "-DCOCOS2D_DEBUG=1")
+	WkAddCDefinitions(Debug "COCOS2D_DEBUG=1")
+	WkAddCXXDefinitions(Debug "COCOS2D_DEBUG=1")
 
-	WkAddCFlags(All "-D_CRT_SECURE_NO_WARNINGS")
-	WkAddCXXFlags(All "-D_CRT_SECURE_NO_WARNINGS")
+	WkAddCFlags("-D_CRT_SECURE_NO_WARNINGS")
+	WkAddCXXFlags("-D_CRT_SECURE_NO_WARNINGS")
 
 elseif (CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
-    WkAddCFlags(Debug "-DCOCOS2D_DEBUG=1")
-    WkAddCXXFlags(Debug "-DCOCOS2D_DEBUG=1")
+    WkAddCDefinitions(Debug "COCOS2D_DEBUG=1")
+    WkAddCXXDefinitions(Debug "COCOS2D_DEBUG=1")
 
-	WkAddCFlags(All "-std=c99")
-	WkAddCXXFlags(All "-std=c++11")
+	WkAddCFlags("-std=c99")
+	WkAddCXXFlags("-std=c++11")
 
 endif()
 
