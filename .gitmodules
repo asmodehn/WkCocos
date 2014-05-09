@@ -2,3 +2,7 @@
 	path = depends/cocos2d-x
 	url = https://github.com/asmodehn/cocos2d-x.git
 	branch = v3
+[submodule "CMake"]
+	path = CMake
+	url = https://github.com/asmodehn/wkcmake.git
+	branch = master
