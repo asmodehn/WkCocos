@@ -45,22 +45,6 @@ WkDocDir ( "Docs" )
 option(USE_CHIPMUNK "Use chipmunk for physics library" ON)
 option(USE_BOX2D "Use box2d for physics library" OFF)
 
-if (MSVC)
-	set(CMAKE_C_FLAGS_DEBUG "-DCOCOS2D_DEBUG=1")
-	set(CMAKE_CXX_FLAGS_DEBUG ${CMAKE_C_FLAGS_DEBUG})
-
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D_CRT_SECURE_NO_WARNINGS")
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_CRT_SECURE_NO_WARNINGS")
-
-elseif (CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
-	set(CMAKE_C_FLAGS_DEBUG "-g -Wall -DCOCOS2D_DEBUG=1")
-	set(CMAKE_CXX_FLAGS_DEBUG ${CMAKE_C_FLAGS_DEBUG})
-
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c99")
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-
-endif()
-
 if(USE_CHIPMUNK)
   message("Using chipmunk ...")
   add_definitions(-DCC_ENABLE_CHIPMUNK_INTEGRATION=1)
