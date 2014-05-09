@@ -36,7 +36,6 @@ WkCMakeDir( "CMake" )
 WkProject( WkCocos CXX )
 
 #Configuration of custom directories
-WkSrcDir ( "Classes" )
 WkIncludeDir ( "Include" )
 WkTestDir ( "Tests" )
 WkTestDataDir ( "Resources")
@@ -87,8 +86,7 @@ endif()
 
 set(COCOS2D_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/depends/cocos2d-x)
 if (WIN32)
-set (${PROJECT_NAME}_INCLUDE_DIR
-  ${${PROJECT_NAME}_INCLUDE_DIR}
+include_directories (
   ${COCOS2D_ROOT}
   ${COCOS2D_ROOT}/cocos
   ${COCOS2D_ROOT}/cocos/audio/include
@@ -123,7 +121,6 @@ set (${PROJECT_NAME}_INCLUDE_DIR
   ${COCOS2D_ROOT}/external/win32-specific/zlib/include
   ${COCOS2D_ROOT}/external/xxhash
 )
-include_directories( ${${PROJECT_NAME}_INCLUDE_DIR} )
 link_directories(
   /usr/local/lib
   ${COCOS2D_ROOT}/external/png/prebuilt/win32
@@ -142,8 +139,7 @@ link_directories(
 )
 
 elseif(UNIX) #assumed linux
-set ( ${PROJECT_NAME}_INCLUDE_DIR 
-  ${${PROJECT_NAME}_INCLUDE_DIR}
+include_directories ( 
   /usr/local/include/GLFW
   ${COCOS2D_ROOT}
   ${COCOS2D_ROOT}/cocos
@@ -172,7 +168,6 @@ set ( ${PROJECT_NAME}_INCLUDE_DIR
   ${COCOS2D_ROOT}/external/linux-specific/fmod/include/${ARCH_DIR}
   ${COCOS2D_ROOT}/external/xxhash
 )
-include_directories( ${${PROJECT_NAME}_INCLUDE_DIR} )
 link_directories(
   /usr/local/lib
   ${COCOS2D_ROOT}/external/jpeg/prebuilt/linux/${ARCH_DIR}
@@ -265,8 +260,8 @@ set (${PROJECT_NAME}_LIBRARY
   cocos2d
   )
 
-WkBuild( LIBRARY )
-
+WkLibraryBuild(WkCocos "Classes")
+  
 #Linking with all libraries
 target_link_libraries(${PROJECT_NAME} ${${PROJECT_NAME}_LIBRARIES})
 
