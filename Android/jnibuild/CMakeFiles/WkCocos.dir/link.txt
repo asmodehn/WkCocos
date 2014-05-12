@@ -1,0 +1,2 @@
+/home/alexv/Projects/WkCocos/Android/arm-linux-androideabi-4.6/bin/arm-linux-androideabi-ar cr lib/libWkCocos.a  CMakeFiles/WkCocos.dir/Classes/HelloWorldScene.cpp.o CMakeFiles/WkCocos.dir/Classes/AppDelegate.cpp.o CMakeFiles/WkCocos.dir/CMakeFiles/WkPlatform_WkCocos.c.o
+/home/alexv/Projects/WkCocos/Android/arm-linux-androideabi-4.6/bin/arm-linux-androideabi-ranlib lib/libWkCocos.a

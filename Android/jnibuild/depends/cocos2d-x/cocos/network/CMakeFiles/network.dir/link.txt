@@ -1,0 +1,2 @@
+/home/alexv/Projects/WkCocos/Android/arm-linux-androideabi-4.6/bin/arm-linux-androideabi-ar cr ../../../../lib/libnetwork.a  CMakeFiles/network.dir/HttpClient.cpp.o CMakeFiles/network.dir/SocketIO.cpp.o CMakeFiles/network.dir/WebSocket.cpp.o
+/home/alexv/Projects/WkCocos/Android/arm-linux-androideabi-4.6/bin/arm-linux-androideabi-ranlib ../../../../lib/libnetwork.a

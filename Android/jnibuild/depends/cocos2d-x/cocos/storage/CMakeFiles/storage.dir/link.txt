@@ -1,0 +1,2 @@
+/home/alexv/Projects/WkCocos/Android/arm-linux-androideabi-4.6/bin/arm-linux-androideabi-ar cr ../../../../lib/libstorage.a  CMakeFiles/storage.dir/local-storage/LocalStorage.cpp.o
+/home/alexv/Projects/WkCocos/Android/arm-linux-androideabi-4.6/bin/arm-linux-androideabi-ranlib ../../../../lib/libstorage.a

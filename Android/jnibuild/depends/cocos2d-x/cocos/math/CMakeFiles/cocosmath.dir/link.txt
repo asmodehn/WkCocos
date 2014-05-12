@@ -1,0 +1,2 @@
+/home/alexv/Projects/WkCocos/Android/arm-linux-androideabi-4.6/bin/arm-linux-androideabi-ar cr ../../../../lib/libcocosmath.a  CMakeFiles/cocosmath.dir/MathUtil.cpp.o CMakeFiles/cocosmath.dir/Matrix.cpp.o CMakeFiles/cocosmath.dir/Quaternion.cpp.o CMakeFiles/cocosmath.dir/Vector2.cpp.o CMakeFiles/cocosmath.dir/Vector3.cpp.o CMakeFiles/cocosmath.dir/Vector4.cpp.o
+/home/alexv/Projects/WkCocos/Android/arm-linux-androideabi-4.6/bin/arm-linux-androideabi-ranlib ../../../../lib/libcocosmath.a

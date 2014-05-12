@@ -1,0 +1,17 @@
+The target system is: Linux - 1 - armv7-a
+The host system is: Linux - 3.13.0-24-generic - x86_64
+Determining if files unistd.h exist passed with the following output:
+Change Dir: /home/alexv/Projects/WkCocos/Android/jnibuild/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec1481007489/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec1481007489.dir/build.make CMakeFiles/cmTryCompileExec1481007489.dir/build
+make[1]: Entering directory `/home/alexv/Projects/WkCocos/Android/jnibuild/CMakeFiles/CMakeTmp'
+/usr/local/bin/cmake -E cmake_progress_report /home/alexv/Projects/WkCocos/Android/jnibuild/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec1481007489.dir/CheckIncludeFiles.c.o
+/home/alexv/Projects/WkCocos/Android/arm-linux-androideabi-4.6/bin/arm-linux-androideabi-gcc  -DANDROID -D__ARM_ARCH_5E__ -D__ARM_ARCH_5TE__ -D__ARM_ARCH_5T__ -D__ARM_ARCH_5__ --sysroot=/home/alexv/Projects/WkCocos/Android/arm-linux-androideabi-4.6/sysroot -fsigned-char -march=armv7-a -mfloat-abi=softfp -mfpu=vfp -fdata-sections -ffunction-sections -fPIC -Wno-psabi -fexceptions  -isystem /home/alexv/Projects/WkCocos/Android/arm-linux-androideabi-4.6/sysroot/usr/include    -o CMakeFiles/cmTryCompileExec1481007489.dir/CheckIncludeFiles.c.o   -c /home/alexv/Projects/WkCocos/Android/jnibuild/CMakeFiles/CMakeTmp/CheckIncludeFiles.c
+Linking C executable cmTryCompileExec1481007489
+/usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec1481007489.dir/link.txt --verbose=1
+/home/alexv/Projects/WkCocos/Android/arm-linux-androideabi-4.6/bin/arm-linux-androideabi-gcc  --sysroot=/home/alexv/Projects/WkCocos/Android/arm-linux-androideabi-4.6/sysroot -fsigned-char -march=armv7-a -mfloat-abi=softfp -mfpu=vfp -fdata-sections -ffunction-sections -fPIC -Wno-psabi -fexceptions   -Wl,--fix-cortex-a8 -Wl,--gc-sections -Wl,--no-undefined  -Wl,-z,nocopyreloc CMakeFiles/cmTryCompileExec1481007489.dir/CheckIncludeFiles.c.o  -o cmTryCompileExec1481007489  -L/home/alexv/Projects/WkCocos/Android/arm-linux-androideabi-4.6/user/libs/armeabi-v7a  -L/home/alexv/Projects/WkCocos/Android/jnibuild/CMakeFiles/ndklibs/armeabi-v7a -rdynamic 
+make[1]: Leaving directory `/home/alexv/Projects/WkCocos/Android/jnibuild/CMakeFiles/CMakeTmp'
+
+
