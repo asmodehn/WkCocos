@@ -46,6 +46,11 @@ elseif (CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
 	set( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c99")
 	set( CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -std=c++11")
 
+	if (CMAKE_TOOLCHAIN_FILE) #assumed linux
+		set( CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -DUSE_FILE32API")
+		set( CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DUSE_FILE32API")
+	endif()
+
 endif()
 
 #Project Declaration
@@ -64,13 +69,13 @@ option(USE_BOX2D "Use box2d for physics library" OFF)
 if(USE_CHIPMUNK)
   message("Using chipmunk ...")
   add_definitions(-DCC_ENABLE_CHIPMUNK_INTEGRATION=1)
-  if(UNIX) # assuming linux
+  if(UNIX AND NOT CMAKE_TOOLCHAIN_FILE ) # assuming linux ( and not crosscopmiling android)
     add_definitions(-DLINUX )
   endif()
 elseif(USE_BOX2D)
   message("Using box2d ...")
   add_definitions(-DCC_ENABLE_BOX2D_INTEGRATION=1)
-  if(UNIX) # assuming linux
+  if(UNIX AND NOT CMAKE_TOOLCHAIN_FILE ) # assuming linux ( and not crosscopmiling android)
     add_definitions(-DLINUX )
   endif()
 else(USE_CHIPMUNK)
@@ -138,7 +143,7 @@ link_directories(
   ${COCOS2D_ROOT}/external/win32-specific/zlib/prebuilt
 )
 
-elseif(UNIX) #assumed linux
+elseif(UNIX AND NOT CMAKE_TOOLCHAIN_FILE) #assumed linux
 include_directories ( 
   /usr/local/include/GLFW
   ${COCOS2D_ROOT}
@@ -178,6 +183,51 @@ link_directories(
   ${COCOS2D_ROOT}/external/spidermonkey/prebuilt/linux/${ARCH_DIR}
   ${COCOS2D_ROOT}/external/linux-specific/fmod/prebuilt/${ARCH_DIR}
 )
+
+elseif(CMAKE_TOOLCHAIN_FILE) #assumed Android
+include_directories ( 
+  ${COCOS2D_ROOT}
+  ${COCOS2D_ROOT}/cocos
+  ${COCOS2D_ROOT}/cocos/audio/include
+  ${COCOS2D_ROOT}/cocos/audio/android
+  ${COCOS2D_ROOT}/cocos/2d
+  ${COCOS2D_ROOT}/cocos/2d/renderer
+  ${COCOS2D_ROOT}/cocos/2d/platform
+  ${COCOS2D_ROOT}/cocos/2d/platform/android
+  ${COCOS2D_ROOT}/cocos/base
+  ${COCOS2D_ROOT}/cocos/deprecated
+  ${COCOS2D_ROOT}/cocos/physics
+  ${COCOS2D_ROOT}/cocos/editor-support
+  ${COCOS2D_ROOT}/cocos/math
+  ${COCOS2D_ROOT}/extensions
+  ${COCOS2D_ROOT}/external
+  ${COCOS2D_ROOT}/external/edtaa3func
+  ${COCOS2D_ROOT}/external/jpeg/include/android
+  ${COCOS2D_ROOT}/external/png/include/android
+  ${COCOS2D_ROOT}/external/tiff/include/android
+  ${COCOS2D_ROOT}/external/webp/include/android
+  ${COCOS2D_ROOT}/external/curl/include/android
+  ${COCOS2D_ROOT}/external/tinyxml2
+  ${COCOS2D_ROOT}/external/unzip
+  ${COCOS2D_ROOT}/external/sqlite3/include
+  ${COCOS2D_ROOT}/external/freetype2/include/android
+  ${COCOS2D_ROOT}/external/freetype2/include/android/freetype2
+  ${COCOS2D_ROOT}/external/websockets/include/android
+  ${COCOS2D_ROOT}/external/spidermonkey/include/android
+  ${COCOS2D_ROOT}/external/xxhash
+)
+link_directories(
+  ${COCOS2D_ROOT}/external/png/prebuilt/android/${ANDROID_ABI}
+  ${COCOS2D_ROOT}/external/jpeg/prebuilt/android/${ANDROID_ABI}
+  ${COCOS2D_ROOT}/external/tiff/prebuilt/android/${ANDROID_ABI}
+  ${COCOS2D_ROOT}/external/webp/prebuilt/android/${ANDROID_ABI}
+  ${COCOS2D_ROOT}/external/curl/prebuilt/android/${ANDROID_ABI}
+  ${COCOS2D_ROOT}/external/sqlite3/libraries/android/${ANDROID_ABI}
+  ${COCOS2D_ROOT}/external/freetype2/prebuilt/android/${ANDROID_ABI}
+  ${COCOS2D_ROOT}/external/websockets/prebuilt/android/${ANDROID_ABI}
+  ${COCOS2D_ROOT}/external/spidermonkey/prebuilt/android/${ANDROID_ABI}
+)
+
 endif()
 
 # math
@@ -241,9 +291,27 @@ else()
 set(FMOD_LIB "fmodex")
 endif()
 
-WkLibraryBuild(WkCocos "Classes")
+#setting flags before calling build
+if (MSVC)
+	WkAddCDefinitions(Debug "COCOS2D_DEBUG=1")
+	WkAddCXXDefinitions(Debug "COCOS2D_DEBUG=1")
+
+	WkAddCFlags("-D_CRT_SECURE_NO_WARNINGS")
+	WkAddCXXFlags("-D_CRT_SECURE_NO_WARNINGS")
+
+elseif (CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
+    WkAddCDefinitions(Debug "COCOS2D_DEBUG=1")
+    WkAddCXXDefinitions(Debug "COCOS2D_DEBUG=1")
+
+	WkAddCFlags("-std=c99")
+	WkAddCXXFlags("-std=c++11")
+
+endif()
+
+WkLibraryBuild(WkCocos SHARED "Classes")
   
 #Linking with all libraries
+if ( NOT CMAKE_TOOLCHAIN_FILE)
 target_link_libraries(WkCocos 
   cocosbase
   cocosmath
@@ -261,21 +329,23 @@ target_link_libraries(WkCocos
   audio
   cocos2d
   )
-
-if (MSVC)
-	WkAddCDefinitions(Debug "COCOS2D_DEBUG=1")
-	WkAddCXXDefinitions(Debug "COCOS2D_DEBUG=1")
-
-	WkAddCFlags("-D_CRT_SECURE_NO_WARNINGS")
-	WkAddCXXFlags("-D_CRT_SECURE_NO_WARNINGS")
-
-elseif (CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
-    WkAddCDefinitions(Debug "COCOS2D_DEBUG=1")
-    WkAddCXXDefinitions(Debug "COCOS2D_DEBUG=1")
-
-	WkAddCFlags("-std=c99")
-	WkAddCXXFlags("-std=c++11")
-
+else() #assumed android
+target_link_libraries(WkCocos 
+  cocosbase
+  cocosmath
+  chipmunk_static
+  tinyxml2
+  unzip
+  xxhash
+  ui
+  network
+  spine
+  cocostudio
+  cocosbuilder
+  extensions
+  audio
+  cocos2d
+  )
 endif()
 
 #Testing
@@ -297,7 +367,7 @@ if(WIN32)
 			    "Copying ${COCOS2D_ROOT}/external/win32-specific/gles/prebuilt/glew32.dll to $<TARGET_FILE_DIR:maintest>"
 			    VERBATIM)
 	endif ( ${PROJECT_NAME}_ENABLE_TESTS )
-elseif (UNIX) #assumed linux
+elseif (UNIX AND NOT CMAKE_TOOLCHAIN_FILE) #assumed linux
     WkTestBuild( maintest linux/main.cpp )
     WkTestRun( WkCocos maintest WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/${${PROJECT_NAME}_TEST_DIR}/${${PROJECT_NAME}_TEST_DATA_DIR} )
 endif()
