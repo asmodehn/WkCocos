@@ -1,2 +1,0 @@
-/home/alexv/Projects/WkCocos/Android/arm-linux-androideabi-4.6/bin/arm-linux-androideabi-ar cr ../../../../lib/libaudio.a  CMakeFiles/audio.dir/linux/SimpleAudioEngineFMOD.cpp.o CMakeFiles/audio.dir/linux/FmodAudioPlayer.cpp.o
-/home/alexv/Projects/WkCocos/Android/arm-linux-androideabi-4.6/bin/arm-linux-androideabi-ranlib ../../../../lib/libaudio.a
