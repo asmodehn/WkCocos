@@ -6,3 +6,7 @@
 	path = CMake
 	url = https://github.com/asmodehn/wkcmake.git
 	branch = master
+[submodule "depends/cocos2d-x-3rd-party-libs-bin"]
+	path = depends/cocos2d-x-3rd-party-libs-bin
+	url = https://github.com/cocos2d/cocos2d-x-3rd-party-libs-bin.git
+	branch = v3
