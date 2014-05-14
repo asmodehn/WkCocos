@@ -1,7 +1,7 @@
 [submodule "depends/cocos2d-x"]
 	path = depends/cocos2d-x
 	url = https://github.com/asmodehn/cocos2d-x.git
-	branch = asmo_newv3_gradle
+	branch = asmo_v3_dragonfall
 [submodule "CMake"]
 	path = CMake
 	url = https://github.com/asmodehn/wkcmake.git
