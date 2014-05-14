@@ -158,7 +158,6 @@ include_directories (
   ${COCOS2D_ROOT}/cocos/deprecated
   ${COCOS2D_ROOT}/cocos/physics
   ${COCOS2D_ROOT}/cocos/editor-support
-  ${COCOS2D_ROOT}/cocos/math
   ${COCOS2D_ROOT}/extensions
   ${COCOS2D_ROOT}/external
   ${COCOS2D_ROOT}/external/edtaa3func
@@ -198,7 +197,6 @@ include_directories (
   ${COCOS2D_ROOT}/cocos/deprecated
   ${COCOS2D_ROOT}/cocos/physics
   ${COCOS2D_ROOT}/cocos/editor-support
-  ${COCOS2D_ROOT}/cocos/math
   ${COCOS2D_ROOT}/extensions
   ${COCOS2D_ROOT}/external
   ${COCOS2D_ROOT}/external/edtaa3func
@@ -230,9 +228,6 @@ link_directories(
 
 endif()
 
-# math
-add_subdirectory(${COCOS2D_ROOT}/cocos/math)
-
 if(USE_CHIPMUNK)
 	include_directories(${COCOS2D_ROOT}/external/chipmunk/include/chipmunk)
 	# chipmunk library
@@ -243,6 +238,9 @@ if(USE_BOX2D)
 	# box2d library
 	add_subdirectory(${COCOS2D_ROOT}/external/Box2D)
 endif()
+
+# cocos2d
+add_subdirectory(${COCOS2D_ROOT}/cocos)
 
 # unzip library
 add_subdirectory(${COCOS2D_ROOT}/external/unzip)
@@ -262,14 +260,8 @@ add_subdirectory(${COCOS2D_ROOT}/cocos/base)
 # cocos 2d library
 add_subdirectory(${COCOS2D_ROOT}/cocos/2d)
 
-# cocos storage
-add_subdirectory(${COCOS2D_ROOT}/cocos/storage)
-
 # ui
 add_subdirectory(${COCOS2D_ROOT}/cocos/ui)
-
-# network
-add_subdirectory(${COCOS2D_ROOT}/cocos/network)
 
 # extensions
 add_subdirectory(${COCOS2D_ROOT}/extensions)
@@ -313,32 +305,24 @@ WkLibraryBuild(WkCocos SHARED "Classes")
 #Linking with all libraries
 if ( NOT CMAKE_TOOLCHAIN_FILE)
 target_link_libraries(WkCocos 
-  cocosbase
-  cocosmath
   chipmunk_static
   tinyxml2
   unzip
   xxhash
-  ui
-  network
-  storage
   spine
   cocostudio
   cocosbuilder
   extensions
   audio
   cocos2d
+  Ws2_32
   )
 else() #assumed android
 target_link_libraries(WkCocos 
-  cocosbase
-  cocosmath
   chipmunk_static
   tinyxml2
   unzip
   xxhash
-  ui
-  network
   spine
   cocostudio
   cocosbuilder
