@@ -300,7 +300,7 @@ elseif (CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
 
 endif()
 
-WkLibraryBuild(WkCocos SHARED "Classes")
+WkLibraryBuild(WkCocos STATIC "Classes")
   
 #Linking with all libraries
 if ( NOT CMAKE_TOOLCHAIN_FILE)
