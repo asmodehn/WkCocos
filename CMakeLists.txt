@@ -187,34 +187,41 @@ WkLibraryBuild(WkCocos STATIC "Classes")
   
   
 #Linking with all libraries
-if ( NOT CMAKE_TOOLCHAIN_FILE)
-target_link_libraries(WkCocos 
-  chipmunk_static
-  tinyxml2
-  unzip
-  xxhash
-  spine
-  cocostudio
+
+if ( BUILD_EDITOR_COCOSBUILDER )
+target_link_libraries(WkCocos
   cocosbuilder
-  extensions
-  audio
-  cocos2d
-  Ws2_32
-  )
-else() #assumed android
-target_link_libraries(WkCocos 
-  chipmunk_static
-  tinyxml2
-  unzip
-  xxhash
-  spine
-  cocostudio
-  cocosbuilder
-  extensions
-  audio
-  cocos2d
-  )
+)
 endif()
+
+if ( BUILD_EDITOR_COCOSTUDIO )
+target_link_libraries(WkCocos
+  cocostudio
+)
+endif()
+
+if ( BUILD_EDITOR_SPINE )
+target_link_libraries(WkCocos
+  spine
+)
+endif()
+
+if ( BUILD_EXTENSIONS )
+target_link_libraries(WkCocos
+  extensions
+)
+endif()
+
+if ( USE_BOX2D )
+target_link_libraries(WkCocos
+  box2d
+)
+endif()
+
+target_link_libraries(WkCocos
+  audio
+  cocos2d
+)
 
 #Testing
 if(WIN32)
