@@ -6,13 +6,13 @@
 # modification, are permitted provided that the following conditions are met:
 # 
 #     * Redistributions of source code must retain the above copyright notice, 
-#	    this list of conditions and the following disclaimer.
+#       this list of conditions and the following disclaimer.
 #     * Redistributions in binary form must reproduce the above copyright
-#		notice, this list of conditions and the following disclaimer in the 
-#	    documentation and/or other materials provided with the distribution.
+#       notice, this list of conditions and the following disclaimer in the 
+#       documentation and/or other materials provided with the distribution.
 #     * Neither the name of the Asmodehn's Corp. nor the names of its 
-#	    contributors may be used to endorse or promote products derived
-#	    from this software without specific prior written permission.
+#       contributors may be used to endorse or promote products derived
+#       from this software without specific prior written permission.
 # 
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 # AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -32,26 +32,6 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 INCLUDE ( "CMake/WkCMake.cmake" )
 WkCMakeDir( "CMake" )
 
-if (MSVC)
-	set( CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} /DCOCOS2D_DEBUG=1")
-	set( CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /DCOCOS2D_DEBUG=1")
-
-	set( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /D_CRT_SECURE_NO_WARNINGS")
-	set( CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} /D_CRT_SECURE_NO_WARNINGS")
-
-elseif (CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
-	set( CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -DCOCOS2D_DEBUG=1")
-	set( CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DCOCOS2D_DEBUG=1")
-
-	set( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c99")
-	set( CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -std=c++11")
-
-	if (CMAKE_TOOLCHAIN_FILE) #assumed linux
-		set( CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -DUSE_FILE32API")
-		set( CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DUSE_FILE32API")
-	endif()
-
-endif()
 
 #Project Declaration
 WkProject( WkCocos CXX )
@@ -62,32 +42,7 @@ WkTestDir ( "Tests" )
 WkTestDataDir ( "Resources")
 WkDocDir ( "Docs" )
 
-#Build rules
-option(USE_CHIPMUNK "Use chipmunk for physics library" ON)
-option(USE_BOX2D "Use box2d for physics library" OFF)
-
-if(USE_CHIPMUNK)
-  message("Using chipmunk ...")
-  add_definitions(-DCC_ENABLE_CHIPMUNK_INTEGRATION=1)
-  if(UNIX AND NOT CMAKE_TOOLCHAIN_FILE ) # assuming linux ( and not crosscopmiling android)
-    add_definitions(-DLINUX )
-  endif()
-elseif(USE_BOX2D)
-  message("Using box2d ...")
-  add_definitions(-DCC_ENABLE_BOX2D_INTEGRATION=1)
-  if(UNIX AND NOT CMAKE_TOOLCHAIN_FILE ) # assuming linux ( and not crosscopmiling android)
-    add_definitions(-DLINUX )
-  endif()
-else(USE_CHIPMUNK)
-  message(FATAL_ERROR "Must choose a physics library.")
-endif(USE_CHIPMUNK)
-
-# architecture
-if ( CMAKE_SIZEOF_VOID_P EQUAL 8 )
-set(ARCH_DIR "64-bit")
-else()
-set(ARCH_DIR "32-bit")
-endif()
+WkDepends("depends/cocos2d-x")
 
 set(COCOS2D_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/depends/cocos2d-x)
 if (WIN32)
@@ -225,82 +180,11 @@ link_directories(
   ${COCOS2D_ROOT}/external/websockets/prebuilt/android/${ANDROID_ABI}
   ${COCOS2D_ROOT}/external/spidermonkey/prebuilt/android/${ANDROID_ABI}
 )
-
 endif()
 
-if(USE_CHIPMUNK)
-	include_directories(${COCOS2D_ROOT}/external/chipmunk/include/chipmunk)
-	# chipmunk library
-	add_subdirectory(${COCOS2D_ROOT}/external/chipmunk/src)
-endif()
-
-if(USE_BOX2D)
-	# box2d library
-	add_subdirectory(${COCOS2D_ROOT}/external/Box2D)
-endif()
-
-# cocos2d
-add_subdirectory(${COCOS2D_ROOT}/cocos)
-
-# unzip library
-add_subdirectory(${COCOS2D_ROOT}/external/unzip)
-
-# tinyxml2 library
-add_subdirectory(${COCOS2D_ROOT}/external/tinyxml2)
-
-# audio
-add_subdirectory(${COCOS2D_ROOT}/cocos/audio)
-
-# xxhash library
-add_subdirectory(${COCOS2D_ROOT}/external/xxhash)
-
-# cocos base library
-add_subdirectory(${COCOS2D_ROOT}/cocos/base)
-
-# cocos 2d library
-add_subdirectory(${COCOS2D_ROOT}/cocos/2d)
-
-# ui
-add_subdirectory(${COCOS2D_ROOT}/cocos/ui)
-
-# extensions
-add_subdirectory(${COCOS2D_ROOT}/extensions)
-
-## Editor Support
-
-# spine
-add_subdirectory(${COCOS2D_ROOT}/cocos/editor-support/spine)
-
-# cocosbuilder
-add_subdirectory(${COCOS2D_ROOT}/cocos/editor-support/cocosbuilder)
-
-# cocostudio
-add_subdirectory(${COCOS2D_ROOT}/cocos/editor-support/cocostudio)
-
-if ( CMAKE_SIZEOF_VOID_P EQUAL 8 )
-set(FMOD_LIB "fmodex64")
-else()
-set(FMOD_LIB "fmodex")
-endif()
-
-#setting flags before calling build
-if (MSVC)
-	WkAddCDefinitions(Debug "COCOS2D_DEBUG=1")
-	WkAddCXXDefinitions(Debug "COCOS2D_DEBUG=1")
-
-	WkAddCFlags("-D_CRT_SECURE_NO_WARNINGS")
-	WkAddCXXFlags("-D_CRT_SECURE_NO_WARNINGS")
-
-elseif (CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
-    WkAddCDefinitions(Debug "COCOS2D_DEBUG=1")
-    WkAddCXXDefinitions(Debug "COCOS2D_DEBUG=1")
-
-	WkAddCFlags("-std=c99")
-	WkAddCXXFlags("-std=c++11")
-
-endif()
 
 WkLibraryBuild(WkCocos STATIC "Classes")
+  
   
 #Linking with all libraries
 if ( NOT CMAKE_TOOLCHAIN_FILE)
