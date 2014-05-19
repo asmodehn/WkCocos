@@ -183,6 +183,54 @@ link_directories(
 endif()
 
 
+WkAddCFlags("-DCOCOS2D_DEBUG=1")
+WkAddCXXFlags("-DCOCOS2D_DEBUG=1")
+
+if(WIN32)
+  WkAddCXXFlags(Debug _USRDLL COCOS2DXWIN32_EXPORTS _WINDOWS WIN32)
+
+  if(MSVC)
+    WkAddCXXFlags( "-D_CRT_SECURE_NO_WARNINGS 
+		  -D _SCL_SECURE_NO_WARNINGS"
+    )
+    WkAddCXXFlags( "-wd4251 -wd4244 -wd4334 
+		  -wd4005 -wd4820 -wd4710
+		  -wd4514 -wd4056 -wd4996 -wd4099"
+    )
+  else(MSVC)#MINGW
+  
+  endif(MSVC)
+elseif(APPLE)
+
+
+else()#Linux
+
+  WkAddCFlags("-DLINUX")
+  WkAddCXXFlags("-DLINUX")
+endif()
+
+
+if(NOT MSVC)# all gcc
+WkAddCFlags( "-std=c99")
+WkAddCXXFlags("-std=c++11")
+endif()
+
+if(MINGW)
+  WkAddCXXFlags("-DGLEW_STATIC")
+endif()
+
+
+if(USE_CHIPMUNK)
+  message("Using chipmunk ...")
+  WkAddCXXFlags("-DCC_ENABLE_CHIPMUNK_INTEGRATION=1")
+elseif(USE_BOX2D)
+  message("Using box2d ...")
+  WkAddCXXFlags("-DCC_ENABLE_BOX2D_INTEGRATION=1")
+else(USE_CHIPMUNK)
+  message(FATAL_ERROR "Must choose a physics library.")
+endif(USE_CHIPMUNK)
+
+
 WkLibraryBuild(WkCocos STATIC "Classes")
   
   
