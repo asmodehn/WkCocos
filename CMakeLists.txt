@@ -52,9 +52,9 @@ include_directories (
   ${COCOS2D_ROOT}/cocos/audio/include
   ${COCOS2D_ROOT}/cocos/2d
   ${COCOS2D_ROOT}/cocos/2d/renderer
-  ${COCOS2D_ROOT}/cocos/2d/platform
-  ${COCOS2D_ROOT}/cocos/2d/platform/desktop
-  ${COCOS2D_ROOT}/cocos/2d/platform/win32
+  ${COCOS2D_ROOT}/cocos/platform
+  ${COCOS2D_ROOT}/cocos/platform/desktop
+  ${COCOS2D_ROOT}/cocos/platform/win32
   ${COCOS2D_ROOT}/cocos/base
   ${COCOS2D_ROOT}/cocos/deprecated
   ${COCOS2D_ROOT}/cocos/physics
@@ -106,9 +106,9 @@ include_directories (
   ${COCOS2D_ROOT}/cocos/audio/include
   ${COCOS2D_ROOT}/cocos/2d
   ${COCOS2D_ROOT}/cocos/2d/renderer
-  ${COCOS2D_ROOT}/cocos/2d/platform
-  ${COCOS2D_ROOT}/cocos/2d/platform/desktop
-  ${COCOS2D_ROOT}/cocos/2d/platform/linux
+  ${COCOS2D_ROOT}/cocos/platform
+  ${COCOS2D_ROOT}/cocos/platform/desktop
+  ${COCOS2D_ROOT}/cocos/platform/linux
   ${COCOS2D_ROOT}/cocos/base
   ${COCOS2D_ROOT}/cocos/deprecated
   ${COCOS2D_ROOT}/cocos/physics
@@ -146,8 +146,8 @@ include_directories (
   ${COCOS2D_ROOT}/cocos/audio/android
   ${COCOS2D_ROOT}/cocos/2d
   ${COCOS2D_ROOT}/cocos/2d/renderer
-  ${COCOS2D_ROOT}/cocos/2d/platform
-  ${COCOS2D_ROOT}/cocos/2d/platform/android
+  ${COCOS2D_ROOT}/cocos/platform
+  ${COCOS2D_ROOT}/cocos/platform/android
   ${COCOS2D_ROOT}/cocos/base
   ${COCOS2D_ROOT}/cocos/deprecated
   ${COCOS2D_ROOT}/cocos/physics
