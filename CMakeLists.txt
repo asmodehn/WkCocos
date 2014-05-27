@@ -190,13 +190,8 @@ if(WIN32)
   WkAddCXXFlags("-D_USRDLL -DCOCOS2DXWIN32_EXPORTS -D_WINDOWS -DWIN32")
 
   if(MSVC)
-    WkAddCXXFlags( "-D_CRT_SECURE_NO_WARNINGS 
-		  -D _SCL_SECURE_NO_WARNINGS"
-    )
-    WkAddCXXFlags( "-wd4251 -wd4244 -wd4334 
-		  -wd4005 -wd4820 -wd4710
-		  -wd4514 -wd4056 -wd4996 -wd4099"
-    )
+    WkAddCXXFlags( "-D_CRT_SECURE_NO_WARNINGS -D _SCL_SECURE_NO_WARNINGS" )
+    WkAddCXXFlags( "-wd4251 -wd4244 -wd4334 -wd4005 -wd4820 -wd4710 -wd4514 -wd4056 -wd4996 -wd4099" )
   else(MSVC)#MINGW
   
   endif(MSVC)
