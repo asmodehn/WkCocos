@@ -52,9 +52,9 @@ include_directories (
   ${COCOS2D_ROOT}/cocos/audio/include
   ${COCOS2D_ROOT}/cocos/2d
   ${COCOS2D_ROOT}/cocos/2d/renderer
-  ${COCOS2D_ROOT}/cocos/2d/platform
-  ${COCOS2D_ROOT}/cocos/2d/platform/desktop
-  ${COCOS2D_ROOT}/cocos/2d/platform/win32
+  ${COCOS2D_ROOT}/cocos/platform
+  ${COCOS2D_ROOT}/cocos/platform/desktop
+  ${COCOS2D_ROOT}/cocos/platform/win32
   ${COCOS2D_ROOT}/cocos/base
   ${COCOS2D_ROOT}/cocos/deprecated
   ${COCOS2D_ROOT}/cocos/physics
@@ -106,9 +106,9 @@ include_directories (
   ${COCOS2D_ROOT}/cocos/audio/include
   ${COCOS2D_ROOT}/cocos/2d
   ${COCOS2D_ROOT}/cocos/2d/renderer
-  ${COCOS2D_ROOT}/cocos/2d/platform
-  ${COCOS2D_ROOT}/cocos/2d/platform/desktop
-  ${COCOS2D_ROOT}/cocos/2d/platform/linux
+  ${COCOS2D_ROOT}/cocos/platform
+  ${COCOS2D_ROOT}/cocos/platform/desktop
+  ${COCOS2D_ROOT}/cocos/platform/linux
   ${COCOS2D_ROOT}/cocos/base
   ${COCOS2D_ROOT}/cocos/deprecated
   ${COCOS2D_ROOT}/cocos/physics
@@ -146,8 +146,8 @@ include_directories (
   ${COCOS2D_ROOT}/cocos/audio/android
   ${COCOS2D_ROOT}/cocos/2d
   ${COCOS2D_ROOT}/cocos/2d/renderer
-  ${COCOS2D_ROOT}/cocos/2d/platform
-  ${COCOS2D_ROOT}/cocos/2d/platform/android
+  ${COCOS2D_ROOT}/cocos/platform
+  ${COCOS2D_ROOT}/cocos/platform/android
   ${COCOS2D_ROOT}/cocos/base
   ${COCOS2D_ROOT}/cocos/deprecated
   ${COCOS2D_ROOT}/cocos/physics
@@ -192,6 +192,7 @@ if(WIN32)
   if(MSVC)
     WkAddCXXFlags( "-D_CRT_SECURE_NO_WARNINGS -D _SCL_SECURE_NO_WARNINGS" )
     WkAddCXXFlags( "-wd4251 -wd4244 -wd4334 -wd4005 -wd4820 -wd4710 -wd4514 -wd4056 -wd4996 -wd4099" )
+    WkAddCXXFlags( "-MP -Qpar" )
   else(MSVC)#MINGW
   
   endif(MSVC)
