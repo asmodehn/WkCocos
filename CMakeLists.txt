@@ -99,6 +99,12 @@ link_directories(
 )
 
 elseif(UNIX AND NOT CMAKE_TOOLCHAIN_FILE) #assumed linux
+# architecture
+if ( CMAKE_SIZEOF_VOID_P EQUAL 8 )
+	set(ARCH_DIR "64-bit")
+else()
+	set(ARCH_DIR "32-bit")
+endif()
 include_directories ( 
   /usr/local/include/GLFW
   ${COCOS2D_ROOT}
@@ -190,7 +196,7 @@ if(WIN32)
   WkAddCXXFlags("-D_USRDLL -DCOCOS2DXWIN32_EXPORTS -D_WINDOWS -DWIN32")
 
   if(MSVC)
-    WkAddCXXFlags( "-D_CRT_SECURE_NO_WARNINGS -D _SCL_SECURE_NO_WARNINGS" )
+    WkAddCXXFlags( "-D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS" )
     WkAddCXXFlags( "-wd4251 -wd4244 -wd4334 -wd4005 -wd4820 -wd4710 -wd4514 -wd4056 -wd4996 -wd4099" )
     WkAddCXXFlags( "-MP -Qpar" )
   else(MSVC)#MINGW
@@ -283,7 +289,7 @@ if(WIN32)
 				"${COCOS2D_ROOT}/external/win32-specific/zlib/prebuilt/zlib1.dll"
 				"$<TARGET_FILE_DIR:maintest>"
 			    COMMENT
-			    "Copying ${COCOS2D_ROOT}/external/win32-specific/gles/prebuilt/zlib1.dll to $<TARGET_FILE_DIR:maintest>"
+			    "Copying ${COCOS2D_ROOT}/external/win32-specific/zlib/prebuilt/zlib1.dll to $<TARGET_FILE_DIR:maintest>"
 			    VERBATIM)
 	ADD_CUSTOM_COMMAND( TARGET maintest POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
 				"${COCOS2D_ROOT}/external/curl/prebuilt/win32/curl.dll"
