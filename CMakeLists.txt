@@ -39,7 +39,7 @@ WkProject( WkCocos CXX )
 #Configuration of custom directories
 WkIncludeDir ( "Include" )
 WkTestDir ( "Tests" )
-WkTestDataDir ( "Resources")
+WkDataDir ( "Resources")
 WkDocDir ( "Docs" )
 
 WkDepends("depends/cocos2d-x")

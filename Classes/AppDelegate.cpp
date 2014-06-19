@@ -3,7 +3,18 @@
 
 USING_NS_CC;
 
-AppDelegate::AppDelegate() {
+AppDelegate::AppDelegate()
+{
+	//initializing search paths for different platforms
+#if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
+	cocos2d::FileUtils::getInstance()->addSearchPath("Resources");
+#elif CC_TARGET_PLATFORM == CC_PLATFORM_LINUX
+	cocos2d::FileUtils::getInstance()->addSearchPath("Resources");
+	//NOT NEEDED. COCOS DOES IT ALREADY.
+	//#elif CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+	//		cocos2d::FileUtils::getInstance()->addSearchPath("assets");
+#endif
+
 
 }
 
