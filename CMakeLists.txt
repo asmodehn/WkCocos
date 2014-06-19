@@ -283,7 +283,13 @@ if(WIN32)
 				"${COCOS2D_ROOT}/external/win32-specific/zlib/prebuilt/zlib1.dll"
 				"$<TARGET_FILE_DIR:maintest>"
 			    COMMENT
-			    "Copying ${COCOS2D_ROOT}/external/win32-specific/gles/prebuilt/glew32.dll to $<TARGET_FILE_DIR:maintest>"
+			    "Copying ${COCOS2D_ROOT}/external/win32-specific/gles/prebuilt/zlib1.dll to $<TARGET_FILE_DIR:maintest>"
+			    VERBATIM)
+	ADD_CUSTOM_COMMAND( TARGET maintest POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
+				"${COCOS2D_ROOT}/external/curl/prebuilt/win32/curl.dll"
+				"$<TARGET_FILE_DIR:maintest>"
+			    COMMENT
+			    "Copying ${COCOS2D_ROOT}/external/curl/prebuilt/win32/curl.dll to $<TARGET_FILE_DIR:maintest>"
 			    VERBATIM)
 	endif ( ${PROJECT_NAME}_ENABLE_TESTS )
 elseif (UNIX AND NOT CMAKE_TOOLCHAIN_FILE) #assumed linux
