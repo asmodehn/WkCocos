@@ -1,3 +1,3 @@
-include ':app'
+include ':app', ':lib'
 include ':cocos2dx'
 project(':cocos2dx').projectDir = new File('../depends/cocos2d-x/cocos/platform/android/java')
