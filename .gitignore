@@ -1,1 +1,7 @@
 build/
+Android/app/src/main/obj/local/
+Android/.idea/workspace.xml
+Android/app/assets/
+Android/.gradle/1.12/taskArtifacts/
+Android/app/src/main/libs/
+Android/local.properties
