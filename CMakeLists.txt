@@ -221,6 +221,7 @@ if(MINGW)
   WkAddCXXFlags("-DGLEW_STATIC")
 endif()
 
+set(BUILD_CppTests OFF CACHE BOOL "CppTests option OFF by default")
 
 if(USE_CHIPMUNK)
   message("Using chipmunk ...")
@@ -232,43 +233,48 @@ else(USE_CHIPMUNK)
   message(FATAL_ERROR "Must choose a physics library.")
 endif(USE_CHIPMUNK)
 
+#The library. reusable for any [Wk]Cocos project.
+WkLibraryBuild(WkCocos "Classes/Lib")
+  
+#The app. Interface to test the library.
+WkLibraryBuild(WkCocosApp "Classes/App")
+target_link_libraries(WkCocosApp
+  WkCocos
+)
 
-WkLibraryBuild(WkCocos STATIC "Classes")
-  
-  
 #Linking with all libraries
 
 if ( BUILD_EDITOR_COCOSBUILDER )
-target_link_libraries(WkCocos
+target_link_libraries(WkCocosApp
   cocosbuilder
 )
 endif()
 
 if ( BUILD_EDITOR_COCOSTUDIO )
-target_link_libraries(WkCocos
+target_link_libraries(WkCocosApp
   cocostudio
 )
 endif()
 
 if ( BUILD_EDITOR_SPINE )
-target_link_libraries(WkCocos
+target_link_libraries(WkCocosApp
   spine
 )
 endif()
 
 if ( BUILD_EXTENSIONS )
-target_link_libraries(WkCocos
+target_link_libraries(WkCocosApp
   extensions
 )
 endif()
 
 if ( USE_BOX2D )
-target_link_libraries(WkCocos
+target_link_libraries(WkCocosApp
   box2d
 )
 endif()
 
-target_link_libraries(WkCocos
+target_link_libraries(WkCocosApp
   audio
   cocos2d
 )
@@ -276,7 +282,7 @@ target_link_libraries(WkCocos
 #Testing
 if(WIN32)
     WkTestBuild( maintest win32/main.cpp )
-    WkTestRun( WkCocos maintest WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/${${PROJECT_NAME}_TEST_DIR}/${${PROJECT_NAME}_TEST_DATA_DIR} )
+    WkTestRun( WkCocosApp maintest WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/${${PROJECT_NAME}_TEST_DIR}/${${PROJECT_NAME}_TEST_DATA_DIR} )
 	if ( ${PROJECT_NAME}_ENABLE_TESTS ) # if the target has been defined ( tests enbled )
 	#also copying dlls to binary directory for the executable to run
 	ADD_CUSTOM_COMMAND( TARGET maintest POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
@@ -300,5 +306,5 @@ if(WIN32)
 	endif ( ${PROJECT_NAME}_ENABLE_TESTS )
 elseif (UNIX AND NOT CMAKE_TOOLCHAIN_FILE) #assumed linux
     WkTestBuild( maintest linux/main.cpp )
-    WkTestRun( WkCocos maintest WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/${${PROJECT_NAME}_TEST_DIR}/${${PROJECT_NAME}_TEST_DATA_DIR} )
+    WkTestRun( WkCocosApp maintest WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/${${PROJECT_NAME}_TEST_DIR}/${${PROJECT_NAME}_TEST_DATA_DIR} )
 endif()

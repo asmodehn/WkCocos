@@ -1,4 +1,4 @@
-#include "WkCocos/HelloWorldScene.h"
+#include "WkCocosApp/HelloWorldScene.h"
 
 USING_NS_CC;
 

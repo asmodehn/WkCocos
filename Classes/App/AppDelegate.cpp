@@ -1,5 +1,7 @@
-#include "WkCocos/AppDelegate.h"
-#include "WkCocos/HelloWorldScene.h"
+#include "WkCocosApp/AppDelegate.h"
+#include "WkCocosApp/HelloWorldScene.h"
+
+#include "WkCocos/Utils/ToolBox.h"
 
 USING_NS_CC;
 
@@ -23,6 +25,11 @@ AppDelegate::~AppDelegate()
 }
 
 bool AppDelegate::applicationDidFinishLaunching() {
+
+	//TMP testing ToolBox
+	std::string fortytwo = WkCocos::ToolBox::itoa(42);
+	CCLOG("fortytwo : %s", fortytwo.c_str());
+
     // initialize director
     auto director = Director::getInstance();
     auto glview = director->getOpenGLView();

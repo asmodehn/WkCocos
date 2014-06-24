@@ -2,25 +2,17 @@ LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
 
-LOCAL_MODULE := cocos2dcpp_shared
+LOCAL_MODULE := wkcocosapp
 
-LOCAL_MODULE_FILENAME := libcocos2dcpp
+LOCAL_MODULE_FILENAME := libwkcocosapp
 
-LOCAL_SRC_FILES := hellocpp/main.cpp \
-                   ../../../../../Classes/AppDelegate.cpp \
-                   ../../../../../Classes/HelloWorldScene.cpp
+LOCAL_SRC_FILES := main.cpp \
+                   ../../../../../Classes/App/AppDelegate.cpp \
+                   ../../../../../Classes/App/HelloWorldScene.cpp
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../../../../Include
 
-LOCAL_WHOLE_STATIC_LIBRARIES := cocos2dx_static
-LOCAL_WHOLE_STATIC_LIBRARIES += cocosdenshion_static
-LOCAL_WHOLE_STATIC_LIBRARIES += box2d_static
-LOCAL_WHOLE_STATIC_LIBRARIES += cocosbuilder_static
-LOCAL_WHOLE_STATIC_LIBRARIES += spine_static
-LOCAL_WHOLE_STATIC_LIBRARIES += cocostudio_static
-LOCAL_WHOLE_STATIC_LIBRARIES += cocos_network_static
-LOCAL_WHOLE_STATIC_LIBRARIES += cocos_extension_static
-# LOCAL_WHOLE_STATIC_LIBRARIES += entityx_static
+LOCAL_SHARED_LIBRARIES := wkcocos_shared
 
 include $(BUILD_SHARED_LIBRARY)
 
@@ -33,5 +25,9 @@ $(call import-module,editor-support/cocostudio)
 $(call import-module,network)
 $(call import-module,extensions)
 # $(call import-module,entityx)
+
+
+
+$(call import-module,lib/src/main/jni)
 
 

@@ -6,3 +6,6 @@
 	path = CMake
 	url = https://github.com/asmodehn/wkcmake.git
 	branch = master
+[submodule "depends/database"]
+	path = depends/database
+	url = https://asmodehn@bitbucket.org/gps_df/database.git

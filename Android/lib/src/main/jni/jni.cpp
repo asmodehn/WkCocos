@@ -1,4 +1,6 @@
-#include "WkCocos/AppDelegate.h"
+/// TODO : JNI access to native C++ methods
+/**
+#include "WkCocosApp/AppDelegate.h"
 #include "cocos2d.h"
 #include "platform/android/jni/JniHelper.h"
 #include <jni.h>
@@ -13,3 +15,4 @@ void cocos_android_app_init (JNIEnv* env, jobject thiz) {
     LOGD("cocos_android_app_init");
     AppDelegate *pAppDelegate = new AppDelegate();
 }
+**/
