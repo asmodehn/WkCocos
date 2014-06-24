@@ -2,7 +2,7 @@ LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
 
-LOCAL_MODULE := wkcocos_shared
+LOCAL_MODULE := wkcocos_static
 
 LOCAL_MODULE_FILENAME := libwkcocos
 
@@ -10,6 +10,8 @@ LOCAL_SRC_FILES := jni.cpp \
                    ../../../../../Classes/Lib/Utils/ToolBox.cpp
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../../../../Include
+
+LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)/../../../../../Include
 
 LOCAL_WHOLE_STATIC_LIBRARIES := cocos2dx_static
 LOCAL_WHOLE_STATIC_LIBRARIES += cocosdenshion_static
@@ -21,7 +23,7 @@ LOCAL_WHOLE_STATIC_LIBRARIES += cocos_network_static
 LOCAL_WHOLE_STATIC_LIBRARIES += cocos_extension_static
 # LOCAL_WHOLE_STATIC_LIBRARIES += entityx_static
 
-include $(BUILD_SHARED_LIBRARY)
+include $(BUILD_STATIC_LIBRARY)
 
 $(call import-module,.)
 $(call import-module,audio/android)

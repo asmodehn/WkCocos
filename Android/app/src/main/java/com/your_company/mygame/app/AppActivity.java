@@ -18,8 +18,8 @@ public class AppActivity extends Cocos2dxActivity {
             ApplicationInfo ai = getPackageManager().getApplicationInfo(getPackageName(), PackageManager.GET_META_DATA);
             Bundle bundle = ai.metaData;
             try {
-                String libName = bundle.getString("android.app.lib_name");
-                System.loadLibrary(libName);
+                //String libName = bundle.getString("android.app.lib_name");
+                //System.loadLibrary(libName);
                 String appName = bundle.getString("android.app.app_name");
                 System.loadLibrary(appName);
             } catch (Exception e) {
