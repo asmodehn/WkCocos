@@ -1,5 +1,5 @@
-#ifndef __TOOLBOX_H__
-#define __TOOLBOX_H__
+#ifndef __WKCOCOS_TOOLBOX_H__
+#define __WKCOCOS_TOOLBOX_H__
 
 #include "cocos2d.h"
 
@@ -37,6 +37,6 @@ namespace WkCocos
 		ToolBox();
 
 	};
-}//namespace dfgame
+}//namespace WkCocos
 
-#endif //__TOOLBOX_H__
+#endif //__WKCOCOS_TOOLBOX_H__

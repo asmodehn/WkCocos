@@ -13,7 +13,7 @@ LOCAL_SRC_FILES := main.cpp \
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../../../../Include
 
 LOCAL_WHOLE_STATIC_LIBRARIES := wkcocos_static
-# NOT WORKING because of cocos structure between C+ and Java
+# NOT WORKING because of cocos structure between C++ and Java
 # LOCAL_SHARED_LIBRARIES := wkcocos_shared
 
 include $(BUILD_SHARED_LIBRARY)

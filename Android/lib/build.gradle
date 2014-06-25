@@ -7,13 +7,13 @@ apply plugin: 'android-library'
 
 android {
     compileSdkVersion 19
-    buildToolsVersion "19.1.0"
+    buildToolsVersion '19.1.0'
 
     defaultConfig {
         minSdkVersion 9
         targetSdkVersion 19
-        versionName "0.1.${buildNumber}"  //versionName can go up to "1.999.build"
-        versionCode  100000 + buildNumber // max should be 2 147 483 647
+        //versionName can go up to "1.999.build"
+        versionCode 100000 + buildNumber // max should be 2 147 483 647
     }
 
     flavorDimensions "api","abi"
@@ -108,7 +108,7 @@ task ndkBuild(type: Exec, dependsOn: 'copyAssets') {
     //windows only
     def dependsDir = '..\\..\\..\\..\\..\\depends'
     def cpus = Runtime.runtime.availableProcessors() / 2
-    commandLine 'cmd','/c','ndk-build', '-j' ,cpus , '-C', file('src/main/jni').absolutePath, 'NDK_MODULE_PATH='+dependsDir+';'+dependsDir+'\\cocos2d-x;'+dependsDir+'\\cocos2d-x\\external;'+dependsDir+'\\cocos2d-x\\cocos'
+    commandLine 'cmd','/c','ndk-build', 'NDK_DEBUG=1' , '-j' ,cpus , '-C', file('src/main/jni').absolutePath, 'NDK_MODULE_PATH='+dependsDir+';'+dependsDir+'\\cocos2d-x;'+dependsDir+'\\cocos2d-x\\external;'+dependsDir+'\\cocos2d-x\\cocos'
 }
 
 tasks.withType(JavaCompile) {
@@ -117,6 +117,6 @@ tasks.withType(JavaCompile) {
 
 dependencies {
     compile project(':cocos2dx')
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:19.+'
 }

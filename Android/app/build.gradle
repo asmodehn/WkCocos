@@ -7,13 +7,13 @@ apply plugin: 'android'
 
 android {
     compileSdkVersion 19
-    buildToolsVersion "19.1.0"
+    buildToolsVersion '19.1.0'
 
     defaultConfig {
         minSdkVersion 9
         targetSdkVersion 19
-        versionName "0.1.${buildNumber}"  //versionName can go up to "1.999.build"
-        versionCode  100000 + buildNumber // max should be 2 147 483 647
+        //versionName can go up to "1.999.build"
+        versionCode 100000 + buildNumber // max should be 2 147 483 647
     }
 
     flavorDimensions "api","abi"
@@ -116,9 +116,8 @@ tasks.withType(JavaCompile) {
 }
 
 dependencies {
-
     compile project(':cocos2dx')
     compile project(':wkcocos')
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:19.+'
 }
