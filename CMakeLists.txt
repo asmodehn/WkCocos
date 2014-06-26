@@ -224,10 +224,10 @@ endif()
 set(BUILD_CppTests OFF CACHE BOOL "CppTests option OFF by default")
 
 if(USE_CHIPMUNK)
-  message("Using chipmunk ...")
+  message(STATUS "Using chipmunk ...")
   WkAddCXXFlags("-DCC_ENABLE_CHIPMUNK_INTEGRATION=1")
 elseif(USE_BOX2D)
-  message("Using box2d ...")
+  message(STATUS "Using box2d ...")
   WkAddCXXFlags("-DCC_ENABLE_BOX2D_INTEGRATION=1")
 else(USE_CHIPMUNK)
   message(FATAL_ERROR "Must choose a physics library.")
@@ -241,6 +241,8 @@ WkLibraryBuild(WkCocosApp "Classes/App")
 target_link_libraries(WkCocosApp
   WkCocos
 )
+
+WkDepends ("depends/App42_Cocos2DX_SDK")
 
 #Linking with all libraries
 

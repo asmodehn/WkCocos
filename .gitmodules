@@ -9,3 +9,7 @@
 [submodule "depends/database"]
 	path = depends/database
 	url = https://asmodehn@bitbucket.org/gps_df/database.git
+[submodule "depends/App42_Cocos2DX_SDK"]
+	path = depends/App42_Cocos2DX_SDK
+	url = git@github.com:asmodehn/App42_Cocos2DX_SDK.git
+	branch = master
