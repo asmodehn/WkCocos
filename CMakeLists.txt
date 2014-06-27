@@ -42,6 +42,10 @@ WkTestDir ( "Tests" )
 WkDataDir ( "Resources")
 WkDocDir ( "Docs" )
 
+set(BUILD_CppTests OFF CACHE BOOL "CppTests option OFF by default")
+set(BUILD_EDITOR_COCOSBUILDER OFF CACHE BOOL "EDITOR_COCOSBUILDER option OFF by default")
+set(BUILD_EDITOR_SPINE OFF CACHE BOOL "EDITOR_SPINE option OFF by default")
+
 WkDepends("depends/cocos2d-x")
 
 set(COCOS2D_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/depends/cocos2d-x)
@@ -221,8 +225,6 @@ if(MINGW)
   WkAddCXXFlags("-DGLEW_STATIC")
 endif()
 
-set(BUILD_CppTests OFF CACHE BOOL "CppTests option OFF by default")
-
 if(USE_CHIPMUNK)
   message(STATUS "Using chipmunk ...")
   WkAddCXXFlags("-DCC_ENABLE_CHIPMUNK_INTEGRATION=1")
@@ -233,6 +235,9 @@ else(USE_CHIPMUNK)
   message(FATAL_ERROR "Must choose a physics library.")
 endif(USE_CHIPMUNK)
 
+WkDepends ("depends/App42_Cocos2DX_SDK")
+
+
 #The library. reusable for any [Wk]Cocos project.
 WkLibraryBuild(WkCocos "Classes/Lib")
   
@@ -242,7 +247,6 @@ target_link_libraries(WkCocosApp
   WkCocos
 )
 
-WkDepends ("depends/App42_Cocos2DX_SDK")
 
 #Linking with all libraries
 
@@ -280,6 +284,10 @@ target_link_libraries(WkCocosApp
   audio
   cocos2d
 )
+
+#WKCMAKE ISSUE 43 https://github.com/asmodehn/wkcmake/issues/43
+# Workaround to actually do the linking
+WkExportConfig( ${PROJECT_NAME} )
 
 #Testing
 if(WIN32)
