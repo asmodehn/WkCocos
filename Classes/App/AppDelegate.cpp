@@ -1,10 +1,6 @@
 #include "WkCocosApp/AppDelegate.h"
 #include "WkCocosApp/HelloWorldScene.h"
 
-#include "WkCocos/Utils/ToolBox.h"
-
-#include "Common/App42API.h"
-
 USING_NS_CC;
 
 AppDelegate::AppDelegate()
@@ -50,8 +46,8 @@ bool AppDelegate::applicationDidFinishLaunching() {
     auto scene = HelloWorld::createScene();
 
 	//Initializing App42
-	App42API::Initialize("eb075343180ff254993d760eaeff219d9c6f3cd768c976f4cb7c25e6a6a7a88e", "e3a38692cb56a84998eaa0b74db029fcfcd331b56c7d82d22a3997e7ca0a85cb");
-	UserService *userService = App42API::BuildUserService();
+	WkCocos::App42::Setup("eb075343180ff254993d760eaeff219d9c6f3cd768c976f4cb7c25e6a6a7a88e", "e3a38692cb56a84998eaa0b74db029fcfcd331b56c7d82d22a3997e7ca0a85cb");
+	WkCocos::App42::Login();
 
     // run
     director->runWithScene(scene);
