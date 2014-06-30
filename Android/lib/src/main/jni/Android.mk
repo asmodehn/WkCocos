@@ -15,9 +15,9 @@ LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)/../../../../../Include
 
 LOCAL_WHOLE_STATIC_LIBRARIES := cocos2dx_static
 LOCAL_WHOLE_STATIC_LIBRARIES += cocosdenshion_static
-LOCAL_WHOLE_STATIC_LIBRARIES += box2d_static
-LOCAL_WHOLE_STATIC_LIBRARIES += cocosbuilder_static
-LOCAL_WHOLE_STATIC_LIBRARIES += spine_static
+#LOCAL_WHOLE_STATIC_LIBRARIES += box2d_static
+#LOCAL_WHOLE_STATIC_LIBRARIES += cocosbuilder_static
+#LOCAL_WHOLE_STATIC_LIBRARIES += spine_static
 LOCAL_WHOLE_STATIC_LIBRARIES += cocostudio_static
 LOCAL_WHOLE_STATIC_LIBRARIES += cocos_network_static
 LOCAL_WHOLE_STATIC_LIBRARIES += cocos_extension_static
