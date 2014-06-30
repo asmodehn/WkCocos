@@ -42,6 +42,13 @@ WkTestDir ( "Tests" )
 WkDataDir ( "Resources")
 WkDocDir ( "Docs" )
 
+add_subdirectory("depends/entityx")
+
+include_directories( "depends/entityx")
+
+# setting include directory for upper project to include it
+set( WkCocos_INCLUDE_DIRS ${WkCocos_INCLDE_DIRS} "depends/entityx")
+
 set(BUILD_CppTests OFF CACHE BOOL "CppTests option OFF by default")
 set(BUILD_EDITOR_COCOSBUILDER OFF CACHE BOOL "EDITOR_COCOSBUILDER option OFF by default")
 set(BUILD_EDITOR_SPINE OFF CACHE BOOL "EDITOR_SPINE option OFF by default")
@@ -241,6 +248,10 @@ WkDepends ("depends/App42_Cocos2DX_SDK")
 #The library. reusable for any [Wk]Cocos project.
 WkLibraryBuild(WkCocos "Classes/Lib")
 
+set( WkCocos_INCLUDE_DIRS ${WkCocos_INCLUDE_DIRS}
+	CACHE PATH "Headers Directories"
+)
+
 #Add WkCocosApp only if we are the top project  
 if ( ${PROJECT_NAME} STREQUAL ${CMAKE_PROJECT_NAME} )
 	#The app. Interface to test the library.
@@ -287,9 +298,9 @@ if ( ${PROJECT_NAME} STREQUAL ${CMAKE_PROJECT_NAME} )
 	  cocos2d
 	)
 
-#WKCMAKE ISSUE 43 https://github.com/asmodehn/wkcmake/issues/43
-# Workaround to actually do the linking
-WkExportConfig( ${PROJECT_NAME} )
+	#WKCMAKE ISSUE 43 https://github.com/asmodehn/wkcmake/issues/43
+	# Workaround to actually do the linking
+	WkExportConfig( ${PROJECT_NAME} )
 
 	#Testing
 	if(WIN32)
