@@ -42,7 +42,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     auto scene = HelloWorld::createScene();
 
 	//Initializing App42
-	WkCocos::App42::Setup("eb075343180ff254993d760eaeff219d9c6f3cd768c976f4cb7c25e6a6a7a88e", "e3a38692cb56a84998eaa0b74db029fcfcd331b56c7d82d22a3997e7ca0a85cb");
+	WkCocos::App42::Setup("3a3579d378cdf38a29e7dd80ec20dc15fc2a19a6959bcfc1ea353885a1802f86", "89ff08c30c0f3d15e5b571d2b3a90fd80401a756cb7f3620cfc625756421ee35");
 	WkCocos::App42::Login();
 
     // run
