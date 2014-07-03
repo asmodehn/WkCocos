@@ -67,7 +67,7 @@ void LoadingScene::scheduleDLCCheck()
 
 void LoadingScene::update(float delta)
 {
-	//if callback was called, loading and slideshow are finished.
+	//if callback was called, loading is finished.
 	if (!m_loadDoneCB_called)
 	{
 		m_loadingManager.step(delta);
@@ -97,6 +97,10 @@ void LoadingScene::progress_CB(float pct)
 
 	if (pct >= 1.0f && !m_loadDoneCB_called)
 	{
+		//DOWNloading is finished.
+		//We should clean the pathCache that was computed before download
+		cocos2d::FileUtils::getInstance()->purgeCachedEntries();
+
 		//loading finished. lets move on.
 		m_loadDoneCB_called = true;
 		m_loadDoneCB();

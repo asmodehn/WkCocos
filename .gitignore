@@ -8,3 +8,4 @@ Android/local.properties
 Android/lib/src/main/obj/
 Android/lib/assets/
 nginxDLC/logs/
+Android/lib/src/main/libs/

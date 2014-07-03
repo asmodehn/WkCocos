@@ -46,10 +46,18 @@ namespace WkCocos
 			std::string minAppVersion = cocostudio::DictionaryHelper::getInstance()->getStringValue_json(json, "minAppVersion", "error");
 			std::string version = cocostudio::DictionaryHelper::getInstance()->getStringValue_json(json, "version", 0);
 			//std::string engineVersion = cocostudio::DictionaryHelper::getInstance()->getStringValue_json(json, "engineVersion", "error");
+
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+			// If we can find "localhost". Replace it with emulator access to localhost.
+			dlcUrl.replace(dlcUrl.find("localhost"), 9, "10.0.2.2");
+#endif
+				
+
+
 			unsigned long lver = 0;
 			try {
 				 lver = ToolBox::stoul(version);
-				CCLOG("Manifest version %ul for DLC at %s ", lver, dlcUrl.c_str());
+				CCLOG("Manifest version %u for DLC at %s ", lver, dlcUrl.c_str());
 			}
 			catch (std::out_of_range oor)
 			{
