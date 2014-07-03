@@ -1,5 +1,9 @@
 #include "WkCocosApp/HelloWorldScene.h"
 
+#include "WkCocosApp/ErrorUI.h"
+
+#include "ui/CocosGUI.h"
+
 USING_NS_CC;
 
 Scene* HelloWorld::createScene()
@@ -71,6 +75,13 @@ bool HelloWorld::init()
 
     // add the sprite as a child to this layer
     this->addChild(sprite, 0);
+
+	//Error UI
+	ErrorUI* errorui = new ErrorUI();
+	auto errorroot = errorui->getRoot();
+	errorroot->setEnabled(true);
+	errorroot->setVisible(true);
+	this->addChild(errorroot);
     
     return true;
 }
