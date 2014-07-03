@@ -1,0 +1,12 @@
+{
+    "assets": {
+        "HelloWorld.png": {
+            "md5": "73F58E6D92FAFDF31C8F195596ACD95C"
+        },
+    },
+    "minAppVersion": "0.1.1",
+    "searchPaths": [
+        "res/"
+    ],
+    "version": "43"
+}
