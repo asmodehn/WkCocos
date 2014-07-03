@@ -49,4 +49,20 @@ namespace WkCocos
 		return fopen(name.c_str(), mode.c_str());
 	}
 
+	unsigned long ToolBox::stoul(const std::string& _Str, size_t *_Idx, int _Base)
+	{	// convert string to unsigned long
+		const char *_Ptr = _Str.c_str();
+		char *_Eptr;
+		errno = 0;
+		unsigned long _Ans = strtoul(_Ptr, &_Eptr, _Base);
+
+		if (_Ptr == _Eptr)
+			throw std::invalid_argument("invalid stoul argument");
+		if (errno == ERANGE)
+			throw std::out_of_range("stoul argument out of range");
+		if (_Idx != 0)
+			*_Idx = (size_t)(_Eptr - _Ptr);
+		return (_Ans);
+	}
+
 }//namespace dfgame
