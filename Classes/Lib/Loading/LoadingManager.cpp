@@ -14,6 +14,8 @@
 #include "WkCocos/Utils/ToolBox.h"
 
 #include <climits>
+#include <vector>
+
 namespace WkCocos
 {
 	namespace Loading
@@ -92,8 +94,13 @@ namespace WkCocos
 
 		void LoadingManager::initialize()
 		{
-			//adding writable path ( where DLC downloads) as search path.
-			cocos2d::FileUtils::getInstance()->addSearchPath(cocos2d::FileUtils::getInstance()->getWritablePath());
+			//adding writable path ( where DLC downloads) as search path. First in list
+			int i = 0;
+			cocos2d::FileUtils *fileUtils = cocos2d::FileUtils::getInstance();
+			std::vector<std::string> searchPaths = fileUtils->getSearchPaths();
+			searchPaths.insert(searchPaths.begin() + i++, cocos2d::FileUtils::getInstance()->getWritablePath());
+			//add more if needed
+			fileUtils->setSearchPaths(searchPaths);
 		}
 
 		void LoadingManager::update(double dt) {

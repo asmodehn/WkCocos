@@ -42,6 +42,8 @@ bool AppDelegate::applicationDidFinishLaunching() {
     // create a scene. it's an autorelease object
     LoadingScene* loadscene = LoadingScene::create();
 
+	loadscene->scheduleDLCCheck();
+
 	loadscene->setLoadDoneCallback([](){
 		auto director = cocos2d::Director::getInstance();
 		director->replaceScene(cocos2d::TransitionFade::create(1.0f, HelloWorld::createScene()));

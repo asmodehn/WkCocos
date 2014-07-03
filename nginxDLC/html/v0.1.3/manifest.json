@@ -2,11 +2,11 @@
     "assets": {
         "HelloWorld.png": {
             "md5": "7154D8993B072DCFFE2CD3069CA4ECB3"
-        },
+        }
     },
     "minAppVersion": "0.1.1",
     "searchPaths": [
         "res/"
     ],
-    "version": "43"
+    "version": "44"
 }

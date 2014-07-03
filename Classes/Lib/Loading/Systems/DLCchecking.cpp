@@ -198,6 +198,9 @@ namespace WkCocos
 										std::string filename = m->name.GetString();
 										std::string filehash = cocostudio::DictionaryHelper::getInstance()->getStringValue_json(m->value, "md5", "error");
 
+										//lowering filehash to be sure
+										std::transform(filehash.begin(), filehash.end(), filehash.begin(), ::tolower);
+
 										//std::cout << filename << " : " << filehash << std::endl;
 
 										entityx::Entity newentity = es->create();
