@@ -258,6 +258,7 @@ if ( ${PROJECT_NAME} STREQUAL ${CMAKE_PROJECT_NAME} )
 	WkLibraryBuild(WkCocosApp "Classes/App")
 	target_link_libraries(WkCocosApp
 	  WkCocos
+	  entityx
 	)
 
 

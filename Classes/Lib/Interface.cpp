@@ -13,16 +13,16 @@ namespace WkCocos
 			cocostudio::GUIReader* reader = cocostudio::GUIReader::getInstance();
 
 			cocos2d::ui::Widget* widget = reader->widgetFromJsonFile(filepath.c_str());
-			widget->retain(); //we need to retain it in cache ( or cocos will drop it )
 			if (widget)
 			{
+				widget->retain(); //we need to retain it in memory ( or cocos will drop it )
 				widget_cache.insert(std::pair<std::string, cocos2d::ui::Widget*>(filepath, widget));
 				return widget;
 			}
 		}
 		else
 		{
-			//return already cached UI
+			//return already loaded UI
 			return uicached->second;
 		}
 	}
