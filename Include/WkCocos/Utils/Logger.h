@@ -7,7 +7,7 @@
 #include <fstream>
 //to make sure our operator overload is working with strings
 #include <string>
-#include <list>
+#include <vector>
 
 //TODO
 /****
@@ -82,7 +82,7 @@ namespace WkCocos
 		/**
 		* List of appender to send the log stream to
 		*/
-		std::list<LogAppender*> _appenders;
+		std::vector<LogAppender*> _appenders;
 
 		int _indentlvl, _indentwidth;
 		std::string _logprefix;
@@ -106,6 +106,18 @@ namespace WkCocos
 		* Class creating the appender is responsible for it's deletion.
 		*/
 		inline void addAppender(LogAppender* newAppender){ _appenders.push_back(newAppender); }
+		void removeAppender(LogAppender* oldAppender)
+		{
+			auto curAppender = _appenders.begin();
+			while (curAppender != _appenders.end() && *curAppender != oldAppender)
+			{
+				++curAppender;
+			}
+			if (curAppender != _appenders.end())
+			{
+				_appenders.erase(curAppender);
+			}
+		}
 
 		//void add(const std::string & message); // not const because of initial '\n' in string from streams...
 		template<typename M>
