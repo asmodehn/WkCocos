@@ -171,7 +171,9 @@ namespace WkCocos
 							std::string current_md5 = computeMD5(outFileName.c_str());
 							if (current_md5 != dlfile->m_hash)
 							{
-								CCLOG("error downloading package %s", fileurl.c_str());
+								CCLOG("error downloading %s", fileurl.c_str());
+								CCLOG("error expected MD5 %s", dlfile->m_hash.c_str());
+								CCLOG("error actual MD5 %s", current_md5.c_str());
 								error_fun(dlfile);
 							}
 							else

@@ -6,3 +6,6 @@ Android/.gradle/1.12/taskArtifacts/
 Android/app/src/main/libs/
 Android/local.properties
 Android/lib/src/main/obj/
+Android/lib/assets/
+nginxDLC/logs/
+Android/lib/src/main/libs/

@@ -14,6 +14,8 @@
 #include "WkCocos/Utils/ToolBox.h"
 
 #include <climits>
+#include <vector>
+
 namespace WkCocos
 {
 	namespace Loading
@@ -44,10 +46,18 @@ namespace WkCocos
 			std::string minAppVersion = cocostudio::DictionaryHelper::getInstance()->getStringValue_json(json, "minAppVersion", "error");
 			std::string version = cocostudio::DictionaryHelper::getInstance()->getStringValue_json(json, "version", 0);
 			//std::string engineVersion = cocostudio::DictionaryHelper::getInstance()->getStringValue_json(json, "engineVersion", "error");
+
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+			// If we can find "localhost". Replace it with emulator access to localhost.
+			dlcUrl.replace(dlcUrl.find("localhost"), 9, "10.0.2.2");
+#endif
+				
+
+
 			unsigned long lver = 0;
 			try {
 				 lver = ToolBox::stoul(version);
-				CCLOG("Manifest version %ul for DLC at %s ", lver, dlcUrl.c_str());
+				CCLOG("Manifest version %u for DLC at %s ", lver, dlcUrl.c_str());
 			}
 			catch (std::out_of_range oor)
 			{
@@ -92,8 +102,13 @@ namespace WkCocos
 
 		void LoadingManager::initialize()
 		{
-			//adding writable path ( where DLC downloads) as search path.
-			cocos2d::FileUtils::getInstance()->addSearchPath(cocos2d::FileUtils::getInstance()->getWritablePath());
+			//adding writable path ( where DLC downloads) as search path. First in list
+			int i = 0;
+			cocos2d::FileUtils *fileUtils = cocos2d::FileUtils::getInstance();
+			std::vector<std::string> searchPaths = fileUtils->getSearchPaths();
+			searchPaths.insert(searchPaths.begin() + i++, cocos2d::FileUtils::getInstance()->getWritablePath());
+			//add more if needed
+			fileUtils->setSearchPaths(searchPaths);
 		}
 
 		void LoadingManager::update(double dt) {

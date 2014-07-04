@@ -8,7 +8,9 @@ LOCAL_MODULE_FILENAME := libwkcocosapp
 
 LOCAL_SRC_FILES := main.cpp \
                    ../../../../../Classes/App/AppDelegate.cpp \
-                   ../../../../../Classes/App/HelloWorldScene.cpp
+                   ../../../../../Classes/App/HelloWorldScene.cpp \
+                   ../../../../../Classes/App/LoadingScene.cpp \
+                   ../../../../../Classes/App/LoadingUI.cpp
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../../../../Include
 
