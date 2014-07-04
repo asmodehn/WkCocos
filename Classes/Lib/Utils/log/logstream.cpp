@@ -3,11 +3,11 @@
 namespace WkCocos
 {
 
-	logstream::logstream()
+	LogStream::LogStream()
 		: std::ostringstream()
 	{
 			//to hook up to usual stream design
-			pvm_lsb = new clogstreambuf();
+			pvm_lsb = new CLogStreamBuf();
 			this->init(pvm_lsb);
 
 			//setup default flags
@@ -18,7 +18,7 @@ namespace WkCocos
 
 		}
 
-	logstream::logstream(logstreambuf* lsb)
+	LogStream::LogStream(LogStreamBuf* lsb)
 		: std::ostringstream()
 	{
 			//to hook up to usual stream design
@@ -33,23 +33,23 @@ namespace WkCocos
 
 		}
 
-	logstream::~logstream()
+	LogStream::~LogStream()
 	{
 	}
 
 	//to manage prefix
-	void logstream::resetprefix(const std::string& newprefix)
+	void LogStream::resetprefix(const std::string& newprefix)
 	{
 		rdbuf()->resetprefix(newprefix);
 	}
 
-	const std::string & logstream::getprefix() const
+	const std::string & LogStream::getprefix() const
 	{
 		return rdbuf()->getprefix();
 	}
 
 
-	logstream& operator<<(logstream &ls, loglevel::Level lvl)
+	LogStream& operator<<(LogStream &ls, loglevel::Level lvl)
 	{
 		if (ls.getLevel() >= lvl)
 		{
@@ -64,7 +64,7 @@ namespace WkCocos
 		return ls;
 	}
 
-	logstream& logstream::level(loglevel::Level l)
+	LogStream& LogStream::level(loglevel::Level l)
 	{
 		*this << l;
 		return *this;

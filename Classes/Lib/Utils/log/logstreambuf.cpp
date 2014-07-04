@@ -6,7 +6,7 @@
 namespace WkCocos
 {
 
-	logstreambuf::logstreambuf()
+	LogStreamBuf::LogStreamBuf()
 		: std::stringbuf(),//stringbuf in and out required
 		ptm_prefix(""), //default no prefix
 		ptm_logtime(true),
@@ -15,22 +15,22 @@ namespace WkCocos
 	{
 		}
 
-	logstreambuf::~logstreambuf()
+	LogStreamBuf::~LogStreamBuf()
 	{
 	}
 
 
-	void logstreambuf::resetprefix(const std::string& newprefix)
+	void LogStreamBuf::resetprefix(const std::string& newprefix)
 	{
 		ptm_prefix = newprefix;
 	}
 
-	const std::string& logstreambuf::getprefix() const
+	const std::string& LogStreamBuf::getprefix() const
 	{
 		return ptm_prefix;
 	}
 
-	std::string logstreambuf::getlocaltime()
+	std::string LogStreamBuf::getlocaltime()
 	{
 		//TODO : insert useful prefixes
 		//maybe distinction date / time useless
@@ -50,7 +50,7 @@ namespace WkCocos
 
 	///Output functions (put)
 	///Write sequence of characters
-	std::streamsize logstreambuf::xsputn(const char * s, std::streamsize n)
+	std::streamsize LogStreamBuf::xsputn(const char * s, std::streamsize n)
 	{
 		std::streamsize ressize = 0;
 		if (ptm_filterin)
@@ -67,7 +67,7 @@ namespace WkCocos
 		return ressize;//ressize == 0 means something is wrong -> will set ios::failbit
 	}
 
-	int logstreambuf::overflow(int c)
+	int LogStreamBuf::overflow(int c)
 	{
 		int res = 0;
 		if (ptm_filterin)
@@ -88,17 +88,17 @@ namespace WkCocos
 	/***************** For clogstreambuff : to output to clog *******/
 
 
-	clogstreambuf::clogstreambuf()
-		: logstreambuf(), ptm_clogbuf(std::clog.rdbuf())//using clog as sink
+	CLogStreamBuf::CLogStreamBuf()
+		: LogStreamBuf(), ptm_clogbuf(std::clog.rdbuf())//using clog as sink
 	{
 	}
 
-	clogstreambuf::~clogstreambuf()
+	CLogStreamBuf::~CLogStreamBuf()
 	{
 	}
 
 	///Synchronizes (flush) the stream buffer
-	int clogstreambuf::sync()
+	int CLogStreamBuf::sync()
 	{
 		int res = 0;
 
@@ -119,11 +119,11 @@ namespace WkCocos
 			//transfer ptm_buf to clogbuf
 			//copy character one by one...
 			//maybe better to lock buffer, and get it whole at once...
-			char c = logstreambuf::sbumpc();
+			char c = LogStreamBuf::sbumpc();
 			while (c != EOF)
 			{
 				ptm_clogbuf->sputc(c);
-				c = logstreambuf::sbumpc();
+				c = LogStreamBuf::sbumpc();
 			}
 
 		}
@@ -138,8 +138,8 @@ namespace WkCocos
 	/***************** For filelogstreambuf : to output to file *******/
 
 
-	filelogstreambuf::filelogstreambuf(const std::string & filename)
-		: logstreambuf(), ptm_filelogbuf()//using clog as sink
+	FileLogStreamBuf::FileLogStreamBuf(const std::string & filename)
+		: LogStreamBuf(), ptm_filelogbuf()//using clog as sink
 	{
 		//TOTHINK ABOUT : do we delete the file everytime we open it ?
 		//or provide an option bool append for example ?
@@ -147,13 +147,13 @@ namespace WkCocos
 			throw std::logic_error("unable to open" + filename);
 	}
 
-	filelogstreambuf::~filelogstreambuf()
+	FileLogStreamBuf::~FileLogStreamBuf()
 	{
 		ptm_filelogbuf.close();
 	}
 
 	///Synchronizes (flush) the stream buffer
-	int filelogstreambuf::sync()
+	int FileLogStreamBuf::sync()
 	{
 		int res = 0;
 		if (ptm_filelogbuf.is_open())
@@ -174,11 +174,11 @@ namespace WkCocos
 				//transfer ptm_buf to clogbuf
 				//copy character one by one...
 				//maybe better to lock buffer, and get it whole at once...
-				char c = logstreambuf::sbumpc();
+				char c = LogStreamBuf::sbumpc();
 				while (c != EOF)
 				{
 					ptm_filelogbuf.sputc(c);
-					c = logstreambuf::sbumpc();
+					c = LogStreamBuf::sbumpc();
 				}
 
 			}

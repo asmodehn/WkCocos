@@ -17,10 +17,10 @@ namespace WkCocos
 	*
 	*/
 	///@TODO : Design should be changed as we cannot access stringbuf inside an ostringstream in a standard / portable way...
-	class logstream : public std::ostringstream
+	class LogStream : public std::ostringstream
 	{
 		//streambuff
-		logstreambuf* pvm_lsb;
+		LogStreamBuf* pvm_lsb;
 
 		//level of hte log stream.
 		//anything less important than this level is ignored
@@ -28,21 +28,21 @@ namespace WkCocos
 
 	public:
 		//default constructor (clog output logstreambuf )
-		logstream();
-		explicit logstream(logstreambuf* lsb);
-		~logstream();
+		LogStream();
+		explicit LogStream(LogStreamBuf* lsb);
+		~LogStream();
 
 		//to manage prefix
 		void resetprefix(const std::string & newprefix = "");
 		const std::string& getprefix() const;
 
 		//to use logstream as streamthrough
-		friend std::ostream& operator<<(std::ostream& o, logstream& l)
+		friend std::ostream& operator<<(std::ostream& o, LogStream & l)
 		{
 			return o << l.rdbuf();
 		};
 
-		logstreambuf* rdbuf() const
+		LogStreamBuf* rdbuf() const
 		{
 			return pvm_lsb;
 		}
@@ -72,8 +72,8 @@ namespace WkCocos
 		}
 
 		//manipulator to set *messages's* level
-		friend logstream& operator<<(logstream &o, loglevel::Level lvl);
-		logstream& level(loglevel::Level l);
+		friend LogStream & operator<<(LogStream  &o, loglevel::Level lvl);
+		LogStream & level(loglevel::Level l);
 
 	};
 

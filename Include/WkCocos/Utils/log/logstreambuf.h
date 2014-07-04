@@ -23,7 +23,7 @@ namespace WkCocos
 	* Date&Time (internally added) [TODO| ThreadID (internally added)] |Custom Prefix (set by logstream) | Message ( sent by logstream )
 	*/
 
-	class logstreambuf : public std::stringbuf
+	class LogStreamBuf : public std::stringbuf
 	{
 
 	protected:
@@ -38,8 +38,8 @@ namespace WkCocos
 		bool ptm_filterin;
 
 	public:
-		logstreambuf();
-		~logstreambuf();
+		LogStreamBuf();
+		virtual ~LogStreamBuf();
 
 		//to manage prefix
 		void resetprefix(const std::string& newprefix = 0);
@@ -94,13 +94,13 @@ namespace WkCocos
 	*/
 
 	///Output to clog
-	class clogstreambuf : public logstreambuf
+	class CLogStreamBuf : public LogStreamBuf
 	{
 		//clog as sink on sync()
 		std::streambuf* ptm_clogbuf;
 	public:
-		clogstreambuf();
-		~clogstreambuf();
+		CLogStreamBuf();
+		virtual ~CLogStreamBuf();
 
 	protected:
 		virtual int sync();
@@ -108,13 +108,13 @@ namespace WkCocos
 
 
 	///Output to clog
-	class filelogstreambuf : public logstreambuf
+	class FileLogStreamBuf : public LogStreamBuf
 	{
 		//clog as sink on sync()
 		std::filebuf ptm_filelogbuf;
 	public:
-		filelogstreambuf(const std::string & filename);
-		~filelogstreambuf();
+		FileLogStreamBuf(const std::string & filename);
+		virtual ~FileLogStreamBuf();
 
 	protected:
 		virtual int sync();
