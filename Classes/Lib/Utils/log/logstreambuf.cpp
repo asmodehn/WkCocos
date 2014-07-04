@@ -13,7 +13,7 @@ namespace WkCocos
 		ptm_filterin(true)
 
 	{
-		}
+	}
 
 	LogStreamBuf::~LogStreamBuf()
 	{

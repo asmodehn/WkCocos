@@ -2,10 +2,12 @@
 #define __WKCOCOS_UTILS_LOGGER_H__
 
 #include "WkCocos/Utils/log/logstream.h"
+#include "WkCocos/Utils/log/logappender.h"
 
 #include <fstream>
 //to make sure our operator overload is working with strings
 #include <string>
+#include <list>
 
 //TODO
 /****
@@ -76,65 +78,34 @@ namespace WkCocos
 
 	class Logger //: public std::ostream
 	{
+	private:
+		/**
+		* List of appender to send the log stream to
+		*/
+		std::list<LogAppender*> _appenders;
+
 		int _indentlvl, _indentwidth;
 		std::string _logprefix;
-
-		std::ofstream _ofstr;
-		bool _consoleLog;
-		bool _fileLog;
 
 		bool setLogfile(const std::string & filename);
 
 	public:
 
-		///Default Constructor that defines how to write the log
+		/**
+		* Default Constructor that defines how to write the log
+		*/
 		Logger(const std::string & LogPrefix = LOGPREFIX, int indentlevel = LOGINDENTLVL, int indentwidth = LOGINDENTWIDTH);
 
-		///Default Destructor that flush the Log Buffer
+		/**
+		* Default Destructor that flush the Log Buffer
+		*/
 		~Logger();
 
-
-
-		void toggleConsoleLog()
-		{
-			_consoleLog = !_consoleLog;
-		}
-		void enableConsoleLog()
-		{
-			_consoleLog = true;
-		}
-		void disableConsoleLog()
-		{
-			_consoleLog = false;
-		}
-
-		//warning, this is likely to return false in release build
-		//TODO : why ? tests on a  release lib needs to be able to log...
-		bool enableFileLog(const std::string & filename)
-		{
-#ifdef RAGELOG
-			_fileLog = true;
-			return setLogfile(filename);
-#else
-			return false;
-#endif
-		}
-		void disableFileLog()
-		{
-#ifdef RAGELOG
-			_fileLog = false;
-			_ofstr.close();
-#endif
-		}
-
-		bool isFileLogEnabled()
-		{
-			return _fileLog;
-		}
-		bool isConsoleLogEnabled()
-		{
-			return _consoleLog;
-		}
+		/**
+		* add Appender on logger.
+		* Class creating the appender is responsible for it's deletion.
+		*/
+		inline void addAppender(LogAppender* newAppender){ _appenders.push_back(newAppender); }
 
 		//void add(const std::string & message); // not const because of initial '\n' in string from streams...
 		template<typename M>
@@ -160,20 +131,15 @@ namespace WkCocos
 	Logger& Logger::operator<< (const M & msg)
 	{
 #ifdef RAGELOG
-		if (_consoleLog)
-			std::clog << msg;
-		if (_fileLog)
-			_ofstr << msg;
+		for (auto appender : _appenders)
+		{
+			(*appender) << msg;
+		}
 #endif
 		return *this;
 	}
 
-
-
 	Logger& nl(Logger& log); // adds a new line with the prefix
-
-
-
 
 } // WkCocos
 

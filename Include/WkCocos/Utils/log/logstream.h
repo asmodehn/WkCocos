@@ -41,6 +41,10 @@ namespace WkCocos
 		{
 			return o << l.rdbuf();
 		};
+		friend std::ostream& operator<<(std::ostream& o, const LogStream & l)
+		{
+			return o << l.rdbuf();
+		};
 
 		LogStreamBuf* rdbuf() const
 		{
