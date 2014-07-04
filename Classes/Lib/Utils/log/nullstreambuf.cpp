@@ -1,10 +1,10 @@
 #include "WkCocos/Utils/log/nullstreambuf.h"
 
-namespace Core
+namespace WkCocos
 {
 	namespace stdext
 	{
 
 
 	}
-}
+}//WkCocos

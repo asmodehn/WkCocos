@@ -1,11 +1,11 @@
-#ifndef CORE_NULLOSTREAM_HH
-#define CORE_NULLOSTREAM_HH
+#ifndef __WKCOCOS_UTILS_LOG_NULLOSTREAM_H__
+#define __WKCOCOS_UTILS_LOG_NULLOSTREAM_H__
 
 #include "WkCocos/Utils/log/nullstreambuf.h"
 
 #include <ostream>
 
-namespace Core
+namespace WkCocos
 {
 
 	namespace stdext
@@ -37,9 +37,9 @@ namespace Core
 	extern stdext::wonullstream wcnull;
 
 
-} //Core
+} //WkCocos
 
 
 
 
-#endif
+#endif //__WKCOCOS_UTILS_LOG_NULLOSTREAM_H__

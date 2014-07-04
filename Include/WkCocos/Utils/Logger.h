@@ -1,5 +1,5 @@
-#ifndef LOGGER_HH
-#define LOGGER_HH
+#ifndef __WKCOCOS_UTILS_LOGGER_H__
+#define __WKCOCOS_UTILS_LOGGER_H__
 
 #include "WkCocos/Utils/log/logstream.h"
 
@@ -48,7 +48,7 @@ Boost Log
 #define RAGELOG
 #endif
 
-namespace Core
+namespace WkCocos
 {
 
 	/**
@@ -175,7 +175,7 @@ namespace Core
 
 
 
-} // Core
+} // WkCocos
 
 
-#endif
+#endif //__WKCOCOS_UTILS_LOGGER_H__

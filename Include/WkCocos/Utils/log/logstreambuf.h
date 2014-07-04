@@ -1,5 +1,5 @@
-#ifndef LOGSTREAMBUF_HH
-#define LOGSTREAMBUF_HH
+#ifndef __WKCOCOS_UTILS_LOG_LOGSTREAMBUF_H__
+#define __WKCOCOS_UTILS_LOG_LOGSTREAMBUF_H__
 
 #include <cstdio> // for EOF
 #include <iostream>
@@ -8,7 +8,7 @@
 #include <locale>
 
 
-namespace Core
+namespace WkCocos
 {
 
 	//we define here logstream and logstreambuf which should integrates well with iostream from STL
@@ -121,6 +121,6 @@ namespace Core
 	};
 
 
-}// Core
+}// WkCocos
 
-#endif // LOGSTREAMBUF_HH
+#endif // __WKCOCOS_UTILS_LOG_LOGSTREAMBUF_H__

@@ -1,5 +1,5 @@
-#ifndef CORE_LOGLEVEL_HH
-#define CORE_LOGLEVEL_HH
+#ifndef __WKCOCOS_UTILS_LOG_LOGLEVEL_H__
+#define __WKCOCOS_UTILS_LOG_LOGLEVEL_H__
 
 //TODO
 // we ned to keep an enum
@@ -8,7 +8,7 @@
 
 #include <ostream>
 
-namespace Core
+namespace WkCocos
 {
 
 	namespace loglevel
@@ -51,8 +51,8 @@ namespace Core
 
 
 
-} //Core
+} //WkCocos
 
 
 
-#endif
+#endif //__WKCOCOS_UTILS_LOG_LOGLEVEL_H__

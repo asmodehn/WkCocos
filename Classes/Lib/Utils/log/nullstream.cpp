@@ -2,8 +2,8 @@
 
 //#include "Config.hh"
 
-namespace Core
+namespace WkCocos
 {
 	/*CORE_API */stdext::onullstream cnull;
 	/*CORE_API*/ stdext::wonullstream wcnull;
-}
+}//WkCocos

@@ -1,6 +1,6 @@
 #include "WkCocos/Utils/log/logstream.h"
 
-namespace Core
+namespace WkCocos
 {
 
 	logstream::logstream()
@@ -70,4 +70,4 @@ namespace Core
 		return *this;
 	}
 
-} // Core
+} // WkCocos

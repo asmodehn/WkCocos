@@ -3,7 +3,7 @@
 #include <stdexcept>
 #include <cstring>
 
-namespace Core
+namespace WkCocos
 {
 
 	logstreambuf::logstreambuf()
@@ -192,4 +192,4 @@ namespace Core
 
 
 
-} //Core
+} //WkCocos

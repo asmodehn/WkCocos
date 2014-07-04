@@ -1,6 +1,6 @@
 #include "WkCocos/Utils/Logger.h"
 
-namespace Core
+namespace WkCocos
 {
 	/****************
 	* Old Logger implementation
@@ -92,4 +92,4 @@ namespace Core
 
 
 
-} // Core
+} // WkCocos

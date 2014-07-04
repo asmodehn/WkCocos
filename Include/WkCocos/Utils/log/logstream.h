@@ -1,5 +1,5 @@
-#ifndef LOGSTREAM_HH
-#define LOGSTREAM_HH
+#ifndef __WKCOCOS_UTILS_LOG_LOGSTREAM_H__
+#define __WKCOCOS_UTILS_LOG_LOGSTREAM_H__
 
 #include "WkCocos/Utils/log/nullstream.h"
 #include "WkCocos/Utils/log/logstreambuf.h"
@@ -8,7 +8,7 @@
 //to get string << operator for logstream
 #include <string>
 
-namespace Core
+namespace WkCocos
 {
 
 	/**
@@ -77,8 +77,8 @@ namespace Core
 
 	};
 
-} //Core
+} //WkCocos
 
 
 
-#endif // LOGSTREAM_HH
+#endif // __WKCOCOS_UTILS_LOG_LOGSTREAM_H__

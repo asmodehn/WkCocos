@@ -1,9 +1,9 @@
-#ifndef CORE_NULLSTREAMBUF_HH
-#define CORE_NULLSTREAMBUF_HH
+#ifndef __WKCOCOS_UTILS_LOG_NULLSTREAMBUF_H__
+#define __WKCOCOS_UTILS_LOG_NULLSTREAMBUF_H__
 
 #include <streambuf>
 
-namespace Core
+namespace WkCocos
 {
 
 	namespace stdext
@@ -39,10 +39,6 @@ namespace Core
 
 
 
-}
+}//WkCocos
 
-
-
-
-
-#endif
+#endif //__WKCOCOS_UTILS_LOG_NULLSTREAMBUF_H__

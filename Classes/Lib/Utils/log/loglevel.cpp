@@ -1,6 +1,6 @@
 #include "WkCocos/Utils/log/loglevel.h"
 
-namespace Core
+namespace WkCocos
 {
 	namespace loglevel
 	{
@@ -28,4 +28,4 @@ namespace Core
 		}
 
 	} //loglevel
-}//Core
+}//WkCocos
