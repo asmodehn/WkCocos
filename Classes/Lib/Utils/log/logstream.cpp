@@ -11,7 +11,7 @@ namespace WkCocos
 			this->init(pvm_lsb);
 
 			//setup default flags
-			this->flags(std::ios::left | std::ios::hex | std::ios::showbase | std::ios::boolalpha);
+			this->flags(std::ios::left | std::ios::dec | std::ios::showbase | std::ios::boolalpha);
 
 			//setup default prefix
 			resetprefix();
@@ -26,7 +26,7 @@ namespace WkCocos
 			this->init(pvm_lsb);
 
 			//setup default flags
-			this->flags(std::ios::left | std::ios::hex | std::ios::showbase | std::ios::boolalpha);
+			this->flags(std::ios::left | std::ios::dec | std::ios::showbase | std::ios::boolalpha);
 
 			//setup default prefix
 			resetprefix();

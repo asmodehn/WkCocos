@@ -89,6 +89,7 @@ namespace WkCocos
 
 		bool setLogfile(const std::string & filename);
 
+		static Logger*			_instance;
 	public:
 
 		/**
@@ -100,6 +101,13 @@ namespace WkCocos
 		* Default Destructor that flush the Log Buffer
 		*/
 		~Logger();
+
+		/**
+		* Make singleton for now
+		*/
+		static void create();
+		static Logger& getInstance();
+		static void destroy();
 
 		/**
 		* add Appender on logger.
@@ -155,5 +163,15 @@ namespace WkCocos
 
 } // WkCocos
 
+
+#ifdef _DEBUG
+#	define LOG_INFO(message)			WkCocos::Logger::getInstance() << std::dec << message << "\n"
+#	define LOG_WARNING(message)			WkCocos::Logger::getInstance() << std::dec << message << "\n"
+#	define LOG_ERROR(message)			WkCocos::Logger::getInstance() << std::dec << message << "\n"
+#else //_DEBUG
+#	define LOG_INFO(message)
+#	define LOG_WARNING(message)
+#	define LOG_ERROR(message)
+#endif //_DEBUG
 
 #endif //__WKCOCOS_UTILS_LOGGER_H__

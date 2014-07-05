@@ -93,6 +93,30 @@ namespace WkCocos
 
 	}
 
+	Logger* Logger::_instance = nullptr;
+	
+	void Logger::create()
+	{
+		if (!_instance)
+		{
+			_instance = new Logger();
+		}
+	}
+
+	Logger& Logger::getInstance()
+	{
+		return *_instance;
+	}
+
+	void Logger::destroy()
+	{
+		if (_instance)
+		{
+			delete _instance;
+			_instance = nullptr;
+		}
+	}
+
 
 
 } // WkCocos
