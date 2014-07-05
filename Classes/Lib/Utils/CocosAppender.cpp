@@ -17,6 +17,7 @@ namespace WkCocos
 		_log = cocos2d::ui::ListView::create();
 		
 		// setup bg
+		bg->setTouchEnabled(false);
 		bg->setSize(cocos2d::Size(1920, 1080));
 		bg->setBackGroundColorType(cocos2d::ui::Layout::BackGroundColorType::SOLID);
 		bg->setBackGroundColor(cocos2d::Color3B(20, 20, 20));
@@ -25,6 +26,7 @@ namespace WkCocos
 		bg->addChild(_log);
 
 		// setup log
+		_log->setTouchEnabled(false);
 		_log->setItemModel(_model);
 		_log->setSize(cocos2d::Size(1920, 900));
 		_log->setSizePercent(cocos2d::Vec2(1.f, 0.9f));
