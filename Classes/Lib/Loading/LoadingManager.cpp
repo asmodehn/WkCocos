@@ -4,7 +4,9 @@
 #include "WkCocos/Loading/Systems/DataEval.h"
 #include "WkCocos/Loading/Systems/DLClisting.h"
 #include "WkCocos/Loading/Systems/DLCchecking.h"
-#include "WkCocos/Loading/Systems/Downloading.h"
+#include "WkCocos/Loading/Systems/MD5checking.h"
+#include "WkCocos/Loading/Systems/CurlDL.h"
+#include "WkCocos/Loading/Systems/DLvalidating.h"
 #include "WkCocos/Loading/Systems/Loading.h"
 #include "WkCocos/Loading/Systems/ProgressUpdate.h"
 
@@ -94,7 +96,9 @@ namespace WkCocos
 			system_manager->add<Systems::DataEval>();
 			system_manager->add<Systems::DLClisting>();
 			system_manager->add<Systems::DLCchecking>();
-			system_manager->add<Systems::Downloading>();
+			system_manager->add<Systems::MD5checking>();
+			system_manager->add<Systems::CurlDL>();
+			system_manager->add<Systems::DLvalidating>();
 			system_manager->add<Systems::ASyncLoading>(m_concurrent_loads);
 			system_manager->add<Systems::SyncLoading>();
 			system_manager->add<Systems::ProgressUpdate>(m_progress_callback);
@@ -121,8 +125,12 @@ namespace WkCocos
 			system_manager->update<Systems::DLClisting>(dt);
 			//listing files in one version on DLC
 			system_manager->update<Systems::DLCchecking>(dt);
-			//keep downloading the needed files
-			system_manager->update<Systems::Downloading>(dt);
+			//check MD5 of files existing and downloaded
+			system_manager->update<Systems::MD5checking>(dt);
+			//dot he curl calls when needed
+			system_manager->update<Systems::CurlDL>(dt);
+			//validates if signature matches
+			system_manager->update<Systems::DLvalidating>(dt);
 			//asynchronously load data
 			system_manager->update<Systems::ASyncLoading>(dt);
 			//synchronously load data
