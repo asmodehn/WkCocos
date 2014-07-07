@@ -35,10 +35,7 @@ public:
 	*/
 	void scheduleDLCCheck();
 
-	void error_CB()
-	{
-		CCLOGERROR("ERROR");
-	}
+	void error_CB();
 
 	//expects pct in [0..1]
 	void progress_CB(float pct);

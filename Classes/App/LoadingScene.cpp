@@ -2,6 +2,8 @@
 
 #include "WkCocosApp/LoadingUI.h"
 
+#include "WkCocosApp/ErrorUI.h"
+
 #include "WkCocosApp/HelloWorldScene.h"
 
 #include "ui/CocosGUI.h"
@@ -19,8 +21,8 @@ bool LoadingScene::init()
 		return false;
 	}
 
-	cocos2d::Size visibleSize = cocos2d::Director::getInstance()->getVisibleSize();
-	cocos2d::Vec2 origin = cocos2d::Director::getInstance()->getVisibleOrigin();
+	//cocos2d::Size visibleSize = cocos2d::Director::getInstance()->getVisibleSize();
+	//cocos2d::Vec2 origin = cocos2d::Director::getInstance()->getVisibleOrigin();
 
 	// add a layer
 	cocos2d::Layer* newLayer = cocos2d::Layer::create();
@@ -105,5 +107,23 @@ void LoadingScene::progress_CB(float pct)
 		m_loadDoneCB_called = true;
 		m_loadDoneCB();
 	}
+}
+
+void LoadingScene::error_CB()
+{
+	CCLOGERROR("ERROR");
+
+	//add a layer
+	cocos2d::Layer* newLayer = cocos2d::Layer::create();
+	addChild(newLayer);
+
+	//Error UI
+	ErrorUI* errorui = new ErrorUI();
+	auto errorroot = errorui->getRoot();
+	errorroot->setEnabled(true);
+	errorroot->setVisible(true);
+	newLayer->addChild(errorui->getRoot());
+	m_ui[ErrorUI::id] = errorui;
+
 }
 

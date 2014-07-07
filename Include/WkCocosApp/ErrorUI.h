@@ -24,8 +24,9 @@ public:
 	* Constructor
 	*/
 	virtual ~ErrorUI();
+
+	void refreshCallback(cocos2d::Ref* pSender);
 	
 };
-
 
 #endif // __ERRORUI_H__

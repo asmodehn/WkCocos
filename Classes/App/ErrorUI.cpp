@@ -5,6 +5,8 @@
 #include "cocos2d.h"
 #include "ui/CocosGUI.h"
 
+USING_NS_CC;
+
 const std::string ErrorUI::id = "error";
 
 ErrorUI::ErrorUI()
@@ -14,16 +16,26 @@ ErrorUI::ErrorUI()
 	m_filepath = id;
 
 	//building UI hierarchy
-	m_widget = cocos2d::ui::Layout::create();
+	m_widget = ui::Layout::create();
 
 	cocos2d::Size visibleSize = cocos2d::Director::getInstance()->getVisibleSize();
 
 	// position the label on the center of the screen
 
-	auto label = cocos2d::LabelTTF::create("ERROR", "Arial", 48);
-	label->setPosition(cocos2d::Vec2(visibleSize.width / 2, visibleSize.height / 2));
-	
+	auto label = LabelTTF::create("ERROR", "Arial", 48);
+	label->setPosition(Vec2(
+		visibleSize.width / 2,
+		(visibleSize.height + label->getContentSize().height) / 2));
 	m_widget->addChild(label);
+
+	auto refreshButton = MenuItemImage::create(
+		"RefreshNormal.png",
+		"RefreshSelected.png",
+		CC_CALLBACK_1(ErrorUI::refreshCallback, this));
+	refreshButton->setPosition(Vec2(
+		visibleSize.width / 2,
+		(visibleSize.height - refreshButton->getContentSize().height) / 2));
+	m_widget->addChild(refreshButton);
 		
 	if (m_widget)
 	{
@@ -36,3 +48,5 @@ ErrorUI::ErrorUI()
 ErrorUI::~ErrorUI()
 {}
 
+void ErrorUI::refreshCallback(Ref* pSender)
+{}
