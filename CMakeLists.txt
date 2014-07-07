@@ -42,12 +42,21 @@ WkTestDir ( "Tests" )
 WkDataDir ( "Resources")
 WkDocDir ( "Docs" )
 
+set(EVENT__DISABLE_BENCHMARK ON CACHE BOOL "Defines if libevent should build without the benchmark executables")
+set(EVENT__DISABLE_OPENSSL ON CACHE BOOL "Defines if libevent should build without support for OpenSSL encryption")
+set(EVENT__DISABLE_TESTS ON CACHE BOOL "Defines if tests should be compiled or not")
+
+add_subdirectory("depends/libevent")
+
+include_directories( "depends/libevent/include" "depends/libevent/WIN32-Code/nmake")
+
+
 add_subdirectory("depends/entityx")
 
 include_directories( "depends/entityx")
 
 # setting include directory for upper project to include it
-set( WkCocos_INCLUDE_DIRS ${WkCocos_INCLDE_DIRS} "depends/entityx")
+set( WkCocos_INCLUDE_DIRS ${WkCocos_INCLDE_DIRS} "depends/libevent/include" "depends/libevent/WIN32-Code/nmake" "depends/entityx")
 
 set(BUILD_CppTests OFF CACHE BOOL "CppTests option OFF by default")
 set(BUILD_EDITOR_COCOSBUILDER OFF CACHE BOOL "EDITOR_COCOSBUILDER option OFF by default")
@@ -258,6 +267,7 @@ if ( ${PROJECT_NAME} STREQUAL ${CMAKE_PROJECT_NAME} )
 	WkLibraryBuild(WkCocosApp "Classes/App")
 	target_link_libraries(WkCocosApp
 	  WkCocos
+	  event_core
 	  entityx
 	)
 
