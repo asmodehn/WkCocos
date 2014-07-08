@@ -29,7 +29,6 @@ namespace WkCocos
 
 				void *_curl;
 				unsigned int _connectionTimeout;
-				unsigned short _retries;
 
 				std::string m_manifest;
 

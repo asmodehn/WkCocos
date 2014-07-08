@@ -36,8 +36,6 @@ namespace WkCocos
 				//to share the same connection.
 				CURL* _curl;
 
-				unsigned short _retries;
-
 			};
 
 		}//namespace Systems

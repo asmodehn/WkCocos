@@ -57,6 +57,21 @@ namespace WkCocos
 				std::string m_path; //local path of the temp file
 			};
 
+			struct TempFileP : entityx::Component<TempFileP> {
+				TempFileP(FILE* fp)
+				: m_fp(fp)
+				{}
+
+				FILE* getFileP()
+				{
+					return m_fp;
+				}
+
+			private:
+
+				FILE* m_fp; //pointer to the temp file
+			};
+
 			struct TempMD5 : entityx::Component<TempMD5> {
 				TempMD5(std::string md5)
 				: m_md5(md5)
@@ -135,7 +150,40 @@ namespace WkCocos
 			};
 
 			//TODO : Component for Multi interface
+			//Component storing everything needed to Curl easy download
+			struct CurlMultiDL : entityx::Component<CurlMultiDL> {
+				CurlMultiDL(short retries = 3)
+				: m_retries(retries)
+				{
+				}
 
+				void setFileP(FILE* fp)
+				{
+					filep = fp;
+				}
+
+				FILE* getFileP()
+				{
+					return filep;
+				}
+
+				char* getErrorBuffer()
+				{
+					return m_errorbuf;
+				}
+
+				unsigned short consumeRetry(unsigned short num = 1)
+				{
+					m_retries -= num;
+					return m_retries;
+				}
+
+			private:
+
+				FILE* filep;
+				char m_errorbuf[CURL_ERROR_SIZE]; //buffer to hold curl error code
+				unsigned short m_retries; //number of retries allowed to download this URL
+			};
 
 		}//namespace Comp
 	}//namespace Loading

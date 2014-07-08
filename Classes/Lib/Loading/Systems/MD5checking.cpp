@@ -59,7 +59,15 @@ namespace WkCocos
 				entityx::ptr<Comp::TempFile> tmpfile;
 				for (auto entity : es->entities_with_components(tmpfile))
 				{
-					if (!entity.component<Comp::TempMD5>())
+					if (entity.component<Comp::CurlDL>())
+					{ //download is still on going, dont check yet
+						continue;
+					}
+					else if (entity.component<Comp::CurlMultiDL>())
+					{ //download is still on going, dont check yet
+						continue;
+					}
+					else if (!entity.component<Comp::TempMD5>())
 					{
 						std::string sig = computeMD5(tmpfile->getPath());
 

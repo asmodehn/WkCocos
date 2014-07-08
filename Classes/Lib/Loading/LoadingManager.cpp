@@ -5,6 +5,7 @@
 #include "WkCocos/Loading/Systems/DLClisting.h"
 #include "WkCocos/Loading/Systems/DLCchecking.h"
 #include "WkCocos/Loading/Systems/MD5checking.h"
+#include "WkCocos/Loading/Systems/CurlMultiDL.h"
 #include "WkCocos/Loading/Systems/CurlDL.h"
 #include "WkCocos/Loading/Systems/DLvalidating.h"
 #include "WkCocos/Loading/Systems/Loading.h"
@@ -18,10 +19,42 @@
 #include <climits>
 #include <vector>
 
+#include "event2/event.h"
+
+//Mutli Curl inspired from : http://curl.haxx.se/libcurl/c/hiperfifo.html
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+//#include <sys/time.h>
+#include <time.h>
+//#include <unistd.h>
+//#include <sys/poll.h>
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <errno.h>
+
+
 namespace WkCocos
 {
 	namespace Loading
 	{
+
+		LoadingManager::LoadingManager(int concurrent_loads,
+			std::function<void(float)> progress_callback,
+			std::function<void()> error_callback
+			)
+			: m_concurrent_loads(concurrent_loads)
+			, m_progress_callback(progress_callback)
+			, m_error_callback(error_callback)
+		{
+			curl_global_init(CURL_GLOBAL_DEFAULT);
+		}
+
+		LoadingManager::~LoadingManager()
+		{
+			curl_global_cleanup();
+		}
+
 		void LoadingManager::addDataDownload(const std::string json_manifest_filename)
 		{
 			cocos2d::Data manifest_data = cocos2d::FileUtils::getInstance()->getDataFromFile(json_manifest_filename);
@@ -97,6 +130,8 @@ namespace WkCocos
 			system_manager->add<Systems::DLClisting>();
 			system_manager->add<Systems::DLCchecking>();
 			system_manager->add<Systems::MD5checking>();
+			//system_manager->add<Systems::CurlMultiDL>();
+			//for now MultiDL take the place of DL
 			system_manager->add<Systems::CurlDL>();
 			system_manager->add<Systems::DLvalidating>();
 			system_manager->add<Systems::ASyncLoading>(m_concurrent_loads);
@@ -127,8 +162,12 @@ namespace WkCocos
 			system_manager->update<Systems::DLCchecking>(dt);
 			//check MD5 of files existing and downloaded
 			system_manager->update<Systems::MD5checking>(dt);
-			//dot he curl calls when needed
+			
+			//do the curl calls when needed
+			//for now MultiDL take the place of DL
+			//system_manager->update<Systems::CurlMultiDL>(dt);
 			system_manager->update<Systems::CurlDL>(dt);
+
 			//validates if signature matches
 			system_manager->update<Systems::DLvalidating>(dt);
 			//asynchronously load data
