@@ -130,9 +130,9 @@ namespace WkCocos
 			system_manager->add<Systems::DLClisting>();
 			system_manager->add<Systems::DLCchecking>();
 			system_manager->add<Systems::MD5checking>();
-			//system_manager->add<Systems::CurlMultiDL>();
+			system_manager->add<Systems::CurlMultiDL>();
 			//for now MultiDL take the place of DL
-			system_manager->add<Systems::CurlDL>();
+			//system_manager->add<Systems::CurlDL>();
 			system_manager->add<Systems::DLvalidating>();
 			system_manager->add<Systems::ASyncLoading>(m_concurrent_loads);
 			system_manager->add<Systems::SyncLoading>();
@@ -165,8 +165,8 @@ namespace WkCocos
 			
 			//do the curl calls when needed
 			//for now MultiDL take the place of DL
-			//system_manager->update<Systems::CurlMultiDL>(dt);
-			system_manager->update<Systems::CurlDL>(dt);
+			system_manager->update<Systems::CurlMultiDL>(dt);
+			//system_manager->update<Systems::CurlDL>(dt);
 
 			//validates if signature matches
 			system_manager->update<Systems::DLvalidating>(dt);

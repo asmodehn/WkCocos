@@ -31,17 +31,7 @@ namespace WkCocos
 
 				//CURL callbacks
 
-				//TODO : put this somewhere else ???
-				/* Information associated with a specific easy handle */
-				typedef struct _ConnInfo
-				{
-					CURL *easy;
-					char *url;
-					CurlMultiDL *global;
-					char error[CURL_ERROR_SIZE];
-				} ConnInfo;
-
-				//THAT TOO ??
+				// TODO : MOVE SOMEWHERE ELSE ??
 				/* Information associated with a specific socket */
 				typedef struct _SockInfo
 				{
@@ -53,8 +43,7 @@ namespace WkCocos
 					int evset;
 					CurlMultiDL *global;
 				} SockInfo;
-
-
+				
 
 				static int sock_cb(CURL *e, curl_socket_t s, int what, void *cbp, void *sockp);
 
@@ -63,6 +52,7 @@ namespace WkCocos
 				static void setsock(SockInfo*f, curl_socket_t s, CURL*e, int act, CurlMultiDL*g);
 
 				static void remsock(SockInfo *f);
+
 
 				static int multi_timer_cb(CURLM *multi, long timeout_ms, CurlMultiDL *lm);
 

@@ -140,7 +140,7 @@ namespace WkCocos
 						//we can actually register progress already, as this entity doesnt need to be downloaded :
 						entity.destroy();
 					}
-					else if (!entity.component<Comp::TempFile>()) //if we havent finished downloading it yet.
+					else if (!entity.component<Comp::CurlDL>() && !entity.component<Comp::TempFile>()) //if we havent finished downloading it yet.
 					{
 						// Create a file to save downloaded data.
 						const std::string outFileName = cocos2d::FileUtils::getInstance()->getWritablePath() + remotefile->getPath() + FILE_DL_EXT;
@@ -150,82 +150,70 @@ namespace WkCocos
 						//md5 will be checked on it before deciding to validate download or not.
 						entity.assign<Comp::TempFile>(outFileName);
 
-						//FILE *fp = WkCocos::ToolBox::FOpen(outFileName, "wb");
-						//if (!fp)
-						//{
-						//	CCLOG("can not create file %s", outFileName);
-						//
-						//	//signal error
-						//	events->emit<Events::Error>(entity);
-						//
-						//	//TMP
-						//	//we cannot do anything with this one : ignore it.
-						//	entity.destroy();
-						//}
-						//else
-						//{
-							if (!entity.component<Comp::CurlDL>())
-							{
+						if (!entity.component<Comp::CurlDL>())
+						{
 
-								//build full URL
-								std::string fullURL = remotefile->getURL() + "/" + remotefile->getPath();
+							//build full URL
+							std::string fullURL = remotefile->getURL() + "/" + remotefile->getPath();
 
-								// Download starts
-								auto dlfile = entity.assign<Comp::CurlDL>();
+							// Download starts
+							auto dlfile = entity.assign<Comp::CurlDL>();
 
-								//to pass the entity to the callback
-								EntityContainer entCont(entity,events);
+							//to pass the entity to the callback
+							EntityContainer entCont(entity,events);
 
-								CURLcode res;
-								curl_easy_setopt(_curl, CURLOPT_URL, fullURL.c_str());
+							CURLcode res;
+							curl_easy_setopt(_curl, CURLOPT_URL, fullURL.c_str());
 #ifdef _DEBUG
-								curl_easy_setopt(_curl, CURLOPT_VERBOSE, 1L);
+							curl_easy_setopt(_curl, CURLOPT_VERBOSE, 1L);
 #endif
-								curl_easy_setopt(_curl, CURLOPT_WRITEFUNCTION, download_file);
-								curl_easy_setopt(_curl, CURLOPT_WRITEDATA, &entCont);
-								//curl_easy_setopt(_curl, CURLOPT_ERRORBUFFER, dlfile->getErrorBuffer());
-								curl_easy_setopt(_curl, CURLOPT_NOSIGNAL, 1L);
-								curl_easy_setopt(_curl, CURLOPT_LOW_SPEED_LIMIT, LOW_SPEED_LIMIT);
-								curl_easy_setopt(_curl, CURLOPT_LOW_SPEED_TIME, LOW_SPEED_TIME);
+							curl_easy_setopt(_curl, CURLOPT_WRITEFUNCTION, download_file);
+							curl_easy_setopt(_curl, CURLOPT_WRITEDATA, &entCont);
+							//curl_easy_setopt(_curl, CURLOPT_ERRORBUFFER, dlfile->getErrorBuffer());
+							curl_easy_setopt(_curl, CURLOPT_NOSIGNAL, 1L);
+							curl_easy_setopt(_curl, CURLOPT_LOW_SPEED_LIMIT, LOW_SPEED_LIMIT);
+							curl_easy_setopt(_curl, CURLOPT_LOW_SPEED_TIME, LOW_SPEED_TIME);
 
-								res = curl_easy_perform(_curl);
-								//this is blocking...
+							res = curl_easy_perform(_curl);
+							//this is blocking...
 
-								//http://curl.haxx.se/libcurl/c/curl_easy_perform.html
-								if (CURLE_OK != res)
+							//http://curl.haxx.se/libcurl/c/curl_easy_perform.html
+							if (CURLE_OK != res)
+							{
+								unsigned short retries = dlfile->consumeRetry();
+								CCLOG("Downloading can not read from %s, error code is %s", fullURL, curlError(res));
+
+								//removing components to allow retry on next update
+								entity.remove<Comp::TempFile>();
+								entity.remove<Comp::CurlDL>();
+
+								if (0 >= retries)
 								{
-									unsigned short retries = dlfile->consumeRetry();
-									CCLOG("Downloading can not read from %s, error code is %s", fullURL, curlError(res));
-
-									if (0 >= retries)
-									{
-										CCLOGERROR("ERROR Downloading %s from %s. CANCELLING.", remotefile->getPath().c_str(), remotefile->getURL().c_str());
-										//signal error
-										events->emit<Events::Error>(entity);
-										//we give up on this entity
-										entity.destroy();
-									}
-								}
-								else
-								{
-									//download successfully finished.
-									entity.remove<Comp::CurlDL>();
-
-									auto tfp = entity.component<Comp::TempFileP>();
-									if (tfp && tfp->getFileP())
-									{
-										fclose(tfp->getFileP()); //close the temp file
-									}
-
+									CCLOGERROR("ERROR Downloading %s from %s. CANCELLING.", remotefile->getPath().c_str(), remotefile->getURL().c_str());
+									//signal error
+									events->emit<Events::Error>(entity);
+									//we give up on this entity
+									entity.destroy();
 								}
 							}
 							else
 							{
-								//a download was started and not finished properly.
-								//we shouldnt be here with synchronous curl.
+								//download successfully finished.
+								entity.remove<Comp::CurlMultiDL>();
+
+								auto tfp = entity.component<Comp::TempFileP>();
+								if (tfp && tfp->getFileP())
+								{
+									fclose(tfp->getFileP()); //close the temp file
+								}
+
 							}
-						//}
-						//fclose(fp);
+						}
+						else
+						{
+							//a download was started and not finished properly.
+							//we shouldnt be here with synchronous curl.
+						}
 
 						//exit this loop. one per update is enough
 						break;

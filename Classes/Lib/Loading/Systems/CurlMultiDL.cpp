@@ -23,6 +23,14 @@ namespace WkCocos
 			std::shared_ptr<struct event*> CurlMultiDL::s_timer_event;
 			std::shared_ptr<CURLM*> CurlMultiDL::s_multicurl;
 
+			//a simple container to pass entities to C-style callbacks
+			struct EntityContainer
+			{
+				EntityContainer(entityx::Entity e, entityx::ptr<entityx::EventManager> ev) : entity(e), events(ev) {}
+				entityx::Entity entity;
+				entityx::ptr<entityx::EventManager> events;
+			};
+
 			static size_t write_data(void *ptr, size_t size, size_t nmemb, void *userdata)
 			{
 				std::string * dirlist = (std::string*)userdata;
@@ -33,9 +41,53 @@ namespace WkCocos
 
 			static size_t download_file(void *ptr, size_t size, size_t nmemb, void *userdata)
 			{
-				FILE *fp = (FILE*)userdata;
-				size_t written = fwrite(ptr, size, nmemb, fp);
-				return written;
+				EntityContainer * econt = (EntityContainer*)userdata;
+				entityx::Entity entity = econt->entity;
+
+				if (!entity.valid())
+				{
+					return -1;
+				}
+
+				auto path = entity.component<Comp::TempFile>();
+				auto pointer = entity.component<Comp::TempFileP>();
+
+				FILE* fp;
+				if (path)
+				{
+					if (!pointer)
+					{
+						fp = fopen(path->getPath().c_str(), "wb");
+						if (!fp)
+						{
+							CCLOG("can not create file %s", path->getPath().c_str());
+
+							//signal error
+							econt->events->emit<Events::Error>(entity);
+
+							//TMP
+							//we cannot do anything more with this one : ignore it.
+							entity.destroy();
+
+							return -1;
+						}
+						else
+						{
+							entity.assign<Comp::TempFileP>(fp);
+						}
+					}
+					else
+					{
+						fp = pointer->getFileP();
+					}
+					size_t written = fwrite(ptr, size, nmemb, fp);
+					return written;
+				}
+				else
+				{
+					return -1;
+				}
+
 			}
 			
 			/* Clean up the SockInfo structure */
@@ -155,22 +207,65 @@ namespace WkCocos
 				char *eff_url;
 				CURLMsg *msg;
 				int msgs_left;
-				ConnInfo *conn;
+				EntityContainer* privdata;
 				CURL *easy;
 				CURLcode res;
 
 				fprintf(stdout, "REMAINING: %d\n", g->still_running);
-				while ((msg = curl_multi_info_read(*(g->multicurl), &msgs_left))) {
-					if (msg->msg == CURLMSG_DONE) {
+				while ((msg = curl_multi_info_read(*(g->multicurl), &msgs_left)))
+				{
+					if (msg->msg == CURLMSG_DONE)
+					{//download has terminated
 						easy = msg->easy_handle;
 						res = msg->data.result;
-						curl_easy_getinfo(easy, CURLINFO_PRIVATE, &conn);
+						curl_easy_getinfo(easy, CURLINFO_PRIVATE, &privdata);
+						entityx::Entity entity = privdata->entity;
+						if (!entity.valid())
+						{
+							//ERROR
+							//WHAT TODO ?
+						}
+
+						auto dlinfo = entity.component<Comp::CurlMultiDL>();
+						auto remotefile = entity.component<Comp::RemoteFile>();
+						
 						curl_easy_getinfo(easy, CURLINFO_EFFECTIVE_URL, &eff_url);
-						fprintf(stdout, "DONE: %s => (%d) %s\n", eff_url, res, conn->error);
+						fprintf(stdout, "DONE: %s => (%d) %s\n", eff_url, res, dlinfo->getErrorBuffer());
+
+						if (CURLE_OK != res)
+						{
+							unsigned short retries = dlinfo->consumeRetry();
+							CCLOG("Downloading can not read from %s, error code is %s", eff_url, curlError(res));
+
+							//removing tempfile to allow retry on next update
+							entity.remove<Comp::TempFile>();
+
+							if (0 >= retries)
+							{
+								CCLOGERROR("ERROR Downloading %s from %s. CANCELLING.", remotefile->getPath().c_str(), remotefile->getURL().c_str());
+								//signal error
+								privdata->events->emit<Events::Error>(entity);
+								//we give up on this entity
+								entity.destroy();
+							}
+						}
+						else
+						{
+							//download successfully finished.
+
+							auto tfp = entity.component<Comp::TempFileP>();
+							if (tfp && tfp->getFileP())
+							{
+								fclose(tfp->getFileP()); //close the temp file
+							}
+
+						}
+
+						entity.remove<Comp::CurlMultiDL>();
+
+						//we remove this handle from the multihandle. this transfer is done.
 						curl_multi_remove_handle(*(g->multicurl), easy);
-						free(conn->url);
-						curl_easy_cleanup(easy);
-						free(conn);
+
 					}
 				}
 			}
@@ -298,74 +393,42 @@ namespace WkCocos
 						const std::string outFileName = cocos2d::FileUtils::getInstance()->getWritablePath() + remotefile->getPath() + FILE_DL_EXT;
 						CCLOG("Downloading  %s...", remotefile->getPath().c_str());
 
-						FILE *fp = WkCocos::ToolBox::FOpen(outFileName, "wb");
-						if (!fp)
+						//register the temp file in entity.
+						//md5 will be checked on it before deciding to validate download or not.
+						entity.assign<Comp::TempFile>(outFileName);
+
+						if (!entity.component<Comp::CurlMultiDL>())
 						{
-							CCLOG("can not create file %s", outFileName);
+							//build full URL
+							std::string fullURL = remotefile->getURL() + "/" + remotefile->getPath();
 
-							//signal error
-							events->emit<Events::Error>(entity);
+							// Download starts
+							auto dlfile = entity.assign<Comp::CurlMultiDL>();
 
-							//TMP
-							//we cannot do anything with this one : ignore it.
-							entity.destroy();
+							//to pass the entity to the callback
+							EntityContainer entCont(entity, events);
+
+							CURLMcode res;
+							curl_easy_setopt(_curl, CURLOPT_URL, fullURL.c_str());
+#ifdef _DEBUG
+							curl_easy_setopt(_curl, CURLOPT_VERBOSE, 1L);
+#endif
+							curl_easy_setopt(_curl, CURLOPT_WRITEFUNCTION, download_file);
+							curl_easy_setopt(_curl, CURLOPT_WRITEDATA, &entCont);
+							curl_easy_setopt(_curl, CURLOPT_PRIVATE, &entCont);
+							//curl_easy_setopt(_curl, CURLOPT_ERRORBUFFER, dlfile->getErrorBuffer());
+							curl_easy_setopt(_curl, CURLOPT_NOSIGNAL, 1L);
+							curl_easy_setopt(_curl, CURLOPT_LOW_SPEED_LIMIT, LOW_SPEED_LIMIT);
+							curl_easy_setopt(_curl, CURLOPT_LOW_SPEED_TIME, LOW_SPEED_TIME);
+							fprintf(stdout, "Adding easy %p to multi %p (%s)\n", _curl,*multicurl, fullURL.c_str());
+							res = curl_multi_add_handle(*multicurl, _curl);
+							// Note that the add_handle() will set a time-out to trigger very soon so
+							// that the necessary socket_action() call will be called by this app
+
 						}
 						else
 						{
-							if (!entity.component<Comp::CurlMultiDL>())
-							{
-
-								//build full URL
-								std::string fullURL = remotefile->getURL() + "/" + remotefile->getPath();
-
-								// Download starts
-								auto dlfile = entity.assign<Comp::CurlMultiDL>();
-
-								dlfile->setFileP(fp);
-
-								CURLMcode res;
-								curl_easy_setopt(_curl, CURLOPT_URL, fullURL.c_str());
-#ifdef _DEBUG
-								curl_easy_setopt(_curl, CURLOPT_VERBOSE, 1L);
-#endif
-								curl_easy_setopt(_curl, CURLOPT_WRITEFUNCTION, download_file);
-								curl_easy_setopt(_curl, CURLOPT_WRITEDATA, fp);
-								curl_easy_setopt(_curl, CURLOPT_ERRORBUFFER, dlfile->getErrorBuffer());
-								curl_easy_setopt(_curl, CURLOPT_NOSIGNAL, 1L);
-								curl_easy_setopt(_curl, CURLOPT_LOW_SPEED_LIMIT, LOW_SPEED_LIMIT);
-								curl_easy_setopt(_curl, CURLOPT_LOW_SPEED_TIME, LOW_SPEED_TIME);
-								fprintf(stdout, "Adding easy %p to multi %p (%s)\n", _curl,*multicurl, fullURL.c_str());
-								res = curl_multi_add_handle(*multicurl, _curl);
-								// Note that the add_handle() will set a time-out to trigger very soon so
-								// that the necessary socket_action() call will be called by this app
-
-								/*
-								if (CURLE_OK != res)
-								{
-									unsigned short retries = dlfile->consumeRetry();
-									CCLOG("Downloading can not read from %s, error code is %s", fullURL, curlError(res));
-
-									if (0 >= retries)
-									{
-										CCLOGERROR("ERROR Downloading %s from %s. CANCELLING.", remotefile->getPath().c_str(), remotefile->getURL().c_str());
-										//signal error
-										events->emit<Events::Error>(entity);
-										//we give up on this entity
-										entity.destroy();
-									}
-								}
-								else
-								{
-									//register the temp file in entity.
-									//md5 will be checked on it before deciding to validate download or not.
-									entity.assign<Comp::TempFile>(outFileName);
-								}
-								*/
-							}
-							else
-							{
-								//a download was started and not finished properly.
-							}
+							//a download was started and not finished properly.
 						}
 
 						//exit this loop. one per update is enough

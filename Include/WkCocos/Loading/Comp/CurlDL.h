@@ -129,6 +129,7 @@ namespace WkCocos
 			struct CurlDL : entityx::Component<CurlDL> {
 				CurlDL( short retries = 3)
 				: m_retries(retries)
+				, m_errorbuf()
 				{
 				}
 				
@@ -154,6 +155,7 @@ namespace WkCocos
 			struct CurlMultiDL : entityx::Component<CurlMultiDL> {
 				CurlMultiDL(short retries = 3)
 				: m_retries(retries)
+				, m_errorbuf()
 				{
 				}
 
@@ -179,6 +181,10 @@ namespace WkCocos
 				}
 
 			private:
+
+				//from ConnInfo
+				CURL *easy;
+				CurlMultiDL *global;
 
 				FILE* filep;
 				char m_errorbuf[CURL_ERROR_SIZE]; //buffer to hold curl error code
