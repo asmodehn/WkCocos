@@ -181,7 +181,7 @@ namespace WkCocos
 							if (CURLE_OK != res)
 							{
 								unsigned short retries = dlfile->consumeRetry();
-								CCLOG("Downloading can not read from %s, error code is %s", fullURL, curlError(res));
+								CCLOG("Downloading can not read from %s, error code is %s", fullURL.c_str(), curlError(res).c_str());
 
 								//removing components to allow retry on next update
 								entity.remove<Comp::TempFile>();

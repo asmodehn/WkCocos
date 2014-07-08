@@ -133,18 +133,18 @@ namespace WkCocos
 				SockInfo *fdp = (SockInfo*)sockp;
 				const char *whatstr[] = { "none", "IN", "OUT", "INOUT", "REMOVE" };
 
-				fprintf(stdout, "socket callback: s=%d e=%p what=%s ", s, e, whatstr[what]);
+				CCLOG( "socket callback: s=%d e=%p what=%s ", s, e, whatstr[what]);
 				if (what == CURL_POLL_REMOVE) {
-					fprintf(stdout, "\n");
+					CCLOG( "\n");
 					remsock(fdp);
 				}
 				else {
 					if (!fdp) {
-						fprintf(stdout, "Adding data: %s\n", whatstr[what]);
+						CCLOG( "Adding data: %s\n", whatstr[what]);
 						addsock(s, e, what, g);
 					}
 					else {
-						fprintf(stdout,
+						CCLOG(
 							"Changing action from %s to %s\n",
 							whatstr[fdp->action], whatstr[what]);
 						setsock(fdp, s, e, what, g);
@@ -161,7 +161,7 @@ namespace WkCocos
 
 				timeout.tv_sec = timeout_ms / 1000;
 				timeout.tv_usec = (timeout_ms % 1000) * 1000;
-				fprintf(stdout, "multi_timer_cb: Setting timeout to %ld ms\n", timeout_ms);
+				CCLOG( "multi_timer_cb: Setting timeout to %ld ms\n", timeout_ms);
 				int timer_added = evtimer_add(*(cmdl->timer_event), &timeout);
 				return timer_added;
 			}
@@ -181,7 +181,7 @@ namespace WkCocos
 
 				check_multi_info(g);
 				if (g->still_running <= 0) {
-					fprintf(stdout, "last transfer done, kill timeout\n");
+					CCLOG("last transfer done, kill timeout\n");
 					if (evtimer_pending(*(g->timer_event), NULL)) {
 						evtimer_del(*(g->timer_event));
 					}
@@ -211,7 +211,7 @@ namespace WkCocos
 				CURL *easy;
 				CURLcode res;
 
-				fprintf(stdout, "REMAINING: %d\n", g->still_running);
+				CCLOG( "REMAINING: %d\n", g->still_running);
 				while ((msg = curl_multi_info_read(*(g->multicurl), &msgs_left)))
 				{
 					if (msg->msg == CURLMSG_DONE)
@@ -230,12 +230,12 @@ namespace WkCocos
 						auto remotefile = entity.component<Comp::RemoteFile>();
 						
 						curl_easy_getinfo(easy, CURLINFO_EFFECTIVE_URL, &eff_url);
-						fprintf(stdout, "DONE: %s => (%d) %s\n", eff_url, res, dlinfo->getErrorBuffer());
+						CCLOG( "DONE: %s => (%d) %s\n", eff_url, res, dlinfo->getErrorBuffer());
 
 						if (CURLE_OK != res)
 						{
 							unsigned short retries = dlinfo->consumeRetry();
-							CCLOG("Downloading can not read from %s, error code is %s", eff_url, curlError(res));
+							CCLOG("Downloading can not read from %s, error code is %s", eff_url, curlError(res).c_str());
 
 							//removing tempfile to allow retry on next update
 							entity.remove<Comp::TempFile>();
@@ -291,7 +291,7 @@ namespace WkCocos
 			void CurlMultiDL::mcode_or_die(const char *where, CURLMcode code)
 			{
 				if (CURLM_OK != code) {
-					fprintf(stdout, "ERROR: %s returns %s\n", where, curlError(code));
+					CCLOG( "ERROR: %s returns %s\n", where, curlError(code).c_str());
 					exit(code);
 				}
 			}
@@ -420,7 +420,7 @@ namespace WkCocos
 							curl_easy_setopt(_curl, CURLOPT_NOSIGNAL, 1L);
 							curl_easy_setopt(_curl, CURLOPT_LOW_SPEED_LIMIT, LOW_SPEED_LIMIT);
 							curl_easy_setopt(_curl, CURLOPT_LOW_SPEED_TIME, LOW_SPEED_TIME);
-							fprintf(stdout, "Adding easy %p to multi %p (%s)\n", _curl,*multicurl, fullURL.c_str());
+							CCLOG( "Adding easy %p to multi %p (%s)\n", _curl,*multicurl, fullURL.c_str());
 							res = curl_multi_add_handle(*multicurl, _curl);
 							// Note that the add_handle() will set a time-out to trigger very soon so
 							// that the necessary socket_action() call will be called by this app
