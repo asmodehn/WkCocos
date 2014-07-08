@@ -38,7 +38,16 @@ namespace WkCocos
 				std::string m_url;
 				unsigned short m_retries;
 			};
-			
+
+			struct DataDownload : entityx::Component<DataDownload> {
+				DataDownload(std::string url, std::string filepath, std::string hash, unsigned short retries = 3) : m_url(url), m_filepath(filepath), m_hash(hash), m_retries(retries) {}
+
+				std::string m_url;
+				std::string m_filepath;
+				std::string m_hash;
+				unsigned short m_retries;
+			};
+
 			struct DataLoad : entityx::Component<DataLoad> {
 				DataLoad(std::string filepath) : m_filepath(filepath) {}
 

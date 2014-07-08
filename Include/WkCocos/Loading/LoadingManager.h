@@ -6,8 +6,6 @@
 #include "entityx/entityx.h"
 #include "WkCocos/Loading/Events/Loaded.h"
 
-#include "curl/curl.h"
-
 namespace WkCocos 
 {
 	namespace Loading
@@ -22,9 +20,7 @@ namespace WkCocos
 					: m_concurrent_loads(concurrent_loads)
 					, m_progress_callback(progress_callback)
 					, m_error_callback(error_callback)
-				{
-					curl_global_init(CURL_GLOBAL_DEFAULT);
-				}
+				{}
 
 				//the assetsManager must be added to a scene to have its update called
 				void addDataDownload(const std::string json_manifest_filename);
@@ -33,11 +29,6 @@ namespace WkCocos
 				//DataLoad Event is sent when the load finishes.
 				bool addDataLoad(const std::vector<std::string> &  filepath);
 				
-				virtual ~LoadingManager()
-				{
-					curl_global_cleanup();
-				}
-
 			protected:
 				void configure() override;
 

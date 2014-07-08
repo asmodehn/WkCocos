@@ -18,7 +18,3 @@
 	path = tools/database
 	url = https://bitbucket.org/yuri-ash/database.git
 	branch = master
-[submodule "depends/libevent"]
-	path = depends/libevent
-	url = https://github.com/asmodehn/libevent
-	branch = master
