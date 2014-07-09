@@ -52,7 +52,7 @@ namespace WkCocos
 				{
 					if (!pointer)
 					{
-						fp = fopen(path->getPath().c_str(), "wb");
+						fp = ToolBox::FOpen(path->getPath().c_str(), "wb");
 						if (!fp)
 						{
 							CCLOG("can not create file %s", path->getPath().c_str());
