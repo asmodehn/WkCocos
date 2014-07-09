@@ -24,9 +24,12 @@ LOCAL_SRC_FILES := jni.cpp \
                    ../../../../../Classes/Lib/Loading/Systems/DataEval.cpp \
                    ../../../../../Classes/Lib/Loading/Systems/DLCchecking.cpp \
                    ../../../../../Classes/Lib/Loading/Systems/DLClisting.cpp \
-                   ../../../../../Classes/Lib/Loading/Systems/Downloading.cpp \
+                   ../../../../../Classes/Lib/Loading/Systems/DLvalidating.cpp \
+                   ../../../../../Classes/Lib/Loading/Systems/CurlDL.cpp \
+                   ../../../../../Classes/Lib/Loading/Systems/CurlMultiDL.cpp \
                    ../../../../../Classes/Lib/Loading/Systems/Error.cpp \
                    ../../../../../Classes/Lib/Loading/Systems/Loading.cpp \
+                   ../../../../../Classes/Lib/Loading/Systems/MD5checking.cpp \
                    ../../../../../Classes/Lib/Loading/Systems/ProgressUpdate.cpp
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../../../../Include
@@ -41,6 +44,7 @@ LOCAL_WHOLE_STATIC_LIBRARIES += cocosdenshion_static
 LOCAL_WHOLE_STATIC_LIBRARIES += cocostudio_static
 LOCAL_WHOLE_STATIC_LIBRARIES += cocos_network_static
 LOCAL_WHOLE_STATIC_LIBRARIES += cocos_extension_static
+LOCAL_WHOLE_STATIC_LIBRARIES += libevent2_static
 LOCAL_WHOLE_STATIC_LIBRARIES += entityx_static
 LOCAL_WHOLE_STATIC_LIBRARIES += app42SDK_static
 
@@ -54,6 +58,7 @@ $(call import-module,audio/android)
 $(call import-module,editor-support/cocostudio)
 $(call import-module,network)
 $(call import-module,extensions)
+$(call import-module,libevent)
 $(call import-module,entityx)
 $(call import-module,App42_Cocos2DX_SDK)
 

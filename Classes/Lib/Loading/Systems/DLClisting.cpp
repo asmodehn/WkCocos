@@ -56,7 +56,6 @@ namespace WkCocos
 			try
 			: _curl(nullptr)
 			, _connectionTimeout(0)
-			, _retries(3)
 			{
 				CCLOG("DLClisting Curl Init");
 				_curl = curl_easy_init();
