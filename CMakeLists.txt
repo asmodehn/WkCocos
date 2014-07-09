@@ -45,6 +45,8 @@ WkDocDir ( "Docs" )
 set(EVENT__DISABLE_BENCHMARK ON CACHE BOOL "Defines if libevent should build without the benchmark executables")
 set(EVENT__DISABLE_OPENSSL ON CACHE BOOL "Defines if libevent should build without support for OpenSSL encryption")
 set(EVENT__DISABLE_TESTS ON CACHE BOOL "Defines if tests should be compiled or not")
+set(EVENT__DISABLE_REGRESS ON CACHE BOOL "Defines if regress tests should be compiled or not")
+set(EVENT__DISABLE_SAMPLES ON CACHE BOOL "Defines if samples should be compiled or not")
 
 add_subdirectory("depends/libevent")
 
