@@ -29,6 +29,11 @@ namespace WkCocos
 				
 				virtual ~LoadingManager();
 
+				entityx::ptr<entityx::EventManager> getEventManager()
+				{
+					return event_manager;
+				}
+
 			protected:
 				void configure() override;
 
