@@ -1,7 +1,7 @@
 #include "WkCocosApp/LoadingUI.h"
 
 #include "WkCocosApp/LoadingScene.h"
-//#include "WkCocosApp/HelloWorldScene.h"
+#include "WkCocosApp/HelloWorldScene.h"
 
 #include "cocos2d.h"
 #include "ui/CocosGUI.h"
@@ -40,3 +40,4 @@ LoadingUI::LoadingUI()
 
 LoadingUI::~LoadingUI()
 {}
+

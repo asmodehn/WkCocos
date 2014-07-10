@@ -4,14 +4,12 @@
 
 #include "WkCocosApp/ErrorUI.h"
 
-//#include "WkCocosApp/HelloWorldScene.h"
+#include "WkCocosApp/HelloWorldScene.h"
 
 #include "ui/CocosGUI.h"
 
 #include <iostream>
 #include <numeric>
-
-USING_NS_CC;
 
 // on "init" you need to initialize your instance
 bool LoadingScene::init()
@@ -27,7 +25,7 @@ bool LoadingScene::init()
 	//cocos2d::Vec2 origin = cocos2d::Director::getInstance()->getVisibleOrigin();
 
 	// add a layer
-	Layer* newLayer = cocos2d::Layer::create();
+	cocos2d::Layer* newLayer = cocos2d::Layer::create();
 	addChild(newLayer);
 
 	//Load UI
@@ -36,14 +34,6 @@ bool LoadingScene::init()
 	loadui->getRoot()->setVisible(true);
 	newLayer->addChild(loadui->getRoot());
 	m_ui[LoadingUI::id] = loadui;
-
-	//Error UI
-	ErrorUI* errorui = new ErrorUI(&error_detected);
-	auto errorroot = errorui->getRoot();
-	newLayer->addChild(errorroot);
-	errorroot->setEnabled(false);
-	errorroot->setVisible(false);
-	m_ui[ErrorUI::id] = errorui;
 
 	m_loadingManager.start();
 
@@ -80,7 +70,7 @@ void LoadingScene::scheduleDLCCheck()
 void LoadingScene::update(float delta)
 {
 	//if callback was called, loading is finished.
-	if (!m_loadDoneCB_called && !error_detected)
+	if (!m_loadDoneCB_called)
 	{
 		m_loadingManager.step(delta);
 	}
@@ -97,8 +87,8 @@ void LoadingScene::progress_CB(float pct)
 		//cocos2d::ui::Widget* loadbarpnl = ui->getRoot()->getChildByName("PNL_LoadingBar");
 		//if (loadbarpnl)
 		//{
-			ui::Widget* loadbarw = ui->getRoot()->getChildByName("LoadingBar"); //loadbarpnl->getChildByName("LoadingBar");
-			ui::LoadingBar* loadbar = dynamic_cast<cocos2d::ui::LoadingBar*>(loadbarw);
+			cocos2d::ui::Widget* loadbarw = ui->getRoot()->getChildByName("LoadingBar"); //loadbarpnl->getChildByName("LoadingBar");
+			cocos2d::ui::LoadingBar* loadbar = dynamic_cast<cocos2d::ui::LoadingBar*>(loadbarw);
 
 			if (loadbar)
 			{
@@ -111,7 +101,7 @@ void LoadingScene::progress_CB(float pct)
 	{
 		//DOWNloading is finished.
 		//We should clean the pathCache that was computed before download
-		FileUtils::getInstance()->purgeCachedEntries();
+		cocos2d::FileUtils::getInstance()->purgeCachedEntries();
 
 		//loading finished. lets move on.
 		m_loadDoneCB_called = true;
@@ -124,15 +114,16 @@ void LoadingScene::error_CB()
 	CCLOGERROR("ERROR");
 
 	//add a layer
-	Layer* newLayer = Layer::create();
+	cocos2d::Layer* newLayer = cocos2d::Layer::create();
 	addChild(newLayer);
 
 	//Error UI
-	ErrorUI* errorui = getInterface<ErrorUI>(ErrorUI::id);
+	ErrorUI* errorui = new ErrorUI();
 	auto errorroot = errorui->getRoot();
 	errorroot->setEnabled(true);
 	errorroot->setVisible(true);
-
-	error_detected = true;
+	newLayer->addChild(errorui->getRoot());
+	m_ui[ErrorUI::id] = errorui;
 
 }
+
