@@ -72,11 +72,15 @@ namespace WkCocos
 				{
 					entityx::ptr<Comp::DataLoad> dataload = entity.component<Comp::DataLoad>();
 
-					//generate the appropriate loader component
-					chooseLoader(entity, dataload->getFilepath(), events);
+					//we need to wait for the file to be there ( might come with DLC), otherwise cocos loading will fail.
+					if (cocos2d::FileUtils::getInstance()->isFileExist(dataload->getFilepath()))
+					{
+						//generate the appropriate loader component
+						chooseLoader(entity, dataload->getFilepath(), events);
 
-					//remove the component we just processed
-					entity.remove<Comp::DataLoad>();
+						//remove the component we just processed
+						entity.remove<Comp::DataLoad>();
+					}
 
 				}
 

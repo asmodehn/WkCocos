@@ -67,32 +67,29 @@ namespace WkCocos
 			if (json.HasParseError()) {
 				CCLOG("GetParseError %s\n", json.GetParseError());
 			}
-				//"packageUrl" : "http://example.com/assets_manager/TestScene/",
-				//"remoteVersionUrl" : "http://example.com/assets_manager/TestScene/version.manifest",
-				//"remoteManifestUrl" : "http://example.com/assets_manager/TestScene/project.manifest",
-				//"version" : "1.0.0",
-				//"engineVersion" : "Cocos2d-JS 3.0 beta",
 
 			bool dlcEnable = cocostudio::DictionaryHelper::getInstance()->getBooleanValue_json(json, "dlcEnable", "error");
 			std::string dlcUrl = cocostudio::DictionaryHelper::getInstance()->getStringValue_json(json, "dlcUrl", "error");
-			//std::string packageUrl = cocostudio::DictionaryHelper::getInstance()->getStringValue_json(json,"packageUrl", "error") ;
-			//std::string remoteVersionUrl = cocostudio::DictionaryHelper::getInstance()->getStringValue_json(json, "remoteVersionUrl", "error");
-			//std::string remoteManifestUrl = cocostudio::DictionaryHelper::getInstance()->getStringValue_json(json, "remoteManifestUrl", "error");
 			std::string minAppVersion = cocostudio::DictionaryHelper::getInstance()->getStringValue_json(json, "minAppVersion", "error");
 			std::string version = cocostudio::DictionaryHelper::getInstance()->getStringValue_json(json, "version", 0);
-			//std::string engineVersion = cocostudio::DictionaryHelper::getInstance()->getStringValue_json(json, "engineVersion", "error");
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-			// If we can find "localhost". Replace it with emulator access to localhost.
-			dlcUrl.replace(dlcUrl.find("localhost"), 9, "10.0.2.2");
+			auto locahost = dlcUrl.find("localhost");
+			if ( std::string::npos != locahost)
+			{
+				// If we can find "localhost". Replace it with emulator access to localhost.
+				dlcUrl.replace(locahost, 9, "10.0.2.2");
+			}
 #endif
 				
-
+			CCLOG("dlcUrl : %s", dlcUrl.c_str());
+			CCLOG("minAppVersion : %s", minAppVersion.c_str());
+			CCLOG("version : %s",version.c_str());
 
 			unsigned long lver = 0;
 			try {
 				 lver = ToolBox::stoul(version);
-				CCLOG("Manifest version %u for DLC at %s ", lver, dlcUrl.c_str());
+				CCLOG("Manifest version %lu for DLC at %s ", lver, dlcUrl.c_str());
 			}
 			catch (std::out_of_range oor)
 			{
