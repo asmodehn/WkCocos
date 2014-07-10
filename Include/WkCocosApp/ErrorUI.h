@@ -21,7 +21,7 @@ public:
 	ErrorUI(bool *parentError);
 
 	/**
-	* Constructor
+	* Destructor
 	*/
 	virtual ~ErrorUI();
 
