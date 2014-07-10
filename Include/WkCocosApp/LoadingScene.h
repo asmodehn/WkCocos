@@ -40,11 +40,14 @@ public:
 	//expects pct in [0..1]
 	void progress_CB(float pct);
 
+	bool error_detected;
+
 protected:
 
 	LoadingScene()
 		: Scene()
 		, m_loadDoneCB_called(false)
+		, error_detected(false)
 		, m_loadDoneCB()
 		, DLCcheck(false)
 		, m_loadingManager(5,

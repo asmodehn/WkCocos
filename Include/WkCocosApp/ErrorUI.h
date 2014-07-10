@@ -18,15 +18,17 @@ public:
 	/**
 	* Default constructor
 	*/
-	ErrorUI();
+	ErrorUI(bool *parentError);
 
 	/**
 	* Destructor
 	*/
 	virtual ~ErrorUI();
 
+	bool * m_parentError;
+
 	void refreshCallback(cocos2d::Ref* pSender);
-	
+
 };
 
 #endif // __ERRORUI_H__

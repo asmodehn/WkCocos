@@ -1,6 +1,6 @@
 #include "WkCocosApp/ErrorUI.h"
 
-#include "WkCocosApp/HelloWorldScene.h"
+//#include "WkCocosApp/HelloWorldScene.h"
 
 #include "cocos2d.h"
 #include "ui/CocosGUI.h"
@@ -9,16 +9,13 @@ USING_NS_CC;
 
 const std::string ErrorUI::id = "error";
 
-ErrorUI::ErrorUI()
-	: Interface()
+ErrorUI::ErrorUI(bool *parentError)
+: Interface(), m_parentError(parentError)
 {
-	//filepath is the id for the preload memory ( not used here )
-	m_filepath = id;
-
 	//building UI hierarchy
 	m_widget = ui::Layout::create();
 
-	cocos2d::Size visibleSize = cocos2d::Director::getInstance()->getVisibleSize();
+	Size visibleSize = Director::getInstance()->getVisibleSize();
 
 	// position the label on the center of the screen
 
@@ -36,6 +33,10 @@ ErrorUI::ErrorUI()
 		visibleSize.width / 2,
 		(visibleSize.height - refreshButton->getContentSize().height) / 2));
 	m_widget->addChild(refreshButton);
+
+	//auto menu = Menu::create(refreshButton, NULL);
+	//menu->setPosition(Vec2::ZERO);
+	//m_widget->addChild(menu, 1);
 		
 	if (m_widget)
 	{
@@ -49,4 +50,6 @@ ErrorUI::~ErrorUI()
 {}
 
 void ErrorUI::refreshCallback(Ref* pSender)
-{}
+{
+	*m_parentError = true;
+}
