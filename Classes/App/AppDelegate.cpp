@@ -10,16 +10,18 @@ AppDelegate::AppDelegate()
 #if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
 	cocos2d::FileUtils::getInstance()->addSearchPath("Resources");
 #elif CC_TARGET_PLATFORM == CC_PLATFORM_LINUX
-	cocos2d::FileUtils::getInstance()->addSearchPath("Resources");
+	//somehow on linux the folder is not the folder where the app is run from (build/)
+	// but the folder where the exe is located (build/Tests).
+	cocos2d::FileUtils::getInstance()->addSearchPath("../Resources");
+#elif CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
 	//NOT NEEDED. COCOS DOES IT ALREADY.
-	//#elif CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
-	//		cocos2d::FileUtils::getInstance()->addSearchPath("assets");
+	//cocos2d::FileUtils::getInstance()->addSearchPath("assets");
 #endif
 
 
 }
 
-AppDelegate::~AppDelegate() 
+AppDelegate::~AppDelegate()
 {
 }
 

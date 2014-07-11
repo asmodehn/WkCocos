@@ -52,6 +52,8 @@ set( WkCocos_INCLUDE_DIRS ${WkCocos_INCLDE_DIRS} "depends/entityx")
 set(BUILD_CppTests OFF CACHE BOOL "CppTests option OFF by default")
 set(BUILD_EDITOR_COCOSBUILDER OFF CACHE BOOL "EDITOR_COCOSBUILDER option OFF by default")
 set(BUILD_EDITOR_SPINE OFF CACHE BOOL "EDITOR_SPINE option OFF by default")
+set(BUILD_LIBS_LUA OFF CACHE BOOL "BUILD_LIBS_LUA option OFF by default")
+set(BUILD_LuaTests OFF CACHE BOOL "BUILD_LuaTests option OFF by default")
 
 WkDepends("depends/cocos2d-x")
 
@@ -138,6 +140,7 @@ include_directories (
   ${COCOS2D_ROOT}/external/webp/include/linux
   ${COCOS2D_ROOT}/external/tinyxml2
   ${COCOS2D_ROOT}/external/unzip
+  ${COCOS2D_ROOT}/external/chipmunk/include/chipmunk
   ${COCOS2D_ROOT}/external/freetype2/include/linux
   ${COCOS2D_ROOT}/external/websockets/include/linux
   ${COCOS2D_ROOT}/external/spidermonkey/include/linux
