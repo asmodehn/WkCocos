@@ -61,8 +61,6 @@ namespace WkCocos
 				{
 					//Signal Error
 					events->emit<Events::Error>(entity);
-					//we cant do more with this entity. kill it.
-					entity.destroy();
 				}
 			}
 
