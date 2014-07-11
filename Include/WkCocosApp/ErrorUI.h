@@ -2,7 +2,7 @@
 #define __ERRORUI_H__
 
 #include "cocos2d.h"
-#include "cocostudio/CocoStudio.h"
+#include "ui/CocosGUI.h"
 
 #include "WkCocos/Interface.h"
 
@@ -27,7 +27,13 @@ public:
 
 	bool * m_parentError;
 
-	void refreshCallback(cocos2d::Ref* pSender);
+	void refreshCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input);
+
+	void activate();
+	void deactivate();
+
+protected:
+	cocos2d::ui::Button* m_refreshButton;
 
 };
 
