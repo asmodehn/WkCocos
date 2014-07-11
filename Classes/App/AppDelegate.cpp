@@ -8,12 +8,12 @@ AppDelegate::AppDelegate()
 {
 	//initializing search paths for different platforms
 #if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
-	cocos2d::FileUtils::getInstance()->addSearchPath("Resources");
+	FileUtils::getInstance()->addSearchPath("Resources");
 #elif CC_TARGET_PLATFORM == CC_PLATFORM_LINUX
-	cocos2d::FileUtils::getInstance()->addSearchPath("Resources");
+	FileUtils::getInstance()->addSearchPath("Resources");
 	//NOT NEEDED. COCOS DOES IT ALREADY.
 	//#elif CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
-	//		cocos2d::FileUtils::getInstance()->addSearchPath("assets");
+	//		FileUtils::getInstance()->addSearchPath("assets");
 #endif
 
 
@@ -45,8 +45,8 @@ bool AppDelegate::applicationDidFinishLaunching() {
 	loadscene->scheduleDLCCheck();
 
 	loadscene->setLoadDoneCallback([](){
-		auto director = cocos2d::Director::getInstance();
-		director->replaceScene(cocos2d::TransitionFade::create(1.0f, HelloWorld::createScene()));
+		auto director = Director::getInstance();
+		director->replaceScene(TransitionFade::create(1.0f, HelloWorld::createScene()));
 	});
 
 	//Initializing App42
@@ -54,7 +54,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 	WkCocos::App42::Login();
 
     // run
-	director->runWithScene(cocos2d::TransitionFade::create(1.0f, loadscene));
+	director->runWithScene(TransitionFade::create(1.0f, loadscene));
 
     return true;
 }

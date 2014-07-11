@@ -34,14 +34,10 @@ ErrorUI::ErrorUI(bool *parentError)
 		(visibleSize.height - refreshButton->getContentSize().height) / 2));
 	m_widget->addChild(refreshButton);
 
-	//auto menu = Menu::create(refreshButton, NULL);
-	//menu->setPosition(Vec2::ZERO);
-	//m_widget->addChild(menu, 1);
-		
 	if (m_widget)
 	{
 		m_widget->retain(); //we need to retain it in memory ( or cocos will drop it )
-		widget_cache.insert(std::pair<std::string, cocos2d::ui::Widget*>(id, m_widget));
+		widget_cache.insert(std::pair<std::string, ui::Widget*>(id, m_widget));
 	}
 
 }
