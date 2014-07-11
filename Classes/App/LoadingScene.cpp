@@ -26,21 +26,17 @@ bool LoadingScene::init()
 	//cocos2d::Size visibleSize = cocos2d::Director::getInstance()->getVisibleSize();
 	//cocos2d::Vec2 origin = cocos2d::Director::getInstance()->getVisibleOrigin();
 
-	// add a layer
-	Layer* newLayer = cocos2d::Layer::create();
-	addChild(newLayer);
-
 	//Load UI
 	LoadingUI* loadui = new LoadingUI();
 	loadui->getRoot()->setEnabled(true);
 	loadui->getRoot()->setVisible(true);
-	newLayer->addChild(loadui->getRoot());
+	addChild(loadui->getRoot());
 	m_ui[LoadingUI::id] = loadui;
 
 	//Error UI
 	ErrorUI* errorui = new ErrorUI(&error_detected);
 	auto errorroot = errorui->getRoot();
-	newLayer->addChild(errorroot);
+	addChild(errorroot);
 	errorroot->setEnabled(false);
 	errorroot->setVisible(false);
 	m_ui[ErrorUI::id] = errorui;
@@ -80,7 +76,7 @@ void LoadingScene::scheduleDLCCheck()
 void LoadingScene::update(float delta)
 {
 	//if callback was called, loading is finished.
-	if (!m_loadDoneCB_called && !error_detected)
+	if (!m_loadDoneCB_called)
 	{
 		m_loadingManager.step(delta);
 	}
@@ -123,16 +119,8 @@ void LoadingScene::error_CB()
 {
 	CCLOGERROR("ERROR");
 
-	//add a layer
-	Layer* newLayer = Layer::create();
-	addChild(newLayer);
-
 	//Error UI
 	ErrorUI* errorui = getInterface<ErrorUI>(ErrorUI::id);
-	auto errorroot = errorui->getRoot();
-	errorroot->setEnabled(true);
-	errorroot->setVisible(true);
-
-	error_detected = true;
+	errorui->activate();
 
 }

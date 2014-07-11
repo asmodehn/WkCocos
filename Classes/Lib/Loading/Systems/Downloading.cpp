@@ -104,8 +104,6 @@ namespace WkCocos
 							CCLOGERROR("ERROR Downloading %s from %s. CANCELLING.", dl->m_filepath.c_str(), dl->m_url.c_str());
 							//signal error
 							events->emit<Events::Error>(entity);
-							//we give up on this entity
-							entity.destroy();
 						} 
 					};
 
@@ -127,10 +125,6 @@ namespace WkCocos
 
 							//signal error
 							events->emit<Events::Error>(entity);
-
-							//TMP
-							//we cannot do anything with this one : ignore it.
-							entity.destroy();
 						}
 						else
 						{
@@ -187,16 +181,18 @@ namespace WkCocos
 								if (0 != rename(outFileName.c_str(), finalFileName.c_str()))
 								{
 									CCLOG("error renaming %s to %s", outFileName.c_str(), fileurl.c_str());
+									events->emit<Events::Error>(entity);
 								}
-								CCLOG("succeed downloading package %s", fileurl.c_str());
+								else
+								{
+									CCLOG("succeed downloading package %s", fileurl.c_str());
 
-								//we dont need to register the new files in manifest,
-								//because we compute locally the md5 before deciding to download or not
-								//=> If the file is at the expeted place with proper signature, download will not happen again.
+									//we dont need to register the new files in manifest,
+									//because we compute locally the md5 before deciding to download or not
+									//=> If the file is at the expeted place with proper signature, download will not happen again.
 
-
-
-								entity.destroy();
+									entity.destroy();
+								}
 							}
 						}
 

@@ -25,14 +25,16 @@ ErrorUI::ErrorUI(bool *parentError)
 		(visibleSize.height + label->getContentSize().height) / 2));
 	m_widget->addChild(label);
 
-	auto refreshButton = MenuItemImage::create(
+	m_refreshButton = cocos2d::ui::Button::create(
 		"RefreshNormal.png",
 		"RefreshSelected.png",
-		CC_CALLBACK_1(ErrorUI::refreshCallback, this));
-	refreshButton->setPosition(Vec2(
+		"RefreshNormal.png"
+	);
+	m_refreshButton->addTouchEventListener(CC_CALLBACK_2(ErrorUI::refreshCallback, this));
+	m_refreshButton->setPosition(Vec2(
 		visibleSize.width / 2,
-		(visibleSize.height - refreshButton->getContentSize().height) / 2));
-	m_widget->addChild(refreshButton);
+		(visibleSize.height - m_refreshButton->getContentSize().height) / 2));
+	m_widget->addChild(m_refreshButton);
 
 	if (m_widget)
 	{
@@ -42,10 +44,26 @@ ErrorUI::ErrorUI(bool *parentError)
 
 }
 
+void ErrorUI::activate()
+{
+	m_widget->setVisible(true);
+	m_widget->setEnabled(true);
+}
+
+void ErrorUI::deactivate()
+{
+	m_widget->setVisible(false);
+	m_widget->setEnabled(false);
+}
+
+
 ErrorUI::~ErrorUI()
 {}
 
-void ErrorUI::refreshCallback(Ref* pSender)
+void ErrorUI::refreshCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input)
 {
-	*m_parentError = true;
+	if (input == cocos2d::ui::Widget::TouchEventType::ENDED)
+	{
+		*m_parentError = true;
+	}
 }

@@ -90,6 +90,7 @@ namespace WkCocos
 
 		void LoadingManager::configure()
 		{
+			event_manager->subscribe<Events::Error>(*this);
 			system_manager->add<Systems::Error>(m_error_callback);
 			system_manager->add<Systems::DataEval>();
 			system_manager->add<Systems::DLClisting>();
@@ -115,21 +116,27 @@ namespace WkCocos
 
 			//check for error and report them if needed
 			system_manager->update<Systems::Error>(dt);
-			//evaluate entities containing DataLoad components
-			system_manager->update<Systems::DataEval>(dt);
-			//listing versions avialable on DLC
-			system_manager->update<Systems::DLClisting>(dt);
-			//listing files in one version on DLC
-			system_manager->update<Systems::DLCchecking>(dt);
-			//keep downloading the needed files
-			system_manager->update<Systems::Downloading>(dt);
-			//asynchronously load data
-			system_manager->update<Systems::ASyncLoading>(dt);
-			//synchronously load data
-			system_manager->update<Systems::SyncLoading>(dt);
 
-			//display the progress
-			system_manager->update<Systems::ProgressUpdate>(dt);
+			//if there is error, we do not want to update systems anymore
+			//if systems need to do something on error, they should receive the event and implement the proper behavior
+			if (!m_error_detected)
+			{
+				//evaluate entities containing DataLoad components
+				system_manager->update<Systems::DataEval>(dt);
+				//listing versions avialable on DLC
+				system_manager->update<Systems::DLClisting>(dt);
+				//listing files in one version on DLC
+				system_manager->update<Systems::DLCchecking>(dt);
+				//keep downloading the needed files
+				system_manager->update<Systems::Downloading>(dt);
+				//asynchronously load data
+				system_manager->update<Systems::ASyncLoading>(dt);
+				//synchronously load data
+				system_manager->update<Systems::SyncLoading>(dt);
+
+				//display the progress
+				system_manager->update<Systems::ProgressUpdate>(dt);
+			}
 
 		}
 			
