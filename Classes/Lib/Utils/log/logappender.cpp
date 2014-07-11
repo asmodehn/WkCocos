@@ -1,5 +1,7 @@
 #include "WkCocos/Utils/log/logappender.h"
 
+#include <stdexcept>
+
 namespace WkCocos
 {
 
@@ -46,11 +48,13 @@ namespace WkCocos
 	
 	LogAppender& FileLogAppender::operator << (const LogStream & msg)
 	{
-		if (_stream.tellp() > 1000)
+		if (_ofstr.is_open())
 		{
-			_ofstr << _stream;
+			if (_stream.tellp() > 1000)
+			{
+				_ofstr << _stream;
+			}
 		}
-
 		return *this;
 	}
 	

@@ -13,7 +13,15 @@ LOCAL_SRC_FILES := jni.cpp \
                    ../../../../../Classes/Lib/Save/Local.cpp \
                    ../../../../../Classes/Lib/Save/Online.cpp \
                    ../../../../../Classes/Lib/App42/Setup.cpp \
-                   ../../../../../Classes/Lib/App42/Login.cpp
+                   ../../../../../Classes/Lib/App42/Login.cpp\
+                   ../../../../../Classes/Lib/Utils/CocosAppender.cpp\
+                   ../../../../../Classes/Lib/Utils/Logger.cpp\
+                   ../../../../../Classes/Lib/Utils/log/logappender.cpp\
+                   ../../../../../Classes/Lib/Utils/log/loglevel.cpp\
+                   ../../../../../Classes/Lib/Utils/log/logstream.cpp\
+                   ../../../../../Classes/Lib/Utils/log/logstreambuf.cpp\
+                   ../../../../../Classes/Lib/Utils/log/nullstream.cpp\
+                   ../../../../../Classes/Lib/Utils/log/nullstreambuf.cpp
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../../../../Include
 

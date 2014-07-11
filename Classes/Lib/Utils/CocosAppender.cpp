@@ -116,4 +116,19 @@ namespace WkCocos
 		}
 	}
 
+	CCocosLogAppender::CCocosLogAppender()
+	{}
+	
+	CCocosLogAppender::~CCocosLogAppender()
+	{}
+	
+	LogAppender& CCocosLogAppender::operator << (const LogStream & msg)
+	{
+		std::stringstream str;
+		str << msg;
+		CCLOG("%s", str.str().c_str());
+
+		return *this;
+	}
+
 }//namespace WkCocos
