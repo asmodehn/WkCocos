@@ -34,7 +34,7 @@ bool LoadingScene::init()
 	m_ui[LoadingUI::id] = loadui;
 
 	//Error UI
-	ErrorUI* errorui = new ErrorUI(&error_detected);
+	ErrorUI* errorui = new ErrorUI();
 	auto errorroot = errorui->getRoot();
 	addChild(errorroot);
 	errorroot->setEnabled(false);
@@ -94,7 +94,7 @@ void LoadingScene::progress_CB(float pct)
 		//if (loadbarpnl)
 		//{
 			ui::Widget* loadbarw = ui->getRoot()->getChildByName("LoadingBar"); //loadbarpnl->getChildByName("LoadingBar");
-			ui::LoadingBar* loadbar = dynamic_cast<cocos2d::ui::LoadingBar*>(loadbarw);
+			ui::LoadingBar* loadbar = dynamic_cast<ui::LoadingBar*>(loadbarw);
 
 			if (loadbar)
 			{

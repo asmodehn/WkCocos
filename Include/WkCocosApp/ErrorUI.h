@@ -18,14 +18,12 @@ public:
 	/**
 	* Default constructor
 	*/
-	ErrorUI(bool *parentError);
+	ErrorUI();
 
 	/**
 	* Destructor
 	*/
 	virtual ~ErrorUI();
-
-	bool * m_parentError;
 
 	void refreshCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input);
 

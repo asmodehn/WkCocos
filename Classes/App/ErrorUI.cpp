@@ -9,8 +9,7 @@ USING_NS_CC;
 
 const std::string ErrorUI::id = "error";
 
-ErrorUI::ErrorUI(bool *parentError)
-: Interface(), m_parentError(parentError)
+ErrorUI::ErrorUI() : Interface()
 {
 	//building UI hierarchy
 	m_widget = ui::Layout::create();
@@ -25,10 +24,10 @@ ErrorUI::ErrorUI(bool *parentError)
 		(visibleSize.height + label->getContentSize().height) / 2));
 	m_widget->addChild(label);
 
-	m_refreshButton = cocos2d::ui::Button::create(
+	m_refreshButton = ui::Button::create(
 		"RefreshNormal.png",
-		"RefreshSelected.png",
-		"RefreshNormal.png"
+		"RefreshSelected.png"/*,
+		"RefreshNormal.png"*/
 	);
 	m_refreshButton->addTouchEventListener(CC_CALLBACK_2(ErrorUI::refreshCallback, this));
 	m_refreshButton->setPosition(Vec2(
@@ -60,10 +59,10 @@ void ErrorUI::deactivate()
 ErrorUI::~ErrorUI()
 {}
 
-void ErrorUI::refreshCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input)
+void ErrorUI::refreshCallback(Ref* widgetRef, ui::Widget::TouchEventType input)
 {
-	if (input == cocos2d::ui::Widget::TouchEventType::ENDED)
+	if (input == ui::Widget::TouchEventType::ENDED)
 	{
-		*m_parentError = true;
+		//
 	}
 }
