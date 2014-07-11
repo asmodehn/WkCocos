@@ -3,9 +3,6 @@
 
 #include "entityx/entityx.h"
 
-#define LOW_SPEED_LIMIT 1L
-#define LOW_SPEED_TIME 5L
-
 #define FILE_DL_EXT ".dlding"
 
 #include "curl/curl.h"
@@ -24,18 +21,19 @@ namespace WkCocos
 			*/
 			struct CurlDL : public entityx::System<CurlDL>
 			{
-				static std::string curlError(int code);
-
-				CurlDL();
+				CurlDL(unsigned short concurrent_dl = 1);
 
 				~CurlDL();
 
 				void update(entityx::ptr<entityx::EntityManager> es, entityx::ptr<entityx::EventManager> events, double dt) override;
 
-				//One Curl handle per system allows all downloads done by this system
-				//to share the same connection.
-				CURL* _curl;
+			protected:
 
+				//curl shared settings
+				CURLSH* _curl_share;
+
+				unsigned short m_concurrent_dl;
+				unsigned short m_concurrent_dl_max;
 			};
 
 		}//namespace Systems

@@ -3,6 +3,7 @@
 
 #include "WkCocos/Loading/Comp/DataLoad.h"
 #include "WkCocos/Loading/Comp/ProgressValue.h"
+#include "WkCocos/Loading/Comp/FileMD5.h"
 #include "WkCocos/Loading/Comp/CurlDL.h"
 
 #include "WkCocos/Utils/ToolBox.h"

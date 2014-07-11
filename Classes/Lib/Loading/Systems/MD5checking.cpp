@@ -63,10 +63,6 @@ namespace WkCocos
 					{ //download is still on going, dont check yet
 						continue;
 					}
-					else if (entity.component<Comp::CurlMultiDL>())
-					{ //download is still on going, dont check yet
-						continue;
-					}
 					else if (!entity.component<Comp::TempMD5>())
 					{
 						std::string sig = computeMD5(tmpfile->getPath());

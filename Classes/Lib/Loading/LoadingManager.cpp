@@ -5,7 +5,6 @@
 #include "WkCocos/Loading/Systems/DLClisting.h"
 #include "WkCocos/Loading/Systems/DLCchecking.h"
 #include "WkCocos/Loading/Systems/MD5checking.h"
-#include "WkCocos/Loading/Systems/CurlMultiDL.h"
 #include "WkCocos/Loading/Systems/CurlDL.h"
 #include "WkCocos/Loading/Systems/DLvalidating.h"
 #include "WkCocos/Loading/Systems/Loading.h"
@@ -16,34 +15,20 @@
 
 #include "WkCocos/Utils/ToolBox.h"
 
-#include <climits>
-#include <vector>
-
-#include "event2/event.h"
-
-//Mutli Curl inspired from : http://curl.haxx.se/libcurl/c/hiperfifo.html
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-//#include <sys/time.h>
-#include <time.h>
-//#include <unistd.h>
-//#include <sys/poll.h>
-#include <fcntl.h>
-#include <sys/stat.h>
-#include <errno.h>
-
+#include <functional>
 
 namespace WkCocos
 {
 	namespace Loading
 	{
 
-		LoadingManager::LoadingManager(int concurrent_loads,
+		LoadingManager::LoadingManager(unsigned short  concurrent_downloads,
+			unsigned short  concurrent_loads,
 			std::function<void(float)> progress_callback,
 			std::function<void()> error_callback
 			)
-			: m_concurrent_loads(concurrent_loads)
+			: m_concurrent_downloads(concurrent_downloads)
+			, m_concurrent_loads(concurrent_loads)
 			, m_progress_callback(progress_callback)
 			, m_error_callback(error_callback)
 		{
@@ -127,9 +112,8 @@ namespace WkCocos
 			system_manager->add<Systems::DLClisting>();
 			system_manager->add<Systems::DLCchecking>();
 			system_manager->add<Systems::MD5checking>();
-			system_manager->add<Systems::CurlMultiDL>();
-			//for now MultiDL take the place of DL
-			//system_manager->add<Systems::CurlDL>();
+			//system_manager->add<Systems::CurlMultiDL>(m_concurrent_downloads);
+			system_manager->add<Systems::CurlDL>(m_concurrent_downloads);
 			system_manager->add<Systems::DLvalidating>();
 			system_manager->add<Systems::ASyncLoading>(m_concurrent_loads);
 			system_manager->add<Systems::SyncLoading>();
@@ -161,9 +145,8 @@ namespace WkCocos
 			system_manager->update<Systems::MD5checking>(dt);
 			
 			//do the curl calls when needed
-			//for now MultiDL take the place of DL
-			system_manager->update<Systems::CurlMultiDL>(dt);
-			//system_manager->update<Systems::CurlDL>(dt);
+			//system_manager->update<Systems::CurlMultiDL>(dt);
+			system_manager->update<Systems::CurlDL>(dt);
 
 			//validates if signature matches
 			system_manager->update<Systems::DLvalidating>(dt);

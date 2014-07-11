@@ -14,10 +14,6 @@
 	path = depends/entityx
 	url = git://github.com/asmodehn/entityx.git
 	branch = master
-[submodule "depends/libevent"]
-	path = depends/libevent
-	url = git://github.com/asmodehn/libevent.git
-	branch = master
 [submodule "tools/database"]
 	path = tools/database
 	url = https://bitbucket.org/yuri-ash/database.git
