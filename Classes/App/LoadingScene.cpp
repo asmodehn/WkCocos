@@ -106,4 +106,3 @@ void LoadingScene::progress_CB(float pct)
 		m_loadDoneCB();
 	}
 }
-

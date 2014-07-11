@@ -50,7 +50,7 @@ protected:
 		, m_loadDoneCB_called(false)
 		, m_loadDoneCB()
 		, DLCcheck(false)
-		, m_loadingManager(5,
+		, m_loadingManager(5,1,
 		std::bind(&LoadingScene::progress_CB, this, std::placeholders::_1),
 		std::bind(&LoadingScene::error_CB, this)
 		)
