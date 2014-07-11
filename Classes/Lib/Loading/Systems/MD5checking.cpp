@@ -20,21 +20,24 @@ namespace WkCocos
 				std::string current_md5 = "";
 
 				//CCLOG(" CHECKING MD5 for %s", filepath.c_str());
-				cocos2d::Data filedata = cocos2d::FileUtils::getInstance()->getDataFromFile(filepath.c_str());
-
-				if (!filedata.isNull()) //read successful
+				if (cocos2d::FileUtils::getInstance()->isFileExist(filepath.c_str()))
 				{
-					unsigned char hashbuffer[Crypto::MD5_BUFFER_LENGTH];
-					Crypto::MD5((void*)filedata.getBytes(), filedata.getSize(), hashbuffer);
-					//converting to string with hex
-					std::stringstream ss;
-					ss << std::hex << std::setfill('0');
-					for (int i = 0; i < sizeof(hashbuffer); ++i)
+					cocos2d::Data filedata = cocos2d::FileUtils::getInstance()->getDataFromFile(filepath.c_str());
+
+					if (!filedata.isNull()) //read successful
 					{
-						ss << std::setw(2) << static_cast<unsigned int>(hashbuffer[i]);
+						unsigned char hashbuffer[Crypto::MD5_BUFFER_LENGTH];
+						Crypto::MD5((void*)filedata.getBytes(), filedata.getSize(), hashbuffer);
+						//converting to string with hex
+						std::stringstream ss;
+						ss << std::hex << std::setfill('0');
+						for (int i = 0; i < sizeof(hashbuffer); ++i)
+						{
+							ss << std::setw(2) << static_cast<unsigned int>(hashbuffer[i]);
+						}
+						current_md5 = ss.str();
+						//std::cout << filepath << " : " << current_md5 << std::endl;
 					}
-					current_md5 = ss.str();
-					//std::cout << filepath << " : " << current_md5 << std::endl;
 				}
 				return current_md5;
 			}

@@ -29,6 +29,7 @@ namespace WkCocos
 				, m_path(path)
 				, m_fp(nullptr)
 				{
+					CCLOG("Initializing curl easy handle for %s ...", m_url.c_str());
 					m_easy_handle = curl_easy_init();
 
 					if (share_handle)
@@ -46,12 +47,14 @@ namespace WkCocos
 					curl_easy_setopt(m_easy_handle, CURLOPT_LOW_SPEED_LIMIT, LOW_SPEED_LIMIT);
 					curl_easy_setopt(m_easy_handle, CURLOPT_LOW_SPEED_TIME, LOW_SPEED_TIME);
 
-					m_future = std::async([&]() -> CURLcode {
+					//we need to force async launch behavior here ( the default is deferred on android it seems )
+					m_future = std::async(std::launch::async,[&]() -> CURLcode {
 						CURLcode errcode;
 						char* eff_url;
 						curl_easy_getinfo(m_easy_handle, CURLINFO_EFFECTIVE_URL, &eff_url);
 						do
 						{
+							CCLOG("Downloading %s ...", eff_url);
 							errcode = curl_easy_perform(m_easy_handle);
 							if (CURLE_OK != errcode)
 							{
@@ -74,7 +77,7 @@ namespace WkCocos
 					curl_easy_cleanup(m_easy_handle);
 				}
 
-				std::string CurlDL::curlError(int code)
+				std::string curlError(int code)
 				{
 					std::string s;
 					switch (code) {
@@ -91,7 +94,7 @@ namespace WkCocos
 					return s;
 				}
 
-				static size_t CurlDL::download_file(void *ptr, size_t size, size_t nmemb, void *userdata)
+				static size_t download_file(void *ptr, size_t size, size_t nmemb, void *userdata)
 				{
 					CurlDL * instance = (CurlDL*)userdata;
 					if (instance)
@@ -105,6 +108,7 @@ namespace WkCocos
 								return -1;
 							}
 						}
+						//CCLOG("Writing %d bytes into %p", size*nmemb, instance->m_fp);
 						size_t written = fwrite(ptr, size, nmemb, instance->m_fp);
 						return written;
 					}

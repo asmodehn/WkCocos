@@ -26,7 +26,6 @@ LOCAL_SRC_FILES := jni.cpp \
                    ../../../../../Classes/Lib/Loading/Systems/DLClisting.cpp \
                    ../../../../../Classes/Lib/Loading/Systems/DLvalidating.cpp \
                    ../../../../../Classes/Lib/Loading/Systems/CurlDL.cpp \
-                   ../../../../../Classes/Lib/Loading/Systems/CurlMultiDL.cpp \
                    ../../../../../Classes/Lib/Loading/Systems/Error.cpp \
                    ../../../../../Classes/Lib/Loading/Systems/Loading.cpp \
                    ../../../../../Classes/Lib/Loading/Systems/MD5checking.cpp \
