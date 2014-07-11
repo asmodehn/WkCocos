@@ -1,4 +1,5 @@
 #include "WkCocosApp/AppDelegate.h"
+#include "WkCocosApp/LoadingScene.h"
 #include "WkCocosApp/HelloWorldScene.h"
 
 USING_NS_CC;
@@ -9,16 +10,18 @@ AppDelegate::AppDelegate()
 #if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
 	cocos2d::FileUtils::getInstance()->addSearchPath("Resources");
 #elif CC_TARGET_PLATFORM == CC_PLATFORM_LINUX
-	cocos2d::FileUtils::getInstance()->addSearchPath("Resources");
+	//somehow on linux the folder is not the folder where the app is run from (build/)
+	// but the folder where the exe is located (build/Tests).
+	cocos2d::FileUtils::getInstance()->addSearchPath("../Resources");
+#elif CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
 	//NOT NEEDED. COCOS DOES IT ALREADY.
-	//#elif CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
-	//		cocos2d::FileUtils::getInstance()->addSearchPath("assets");
+	//cocos2d::FileUtils::getInstance()->addSearchPath("assets");
 #endif
 
 
 }
 
-AppDelegate::~AppDelegate() 
+AppDelegate::~AppDelegate()
 {
 }
 
@@ -39,14 +42,21 @@ bool AppDelegate::applicationDidFinishLaunching() {
     director->setAnimationInterval(1.0 / 60);
 
     // create a scene. it's an autorelease object
-    auto scene = HelloWorld::createScene();
+    LoadingScene* loadscene = LoadingScene::create();
+
+	loadscene->scheduleDLCCheck();
+
+	loadscene->setLoadDoneCallback([](){
+		auto director = cocos2d::Director::getInstance();
+		director->replaceScene(cocos2d::TransitionFade::create(1.0f, HelloWorld::createScene()));
+	});
 
 	//Initializing App42
 	WkCocos::App42::Setup("3a3579d378cdf38a29e7dd80ec20dc15fc2a19a6959bcfc1ea353885a1802f86", "89ff08c30c0f3d15e5b571d2b3a90fd80401a756cb7f3620cfc625756421ee35");
 	WkCocos::App42::Login();
 
     // run
-    director->runWithScene(scene);
+	director->runWithScene(cocos2d::TransitionFade::create(1.0f, loadscene));
 
     return true;
 }

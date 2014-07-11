@@ -1,0 +1,9 @@
+{
+    "dlcEnable": true,
+    "dlcUrl": "http://localhost:8080",
+    "minAppVersion": "0.1",
+    "searchPaths": [
+        "res/"
+    ],
+    "version": "42"
+}

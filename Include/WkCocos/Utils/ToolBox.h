@@ -29,6 +29,11 @@ namespace WkCocos
 		*/
 		static FILE* FOpen(std::string name, std::string mode);
 
+		/**
+		* Implementation ( from VS C++ ) of std::stoul for Android, who doesnt have it ( no C99 function )
+		*/
+		static unsigned long stoul(const std::string& _Str, size_t *_Idx = 0, int _Base = 10);
+
 	private:
 		/**
 		* Default constructor.
