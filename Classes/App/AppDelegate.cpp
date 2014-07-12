@@ -8,18 +8,20 @@ AppDelegate::AppDelegate()
 {
 	//initializing search paths for different platforms
 #if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
-	FileUtils::getInstance()->addSearchPath("Resources");
+	cocos2d::FileUtils::getInstance()->addSearchPath("Resources");
 #elif CC_TARGET_PLATFORM == CC_PLATFORM_LINUX
-	FileUtils::getInstance()->addSearchPath("Resources");
+	//somehow on linux the folder is not the folder where the app is run from (build/)
+	// but the folder where the exe is located (build/Tests).
+	cocos2d::FileUtils::getInstance()->addSearchPath("../Resources");
+#elif CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
 	//NOT NEEDED. COCOS DOES IT ALREADY.
-	//#elif CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
-	//		FileUtils::getInstance()->addSearchPath("assets");
+	//cocos2d::FileUtils::getInstance()->addSearchPath("assets");
 #endif
 
 
 }
 
-AppDelegate::~AppDelegate() 
+AppDelegate::~AppDelegate()
 {
 }
 
@@ -45,8 +47,8 @@ bool AppDelegate::applicationDidFinishLaunching() {
 	loadscene->scheduleDLCCheck();
 
 	loadscene->setLoadDoneCallback([](){
-		auto director = Director::getInstance();
-		director->replaceScene(TransitionFade::create(1.0f, HelloWorld::createScene()));
+		auto director = cocos2d::Director::getInstance();
+		director->replaceScene(cocos2d::TransitionFade::create(1.0f, HelloWorld::createScene()));
 	});
 
 	//Initializing App42
@@ -54,7 +56,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 	WkCocos::App42::Login();
 
     // run
-	director->runWithScene(TransitionFade::create(1.0f, loadscene));
+	director->runWithScene(cocos2d::TransitionFade::create(1.0f, loadscene));
 
     return true;
 }

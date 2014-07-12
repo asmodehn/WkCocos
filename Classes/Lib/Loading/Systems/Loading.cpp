@@ -76,6 +76,7 @@ namespace WkCocos
 							//WARNING : this should be run in same thread as the update to avoid any undesired side effects, like game crash.
 							entityx::Entity copy = loadentity;
 							//signal loaded
+							CCLOG("=> Sending loaded event for %s", loadfunc->getFilepath().c_str());
 							events->emit<Events::Loaded>(loadfunc->getFilepath());
 							copy.destroy();
 							this->m_cur_concurrent--;

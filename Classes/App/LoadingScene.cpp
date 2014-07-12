@@ -114,6 +114,7 @@ void LoadingScene::progress_CB(float pct)
 		m_loadDoneCB();
 	}
 }
+<<<<<<< HEAD
 
 void LoadingScene::error_CB()
 {
@@ -124,3 +125,5 @@ void LoadingScene::error_CB()
 	errorui->activate();
 
 }
+=======
+>>>>>>> origin/develop

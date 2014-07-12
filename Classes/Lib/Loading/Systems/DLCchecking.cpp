@@ -3,6 +3,8 @@
 
 #include "WkCocos/Loading/Comp/DataLoad.h"
 #include "WkCocos/Loading/Comp/ProgressValue.h"
+#include "WkCocos/Loading/Comp/FileMD5.h"
+#include "WkCocos/Loading/Comp/CurlDL.h"
 
 #include "WkCocos/Utils/ToolBox.h"
 
@@ -58,7 +60,6 @@ namespace WkCocos
 			try
 			: _curl(nullptr)
 			, _connectionTimeout(0)
-			, _retries(3)
 			{
 				CCLOG("DLCchecking Curl Init");
 				_curl = curl_easy_init();
@@ -145,6 +146,8 @@ namespace WkCocos
 								CCLOGERROR("DLCchecking can not read from %s, error code is %d", url.c_str(), res);
 								//signal error
 								events->emit<Events::Error>(entity);
+								//we give up on this entity
+								entity.destroy();
 							}
 						}
 						else
@@ -202,7 +205,10 @@ namespace WkCocos
 										//std::cout << filename << " : " << filehash << std::endl;
 
 										entityx::Entity newentity = es->create();
-										newentity.assign<Comp::DataDownload>(dllist->m_url + "/" + dllist->m_verlist.back(), filename, filehash);
+										newentity.assign<Comp::LocalFile>(filename);
+										newentity.assign<Comp::RemoteMD5>(filehash);
+										newentity.assign<Comp::RemoteFile>(dllist->m_url + "/" + dllist->m_verlist.back(), filename);
+										
 										newentity.assign<Comp::ProgressValue>(1);
 									}
 

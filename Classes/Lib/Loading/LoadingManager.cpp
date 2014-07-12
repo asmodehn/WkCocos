@@ -4,7 +4,9 @@
 #include "WkCocos/Loading/Systems/DataEval.h"
 #include "WkCocos/Loading/Systems/DLClisting.h"
 #include "WkCocos/Loading/Systems/DLCchecking.h"
-#include "WkCocos/Loading/Systems/Downloading.h"
+#include "WkCocos/Loading/Systems/MD5checking.h"
+#include "WkCocos/Loading/Systems/CurlDL.h"
+#include "WkCocos/Loading/Systems/DLvalidating.h"
 #include "WkCocos/Loading/Systems/Loading.h"
 #include "WkCocos/Loading/Systems/ProgressUpdate.h"
 
@@ -13,13 +15,31 @@
 
 #include "WkCocos/Utils/ToolBox.h"
 
-#include <climits>
-#include <vector>
+#include <functional>
 
 namespace WkCocos
 {
 	namespace Loading
 	{
+
+		LoadingManager::LoadingManager(unsigned short  concurrent_downloads,
+			unsigned short  concurrent_loads,
+			std::function<void(float)> progress_callback,
+			std::function<void()> error_callback
+			)
+			: m_concurrent_downloads(concurrent_downloads)
+			, m_concurrent_loads(concurrent_loads)
+			, m_progress_callback(progress_callback)
+			, m_error_callback(error_callback)
+		{
+			curl_global_init(CURL_GLOBAL_DEFAULT);
+		}
+
+		LoadingManager::~LoadingManager()
+		{
+			curl_global_cleanup();
+		}
+
 		void LoadingManager::addDataDownload(const std::string json_manifest_filename)
 		{
 			cocos2d::Data manifest_data = cocos2d::FileUtils::getInstance()->getDataFromFile(json_manifest_filename);
@@ -32,32 +52,29 @@ namespace WkCocos
 			if (json.HasParseError()) {
 				CCLOG("GetParseError %s\n", json.GetParseError());
 			}
-				//"packageUrl" : "http://example.com/assets_manager/TestScene/",
-				//"remoteVersionUrl" : "http://example.com/assets_manager/TestScene/version.manifest",
-				//"remoteManifestUrl" : "http://example.com/assets_manager/TestScene/project.manifest",
-				//"version" : "1.0.0",
-				//"engineVersion" : "Cocos2d-JS 3.0 beta",
 
 			bool dlcEnable = cocostudio::DictionaryHelper::getInstance()->getBooleanValue_json(json, "dlcEnable", "error");
 			std::string dlcUrl = cocostudio::DictionaryHelper::getInstance()->getStringValue_json(json, "dlcUrl", "error");
-			//std::string packageUrl = cocostudio::DictionaryHelper::getInstance()->getStringValue_json(json,"packageUrl", "error") ;
-			//std::string remoteVersionUrl = cocostudio::DictionaryHelper::getInstance()->getStringValue_json(json, "remoteVersionUrl", "error");
-			//std::string remoteManifestUrl = cocostudio::DictionaryHelper::getInstance()->getStringValue_json(json, "remoteManifestUrl", "error");
 			std::string minAppVersion = cocostudio::DictionaryHelper::getInstance()->getStringValue_json(json, "minAppVersion", "error");
 			std::string version = cocostudio::DictionaryHelper::getInstance()->getStringValue_json(json, "version", 0);
-			//std::string engineVersion = cocostudio::DictionaryHelper::getInstance()->getStringValue_json(json, "engineVersion", "error");
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-			// If we can find "localhost". Replace it with emulator access to localhost.
-			dlcUrl.replace(dlcUrl.find("localhost"), 9, "10.0.2.2");
+			auto locahost = dlcUrl.find("localhost");
+			if ( std::string::npos != locahost)
+			{
+				// If we can find "localhost". Replace it with emulator access to localhost.
+				dlcUrl.replace(locahost, 9, "10.0.2.2");
+			}
 #endif
 				
-
+			CCLOG("dlcUrl : %s", dlcUrl.c_str());
+			CCLOG("minAppVersion : %s", minAppVersion.c_str());
+			CCLOG("version : %s",version.c_str());
 
 			unsigned long lver = 0;
 			try {
 				 lver = ToolBox::stoul(version);
-				CCLOG("Manifest version %u for DLC at %s ", lver, dlcUrl.c_str());
+				CCLOG("Manifest version %lu for DLC at %s ", lver, dlcUrl.c_str());
 			}
 			catch (std::out_of_range oor)
 			{
@@ -90,12 +107,14 @@ namespace WkCocos
 
 		void LoadingManager::configure()
 		{
-			event_manager->subscribe<Events::Error>(*this);
 			system_manager->add<Systems::Error>(m_error_callback);
 			system_manager->add<Systems::DataEval>();
 			system_manager->add<Systems::DLClisting>();
 			system_manager->add<Systems::DLCchecking>();
-			system_manager->add<Systems::Downloading>();
+			system_manager->add<Systems::MD5checking>();
+			//system_manager->add<Systems::CurlMultiDL>(m_concurrent_downloads);
+			system_manager->add<Systems::CurlDL>(m_concurrent_downloads);
+			system_manager->add<Systems::DLvalidating>();
 			system_manager->add<Systems::ASyncLoading>(m_concurrent_loads);
 			system_manager->add<Systems::SyncLoading>();
 			system_manager->add<Systems::ProgressUpdate>(m_progress_callback);
@@ -116,27 +135,28 @@ namespace WkCocos
 
 			//check for error and report them if needed
 			system_manager->update<Systems::Error>(dt);
+			//evaluate entities containing DataLoad components
+			system_manager->update<Systems::DataEval>(dt);
+			//listing versions avialable on DLC
+			system_manager->update<Systems::DLClisting>(dt);
+			//listing files in one version on DLC
+			system_manager->update<Systems::DLCchecking>(dt);
+			//check MD5 of files existing and downloaded
+			system_manager->update<Systems::MD5checking>(dt);
+			
+			//do the curl calls when needed
+			//system_manager->update<Systems::CurlMultiDL>(dt);
+			system_manager->update<Systems::CurlDL>(dt);
 
-			//if there is error, we do not want to update systems anymore
-			//if systems need to do something on error, they should receive the event and implement the proper behavior
-			if (!m_error_detected)
-			{
-				//evaluate entities containing DataLoad components
-				system_manager->update<Systems::DataEval>(dt);
-				//listing versions avialable on DLC
-				system_manager->update<Systems::DLClisting>(dt);
-				//listing files in one version on DLC
-				system_manager->update<Systems::DLCchecking>(dt);
-				//keep downloading the needed files
-				system_manager->update<Systems::Downloading>(dt);
-				//asynchronously load data
-				system_manager->update<Systems::ASyncLoading>(dt);
-				//synchronously load data
-				system_manager->update<Systems::SyncLoading>(dt);
+			//validates if signature matches
+			system_manager->update<Systems::DLvalidating>(dt);
+			//asynchronously load data
+			system_manager->update<Systems::ASyncLoading>(dt);
+			//synchronously load data
+			system_manager->update<Systems::SyncLoading>(dt);
 
-				//display the progress
-				system_manager->update<Systems::ProgressUpdate>(dt);
-			}
+			//display the progress
+			system_manager->update<Systems::ProgressUpdate>(dt);
 
 		}
 			
