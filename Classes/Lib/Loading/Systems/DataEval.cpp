@@ -1,5 +1,5 @@
 #include "WkCocos/Loading/Systems/DataEval.h"
-
+#include "WkCocos/Loading/Comp/ProgressValue.h"
 #include "WkCocos/Loading/Events/Error.h"
 
 #include "WkCocos/Interface.h"
@@ -43,19 +43,27 @@ namespace WkCocos
 				}
 				else if (datafile.compare(datafile.size() - 10, 10, ".anim.json") == 0)
 				{
+					entityx::ptr<Comp::DataLoad> dataload = entity.component<Comp::DataLoad>();
+					std::string file = dataload->getFilepath();
+					//assigning the proper loadfunc component
+					entity.assign<Comp::LoadSyncFunc>(file, 0, [file, entity](){
+						cocostudio::ArmatureDataManager::sharedArmatureDataManager()->addArmatureFileInfo(file);
+					});
 					//TODO
 					//assigning the proper loadfunc component
-					//entity.assign<Comp::LoadSyncFunc>(0, [respath](){
 
-					//});
 				}
 				else if (datafile.compare(datafile.size() - 11, 11, ".scene.json") == 0)
 				{
+					entityx::ptr<Comp::DataLoad> dataload = entity.component<Comp::DataLoad>();
+					std::string file = dataload->getFilepath();
+					//assigning the proper loadfunc component
+					entity.assign<Comp::LoadSyncFunc>(file, 0, [file, entity](){
+						auto entityCopy = entity;
+						entityCopy.assign<Comp::ProgressValue>(1);
+					});
 					//TODO
 					//assigning the proper loadfunc component
-					//entity.assign<Comp::LoadSyncFunc>(0, [respath](){
-
-					//});
 				}
 				else
 				{

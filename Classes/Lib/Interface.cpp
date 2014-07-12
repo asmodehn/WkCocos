@@ -19,6 +19,8 @@ namespace WkCocos
 				widget_cache.insert(std::pair<std::string, cocos2d::ui::Widget*>(filepath, widget));
 				return widget;
 			}
+			//error cannot read Json UI
+			return nullptr;
 		}
 		else
 		{
