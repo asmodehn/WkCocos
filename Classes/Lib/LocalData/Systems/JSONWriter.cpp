@@ -34,7 +34,7 @@ namespace WkCocos
 						}
 						else
 						{
-							CCLOG("file write error !!\n",);
+							CCLOG("file write error !!\n");
 							//signal error
 							events->emit<Events::Error>(entity);
 							//WHAT TO DO ?

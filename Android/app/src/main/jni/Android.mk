@@ -10,7 +10,8 @@ LOCAL_SRC_FILES := main.cpp \
                    ../../../../../Classes/App/AppDelegate.cpp \
                    ../../../../../Classes/App/HelloWorldScene.cpp \
                    ../../../../../Classes/App/LoadingScene.cpp \
-                   ../../../../../Classes/App/LoadingUI.cpp
+                   ../../../../../Classes/App/LoadingUI.cpp \
+                   ../../../../../Classes/App/MyPlayer.cpp
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../../../../Include
 

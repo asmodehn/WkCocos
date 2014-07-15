@@ -16,7 +16,6 @@ LOCAL_SRC_FILES := jni.cpp \
                    ../../../../../Classes/Lib/Player.cpp \
                    ../../../../../Classes/Lib/Scene.cpp \
                    ../../../../../Classes/Lib/Interface.cpp \
-                   ../../../../../Classes/Lib/Save/Local.cpp \
                    ../../../../../Classes/Lib/Save/Online.cpp \
                    ../../../../../Classes/Lib/App42/Setup.cpp \
                    ../../../../../Classes/Lib/App42/Login.cpp \
@@ -29,7 +28,12 @@ LOCAL_SRC_FILES := jni.cpp \
                    ../../../../../Classes/Lib/Loading/Systems/Error.cpp \
                    ../../../../../Classes/Lib/Loading/Systems/Loading.cpp \
                    ../../../../../Classes/Lib/Loading/Systems/MD5checking.cpp \
-                   ../../../../../Classes/Lib/Loading/Systems/ProgressUpdate.cpp
+                   ../../../../../Classes/Lib/Loading/Systems/ProgressUpdate.cpp \
+                   ../../../../../Classes/Lib/LocalData/LocalDataManager.cpp \
+                   ../../../../../Classes/Lib/LocalData/Systems/Error.cpp \
+                   ../../../../../Classes/Lib/LocalData/Systems/JSONLoginID.cpp \
+                   ../../../../../Classes/Lib/LocalData/Systems/JSONReader.cpp \
+                   ../../../../../Classes/Lib/LocalData/Systems/JSONWriter.cpp \
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../../../../Include
 

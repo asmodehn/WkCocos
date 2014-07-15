@@ -37,7 +37,7 @@ namespace WkCocos
 						ifs.seekg(0, std::ios::end);
 						size_t size = ifs.tellg();
 
-						m_contents.resize(size);//make space for '\0'
+						m_contents.resize(size);
 						ifs.seekg(0);
 						//this doesnt change size of string ( therefore the previous "resize()" call )
 						ifs.read(&m_contents[0], size);//WARNING this is supposed to work with C++11 only ( continous string in memory )
