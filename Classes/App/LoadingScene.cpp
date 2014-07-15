@@ -61,7 +61,6 @@ void LoadingScene::setLoadDoneCallback(std::function<void()> cb)
 
 void LoadingScene::scheduleDLCCheck()
 {
-	DLCcheck = true;
 	m_downloadManager.addDataDownload("manifest.json");
 }
 
