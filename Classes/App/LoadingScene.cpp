@@ -34,12 +34,19 @@ bool LoadingScene::init()
 	m_ui[LoadingUI::id] = loadui;
 
 	//Error UI
-	ErrorUI* errorui = new ErrorUI();
+	ErrorUI* errorui = new ErrorUI(this);
 	auto errorroot = errorui->getRoot();
 	addChild(errorroot);
 	errorroot->setEnabled(false);
 	errorroot->setVisible(false);
 	m_ui[ErrorUI::id] = errorui;
+
+	errorui->setRefreshCallback([](){
+		LoadingScene * ls = Director::getInstance()->getRunningScene<LoadingScene>();
+		ls->m_loadingManager(5, 1,
+			std::bind(&LoadingScene::progress_CB, ls, std::placeholders::_1),
+			std::bind(&LoadingScene::error_CB, ls);
+	});
 
 	m_loadingManager.start();
 
@@ -69,7 +76,6 @@ void LoadingScene::setLoadDoneCallback(std::function<void()> cb)
 
 void LoadingScene::scheduleDLCCheck()
 {
-	DLCcheck = true;
 	m_loadingManager.addDataDownload("manifest.json");
 }
 
@@ -122,5 +128,7 @@ void LoadingScene::error_CB()
 	//Error UI
 	ErrorUI* errorui = getInterface<ErrorUI>(ErrorUI::id);
 	errorui->activate();
+
+	m_loadingManager.~LoadingManager();
 
 }

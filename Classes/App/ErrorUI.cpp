@@ -1,6 +1,6 @@
 #include "WkCocosApp/ErrorUI.h"
 
-//#include "WkCocosApp/HelloWorldScene.h"
+#include "WkCocosApp/LoadingScene.h"
 
 #include "cocos2d.h"
 #include "ui/CocosGUI.h"
@@ -9,7 +9,7 @@ USING_NS_CC;
 
 const std::string ErrorUI::id = "error";
 
-ErrorUI::ErrorUI() : Interface()
+ErrorUI::ErrorUI(LoadingScene* ls) : Interface(), parent(ls)
 {
 	//building UI hierarchy
 	m_widget = ui::Layout::create();
@@ -63,6 +63,11 @@ void ErrorUI::refreshCallback(Ref* widgetRef, ui::Widget::TouchEventType input)
 {
 	if (input == ui::Widget::TouchEventType::ENDED)
 	{
-		//
+		m_refreshCB();
 	}
+}
+
+void ErrorUI::setRefreshCallback(std::function<void()> cb)
+{
+	m_refreshCB = cb;
 }

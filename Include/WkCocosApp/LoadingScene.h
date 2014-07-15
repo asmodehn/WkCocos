@@ -46,7 +46,6 @@ protected:
 		: Scene()
 		, m_loadDoneCB_called(false)
 		, m_loadDoneCB()
-		, DLCcheck(false)
 		, m_loadingManager(5,1,
 		std::bind(&LoadingScene::progress_CB, this, std::placeholders::_1),
 		std::bind(&LoadingScene::error_CB, this)
@@ -56,8 +55,6 @@ protected:
 
 	bool m_loadDoneCB_called;
 	std::function<void()> m_loadDoneCB;
-
-	bool DLCcheck;
 
 	WkCocos::Loading::LoadingManager m_loadingManager;
 
