@@ -1,5 +1,5 @@
-#ifndef __LOADING_ENTITY_LOADINGMANAGER_H__
-#define __LOADING_ENTITY_LOADINGMANAGER_H__
+#ifndef __LOADING_ENTITY_DOWNLOAD_H__
+#define __LOADING_ENTITY_DOWNLOAD_H__
 
 #include "cocos2d.h"
 
@@ -12,10 +12,10 @@ namespace WkCocos
 {
 	namespace Loading
 	{
-		class LoadingManager : public entityx::Manager
+		class Download : public entityx::Manager
 			{
 			public:
-				explicit LoadingManager(unsigned short  concurrent_downloads,
+				explicit Download(unsigned short  concurrent_downloads,
 					unsigned short  concurrent_loads,
 					std::function<void(float)> progress_callback,
 					std::function<void()> error_callback
@@ -28,7 +28,7 @@ namespace WkCocos
 				//DataLoad Event is sent when the load finishes.
 				bool addDataLoad(const std::vector<std::string> &  filepath);
 				
-				virtual ~LoadingManager();
+				virtual ~Download();
 
 				entityx::ptr<entityx::EventManager> getEventManager()
 				{
@@ -53,4 +53,4 @@ namespace WkCocos
 	} // namespace Loading
 }  // namespace dfgame
 
-#endif //__LOADING_ENTITY_LOADINGMANAGER_H__
+#endif //__LOADING_ENTITY_DOWNLOAD_H__

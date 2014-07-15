@@ -1,4 +1,4 @@
-#include "WkCocos/Loading/LoadingManager.h"
+#include "WkCocos/Loading/Download.h"
 
 #include "WkCocos/Loading/Systems/Error.h"
 #include "WkCocos/Loading/Systems/DataEval.h"
@@ -22,7 +22,7 @@ namespace WkCocos
 	namespace Loading
 	{
 
-		LoadingManager::LoadingManager(unsigned short  concurrent_downloads,
+		Download::Download(unsigned short  concurrent_downloads,
 			unsigned short  concurrent_loads,
 			std::function<void(float)> progress_callback,
 			std::function<void()> error_callback
@@ -35,12 +35,12 @@ namespace WkCocos
 			curl_global_init(CURL_GLOBAL_DEFAULT);
 		}
 
-		LoadingManager::~LoadingManager()
+		Download::~Download()
 		{
 			curl_global_cleanup();
 		}
 
-		void LoadingManager::addDataDownload(const std::string json_manifest_filename)
+		void Download::addDataDownload(const std::string json_manifest_filename)
 		{
 			cocos2d::Data manifest_data = cocos2d::FileUtils::getInstance()->getDataFromFile(json_manifest_filename);
 				
@@ -94,7 +94,7 @@ namespace WkCocos
 
 		}
 
-		bool LoadingManager::addDataLoad(const std::vector<std::string> &  filepath)
+		bool Download::addDataLoad(const std::vector<std::string> &  filepath)
 		{
 			for (auto path : filepath)
 			{
@@ -105,7 +105,7 @@ namespace WkCocos
 			return true;
 		}
 
-		void LoadingManager::configure()
+		void Download::configure()
 		{
 			system_manager->add<Systems::Error>(m_error_callback);
 			system_manager->add<Systems::DataEval>();
@@ -120,7 +120,7 @@ namespace WkCocos
 			system_manager->add<Systems::ProgressUpdate>(m_progress_callback);
 		};
 
-		void LoadingManager::initialize()
+		void Download::initialize()
 		{
 			//adding writable path ( where DLC downloads) as search path. First in list
 			int i = 0;
@@ -131,7 +131,7 @@ namespace WkCocos
 			fileUtils->setSearchPaths(searchPaths);
 		}
 
-		void LoadingManager::update(double dt) {
+		void Download::update(double dt) {
 
 			//check for error and report them if needed
 			system_manager->update<Systems::Error>(dt);

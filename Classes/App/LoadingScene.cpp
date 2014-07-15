@@ -33,7 +33,7 @@ bool LoadingScene::init()
 	newLayer->addChild(loadui->getRoot());
 	m_ui[LoadingUI::id] = loadui;
 
-	m_loadingManager.start();
+	m_downloadManager.start();
 
 	return true;
 }
@@ -51,7 +51,7 @@ void LoadingScene::onExitTransitionDidStart()
 
 void LoadingScene::addLoad(std::vector<std::string> respath)
 {
-	m_loadingManager.addDataLoad(respath);
+	m_downloadManager.addDataLoad(respath);
 }
 
 void LoadingScene::setLoadDoneCallback(std::function<void()> cb)
@@ -62,7 +62,7 @@ void LoadingScene::setLoadDoneCallback(std::function<void()> cb)
 void LoadingScene::scheduleDLCCheck()
 {
 	DLCcheck = true;
-	m_loadingManager.addDataDownload("manifest.json");
+	m_downloadManager.addDataDownload("manifest.json");
 }
 
 void LoadingScene::update(float delta)
@@ -70,7 +70,7 @@ void LoadingScene::update(float delta)
 	//if callback was called, loading is finished.
 	if (!m_loadDoneCB_called)
 	{
-		m_loadingManager.step(delta);
+		m_downloadManager.step(delta);
 	}
 }
 

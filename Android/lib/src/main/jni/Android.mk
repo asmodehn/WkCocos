@@ -19,7 +19,8 @@ LOCAL_SRC_FILES := jni.cpp \
                    ../../../../../Classes/Lib/Save/Online.cpp \
                    ../../../../../Classes/Lib/App42/Setup.cpp \
                    ../../../../../Classes/Lib/App42/Login.cpp \
-                   ../../../../../Classes/Lib/Loading/LoadingManager.cpp \
+                   ../../../../../Classes/Lib/Loading/Download.cpp \
+                   ../../../../../Classes/Lib/Loading/Preload.cpp \
                    ../../../../../Classes/Lib/Loading/Systems/DataEval.cpp \
                    ../../../../../Classes/Lib/Loading/Systems/DLCchecking.cpp \
                    ../../../../../Classes/Lib/Loading/Systems/DLClisting.cpp \
@@ -47,7 +48,6 @@ LOCAL_WHOLE_STATIC_LIBRARIES += cocosdenshion_static
 LOCAL_WHOLE_STATIC_LIBRARIES += cocostudio_static
 LOCAL_WHOLE_STATIC_LIBRARIES += cocos_network_static
 LOCAL_WHOLE_STATIC_LIBRARIES += cocos_extension_static
-LOCAL_WHOLE_STATIC_LIBRARIES += libevent2_static
 LOCAL_WHOLE_STATIC_LIBRARIES += entityx_static
 LOCAL_WHOLE_STATIC_LIBRARIES += app42SDK_static
 
@@ -61,7 +61,6 @@ $(call import-module,audio/android)
 $(call import-module,editor-support/cocostudio)
 $(call import-module,network)
 $(call import-module,extensions)
-$(call import-module,libevent)
 $(call import-module,entityx)
 $(call import-module,App42_Cocos2DX_SDK)
 

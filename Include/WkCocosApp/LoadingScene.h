@@ -4,8 +4,8 @@
 #include "cocos2d.h"
 #include "WkCocos/Scene.h"
 
-#include "WkCocos/Loading/LoadingManager.h"
-
+#include "WkCocos/Loading/Download.h"
+#include "WkCocos/Loading/Preload.h"
 
 class LoadingScene : public WkCocos::Scene
 {
@@ -50,10 +50,12 @@ protected:
 		, m_loadDoneCB_called(false)
 		, m_loadDoneCB()
 		, DLCcheck(false)
-		, m_loadingManager(5,1,
+		, m_downloadManager(5,1,
 		std::bind(&LoadingScene::progress_CB, this, std::placeholders::_1),
-		std::bind(&LoadingScene::error_CB, this)
-		)
+		std::bind(&LoadingScene::error_CB, this))
+		, m_preloadManager(5, 1,
+		std::bind(&LoadingScene::progress_CB, this, std::placeholders::_1),
+		std::bind(&LoadingScene::error_CB, this))
 	{
 	}
 
@@ -62,8 +64,8 @@ protected:
 
 	bool DLCcheck;
 
-	WkCocos::Loading::LoadingManager m_loadingManager;
-
+	WkCocos::Loading::Download m_downloadManager;
+	WkCocos::Loading::Preload m_preloadManager;
 };
 
 
