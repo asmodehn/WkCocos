@@ -42,10 +42,19 @@ bool LoadingScene::init()
 	m_ui[ErrorUI::id] = errorui;
 
 	errorui->setRefreshCallback([](){
-		LoadingScene * ls = Director::getInstance()->getRunningScene<LoadingScene>();
+		/*
+		auto ls = Director::getInstance()->getRunningScene();
 		ls->m_loadingManager(5, 1,
 			std::bind(&LoadingScene::progress_CB, ls, std::placeholders::_1),
-			std::bind(&LoadingScene::error_CB, ls);
+			std::bind(&LoadingScene::error_CB, ls));
+		*/
+
+		/*
+		ErrorUI* errorui = getInterface<ErrorUI>(ErrorUI::id);
+		errorui->parent->m_loadingManager(5, 1,
+			std::bind(&LoadingScene::progress_CB, errorui->parent, std::placeholders::_1),
+			std::bind(&LoadingScene::error_CB, errorui->parent));
+		*/
 	});
 
 	m_loadingManager.start();
