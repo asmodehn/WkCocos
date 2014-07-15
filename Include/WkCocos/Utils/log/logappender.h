@@ -45,6 +45,11 @@ namespace WkCocos
 		* Not the best design, but we need something that will work for now
 		*/
 		LogStream	_stream;
+
+		/**
+		* Max level to output
+		*/
+		int			_level;
 	};
 
 	/**

@@ -1,4 +1,5 @@
 #include "WkCocos/Utils/log/logappender.h"
+#include "WkCocos/Utils/log/loglevel.h"
 
 #include <stdexcept>
 
@@ -6,6 +7,7 @@ namespace WkCocos
 {
 
 	LogAppender::LogAppender()
+		: _level(WkCocos::loglevel::Core_LogDebug)
 	{
 		//_stream.getBuf()->onOverflow(std::bind(&LogAppender::onOverflow, this, std::placeholders::_1));
 	}
