@@ -4,6 +4,7 @@
 
 
 //our own headers
+#include "Player.h"
 #include "Utils/ToolBox.h"
 
 #include "App42/Setup.h"

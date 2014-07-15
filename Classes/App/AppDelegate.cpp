@@ -2,6 +2,8 @@
 #include "WkCocosApp/LoadingScene.h"
 #include "WkCocosApp/HelloWorldScene.h"
 
+#include "WkCocosApp/MyPlayer.h"
+
 USING_NS_CC;
 
 AppDelegate::AppDelegate()
@@ -50,6 +52,9 @@ bool AppDelegate::applicationDidFinishLaunching() {
 		auto director = cocos2d::Director::getInstance();
 		director->replaceScene(cocos2d::TransitionFade::create(1.0f, HelloWorld::createScene()));
 	});
+
+	//Activating player
+	MyPlayer::GetInstance().Activate();
 
 	//Initializing App42
 	WkCocos::App42::Setup("3a3579d378cdf38a29e7dd80ec20dc15fc2a19a6959bcfc1ea353885a1802f86", "89ff08c30c0f3d15e5b571d2b3a90fd80401a756cb7f3620cfc625756421ee35");
