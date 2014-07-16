@@ -51,27 +51,23 @@ bool LoadingScene::init()
 	m_ui[LoadingUI::id] = loadui;
 
 	//Error UI
-	ErrorUI* errorui = new ErrorUI(this);
+	ErrorUI* errorui = new ErrorUI();
 	auto errorroot = errorui->getRoot();
 	addChild(errorroot);
 	errorroot->setEnabled(false);
 	errorroot->setVisible(false);
 	m_ui[ErrorUI::id] = errorui;
 
-	errorui->setRefreshCallback([](){
-		/*
-		auto ls = Director::getInstance()->getRunningScene();
-		ls->m_loadingManager(5, 1,
-			std::bind(&LoadingScene::progress_CB, ls, std::placeholders::_1),
-			std::bind(&LoadingScene::error_CB, ls));
-		*/
+	errorui->setRefreshCallback([this](){
+		
+		m_loadingManager = new WkCocos::Loading::LoadingManager(5, 1,
+			std::bind(&LoadingScene::progress_CB, this, std::placeholders::_1),
+			std::bind(&LoadingScene::error_CB, this));
 
-		/*
-		ErrorUI* errorui = getInterface<ErrorUI>(ErrorUI::id);
-		errorui->parent->m_loadingManager(5, 1,
-			std::bind(&LoadingScene::progress_CB, errorui->parent, std::placeholders::_1),
-			std::bind(&LoadingScene::error_CB, errorui->parent));
-		*/
+		scheduleDLCCheck();
+
+		m_loadingManager->start();
+
 	});
 
 	m_loadingManager->start();

@@ -9,7 +9,7 @@ USING_NS_CC;
 
 const std::string ErrorUI::id = "error";
 
-ErrorUI::ErrorUI(LoadingScene* ls) : Interface(), parent(ls)
+ErrorUI::ErrorUI() : Interface()
 {
 	//building UI hierarchy
 	m_widget = ui::Layout::create();

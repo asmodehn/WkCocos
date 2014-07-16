@@ -20,7 +20,7 @@ public:
 	/**
 	* Default constructor
 	*/
-	ErrorUI(LoadingScene* ls);
+	ErrorUI();
 
 	/**
 	* Destructor
@@ -35,8 +35,6 @@ public:
 	void deactivate();
 
 	std::function<void()> m_refreshCB;
-
-	LoadingScene * parent;
 
 protected:
 	cocos2d::ui::Button* m_refreshButton;
