@@ -16,8 +16,7 @@ public:
 	// implement the "static create()" method manually
 	CREATE_FUNC(LoadingScene);
 
-	virtual ~LoadingScene()
-	{}
+	virtual ~LoadingScene();
 
 	virtual void onEnterTransitionDidFinish() override;
 
@@ -42,21 +41,15 @@ public:
 
 protected:
 
-	LoadingScene()
-		: Scene()
-		, m_loadDoneCB_called(false)
-		, m_loadDoneCB()
-		, m_loadingManager(5,1,
-		std::bind(&LoadingScene::progress_CB, this, std::placeholders::_1),
-		std::bind(&LoadingScene::error_CB, this)
-		)
-	{
-	}
+	LoadingScene();
 
 	bool m_loadDoneCB_called;
+
+	bool m_loadMan_del_scheduled;
+
 	std::function<void()> m_loadDoneCB;
 
-	WkCocos::Loading::LoadingManager m_loadingManager;
+	WkCocos::Loading::LoadingManager * m_loadingManager;
 
 };
 

@@ -13,6 +13,23 @@
 
 USING_NS_CC;
 
+LoadingScene::LoadingScene() : Scene()
+, m_loadDoneCB_called(false)
+, m_loadMan_del_scheduled(false)
+, m_loadDoneCB()
+, m_loadingManager(nullptr)
+{
+	WkCocos::Loading::LoadingManager * m_loadingManager = new WkCocos::Loading::LoadingManager(5, 1,
+		std::bind(&LoadingScene::progress_CB, this, std::placeholders::_1),
+		std::bind(&LoadingScene::error_CB, this));
+}
+
+LoadingScene::~LoadingScene()
+{
+	if (m_loadingManager)
+	delete m_loadingManager;
+}
+
 // on "init" you need to initialize your instance
 bool LoadingScene::init()
 {
@@ -57,7 +74,7 @@ bool LoadingScene::init()
 		*/
 	});
 
-	m_loadingManager.start();
+	m_loadingManager->start();
 
 	return true;
 }
@@ -75,7 +92,7 @@ void LoadingScene::onExitTransitionDidStart()
 
 void LoadingScene::addLoad(std::vector<std::string> respath)
 {
-	m_loadingManager.addDataLoad(respath);
+	m_loadingManager->addDataLoad(respath);
 }
 
 void LoadingScene::setLoadDoneCallback(std::function<void()> cb)
@@ -85,16 +102,17 @@ void LoadingScene::setLoadDoneCallback(std::function<void()> cb)
 
 void LoadingScene::scheduleDLCCheck()
 {
-	m_loadingManager.addDataDownload("manifest.json");
+	m_loadingManager->addDataDownload("manifest.json");
 }
 
 void LoadingScene::update(float delta)
 {
+	if (m_loadMan_del_scheduled)
+		delete m_loadingManager;
+
 	//if callback was called, loading is finished.
-	if (!m_loadDoneCB_called)
-	{
-		m_loadingManager.step(delta);
-	}
+	if (!m_loadDoneCB_called && m_loadingManager)
+			m_loadingManager->step(delta);
 }
 
 //expects pct in [0..1]
@@ -138,6 +156,7 @@ void LoadingScene::error_CB()
 	ErrorUI* errorui = getInterface<ErrorUI>(ErrorUI::id);
 	errorui->activate();
 
-	m_loadingManager.~LoadingManager();
+	//m_loadingManager.~LoadingManager();
+	m_loadMan_del_scheduled = true;
 
 }
