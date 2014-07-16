@@ -72,6 +72,15 @@ bool LoadingScene::init()
 
 	});
 
+	errorui->setSkipCallback([this, errorui](){
+
+		errorui->deactivate();
+
+		m_loadDoneCB_called = true;
+		m_loadDoneCB();
+
+	});
+
 	m_loadingManager->start();
 
 	return true;
@@ -160,7 +169,6 @@ void LoadingScene::error_CB()
 	ErrorUI* errorui = getInterface<ErrorUI>(ErrorUI::id);
 	errorui->activate();
 
-	//m_loadingManager.~LoadingManager();
 	m_loadMan_del_scheduled = true;
 
 }

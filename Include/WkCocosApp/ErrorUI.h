@@ -28,17 +28,20 @@ public:
 	virtual ~ErrorUI();
 
 	void setRefreshCallback(std::function<void()> cb);
+	void setSkipCallback(std::function<void()> cb);
 
 	void refreshCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input);
+	void skipCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input);
 
 	void activate();
 	void deactivate();
 
 	std::function<void()> m_refreshCB;
+	std::function<void()> m_skipCB;
 
 protected:
 	cocos2d::ui::Button* m_refreshButton;
-
+	cocos2d::ui::Button* m_skipButton;
 };
 
 #endif // __ERRORUI_H__
