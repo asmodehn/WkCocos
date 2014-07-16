@@ -58,7 +58,7 @@ bool LoadingScene::init()
 	errorroot->setVisible(false);
 	m_ui[ErrorUI::id] = errorui;
 
-	errorui->setRefreshCallback([this](){
+	errorui->setRefreshCallback([this, errorui](){
 		
 		m_loadingManager = new WkCocos::Loading::LoadingManager(5, 1,
 			std::bind(&LoadingScene::progress_CB, this, std::placeholders::_1),
@@ -67,6 +67,8 @@ bool LoadingScene::init()
 		scheduleDLCCheck();
 
 		m_loadingManager->start();
+
+		errorui->deactivate();
 
 	});
 
