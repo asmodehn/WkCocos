@@ -19,7 +19,7 @@ LoadingScene::LoadingScene() : Scene()
 , m_loadDoneCB()
 , m_loadingManager(nullptr)
 {
-	LoadingScene::m_loadingManager = new WkCocos::Loading::LoadingManager(5, 1,
+	m_loadingManager = new WkCocos::Loading::LoadingManager(5, 1,
 		std::bind(&LoadingScene::progress_CB, this, std::placeholders::_1),
 		std::bind(&LoadingScene::error_CB, this));
 }
