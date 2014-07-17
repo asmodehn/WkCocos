@@ -50,4 +50,3 @@ namespace WkCocos
 		}//namespace Systems
 	}//namespace Loading
 }//namespace WkCocos
-

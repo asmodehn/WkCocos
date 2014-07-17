@@ -5,7 +5,7 @@
 
 #include "WkCocos/Loading/Comp/ProgressValue.h"
 
-#define LOW_SPEED_LIMIT 1L
+#define LOW_SPEED_LIMIT 30L
 #define LOW_SPEED_TIME 5L
 
 namespace WkCocos

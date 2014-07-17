@@ -2,12 +2,33 @@
 
 #include "WkCocosApp/LoadingUI.h"
 
-#include "WkCocosApp/HelloWorldScene.h"
+#include "WkCocosApp/ErrorUI.h"
+
+//#include "WkCocosApp/HelloWorldScene.h"
 
 #include "ui/CocosGUI.h"
 
 #include <iostream>
 #include <numeric>
+
+USING_NS_CC;
+
+LoadingScene::LoadingScene() : Scene()
+, m_loadDoneCB_called(false)
+, m_loadMan_del_scheduled(false)
+, m_loadDoneCB()
+, m_loadingManager(nullptr)
+{
+	LoadingScene::m_loadingManager = new WkCocos::Loading::LoadingManager(5, 1,
+		std::bind(&LoadingScene::progress_CB, this, std::placeholders::_1),
+		std::bind(&LoadingScene::error_CB, this));
+}
+
+LoadingScene::~LoadingScene()
+{
+	if (m_loadingManager)
+	delete m_loadingManager;
+}
 
 // on "init" you need to initialize your instance
 bool LoadingScene::init()
@@ -19,21 +40,48 @@ bool LoadingScene::init()
 		return false;
 	}
 
-	cocos2d::Size visibleSize = cocos2d::Director::getInstance()->getVisibleSize();
-	cocos2d::Vec2 origin = cocos2d::Director::getInstance()->getVisibleOrigin();
-
-	// add a layer
-	cocos2d::Layer* newLayer = cocos2d::Layer::create();
-	addChild(newLayer);
+	//cocos2d::Size visibleSize = cocos2d::Director::getInstance()->getVisibleSize();
+	//cocos2d::Vec2 origin = cocos2d::Director::getInstance()->getVisibleOrigin();
 
 	//Load UI
 	LoadingUI* loadui = new LoadingUI();
 	loadui->getRoot()->setEnabled(true);
 	loadui->getRoot()->setVisible(true);
-	newLayer->addChild(loadui->getRoot());
+	addChild(loadui->getRoot());
 	m_ui[LoadingUI::id] = loadui;
 
-	m_loadingManager.start();
+	//Error UI
+	ErrorUI* errorui = new ErrorUI();
+	auto errorroot = errorui->getRoot();
+	addChild(errorroot);
+	errorroot->setEnabled(false);
+	errorroot->setVisible(false);
+	m_ui[ErrorUI::id] = errorui;
+
+	errorui->setRefreshCallback([this, errorui](){
+		
+		m_loadingManager = new WkCocos::Loading::LoadingManager(5, 1,
+			std::bind(&LoadingScene::progress_CB, this, std::placeholders::_1),
+			std::bind(&LoadingScene::error_CB, this));
+
+		scheduleDLCCheck();
+
+		m_loadingManager->start();
+
+		errorui->deactivate();
+
+	});
+
+	errorui->setSkipCallback([this, errorui](){
+
+		errorui->deactivate();
+
+		m_loadDoneCB_called = true;
+		m_loadDoneCB();
+
+	});
+
+	m_loadingManager->start();
 
 	return true;
 }
@@ -51,7 +99,8 @@ void LoadingScene::onExitTransitionDidStart()
 
 void LoadingScene::addLoad(std::vector<std::string> respath)
 {
-	m_loadingManager.addDataLoad(respath);
+	if (m_loadingManager)
+		m_loadingManager->addDataLoad(respath);
 }
 
 void LoadingScene::setLoadDoneCallback(std::function<void()> cb)
@@ -61,17 +110,22 @@ void LoadingScene::setLoadDoneCallback(std::function<void()> cb)
 
 void LoadingScene::scheduleDLCCheck()
 {
-	DLCcheck = true;
-	m_loadingManager.addDataDownload("manifest.json");
+	if (m_loadingManager)
+		m_loadingManager->addDataDownload("manifest.json");
 }
 
 void LoadingScene::update(float delta)
 {
-	//if callback was called, loading is finished.
-	if (!m_loadDoneCB_called)
+	if (m_loadMan_del_scheduled)
 	{
-		m_loadingManager.step(delta);
+		delete m_loadingManager;
+		m_loadingManager = nullptr;
+		m_loadMan_del_scheduled = false;
 	}
+
+	//if callback was called, loading is finished.
+	if (!m_loadDoneCB_called && m_loadingManager)
+			m_loadingManager->step(delta);
 }
 
 //expects pct in [0..1]
@@ -85,8 +139,8 @@ void LoadingScene::progress_CB(float pct)
 		//cocos2d::ui::Widget* loadbarpnl = ui->getRoot()->getChildByName("PNL_LoadingBar");
 		//if (loadbarpnl)
 		//{
-			cocos2d::ui::Widget* loadbarw = ui->getRoot()->getChildByName("LoadingBar"); //loadbarpnl->getChildByName("LoadingBar");
-			cocos2d::ui::LoadingBar* loadbar = dynamic_cast<cocos2d::ui::LoadingBar*>(loadbarw);
+			ui::Widget* loadbarw = ui->getRoot()->getChildByName("LoadingBar"); //loadbarpnl->getChildByName("LoadingBar");
+			ui::LoadingBar* loadbar = dynamic_cast<ui::LoadingBar*>(loadbarw);
 
 			if (loadbar)
 			{
@@ -99,10 +153,22 @@ void LoadingScene::progress_CB(float pct)
 	{
 		//DOWNloading is finished.
 		//We should clean the pathCache that was computed before download
-		cocos2d::FileUtils::getInstance()->purgeCachedEntries();
+		FileUtils::getInstance()->purgeCachedEntries();
 
 		//loading finished. lets move on.
 		m_loadDoneCB_called = true;
 		m_loadDoneCB();
 	}
+}
+
+void LoadingScene::error_CB()
+{
+	CCLOGERROR("ERROR");
+
+	//Error UI
+	ErrorUI* errorui = getInterface<ErrorUI>(ErrorUI::id);
+	errorui->activate();
+
+	m_loadMan_del_scheduled = true;
+
 }
