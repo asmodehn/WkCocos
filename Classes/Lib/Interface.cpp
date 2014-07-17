@@ -39,9 +39,9 @@ namespace WkCocos
 		}
 	}
 
-	Interface::Interface():
-		m_widget(nullptr),
-		m_filepath("")
+	Interface::Interface()
+		: m_widget(nullptr)
+		, m_filepath("")
 	{
 	}
 
