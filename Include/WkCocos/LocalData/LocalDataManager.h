@@ -17,7 +17,7 @@ namespace WkCocos
 			/**
 			* Constructor 
 			*/
-			LocalDataManager(std::function<void()> error_CB = [](){});
+			LocalDataManager(std::function<void()> error_CB);
 			
 			/**
 			* LoginID

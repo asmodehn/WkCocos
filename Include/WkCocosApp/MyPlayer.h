@@ -6,9 +6,14 @@
 /**
 * This UI is the main menu UI
 */
-class MyPlayer : public WkCocos::Player<MyPlayer>
+class MyPlayer : public WkCocos::Player
 {
 public:
+
+	/**
+	* Constructor
+	*/
+	MyPlayer(std::string app_access_key, std::string app_secret_key);
 
 	/**
 	* Destructor

@@ -12,20 +12,18 @@ namespace WkCocos
 	namespace LocalData
 	{
 
-		enum DataType {
-			NONE = 0,
-			LOGIN_ID
-		};
-
 		LocalDataManager::LocalDataManager(std::function<void()> error_CB)
 		: m_error_callback(error_CB)
 		, event_manager(entityx::EventManager::make())
 		, entity_manager(entityx::EntityManager::make(event_manager))
 		, system_manager(entityx::SystemManager::make(entity_manager, event_manager))
 		{
-			configure();
+
+			system_manager->add<Systems::Error>(m_error_callback);
+			system_manager->add<Systems::JSONReader>();
+			system_manager->add<Systems::JSONLoginID>();
+			system_manager->add<Systems::JSONWriter>();
 			system_manager->configure();
-			initialize();
 		}
 
 		bool LocalDataManager::saveLoginID(std::string user, std::string passwd, short version)
@@ -51,20 +49,7 @@ namespace WkCocos
 			}
 			return true;
 		}
-
-		void LocalDataManager::configure()
-		{
-			system_manager->add<Systems::Error>(m_error_callback);
-			system_manager->add<Systems::JSONReader>();
-			system_manager->add<Systems::JSONLoginID>();
-			system_manager->add<Systems::JSONWriter>();
-		};
-
-		void LocalDataManager::initialize()
-		{
-
-		}
-
+		
 		void LocalDataManager::update(double dt) {
 
 			//check for error and report them if needed
