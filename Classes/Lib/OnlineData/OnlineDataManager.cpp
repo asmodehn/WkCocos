@@ -1,6 +1,5 @@
 #include "WkCocos/OnlineData/OnlineDataManager.h"
 
-#include "WkCocos/OnlineData/Systems/Error.h"
 #include "WkCocos/OnlineData/Systems/User.h"
 
 #include "WkCocos/OnlineData/Comp/OnlineData.h"
@@ -12,14 +11,12 @@ namespace WkCocos
 {
 	namespace OnlineData
 	{
-		OnlineDataManager::OnlineDataManager(std::string app_access_key, std::string app_secret_key, std::function<void()> error_CB)
-			: m_error_callback(error_CB)
-			, event_manager(entityx::EventManager::make())
+		OnlineDataManager::OnlineDataManager(std::string app_access_key, std::string app_secret_key)
+			: event_manager(entityx::EventManager::make())
 			, entity_manager(entityx::EntityManager::make(event_manager))
 			, system_manager(entityx::SystemManager::make(entity_manager, event_manager))
 		{
 			App42API::Initialize(app_access_key, app_secret_key);
-			system_manager->add<Systems::Error>(m_error_callback);
 			system_manager->add<Systems::User>();
 			system_manager->configure();
 		}
@@ -57,7 +54,6 @@ namespace WkCocos
 
 		void OnlineDataManager::update(double dt) {
 			//check for error and report them if needed
-			system_manager->update<Systems::Error>(dt);
 			system_manager->update<Systems::User>(dt);
 		}
 

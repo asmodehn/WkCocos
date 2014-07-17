@@ -21,23 +21,18 @@ namespace WkCocos
 		* Update loop, called by cocos after Activate has been called
 		*/
 		void Update(float deltatime);
-
-		/**
-		* error callbacks for data managers
-		*/
-		void local_save_error_callback();
-		void online_save_error_callback();
+		
+		void setOnlineDataManager(std::shared_ptr<OnlineData::OnlineDataManager> onlinedata);
 
 	protected:
-		Player(std::string app_access_key,std::string app_secret_key);
+		Player(std::shared_ptr<LocalData::LocalDataManager> localdata);
 
-		static bool m_bSingletonCreating;
-
+		bool newPlayer;
 		std::string m_user;
 		std::string m_passwd;
 
-		LocalData::LocalDataManager m_localdata;
-		OnlineData::OnlineDataManager m_onlinedata;
+		std::shared_ptr<LocalData::LocalDataManager> m_localdata;
+		std::shared_ptr<OnlineData::OnlineDataManager> m_onlinedata;
 
 	};
 

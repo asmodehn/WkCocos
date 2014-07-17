@@ -13,7 +13,7 @@ public:
 	/**
 	* Constructor
 	*/
-	MyPlayer(std::string app_access_key, std::string app_secret_key);
+	MyPlayer(std::shared_ptr<WkCocos::LocalData::LocalDataManager> localdatamngr);
 
 	/**
 	* Destructor

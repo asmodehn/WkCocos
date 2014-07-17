@@ -4,24 +4,26 @@ namespace WkCocos
 {
 
 	//constructors
-	Player::Player(std::string app_access_key, std::string app_secret_key)
-		: m_localdata(std::bind(&Player::local_save_error_callback, this))
-		, m_onlinedata(app_access_key, app_secret_key, std::bind(&Player::online_save_error_callback, this))
+	Player::Player(std::shared_ptr<LocalData::LocalDataManager> localdata)
+		: m_localdata(localdata)
 	{
 		//registering player class in cocos update loop
 		cocos2d::Director::getInstance()->getScheduler()->schedule(std::bind(&Player::Update, this, std::placeholders::_1), this, 1.f / 15, false, "player_update");
 
 		//tried to read existing data.
-		m_localdata.loadLoginID([=](std::string user, std::string passwd){
+		m_localdata->loadLoginID([=](std::string user, std::string passwd){
 			if (user != "" && passwd != "")
 			{
-				this->m_user = user;
-				this->m_passwd = passwd;
+				m_user = user;
+				m_passwd = passwd;
 
-				//autologin
-				m_onlinedata.login(this->m_user, this->m_passwd, [=](void * data){
-					CCLOG("login done !!!");
-				});
+				newPlayer = false;
+
+				if (m_onlinedata)
+				{
+					//reset online data manager to force login
+					setOnlineDataManager(m_onlinedata);
+				}
 			}
 			else
 			{
@@ -38,40 +40,64 @@ namespace WkCocos
 
 				if (user.length() > 0 && passwd.length() > 0)
 				{
-					this->m_user = user;
-					this->m_passwd = passwd;
+					m_user = user;
+					m_passwd = passwd;
 
 					//store unique ID
-					m_localdata.saveLoginID(this->m_user, this->m_passwd);
+					m_localdata->saveLoginID(m_user, m_passwd);
 
-					//adding fake email on creation ( email is used for password recovery )
-					std::string email = this->m_user + "@fake.net";
-
-					//autologin. create user and login
-					m_onlinedata.loginNew(this->m_user, this->m_passwd, email, [=](void * data){
-						CCLOG("login done !!!");
-					});
+					newPlayer = true;
+					if (m_onlinedata)
+					{
+						//reset online data manager to force login
+						setOnlineDataManager(m_onlinedata);
+					}
 				}
 			}
 
 		});
 	}
 
-	//member methods
+	void Player::setOnlineDataManager(std::shared_ptr<OnlineData::OnlineDataManager> onlinedata)
+	{
+		m_onlinedata = onlinedata;
+
+		if (m_user != "")
+		{
+			if (newPlayer)
+			{
+				//adding fake email on creation ( email is used for password recovery )
+				std::string email = m_user + "@fake.net";
+
+				//autologin. create user and login
+				m_onlinedata->loginNew(m_user, m_passwd, email, [=](void * data){
+					CCLOG("login done !!!");
+				});
+			}
+			else
+			{
+				//autologin
+				m_onlinedata->login(m_user, m_passwd, [=](void * data){
+					CCLOG("login done !!!");
+				});
+			}
+		}
+		else //save not loaded yet
+		{
+
+		}
+	}
+
 	void Player::Update(float deltatime)
 	{
-		m_localdata.update(deltatime);
-		m_onlinedata.update(deltatime);
-	}
-
-	void Player::local_save_error_callback()
-	{
-		CCLOG("LOCAL SAVE ERROR");
-	}
-
-	void Player::online_save_error_callback()
-	{
-		CCLOG("ONLINE SAVE ERROR");
+		if (m_localdata)
+		{
+			m_localdata->update(deltatime);
+		}
+		if (m_onlinedata)
+		{
+			m_onlinedata->update(deltatime);
+		}
 	}
 
 }
