@@ -100,7 +100,9 @@ namespace WkCocos
 					curl_easy_setopt(_curl, CURLOPT_NOSIGNAL, 1L);
 					curl_easy_setopt(_curl, CURLOPT_LOW_SPEED_LIMIT, LOW_SPEED_LIMIT);
 					curl_easy_setopt(_curl, CURLOPT_LOW_SPEED_TIME, LOW_SPEED_TIME);
+					CCLOG("CURL EASY PERFORM begin");
 					res = curl_easy_perform(_curl);
+					CCLOG("CURL EASY PERFORM end");
 
 					CCLOG("DLClisting read from %s", url.c_str());
 
