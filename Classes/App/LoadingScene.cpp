@@ -34,7 +34,7 @@ bool LoadingScene::init()
 	m_ui[LoadingUI::id] = loadui;
 
 	m_downloadManager.start();
-
+	m_preloadManager.start();
 	return true;
 }
 

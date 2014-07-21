@@ -25,7 +25,7 @@ namespace WkCocos
 
 		}//namespace Event
 	}//namespace Loading
-}//namespace dfgame
+}//namespace WkCocos
 
 
 #endif // __DFGAME_SLIDESHOW_EVENTS_ERROR_H__

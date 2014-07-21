@@ -2,6 +2,7 @@
 #define __DFGAME_LOADING_ENTITY_SYSTEMS_LOADING_H__
 
 #include "entityx/entityx.h"
+#include "WkCocos/Loading/Comp/DataLoad.h"
 
 namespace WkCocos
 {

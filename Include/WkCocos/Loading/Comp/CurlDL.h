@@ -146,6 +146,6 @@ namespace WkCocos
 
 		}//namespace Comp
 	}//namespace Loading
-}//namespace dfgame
+}//namespace WkCocos
 
 #endif // __DFGAME_LOADING_ENTITY_COMP_CURLDL_H__

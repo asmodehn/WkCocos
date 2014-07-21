@@ -17,7 +17,7 @@ namespace WkCocos
 
 		}//namespace Event
 	}//namespace LocalData
-}//namespace dfgame
+}//namespace WkCocos
 
 
 #endif // __DFGAME_LOADING_ENTITY_EVENTS_ERROR_H__

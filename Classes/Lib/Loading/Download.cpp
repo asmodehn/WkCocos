@@ -7,7 +7,7 @@
 #include "WkCocos/Loading/Systems/MD5checking.h"
 #include "WkCocos/Loading/Systems/CurlDL.h"
 #include "WkCocos/Loading/Systems/DLvalidating.h"
-#include "WkCocos/Loading/Systems/Loading.h"
+//#include "WkCocos/Loading/Systems/Loading.h"
 #include "WkCocos/Loading/Systems/ProgressUpdate.h"
 
 #include "cocos2d.h"
@@ -104,8 +104,8 @@ namespace WkCocos
 			//system_manager->add<Systems::CurlMultiDL>(m_concurrent_downloads);
 			system_manager->add<Systems::CurlDL>(m_concurrent_downloads);
 			system_manager->add<Systems::DLvalidating>();
-			system_manager->add<Systems::ASyncLoading>(m_concurrent_loads);
-			system_manager->add<Systems::SyncLoading>();
+			//system_manager->add<Systems::ASyncLoading>(m_concurrent_loads);
+			//system_manager->add<Systems::SyncLoading>();
 			system_manager->add<Systems::ProgressUpdate>(m_progress_callback);
 		};
 
@@ -140,9 +140,9 @@ namespace WkCocos
 			//validates if signature matches
 			system_manager->update<Systems::DLvalidating>(dt);
 			//asynchronously load data
-			system_manager->update<Systems::ASyncLoading>(dt);
+			//system_manager->update<Systems::ASyncLoading>(dt);
 			//synchronously load data
-			system_manager->update<Systems::SyncLoading>(dt);
+			//system_manager->update<Systems::SyncLoading>(dt);
 
 			//display the progress
 			system_manager->update<Systems::ProgressUpdate>(dt);
@@ -150,4 +150,4 @@ namespace WkCocos
 		}
 			
 	} // namespace Loading
-}  // namespace dfgame
+}  // namespace WkCocos

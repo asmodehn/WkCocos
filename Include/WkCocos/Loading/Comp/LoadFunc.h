@@ -82,7 +82,7 @@ namespace WkCocos
 			};
 
 		}//namespace Comp
-	}//namespace LoadingScene
-}//namespace dfgame
+	}//namespace Loading
+}//namespace WkCocos
 
 #endif // __DFGAME_LOADING_ENTITY_COMP_LOADFUNC_H__

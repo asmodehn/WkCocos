@@ -4,7 +4,7 @@
 #include "cocos2d.h"
 
 #include "entityx/entityx.h"
-#include "WkCocos/Loading/Events/Loaded.h"
+//#include "WkCocos/Loading/Events/Loaded.h"
 
 #include "curl/curl.h"
 
@@ -48,6 +48,6 @@ namespace WkCocos
 			};
 
 	} // namespace Loading
-}  // namespace dfgame
+}  // namespace WkCocos
 
 #endif //__LOADING_ENTITY_PRELOAD_H__

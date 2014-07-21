@@ -4,7 +4,7 @@
 #include "cocos2d.h"
 
 #include "entityx/entityx.h"
-#include "WkCocos/Loading/Comp/DataLoad.h"
+//#include "WkCocos/Loading/Comp/DataLoad.h"
 #include "WkCocos/Loading/Comp/FileMD5.h"
 #include "WkCocos/Loading/Comp/CurlDL.h"
 

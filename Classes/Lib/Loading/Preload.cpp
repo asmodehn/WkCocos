@@ -1,12 +1,12 @@
 #include "WkCocos/Loading/Preload.h"
 
 #include "WkCocos/Loading/Systems/Error.h"
-#include "WkCocos/Loading/Systems/DataEval.h"
-#include "WkCocos/Loading/Systems/DLClisting.h"
-#include "WkCocos/Loading/Systems/DLCchecking.h"
-#include "WkCocos/Loading/Systems/MD5checking.h"
-#include "WkCocos/Loading/Systems/CurlDL.h"
-#include "WkCocos/Loading/Systems/DLvalidating.h"
+//#include "WkCocos/Loading/Systems/DataEval.h"
+//#include "WkCocos/Loading/Systems/DLClisting.h"
+//#include "WkCocos/Loading/Systems/DLCchecking.h"
+//#include "WkCocos/Loading/Systems/MD5checking.h"
+//#include "WkCocos/Loading/Systems/CurlDL.h"
+//#include "WkCocos/Loading/Systems/DLvalidating.h"
 #include "WkCocos/Loading/Systems/Loading.h"
 #include "WkCocos/Loading/Systems/ProgressUpdate.h"
 
@@ -54,13 +54,13 @@ namespace WkCocos
 		void Preload::configure()
 		{
 			system_manager->add<Systems::Error>(m_error_callback);
-			system_manager->add<Systems::DataEval>();
-			system_manager->add<Systems::DLClisting>();
-			system_manager->add<Systems::DLCchecking>();
-			system_manager->add<Systems::MD5checking>();
+			//system_manager->add<Systems::DataEval>();
+			//system_manager->add<Systems::DLClisting>();
+			//system_manager->add<Systems::DLCchecking>();
+			//system_manager->add<Systems::MD5checking>();
 			//system_manager->add<Systems::CurlMultiDL>(m_concurrent_downloads);
-			system_manager->add<Systems::CurlDL>(m_concurrent_downloads);
-			system_manager->add<Systems::DLvalidating>();
+			//system_manager->add<Systems::CurlDL>(m_concurrent_downloads);
+			//system_manager->add<Systems::DLvalidating>();
 			system_manager->add<Systems::ASyncLoading>(m_concurrent_loads);
 			system_manager->add<Systems::SyncLoading>();
 			system_manager->add<Systems::ProgressUpdate>(m_progress_callback);
@@ -82,20 +82,20 @@ namespace WkCocos
 			//check for error and report them if needed
 			system_manager->update<Systems::Error>(dt);
 			//evaluate entities containing DataLoad components
-			system_manager->update<Systems::DataEval>(dt);
+			//system_manager->update<Systems::DataEval>(dt);
 			//listing versions avialable on DLC
-			system_manager->update<Systems::DLClisting>(dt);
+			//system_manager->update<Systems::DLClisting>(dt);
 			//listing files in one version on DLC
-			system_manager->update<Systems::DLCchecking>(dt);
+			//system_manager->update<Systems::DLCchecking>(dt);
 			//check MD5 of files existing and downloaded
-			system_manager->update<Systems::MD5checking>(dt);
+			//system_manager->update<Systems::MD5checking>(dt);
 			
 			//do the curl calls when needed
 			//system_manager->update<Systems::CurlMultiDL>(dt);
-			system_manager->update<Systems::CurlDL>(dt);
+			//system_manager->update<Systems::CurlDL>(dt);
 
 			//validates if signature matches
-			system_manager->update<Systems::DLvalidating>(dt);
+			//system_manager->update<Systems::DLvalidating>(dt);
 			//asynchronously load data
 			system_manager->update<Systems::ASyncLoading>(dt);
 			//synchronously load data
@@ -107,4 +107,4 @@ namespace WkCocos
 		}
 			
 	} // namespace Loading
-}  // namespace dfgame
+}  // namespace WkCocos
