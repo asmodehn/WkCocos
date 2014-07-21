@@ -40,60 +40,6 @@ namespace WkCocos
 			curl_global_cleanup();
 		}
 
-		void Preload::addDataDownload(const std::string json_manifest_filename)
-		{
-			cocos2d::Data manifest_data = cocos2d::FileUtils::getInstance()->getDataFromFile(json_manifest_filename);
-				
-			rapidjson::Document json;
-
-			std::string manifestStr = cocos2d::FileUtils::getInstance()->getStringFromFile(json_manifest_filename);
-
-			json.Parse<0>(manifestStr.c_str());
-			if (json.HasParseError()) {
-				CCLOG("GetParseError %s\n", json.GetParseError());
-			}
-
-			bool dlcEnable = cocostudio::DictionaryHelper::getInstance()->getBooleanValue_json(json, "dlcEnable", "error");
-			std::string dlcUrl = cocostudio::DictionaryHelper::getInstance()->getStringValue_json(json, "dlcUrl", "error");
-			std::string minAppVersion = cocostudio::DictionaryHelper::getInstance()->getStringValue_json(json, "minAppVersion", "error");
-			std::string version = cocostudio::DictionaryHelper::getInstance()->getStringValue_json(json, "version", 0);
-
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-			auto locahost = dlcUrl.find("localhost");
-			if ( std::string::npos != locahost)
-			{
-				// If we can find "localhost". Replace it with emulator access to localhost.
-				dlcUrl.replace(locahost, 9, "10.0.2.2");
-			}
-#endif
-				
-			CCLOG("dlcUrl : %s", dlcUrl.c_str());
-			CCLOG("minAppVersion : %s", minAppVersion.c_str());
-			CCLOG("version : %s",version.c_str());
-
-			unsigned long lver = 0;
-			try {
-				 lver = ToolBox::stoul(version);
-				CCLOG("Manifest version %lu for DLC at %s ", lver, dlcUrl.c_str());
-			}
-			catch (std::out_of_range oor)
-			{
-				lver = LONG_MAX;
-			}
-
-			if (dlcEnable)
-			{
-				entityx::Entity entity = entity_manager->create();
-				entity.assign<Comp::DataListDownload>(dlcUrl, lver , minAppVersion);
-				entity.assign<Comp::ProgressValue>(1);
-			}
-			else
-			{
-				CCLOG("Manifest IGNORED !");
-			}
-
-		}
-
 		bool Preload::addDataLoad(const std::vector<std::string> &  filepath)
 		{
 			for (auto path : filepath)

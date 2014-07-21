@@ -32,26 +32,6 @@ namespace WkCocos
 				return written;
 			}
 
-			static int download_progress(void *ptr, double totalToDownload, double nowDownloaded, double totalToUpLoad, double nowUpLoaded)
-			{
-				static int percent = 0;
-				int tmp = (int)(nowDownloaded / totalToDownload * 100);
-
-				if (percent != tmp)
-				{
-					percent = tmp;
-					//Director::getInstance()->getScheduler()->performFunctionInCocosThread([=]{
-					//	auto manager = static_cast<AssetsManager*>(ptr);
-					//	if (manager->_delegate)
-					//		manager->_delegate->onProgress(percent);
-					//});
-
-					CCLOG("downloading... %d%%", percent);
-				}
-
-				return 0;
-			}
-
 			DLClisting::DLClisting()
 			try
 			: _curl(nullptr)

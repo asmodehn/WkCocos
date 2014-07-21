@@ -94,17 +94,6 @@ namespace WkCocos
 
 		}
 
-		bool Download::addDataLoad(const std::vector<std::string> &  filepath)
-		{
-			for (auto path : filepath)
-			{
-				entityx::Entity entity = entity_manager->create();
-				entity.assign<Comp::DataLoad>(path);
-				entity.assign<Comp::ProgressValue>(1);
-			}
-			return true;
-		}
-
 		void Download::configure()
 		{
 			system_manager->add<Systems::Error>(m_error_callback);

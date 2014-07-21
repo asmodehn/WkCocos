@@ -21,9 +21,6 @@ namespace WkCocos
 					std::function<void()> error_callback
 					);
 
-				//the assetsManager must be added to a scene to have its update called
-				void addDataDownload(const std::string json_manifest_filename);
-
 				//scheduel the load in memory of a data.
 				//DataLoad Event is sent when the load finishes.
 				bool addDataLoad(const std::vector<std::string> &  filepath);

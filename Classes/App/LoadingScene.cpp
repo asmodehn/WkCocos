@@ -51,7 +51,7 @@ void LoadingScene::onExitTransitionDidStart()
 
 void LoadingScene::addLoad(std::vector<std::string> respath)
 {
-	m_downloadManager.addDataLoad(respath);
+	m_preloadManager.addDataLoad(respath);
 }
 
 void LoadingScene::setLoadDoneCallback(std::function<void()> cb)
