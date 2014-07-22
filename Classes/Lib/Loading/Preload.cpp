@@ -22,13 +22,11 @@ namespace WkCocos
 	namespace Loading
 	{
 
-		Preload::Preload(unsigned short  concurrent_downloads,
-			unsigned short  concurrent_loads,
+		Preload::Preload(unsigned short concurrent_loads,
 			std::function<void(float)> progress_callback,
 			std::function<void()> error_callback
 			)
-			: m_concurrent_downloads(concurrent_downloads)
-			, m_concurrent_loads(concurrent_loads)
+			: m_concurrent_loads(concurrent_loads)
 			, m_progress_callback(progress_callback)
 			, m_error_callback(error_callback)
 		{
@@ -103,8 +101,12 @@ namespace WkCocos
 
 			//display the progress
 			system_manager->update<Systems::ProgressUpdate>(dt);
-
 		}
-			
+
+		void Preload::setEventEmmiter(entityx::ptr<entityx::EventManager> event_emmiter)
+		{
+			event_emmiter->subscribe<Events::Downloaded>(system_manager->system<Systems::DataEval>());
+		}
+
 	} // namespace Loading
 }  // namespace WkCocos

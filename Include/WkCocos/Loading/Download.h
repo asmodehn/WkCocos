@@ -15,8 +15,7 @@ namespace WkCocos
 		class Download : public entityx::Manager
 			{
 			public:
-				explicit Download(unsigned short  concurrent_downloads,
-					unsigned short  concurrent_loads,
+				explicit Download(unsigned short concurrent_downloads,
 					std::function<void(float)> progress_callback,
 					std::function<void()> error_callback
 					);
@@ -39,7 +38,7 @@ namespace WkCocos
 				void update(double dt) override;
 
 				unsigned short m_concurrent_downloads;
-				unsigned short m_concurrent_loads;
+
 				std::function<void()> m_error_callback;
 				std::function<void(float)> m_progress_callback;
 

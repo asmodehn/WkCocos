@@ -22,13 +22,11 @@ namespace WkCocos
 	namespace Loading
 	{
 
-		Download::Download(unsigned short  concurrent_downloads,
-			unsigned short  concurrent_loads,
+		Download::Download(unsigned short concurrent_downloads,
 			std::function<void(float)> progress_callback,
 			std::function<void()> error_callback
 			)
 			: m_concurrent_downloads(concurrent_downloads)
-			, m_concurrent_loads(concurrent_loads)
 			, m_progress_callback(progress_callback)
 			, m_error_callback(error_callback)
 		{

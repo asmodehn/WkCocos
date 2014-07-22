@@ -49,10 +49,10 @@ protected:
 		: Scene()
 		, m_loadDoneCB_called(false)
 		, m_loadDoneCB()
-		, m_downloadManager(5,1,
+		, m_downloadManager(5,
 		std::bind(&LoadingScene::progress_CB, this, std::placeholders::_1),
 		std::bind(&LoadingScene::error_CB, this))
-		, m_preloadManager(5, 1,
+		, m_preloadManager(1,
 		std::bind(&LoadingScene::progress_CB, this, std::placeholders::_1),
 		std::bind(&LoadingScene::error_CB, this))
 	{

@@ -4,7 +4,6 @@
 #include "cocos2d.h"
 
 #include "entityx/entityx.h"
-//#include "WkCocos/Loading/Events/Loaded.h"
 
 #include "curl/curl.h"
 
@@ -15,8 +14,7 @@ namespace WkCocos
 		class Preload : public entityx::Manager
 			{
 			public:
-				explicit Preload(unsigned short  concurrent_downloads,
-					unsigned short  concurrent_loads,
+				explicit Preload(unsigned short concurrent_loads,
 					std::function<void(float)> progress_callback,
 					std::function<void()> error_callback
 					);
@@ -32,6 +30,8 @@ namespace WkCocos
 					return event_manager;
 				}
 
+				void setEventEmmiter(entityx::ptr<entityx::EventManager> event_emmiter);
+
 			protected:
 				void configure() override;
 
@@ -39,12 +39,11 @@ namespace WkCocos
 
 				void update(double dt) override;
 
-				unsigned short m_concurrent_downloads;
 				unsigned short m_concurrent_loads;
+
 				std::function<void()> m_error_callback;
 				std::function<void(float)> m_progress_callback;
 
-				
 			};
 
 	} // namespace Loading
