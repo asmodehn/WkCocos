@@ -1,6 +1,6 @@
 #include "WkCocosApp/AppDelegate.h"
 #include "WkCocosApp/LoadingScene.h"
-#include "WkCocosApp/HelloWorldScene.h"
+#include "WkCocosApp/SavingScene.h"
 #include "WkCocosApp/GameLogic.h"
 
 USING_NS_CC;
@@ -49,7 +49,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
 	loadscene->setLoadDoneCallback([](){
 		auto director = cocos2d::Director::getInstance();
-		director->replaceScene(cocos2d::TransitionFade::create(1.0f, HelloWorld::createScene()));
+		director->replaceScene(cocos2d::TransitionFade::create(1.0f, SavingScene::create()));
 	});
 
 	//Creating gamelogic and setting player.
