@@ -41,6 +41,55 @@ namespace WkCocos
 
 			};
 
+			/*
+			struct SaveProfile : entityx::Component<SaveProfile>
+			{
+				SaveProfile(std::string userid, std::string profile_data, std::function<void(App42UserCustomResponse*)> cb);
+
+				bool in_progress;
+				bool done;
+				std::string m_userid;
+				std::string m_profile_data;
+				std::function<void(void*)> m_cb;
+			};
+
+			struct LoadProfile : entityx::Component<LoadProfile>
+			{
+				LoadProfile(std::string userid, std::function<void(App42UserCustomResponse*)> cb);
+
+				bool in_progress;
+				bool done;
+				std::string m_userid;
+				std::string m_profile_data;
+				std::function<void(void*)> m_cb;
+			};
+			*/
+			/*
+			struct SavePublic : entityx::Component<SavePublic>
+			{
+				SavePublic(std::string userid, std::string public_data, std::function<void(App42StorageResponse*)> cb);
+
+				bool in_progress;
+				bool done;
+				std::string m_userid;
+				std::string m_public_data;
+				std::function<void(void*)> m_cb;
+				std::string m_suffix = "_public";
+			};
+
+			struct LoadPublic : entityx::Component<LoadPublic>
+			{
+				LoadPublic(std::string userid, std::function<void(App42StorageResponse*)> cb);
+
+				bool in_progress;
+				bool done;
+				std::string m_userid;
+				std::string m_public_data;
+				std::function<void(void*)> m_cb;
+				std::string m_suffix = "_public";
+			};
+			*/
+
 		}//namespace Comp
 	}//namespace OnlineData
 }//namespace WkCocos

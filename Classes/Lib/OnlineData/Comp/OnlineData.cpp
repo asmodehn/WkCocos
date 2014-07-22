@@ -68,6 +68,70 @@ namespace WkCocos
 				};
 			}
 
+			/*
+			SaveProfile::SaveProfile(std::string userid, std::string profile_data, std::function<void(App42UserCustomResponse*)> cb)
+				: in_progress(false)
+				, done(false)
+				, m_userid(userid)
+				, m_profile_data(profile_data)
+			{
+				m_cb = [=](void* data) {
+					App42UserCustomResponse* userdata = static_cast<App42UserCustomResponse*>(data);
+
+					CCLOG("\ncode=%d...=%d", userdata->getCode(), userdata->isSuccess);
+					CCLOG("\nResponse Body=%s", userdata->getBody().c_str());
+
+					if (userdata->isSuccess)
+					{//if request succeed
+						cb(userdata);
+					}
+					else// if request failed, 
+					{
+						CCLOG("\nerrordetails:%s", userdata->errorDetails.c_str());
+						CCLOG("\nerrorMessage:%s", userdata->errorMessage.c_str());
+						CCLOG("\nappErrorCode:%d", userdata->appErrorCode);
+						CCLOG("\nhttpErrorCode:%d", userdata->httpErrorCode);
+
+						cb(userdata);
+					}
+
+					done = true;
+
+				};
+			}
+
+			LoadProfile::LoadProfile(std::string userid, std::function<void(App42UserCustomResponse*)> cb)
+				: in_progress(false)
+				, done(false)
+				, m_userid(userid)
+				, m_profile_data("")
+			{
+				m_cb = [=](void* data) {
+					App42UserCustomResponse* userdata = static_cast<App42UserCustomResponse*>(data);
+
+					CCLOG("\ncode=%d...=%d", userdata->getCode(), userdata->isSuccess);
+					CCLOG("\nResponse Body=%s", userdata->getBody().c_str());
+
+					if (userdata->isSuccess)
+					{//if request succeed
+						cb(userdata);
+					}
+					else// if request failed, 
+					{
+						CCLOG("\nerrordetails:%s", userdata->errorDetails.c_str());
+						CCLOG("\nerrorMessage:%s", userdata->errorMessage.c_str());
+						CCLOG("\nappErrorCode:%d", userdata->appErrorCode);
+						CCLOG("\nhttpErrorCode:%d", userdata->httpErrorCode);
+
+						cb(userdata);
+					}
+
+					done = true;
+
+				};
+			}
+			*/
+
 		}
 
 	}//namespace OnlineData

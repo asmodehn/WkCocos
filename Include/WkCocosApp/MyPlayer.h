@@ -4,9 +4,9 @@
 #include "WkCocos/Player.h"
 
 /**
-* This UI is the main menu UI
+* This is the game player
 */
-class MyPlayer : public WkCocos::Player
+class MyPlayer : public WkCocos::Player<MyPlayer>
 {
 public:
 
@@ -20,6 +20,27 @@ public:
 	*/
 	virtual ~MyPlayer();
 	
+
+	/**
+	* data accessor as json string
+	*/
+	std::string get_data_json();
+
+	/**
+	* data setter from json string
+	*/
+	void set_data_json(std::string data);
+
+	//ingame currency
+	unsigned int m_gold;
+	//premium currency
+	unsigned int m_gem;
+
+	void testSave()
+	{
+
+		requestSaveData();
+	}
 };
 
 

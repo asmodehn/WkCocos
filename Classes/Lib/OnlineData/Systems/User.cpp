@@ -59,6 +59,54 @@ namespace WkCocos
 					}
 
 				}
+				/*
+				entityx::ptr<Comp::SaveProfile> sp;
+				for (auto entity : entities->entities_with_components(sp))
+				{
+					if (sp->done)
+					{
+						entity.remove<Comp::SaveProfile>();
+						//if mask at 0 no request in this entity anymore
+						if (entity.component_mask() == 0)
+						{
+							entity.destroy();
+						}
+					}
+					else if (!sp->in_progress)
+					{
+						App42CustomUser user;
+						user.userName = sp->m_userid;
+						user.customProfile = sp->m_profile_data;
+						CCLOG("Saving App42 User %s profile : %s ", user.userName.c_str(), user.customProfile.c_str());
+						m_service->createOrUpdateCustomProfile(&user, sp->m_cb);
+						sp->in_progress = true;
+					}
+
+				}
+
+
+				entityx::ptr<Comp::LoadProfile> lp;
+				for (auto entity : entities->entities_with_components(lp))
+				{
+					if (lp->done)
+					{
+						entity.remove<Comp::LoadProfile>();
+						//if mask at 0 no request in this entity anymore
+						if (entity.component_mask() == 0)
+						{
+							entity.destroy();
+						}
+					}
+					else if (!lp->in_progress)
+					{
+						CCLOG("Requesting App42 User profile : %s ", lp->m_userid.c_str());
+						m_service->GetCustomUser(lp->m_userid.c_str(), lp->m_cb);
+						lp->in_progress = true;
+					}
+
+				}
+
+				*/
 
 			}
 

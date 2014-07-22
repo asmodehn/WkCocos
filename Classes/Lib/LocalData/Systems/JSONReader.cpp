@@ -29,7 +29,7 @@ namespace WkCocos
 					bool fileread = file->read();
 
 					//we try to read
-					if (fileread)
+					if (fileread && file->m_contents != "")
 					{
 						doc.Parse<0>(file->m_contents.c_str());
 						if (doc.HasParseError()) {

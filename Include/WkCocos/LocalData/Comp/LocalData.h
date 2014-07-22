@@ -94,6 +94,27 @@ namespace WkCocos
 				std::function<void(std::string user, std::string passwd)> m_load_cb;
 			};
 
+			struct PlayerData_v1 : entityx::Component<PlayerData_v1>
+			{
+				const std::string m_name = "playerData";
+
+				//warning rapidjson has move semantics implicitly
+				PlayerData_v1(std::string data)
+					: m_load_cb()
+					, m_data(data)
+				{
+				}
+
+				PlayerData_v1(std::function<void(std::string data)> load_cb)
+					: m_load_cb(load_cb)
+				{
+				}
+
+				std::string m_data;
+
+				std::function<void(std::string data)> m_load_cb;
+			};
+
 
 		}//namespace Comp
 	}//namespace LocalData

@@ -1,5 +1,8 @@
 #include "WkCocosApp/HelloWorldScene.h"
 
+#include "WkCocosApp/GameLogic.h"
+#include "WkCocosApp/MyPlayer.h"
+
 USING_NS_CC;
 
 Scene* HelloWorld::createScene()
@@ -54,7 +57,7 @@ bool HelloWorld::init()
     // add a label shows "Hello World"
     // create and initialize a label
     
-    auto label = LabelTTF::create("Hello World", "Arial", 24);
+	auto label = LabelTTF::create("Hello World " + WkCocos::ToolBox::itoa(GameLogic::Instance().getPlayer().m_gem), "Arial", 24);
     
     // position the label on the center of the screen
     label->setPosition(Vec2(origin.x + visibleSize.width/2,
@@ -77,7 +80,7 @@ bool HelloWorld::init()
 
 
 void HelloWorld::menuCloseCallback(Ref* pSender)
-{
+{/*
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WP8) || (CC_TARGET_PLATFORM == CC_PLATFORM_WINRT)
 	MessageBox("You pressed the close button. Windows Store Apps do not implement a close button.","Alert");
     return;
@@ -88,4 +91,6 @@ void HelloWorld::menuCloseCallback(Ref* pSender)
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     exit(0);
 #endif
+	*/
+	GameLogic::Instance().getPlayer().testSave();
 }

@@ -29,6 +29,16 @@ namespace WkCocos
 			*/
 			void login(std::string userid, std::string password, std::function<void(App42UserResponse*)> callback);
 
+			/**
+			* Save Player Public Data
+			*/
+			//void save(std::string userid, std::string public_data, std::function<void(App42UserCustomResponse*)> callback);
+
+			/**
+			* Load Player Public Data
+			*/
+			//void load(std::string userid, std::function<void(App42UserCustomResponse*)> callback);
+
 			void update(double dt);
 
 		protected :
