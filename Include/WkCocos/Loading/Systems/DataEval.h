@@ -6,6 +6,7 @@
 #include "entityx/entityx.h"
 #include "WkCocos/Loading/Comp/DataLoad.h"
 #include "WkCocos/Loading/Comp/LoadFunc.h"
+#include "WkCocos/Loading/Events/Downloaded.h"
 
 namespace WkCocos
 {
@@ -14,9 +15,11 @@ namespace WkCocos
 		namespace Systems
 		{
 			//system reading data to determine which loading component must be added.
-			struct DataEval : public entityx::System<DataEval> {
-
+			struct DataEval : public entityx::System<DataEval>, entityx::Receiver<DataEval>
+			{
 				void update(entityx::ptr<entityx::EntityManager> es, entityx::ptr<entityx::EventManager> events, double dt) override;
+				void receive(const Events::Downloaded &dl);
+			
 			protected:
 				void chooseLoader(entityx::Entity entity, std::string datafile, entityx::ptr<entityx::EventManager> events);
 			};

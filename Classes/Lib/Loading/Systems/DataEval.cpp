@@ -1,7 +1,7 @@
 #include "WkCocos/Loading/Systems/DataEval.h"
 
 #include "WkCocos/Loading/Events/Error.h"
-
+#include "WkCocos/Loading/Events/Downloaded.h"
 #include "WkCocos/Interface.h"
 
 namespace WkCocos
@@ -84,7 +84,9 @@ namespace WkCocos
 
 				}
 
-			};
+			}
+
+			void DataEval::receive(const Events::Downloaded &dl) {}
 					
 		}//namespace Systems
 	}//namespace Loading

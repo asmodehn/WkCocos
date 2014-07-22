@@ -1,7 +1,7 @@
 #include "WkCocos/Loading/Preload.h"
 
 #include "WkCocos/Loading/Systems/Error.h"
-//#include "WkCocos/Loading/Systems/DataEval.h"
+#include "WkCocos/Loading/Systems/DataEval.h"
 //#include "WkCocos/Loading/Systems/DLClisting.h"
 //#include "WkCocos/Loading/Systems/DLCchecking.h"
 //#include "WkCocos/Loading/Systems/MD5checking.h"
@@ -32,12 +32,12 @@ namespace WkCocos
 			, m_progress_callback(progress_callback)
 			, m_error_callback(error_callback)
 		{
-			curl_global_init(CURL_GLOBAL_DEFAULT);
+			//curl_global_init(CURL_GLOBAL_DEFAULT);
 		}
 
 		Preload::~Preload()
 		{
-			curl_global_cleanup();
+			//curl_global_cleanup();
 		}
 
 		bool Preload::addDataLoad(const std::vector<std::string> &  filepath)
@@ -54,7 +54,7 @@ namespace WkCocos
 		void Preload::configure()
 		{
 			system_manager->add<Systems::Error>(m_error_callback);
-			//system_manager->add<Systems::DataEval>();
+			system_manager->add<Systems::DataEval>();
 			//system_manager->add<Systems::DLClisting>();
 			//system_manager->add<Systems::DLCchecking>();
 			//system_manager->add<Systems::MD5checking>();
@@ -82,7 +82,7 @@ namespace WkCocos
 			//check for error and report them if needed
 			system_manager->update<Systems::Error>(dt);
 			//evaluate entities containing DataLoad components
-			//system_manager->update<Systems::DataEval>(dt);
+			system_manager->update<Systems::DataEval>(dt);
 			//listing versions avialable on DLC
 			//system_manager->update<Systems::DLClisting>(dt);
 			//listing files in one version on DLC
