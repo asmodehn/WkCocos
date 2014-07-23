@@ -4,8 +4,8 @@
 #include "cocos2d.h"
 #include "WkCocos/Scene.h"
 
-#include "WkCocos/Loading/Download.h"
-#include "WkCocos/Loading/Preload.h"
+#include "WkCocos/Download/Download.h"
+#include "WkCocos/Preload/Preload.h"
 
 class LoadingScene : public WkCocos::Scene
 {
@@ -61,8 +61,8 @@ protected:
 	bool m_loadDoneCB_called;
 	std::function<void()> m_loadDoneCB;
 
-	WkCocos::Loading::Download m_downloadManager;
-	WkCocos::Loading::Preload m_preloadManager;
+	WkCocos::Download::Download m_downloadManager;
+	WkCocos::Preload::Preload m_preloadManager;
 };
 
 
