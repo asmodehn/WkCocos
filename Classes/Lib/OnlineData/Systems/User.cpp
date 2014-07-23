@@ -33,6 +33,18 @@ namespace WkCocos
 					}
 					else if (!c->in_progress)
 					{
+						auto data = entity.component<Comp::SaveUserData>();
+						if (data && !data->in_progress)
+						{
+							App42Object* app42Object = new App42Object();
+							app42Object->setObject("user_id", data->m_userid.c_str());
+							app42Object->setObject("data", data->m_user_data.c_str());
+							const char* dbName = "PLAYERS";
+							const char* collectionName = "Data";
+							App42API::setDbName(dbName);
+							m_service->AddUserInfo(app42Object, collectionName);
+							data->in_progress = true;
+						}
 						CCLOG("Requesting App42 User creation : %s ", c->m_userid.c_str());
 						m_service->CreateUser(c->m_userid.c_str(), c->m_passwd.c_str(), c->m_email.c_str(), c->m_cb);
 						c->in_progress = true;
@@ -59,59 +71,60 @@ namespace WkCocos
 					}
 
 				}
-				/*
-				entityx::ptr<Comp::SaveProfile> sp;
-				for (auto entity : entities->entities_with_components(sp))
+				
+				entityx::ptr<Comp::SaveUserData> sud;
+				for (auto entity : entities->entities_with_components(sud))
 				{
-					if (sp->done)
+					if (sud->done)
 					{
-						entity.remove<Comp::SaveProfile>();
+						entity.remove<Comp::SaveUserData>();
 						//if mask at 0 no request in this entity anymore
 						if (entity.component_mask() == 0)
 						{
 							entity.destroy();
 						}
 					}
-					else if (!sp->in_progress)
+					else if (!sud->in_progress)
 					{
-						App42CustomUser user;
-						user.userName = sp->m_userid;
-						user.customProfile = sp->m_profile_data;
-						CCLOG("Saving App42 User %s profile : %s ", user.userName.c_str(), user.customProfile.c_str());
-						m_service->createOrUpdateCustomProfile(&user, sp->m_cb);
-						sp->in_progress = true;
+						App42Object* app42Object = new App42Object();
+						app42Object->setObject("user_id", sud->m_userid.c_str());
+						app42Object->setObject("data", sud->m_user_data.c_str());
+						const char* dbName = "PLAYERS";
+						const char* collectionName = "Data";
+						App42API::setDbName(dbName);
+						m_service->AddUserInfo(app42Object, collectionName);
+						//m_service->CreateUser(sud->m_userid.c_str(), sud->m_passwd.c_str(), sud->m_email.c_str(), sud->m_cb);
+						sud->in_progress = true;
 					}
 
 				}
 
 
-				entityx::ptr<Comp::LoadProfile> lp;
-				for (auto entity : entities->entities_with_components(lp))
+				entityx::ptr<Comp::LoadUserData> lud;
+				for (auto entity : entities->entities_with_components(lud))
 				{
-					if (lp->done)
+					if (lud->done)
 					{
-						entity.remove<Comp::LoadProfile>();
+						entity.remove<Comp::LoadUserData>();
 						//if mask at 0 no request in this entity anymore
 						if (entity.component_mask() == 0)
 						{
 							entity.destroy();
 						}
 					}
-					else if (!lp->in_progress)
+					else if (!lud->in_progress)
 					{
-						CCLOG("Requesting App42 User profile : %s ", lp->m_userid.c_str());
-						m_service->GetCustomUser(lp->m_userid.c_str(), lp->m_cb);
-						lp->in_progress = true;
+						Query* query = QueryBuilder::BuildQuery("user_id", lud->m_userid.c_str(), APP42_OP_EQUALS);
+						m_service->setQuery("PLAYERS", "Data", query);
+						CCLOG("Requesting App42 User data for : %s ", lud->m_userid.c_str());
+						m_service->GetUser(lud->m_userid.c_str(), lud->m_cb);
+						lud->in_progress = true;
 					}
 
 				}
-
-				*/
-
+				
 			}
-
-
-					
+			
 		}//namespace Systems
 	}//namespace OnlineData
 }//namespace WkCocos

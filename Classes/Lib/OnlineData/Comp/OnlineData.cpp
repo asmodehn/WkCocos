@@ -68,15 +68,14 @@ namespace WkCocos
 				};
 			}
 
-			/*
-			SaveProfile::SaveProfile(std::string userid, std::string profile_data, std::function<void(App42UserCustomResponse*)> cb)
+			SaveUserData::SaveUserData(std::string userid, std::string user_data, std::function<void(App42UserResponse*)> cb)
 				: in_progress(false)
 				, done(false)
 				, m_userid(userid)
-				, m_profile_data(profile_data)
+				, m_user_data(user_data)
 			{
 				m_cb = [=](void* data) {
-					App42UserCustomResponse* userdata = static_cast<App42UserCustomResponse*>(data);
+					App42UserResponse* userdata = static_cast<App42UserResponse*>(data);
 
 					CCLOG("\ncode=%d...=%d", userdata->getCode(), userdata->isSuccess);
 					CCLOG("\nResponse Body=%s", userdata->getBody().c_str());
@@ -100,14 +99,14 @@ namespace WkCocos
 				};
 			}
 
-			LoadProfile::LoadProfile(std::string userid, std::function<void(App42UserCustomResponse*)> cb)
+			LoadUserData::LoadUserData(std::string userid, std::function<void(App42UserResponse*)> cb)
 				: in_progress(false)
 				, done(false)
 				, m_userid(userid)
-				, m_profile_data("")
+				, m_user_data("")
 			{
 				m_cb = [=](void* data) {
-					App42UserCustomResponse* userdata = static_cast<App42UserCustomResponse*>(data);
+					App42UserResponse* userdata = static_cast<App42UserResponse*>(data);
 
 					CCLOG("\ncode=%d...=%d", userdata->getCode(), userdata->isSuccess);
 					CCLOG("\nResponse Body=%s", userdata->getBody().c_str());
@@ -130,7 +129,6 @@ namespace WkCocos
 
 				};
 			}
-			*/
 
 		}
 

@@ -41,29 +41,28 @@ namespace WkCocos
 
 			};
 
-			/*
-			struct SaveProfile : entityx::Component<SaveProfile>
+			struct SaveUserData : entityx::Component<SaveUserData>
 			{
-				SaveProfile(std::string userid, std::string profile_data, std::function<void(App42UserCustomResponse*)> cb);
+				SaveUserData(std::string userid, std::string user_data, std::function<void(App42UserResponse*)> cb);
 
 				bool in_progress;
 				bool done;
 				std::string m_userid;
-				std::string m_profile_data;
+				std::string m_user_data;
 				std::function<void(void*)> m_cb;
 			};
 
-			struct LoadProfile : entityx::Component<LoadProfile>
+			struct LoadUserData : entityx::Component<LoadUserData>
 			{
-				LoadProfile(std::string userid, std::function<void(App42UserCustomResponse*)> cb);
+				LoadUserData(std::string userid, std::function<void(App42UserResponse*)> cb);
 
 				bool in_progress;
 				bool done;
 				std::string m_userid;
-				std::string m_profile_data;
+				std::string m_user_data;
 				std::function<void(void*)> m_cb;
 			};
-			*/
+
 			/*
 			struct SavePublic : entityx::Component<SavePublic>
 			{
