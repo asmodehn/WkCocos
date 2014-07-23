@@ -31,7 +31,7 @@ namespace WkCocos
 							CCLOG("error renaming %s to %s", tmpfile->getPath().c_str(), finalFileName.c_str());
 						}
 						CCLOG("succeed downloading %s", localfile->getPath().c_str());
-						events->emit<Events::Downloaded>(localfile->getPath());
+						events->emit<Events::Downloaded>(entity, events);
 						//we remove the remotefile to validate the success of the download
 						entity.remove<Comp::RemoteFile>();
 

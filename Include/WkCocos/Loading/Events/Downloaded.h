@@ -11,16 +11,13 @@ namespace WkCocos
 		{
 			struct Downloaded : public entityx::Event<Downloaded>
 			{
-				Downloaded(std::string rpath) : loaded_path(rpath)
+				Downloaded(entityx::Entity e, entityx::ptr<entityx::EventManager> events)
+				: downloaded_entity(e)
+				, downloaded_events(events)
 				{}
 
-				inline std::string getLoadedPath() const
-				{
-					return loaded_path;
-				}
-
-			private:
-				std::string loaded_path;
+				entityx::Entity downloaded_entity;
+				entityx::ptr<entityx::EventManager> downloaded_events;
 			};
 
 		}//namespace Event

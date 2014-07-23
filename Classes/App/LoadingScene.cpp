@@ -35,6 +35,8 @@ bool LoadingScene::init()
 
 	m_downloadManager.start();
 	m_preloadManager.start();
+	m_preloadManager.setEventEmmiter(m_downloadManager.getEventManager());
+
 	return true;
 }
 
@@ -98,7 +100,7 @@ void LoadingScene::progress_CB(float pct)
 	{
 		//DOWNloading is finished.
 		//We should clean the pathCache that was computed before download
-		cocos2d::FileUtils::getInstance()->purgeCachedEntries();
+		//cocos2d::FileUtils::getInstance()->purgeCachedEntries();
 
 		//loading finished. lets move on.
 		m_loadDoneCB_called = true;

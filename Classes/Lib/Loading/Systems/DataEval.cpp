@@ -3,6 +3,7 @@
 #include "WkCocos/Loading/Events/Error.h"
 #include "WkCocos/Loading/Events/Downloaded.h"
 #include "WkCocos/Interface.h"
+//#include "WkCocos/Loading/Comp/DataLoad.h"
 
 namespace WkCocos
 {
@@ -86,7 +87,13 @@ namespace WkCocos
 
 			}
 
-			void DataEval::receive(const Events::Downloaded &dl) {}
+			void DataEval::receive(const Events::Downloaded &dl)
+			{
+				auto entity = dl.downloaded_entity;
+				entityx::ptr<Comp::DataLoad> dataload = entity.component<Comp::DataLoad>();
+				chooseLoader(entity, dataload->getFilepath(), dl.downloaded_events);
+				entity.remove<Comp::DataLoad>();
+			}
 					
 		}//namespace Systems
 	}//namespace Loading

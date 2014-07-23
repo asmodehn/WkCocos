@@ -105,7 +105,7 @@ namespace WkCocos
 
 		void Preload::setEventEmmiter(entityx::ptr<entityx::EventManager> event_emmiter)
 		{
-			event_emmiter->subscribe<Events::Downloaded>(system_manager->system<Systems::DataEval>());
+			event_emmiter->subscribe<Events::Downloaded>(*system_manager->system<Systems::DataEval>());
 		}
 
 	} // namespace Loading

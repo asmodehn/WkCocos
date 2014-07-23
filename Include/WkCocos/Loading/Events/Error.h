@@ -9,7 +9,8 @@ namespace WkCocos
 	{
 		namespace Events
 		{
-				struct Error : public entityx::Event<Error> {
+			struct Error : public entityx::Event<Error>
+			{
 				Error(entityx::Entity e) : errored_entity(e) {}
 
 				entityx::Entity errored_entity;
