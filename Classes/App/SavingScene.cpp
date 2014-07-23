@@ -77,6 +77,7 @@ void SavingScene::onExitTransitionDidStart()
 
 void SavingScene::update(float delta)
 {
+	Scene::update(delta);
 }
 
 void SavingScene::error_CB()

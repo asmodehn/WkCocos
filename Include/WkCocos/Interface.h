@@ -49,6 +49,11 @@ namespace WkCocos
 		*/
 		inline std::string getFilepath() const { return m_filepath; }
 
+		/**
+		* update function that is called by Scene to update UI everyframe if needed.
+		*/
+		virtual void update(float delta);
+
 	protected:
 		/**
 		* Default constructor

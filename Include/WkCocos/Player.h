@@ -51,7 +51,6 @@ namespace WkCocos
 		: m_localdata(localdata)
 	{
 		//registering player class in cocos update loop
-
 		cocos2d::Director::getInstance()->getScheduler()->schedule(std::bind(&Player<T>::Update, this, std::placeholders::_1), this, 1.f / 15, false, "player_update");
 
 		//tried to read existing login data.
@@ -101,11 +100,7 @@ namespace WkCocos
 
 		});
 
-		m_localdata->loadPlayerData([=](std::string data){
-
-			set_data_json(data);
-
-		});
+		requestLoadData();
 	}
 	
 	template <class T>
@@ -123,7 +118,7 @@ namespace WkCocos
 				//autologin. create user and login
 				m_onlinedata->loginNew(m_user, m_passwd, email, [=](void * data){
 					CCLOG("login done !!!");
-
+					//loading again to get online value
 					requestLoadData();
 				});
 			}
@@ -132,7 +127,7 @@ namespace WkCocos
 				//autologin
 				m_onlinedata->login(m_user, m_passwd, [=](void * data){
 					CCLOG("login done !!!");
-
+					//loading again to get online value
 					requestLoadData();
 				});
 			}
@@ -146,6 +141,10 @@ namespace WkCocos
 	template <class T>
 	bool Player<T>::requestLoadData()
 	{
+		m_localdata->loadPlayerData([=](std::string data){
+			set_data_json(data);
+		});
+
 		if (m_onlinedata)
 		{
 			//m_onlinedata->load(m_user, [=](void* data)

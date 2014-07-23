@@ -36,10 +36,16 @@ public:
 	//premium currency
 	unsigned int m_gem;
 
-	void testSave()
+	//save Data for test
+	void saveData()
 	{
-
 		requestSaveData();
+	}
+
+	//load Data for test
+	void loadData()
+	{
+		requestLoadData();
 	}
 };
 
