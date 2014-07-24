@@ -29,13 +29,6 @@ namespace WkCocos
 				return (size * nmemb);
 			}
 
-			static size_t download_file(void *ptr, size_t size, size_t nmemb, void *userdata)
-			{
-				FILE *fp = (FILE*)userdata;
-				size_t written = fwrite(ptr, size, nmemb, fp);
-				return written;
-			}
-
 			DLCchecking::DLCchecking()
 			try
 			: _curl(nullptr)
