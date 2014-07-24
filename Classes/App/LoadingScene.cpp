@@ -98,10 +98,6 @@ void LoadingScene::progress_CB(float pct)
 
 	if (pct >= 1.0f && !m_loadDoneCB_called)
 	{
-		//DOWNloading is finished.
-		//We should clean the pathCache that was computed before download
-		//cocos2d::FileUtils::getInstance()->purgeCachedEntries();
-
 		//loading finished. lets move on.
 		m_loadDoneCB_called = true;
 		m_loadDoneCB();

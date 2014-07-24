@@ -73,28 +73,18 @@ namespace WkCocos
 					entityx::ptr<Comp::DataLoad> dataload = entity.component<Comp::DataLoad>();
 
 					//we need to wait for the file to be there ( might come with DLC), otherwise cocos loading will fail.
-					if (cocos2d::FileUtils::getInstance()->isFileExist(dataload->getFilepath()))
+					if (!dataload->loaded && cocos2d::FileUtils::getInstance()->isFileExist(dataload->getFilepath()))
 					{
 						//generate the appropriate loader component
 						chooseLoader(entity, dataload->getFilepath(), events);
 
-						//remove the component we just processed
-						entity.remove<Comp::DataLoad>();
+						//mark the entity as loaded
+						dataload->loaded = true;
+						
 					}
 
 				}
 
-			}
-
-			void DataEval::receive(const Download::Events::Downloaded &dl)
-			{
-				cocos2d::FileUtils::getInstance()->purgeCachedEntries();
-				for (auto entity : dl.downloaded_entities->entities_with_components<Comp::DataLoad>())
-				{
-					entityx::ptr<Comp::DataLoad> dataload = entity.component<Comp::DataLoad>();
-					chooseLoader(entity, dataload->getFilepath(), dl.downloaded_events);
-					entity.remove<Comp::DataLoad>();
-				}
 			}
 					
 		}//namespace Systems

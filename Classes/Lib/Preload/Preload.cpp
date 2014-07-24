@@ -1,12 +1,12 @@
 #include "WkCocos/Preload/Preload.h"
 
+#include "WkCocos/Preload/Comp/DataLoad.h"
+
 #include "WkCocos/Preload/Systems/Error.h"
 #include "WkCocos/Preload/Systems/DataEval.h"
 #include "WkCocos/Preload/Systems/SyncLoading.h"
 #include "WkCocos/Preload/Systems/ASyncLoading.h"
 #include "WkCocos/Preload/Systems/ProgressUpdate.h"
-
-#include "WkCocos/Download/Events/Downloaded.h"
 
 #include "cocos2d.h"
 #include "cocostudio/CocoStudio.h"
@@ -79,19 +79,7 @@ namespace WkCocos
 			system_manager->update<Systems::Error>(dt);
 			//evaluate entities containing DataLoad components
 			system_manager->update<Systems::DataEval>(dt);
-			//listing versions avialable on DLC
-			//system_manager->update<Systems::DLClisting>(dt);
-			//listing files in one version on DLC
-			//system_manager->update<Systems::DLCchecking>(dt);
-			//check MD5 of files existing and downloaded
-			//system_manager->update<Systems::MD5checking>(dt);
-			
-			//do the curl calls when needed
-			//system_manager->update<Systems::CurlMultiDL>(dt);
-			//system_manager->update<Systems::CurlDL>(dt);
 
-			//validates if signature matches
-			//system_manager->update<Systems::DLvalidating>(dt);
 			//asynchronously load data
 			system_manager->update<Systems::ASyncLoading>(dt);
 			//synchronously load data
@@ -103,7 +91,20 @@ namespace WkCocos
 
 		void Preload::setEventEmmiter(entityx::ptr<entityx::EventManager> event_emmiter)
 		{
-			event_emmiter->subscribe<Download::Events::Downloaded>(*system_manager->system<Systems::DataEval>());
+			event_emmiter->subscribe<Download::Events::Downloaded>(*this);
+		}
+
+		void Preload::receive(const Download::Events::Downloaded &dl)
+		{
+			entityx::ptr<Comp::DataLoad> data;
+			for (auto entity : entity_manager->entities_with_components(data))
+			{
+				if (data->getFilepath() == dl.m_filepath)
+				{
+					data->loaded = false;
+					entity.assign<Comp::ProgressValue>(1);
+				}
+			}
 		}
 
 	} // namespace Preload

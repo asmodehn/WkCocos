@@ -1,6 +1,7 @@
 #include "WkCocos/Preload/Systems/ASyncLoading.h"
 
 #include "WkCocos/Preload/Comp/LoadFunc.h"
+#include "WkCocos/Preload/Comp/ProgressValue.h"
 
 #include "WkCocos/Preload/Events/Error.h"
 #include "WkCocos/Preload/Events/Loaded.h"
@@ -52,7 +53,7 @@ namespace WkCocos
 							//signal loaded
 							CCLOG("=> Sending loaded event for %s", loadfunc->getFilepath().c_str());
 							events->emit<Events::Loaded>(loadfunc->getFilepath());
-							copy.destroy();
+							copy.remove<Comp::ProgressValue>();
 							this->m_cur_concurrent--;
 						});
 					}

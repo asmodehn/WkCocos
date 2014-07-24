@@ -5,13 +5,15 @@
 
 #include "entityx/entityx.h"
 
+#include "WkCocos/Download/Events/Downloaded.h"
+
 #include "curl/curl.h"
 
 namespace WkCocos 
 {
 	namespace Preload
 	{
-		class Preload : public entityx::Manager
+		class Preload : public entityx::Manager, public entityx::Receiver<Preload>
 			{
 			public:
 				explicit Preload(unsigned short concurrent_loads,
@@ -31,6 +33,8 @@ namespace WkCocos
 				}
 
 				void setEventEmmiter(entityx::ptr<entityx::EventManager> event_emmiter);
+
+				void receive(const Download::Events::Downloaded &dl);
 
 			protected:
 				void configure() override;

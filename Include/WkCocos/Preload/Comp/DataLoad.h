@@ -40,13 +40,15 @@ namespace WkCocos
 			};*/
 			
 			struct DataLoad : entityx::Component<DataLoad> {
-				DataLoad(std::string filepath) : m_filepath(filepath) {}
+				DataLoad(std::string filepath) : m_filepath(filepath), loaded(false) {}
 
 				inline std::string getFilepath() const
 				{
 					return m_filepath;
 				}
 				std::string m_filepath;
+
+				bool loaded;
 			};
 
 		}//namespace Comp

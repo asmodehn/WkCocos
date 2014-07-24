@@ -4,7 +4,6 @@
 #include "cocos2d.h"
 
 #include "entityx/entityx.h"
-#include "WkCocos/Download/Events/Downloaded.h"
 
 namespace WkCocos
 {
@@ -13,10 +12,9 @@ namespace WkCocos
 		namespace Systems
 		{
 			//system reading data to determine which loading component must be added.
-			struct DataEval : public entityx::System<DataEval>, entityx::Receiver<DataEval>
+			struct DataEval : public entityx::System<DataEval>
 			{
 				void update(entityx::ptr<entityx::EntityManager> es, entityx::ptr<entityx::EventManager> events, double dt) override;
-				void receive(const Download::Events::Downloaded &dl);
 			
 			protected:
 				void chooseLoader(entityx::Entity entity, std::string datafile, entityx::ptr<entityx::EventManager> events);

@@ -1,6 +1,7 @@
 #include "WkCocos/Preload/Systems/SyncLoading.h"
 
 #include "WkCocos/Preload/Comp/LoadFunc.h"
+#include "WkCocos/Preload/Comp/ProgressValue.h"
 
 #include "WkCocos/Preload/Events/Error.h"
 #include "WkCocos/Preload/Events/Loaded.h"
@@ -36,7 +37,7 @@ namespace WkCocos
 					//signal loaded
 					events->emit<Events::Loaded>(loadfunc->getFilepath());
 					//register progress
-					loadentity.destroy();
+					loadentity.remove<Comp::ProgressValue>();
 				}
 			}
 
