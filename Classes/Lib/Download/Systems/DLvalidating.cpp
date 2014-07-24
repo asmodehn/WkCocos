@@ -1,5 +1,5 @@
 #include "WkCocos/Download/Systems/DLvalidating.h"
-
+#include "WkCocos/Preload/Comp/Dataload.h"
 #include "WkCocos/Download/Events/Error.h"
 #include "WkCocos/Download/Events/Downloaded.h"
 
@@ -31,7 +31,11 @@ namespace WkCocos
 							CCLOG("error renaming %s to %s", tmpfile->getPath().c_str(), finalFileName.c_str());
 						}
 						CCLOG("succeed downloading %s", localfile->getPath().c_str());
-						events->emit<Events::Downloaded>(entity, events);
+						
+						entity.assign<Preload::Comp::DataLoad>(localfile->getPath());
+						
+						events->emit<Events::Downloaded>(es, events);
+						
 						//we remove the remotefile to validate the success of the download
 						entity.remove<Comp::RemoteFile>();
 

@@ -9,7 +9,7 @@ namespace WkCocos
 	{
 		namespace Comp
 		{
-			struct DataListDownload : entityx::Component<DataListDownload> {
+			/*struct DataListDownload : entityx::Component<DataListDownload> {
 				DataListDownload(std::string url, unsigned long current_version, std::string minAppVersion, unsigned short retries = 3)
 				: m_url(url)
 				, m_current_version(current_version)
@@ -37,7 +37,7 @@ namespace WkCocos
 				std::string m_current_minAppVersion;
 				std::string m_url;
 				unsigned short m_retries;
-			};
+			};*/
 			
 			struct DataLoad : entityx::Component<DataLoad> {
 				DataLoad(std::string filepath) : m_filepath(filepath) {}

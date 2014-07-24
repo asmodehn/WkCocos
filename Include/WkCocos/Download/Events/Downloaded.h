@@ -11,12 +11,12 @@ namespace WkCocos
 		{
 			struct Downloaded : public entityx::Event<Downloaded>
 			{
-				Downloaded(entityx::Entity e, entityx::ptr<entityx::EventManager> events)
-				: downloaded_entity(e)
+				Downloaded(entityx::ptr<entityx::EntityManager> es, entityx::ptr<entityx::EventManager> events)
+				: downloaded_entities(es)
 				, downloaded_events(events)
 				{}
 
-				entityx::Entity downloaded_entity;
+				entityx::ptr<entityx::EntityManager> downloaded_entities;
 				entityx::ptr<entityx::EventManager> downloaded_events;
 			};
 

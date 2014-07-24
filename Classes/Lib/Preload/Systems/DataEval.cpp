@@ -88,10 +88,13 @@ namespace WkCocos
 
 			void DataEval::receive(const Download::Events::Downloaded &dl)
 			{
-				auto entity = dl.downloaded_entity;
-				entityx::ptr<Comp::DataLoad> dataload = entity.component<Comp::DataLoad>();
-				chooseLoader(entity, dataload->getFilepath(), dl.downloaded_events);
-				entity.remove<Comp::DataLoad>();
+				cocos2d::FileUtils::getInstance()->purgeCachedEntries();
+				for (auto entity : dl.downloaded_entities->entities_with_components<Comp::DataLoad>())
+				{
+					entityx::ptr<Comp::DataLoad> dataload = entity.component<Comp::DataLoad>();
+					chooseLoader(entity, dataload->getFilepath(), dl.downloaded_events);
+					entity.remove<Comp::DataLoad>();
+				}
 			}
 					
 		}//namespace Systems

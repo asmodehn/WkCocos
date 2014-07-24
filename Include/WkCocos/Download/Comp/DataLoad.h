@@ -39,7 +39,7 @@ namespace WkCocos
 				unsigned short m_retries;
 			};
 			
-			struct DataLoad : entityx::Component<DataLoad> {
+			/*struct DataLoad : entityx::Component<DataLoad> {
 				DataLoad(std::string filepath) : m_filepath(filepath) {}
 
 				inline std::string getFilepath() const
@@ -47,7 +47,7 @@ namespace WkCocos
 					return m_filepath;
 				}
 				std::string m_filepath;
-			};
+			};*/
 
 		}//namespace Comp
 	}//namespace Download
