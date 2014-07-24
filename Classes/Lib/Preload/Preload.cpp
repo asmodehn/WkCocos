@@ -2,7 +2,8 @@
 
 #include "WkCocos/Preload/Systems/Error.h"
 #include "WkCocos/Preload/Systems/DataEval.h"
-#include "WkCocos/Preload/Systems/Loading.h"
+#include "WkCocos/Preload/Systems/SyncLoading.h"
+#include "WkCocos/Preload/Systems/ASyncLoading.h"
 #include "WkCocos/Preload/Systems/ProgressUpdate.h"
 
 #include "cocos2d.h"
