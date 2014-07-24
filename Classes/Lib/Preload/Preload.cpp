@@ -6,6 +6,8 @@
 #include "WkCocos/Preload/Systems/ASyncLoading.h"
 #include "WkCocos/Preload/Systems/ProgressUpdate.h"
 
+#include "WkCocos/Download/Events/Downloaded.h"
+
 #include "cocos2d.h"
 #include "cocostudio/CocoStudio.h"
 
@@ -101,7 +103,7 @@ namespace WkCocos
 
 		void Preload::setEventEmmiter(entityx::ptr<entityx::EventManager> event_emmiter)
 		{
-			event_emmiter->subscribe<Events::Downloaded>(*system_manager->system<Systems::DataEval>());
+			event_emmiter->subscribe<Download::Events::Downloaded>(*system_manager->system<Systems::DataEval>());
 		}
 
 	} // namespace Preload

@@ -1,7 +1,7 @@
 #include "WkCocos/Preload/Systems/DataEval.h"
+#include "WkCocos/Preload/Comp/DataLoad.h"
 #include "WkCocos/Preload/Comp/LoadFunc.h"
 #include "WkCocos/Preload/Events/Error.h"
-#include "WkCocos/Preload/Events/Downloaded.h"
 #include "WkCocos/Interface.h"
 
 namespace WkCocos
@@ -86,7 +86,7 @@ namespace WkCocos
 
 			}
 
-			void DataEval::receive(const Events::Downloaded &dl)
+			void DataEval::receive(const Download::Events::Downloaded &dl)
 			{
 				auto entity = dl.downloaded_entity;
 				entityx::ptr<Comp::DataLoad> dataload = entity.component<Comp::DataLoad>();
