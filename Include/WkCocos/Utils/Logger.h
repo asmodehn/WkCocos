@@ -165,13 +165,13 @@ namespace WkCocos
 
 
 #ifdef _DEBUG
-#	define LOG_INFO(message)			WkCocos::Logger::getInstance() << std::dec << message << "\n"
-#	define LOG_WARNING(message)			WkCocos::Logger::getInstance() << std::dec << message << "\n"
-#	define LOG_ERROR(message)			WkCocos::Logger::getInstance() << std::dec << message << "\n"
+#	define LOG_INFO				WkCocos::Logger::getInstance() /*<< __FILE__ << ":" << __LINE__*/
+#	define LOG_WARNING			WkCocos::Logger::getInstance() /*<< __FILE__ << ":" << __LINE__*/
+#	define LOG_ERROR			WkCocos::Logger::getInstance() /*<< __FILE__ << ":" << __LINE__*/
 #else //_DEBUG
-#	define LOG_INFO(message)
-#	define LOG_WARNING(message)
-#	define LOG_ERROR(message)
+#	define LOG_INFO				std::clog
+#	define LOG_WARNING			std::cerr
+#	define LOG_ERROR			std::cerr
 #endif //_DEBUG
 
 #endif //__WKCOCOS_UTILS_LOGGER_H__

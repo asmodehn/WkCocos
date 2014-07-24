@@ -82,6 +82,30 @@ namespace WkCocos
 		int						_logSize;
 	};
 
+	/**
+	* Cocos console appender.
+	* Display the log on console using cocos macros.
+	*/
+	class CCocosLogAppender : public LogAppender
+	{
+
+	public:
+		/**
+		* Default construtor
+		*/
+		CCocosLogAppender();
+
+		/**
+		* Destructor
+		*/
+		virtual ~CCocosLogAppender();
+
+		/**
+		* Write the log
+		*/
+		LogAppender& operator << (const LogStream & msg);
+	};
+
 }//namespace WkCocos
 
 #endif //__WKCOCOS_UTILS_COCOSAPPENDER_H__

@@ -1,9 +1,13 @@
 #include "WkCocos/Utils/log/logappender.h"
+#include "WkCocos/Utils/log/loglevel.h"
+
+#include <stdexcept>
 
 namespace WkCocos
 {
 
 	LogAppender::LogAppender()
+		: _level(WkCocos::loglevel::Core_LogDebug)
 	{
 		//_stream.getBuf()->onOverflow(std::bind(&LogAppender::onOverflow, this, std::placeholders::_1));
 	}
@@ -46,11 +50,13 @@ namespace WkCocos
 	
 	LogAppender& FileLogAppender::operator << (const LogStream & msg)
 	{
-		if (_stream.tellp() > 1000)
+		if (_ofstr.is_open())
 		{
-			_ofstr << _stream;
+			if (_stream.tellp() > 1000)
+			{
+				_ofstr << _stream;
+			}
 		}
-
 		return *this;
 	}
 	
