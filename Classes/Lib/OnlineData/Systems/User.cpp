@@ -4,6 +4,8 @@
 
 #include "Common/App42API.h"
 
+#define DB_NAME "PUBLIC"
+
 namespace WkCocos
 {
 	namespace OnlineData
@@ -39,10 +41,8 @@ namespace WkCocos
 							App42Object* app42Object = new App42Object();
 							app42Object->setObject("user_id", data->m_userid.c_str());
 							app42Object->setObject("data", data->m_user_data.c_str());
-							const char* dbName = "PLAYERS";
-							const char* collectionName = "Data";
-							App42API::setDbName(dbName);
-							m_service->AddUserInfo(app42Object, collectionName);
+							App42API::setDbName(DB_NAME);
+							m_service->AddUserInfo(app42Object, data->m_collection.c_str());
 							data->in_progress = true;
 						}
 						CCLOG("Requesting App42 User creation : %s ", c->m_userid.c_str());
@@ -86,14 +86,14 @@ namespace WkCocos
 					}
 					else if (!sud->in_progress)
 					{
+						App42User user;
+						user.userName = sud->m_userid.c_str();
 						App42Object* app42Object = new App42Object();
 						app42Object->setObject("user_id", sud->m_userid.c_str());
 						app42Object->setObject("data", sud->m_user_data.c_str());
-						const char* dbName = "PLAYERS";
-						const char* collectionName = "Data";
-						App42API::setDbName(dbName);
-						m_service->AddUserInfo(app42Object, collectionName);
-						//m_service->CreateUser(sud->m_userid.c_str(), sud->m_passwd.c_str(), sud->m_email.c_str(), sud->m_cb);
+						App42API::setDbName(DB_NAME);
+						m_service->AddUserInfo(app42Object, sud->m_collection.c_str());
+						m_service->createOrUpdateProfile(&user, sud->m_cb);
 						sud->in_progress = true;
 					}
 
@@ -115,7 +115,7 @@ namespace WkCocos
 					else if (!lud->in_progress)
 					{
 						Query* query = QueryBuilder::BuildQuery("user_id", lud->m_userid.c_str(), APP42_OP_EQUALS);
-						m_service->setQuery("PLAYERS", "Data", query);
+						m_service->setQuery(DB_NAME, lud->m_collection, query);
 						CCLOG("Requesting App42 User data for : %s ", lud->m_userid.c_str());
 						m_service->GetUser(lud->m_userid.c_str(), lud->m_cb);
 						lud->in_progress = true;

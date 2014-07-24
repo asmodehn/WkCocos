@@ -43,22 +43,24 @@ namespace WkCocos
 
 			struct SaveUserData : entityx::Component<SaveUserData>
 			{
-				SaveUserData(std::string userid, std::string user_data, std::function<void(App42UserResponse*)> cb);
+				SaveUserData(std::string userid, std::string m_collection, std::string user_data, std::function<void(std::string)> cb);
 
 				bool in_progress;
 				bool done;
 				std::string m_userid;
+				std::string m_collection;
 				std::string m_user_data;
 				std::function<void(void*)> m_cb;
 			};
 
 			struct LoadUserData : entityx::Component<LoadUserData>
 			{
-				LoadUserData(std::string userid, std::function<void(App42UserResponse*)> cb);
+				LoadUserData(std::string userid, std::string m_collection, std::function<void(std::string)> cb);
 
 				bool in_progress;
 				bool done;
 				std::string m_userid;
+				std::string m_collection;
 				std::string m_user_data;
 				std::function<void(void*)> m_cb;
 			};

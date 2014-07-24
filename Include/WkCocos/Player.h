@@ -147,11 +147,12 @@ namespace WkCocos
 
 		if (m_onlinedata)
 		{
-			//m_onlinedata->load(m_user, [=](void* data)
-			//{
-			//	CCLOG("profile loaded !!!");
-			//	//TODO : decide if we keep local or online data
-			//});
+			m_onlinedata->load(m_user, [=](std::string data)
+			{
+				set_data_json(data);
+				CCLOG("user data loaded : %s", data.c_str());
+				//TODO : decide if we keep local or online data
+			});
 			return true;
 		}
 		else
@@ -169,11 +170,11 @@ namespace WkCocos
 
 		if (m_onlinedata)
 		{
-			//m_onlinedata->save(m_user, get_data_json(), [=](void* data)
-			//{
-			//	CCLOG("profile saved !!!");
-			//	//TODO : decide if we keep local or online data
-			//});
+			m_onlinedata->save(m_user, get_data_json(), [=](std::string data)
+			{
+				CCLOG("user data saved : %s", data.c_str());
+				//TODO : decide if we keep local or online data
+			});
 			return true;
 		}
 		else

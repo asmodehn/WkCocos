@@ -30,14 +30,14 @@ namespace WkCocos
 			void login(std::string userid, std::string password, std::function<void(App42UserResponse*)> callback);
 
 			/**
-			* Save Player  Data
+			* Save User Data
 			*/
-			void save(std::string userid, std::string user_data, std::function<void(App42UserResponse*)> callback);
+			void save(std::string userid, std::string user_data, std::function<void(std::string)> callback);
 
 			/**
-			* Load Player Data
+			* Load User Data
 			*/
-			void load(std::string userid, std::function<void(App42UserResponse*)> callback);
+			void load(std::string userid, std::function<void(std::string)> callback);
 
 			void update(double dt);
 

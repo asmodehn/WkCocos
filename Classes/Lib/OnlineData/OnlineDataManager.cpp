@@ -51,22 +51,18 @@ namespace WkCocos
 			});
 		}
 
-		void OnlineDataManager::save(std::string userid, std::string user_data, std::function<void(App42UserResponse*)> callback)
+		void OnlineDataManager::save(std::string userid, std::string user_data, std::function<void(std::string)> callback)
 		{
 			auto newentity = entity_manager->create();
 			//new File component for each request. The aggregator system will detect duplicates and group them
-			newentity.assign<Comp::SaveUserData>(userid, user_data, [=](App42UserResponse* r){
-				callback(r);
-			});
+			newentity.assign<Comp::SaveUserData>(userid, "user_data", user_data, callback);
 		}
 
-		void OnlineDataManager::load(std::string userid, std::function<void(App42UserResponse*)> callback)
+		void OnlineDataManager::load(std::string userid, std::function<void(std::string)> callback)
 		{
 			auto newentity = entity_manager->create();
 			//new File component for each request. The aggregator system will detect duplicates and group them
-			newentity.assign<Comp::LoadUserData>(userid, [=](App42UserResponse* r){
-				callback(r);
-			});
+			newentity.assign<Comp::LoadUserData>(userid, "user_data",callback);
 		}
 
 		void OnlineDataManager::update(double dt) {
