@@ -306,7 +306,8 @@ if ( ${PROJECT_NAME} STREQUAL ${CMAKE_PROJECT_NAME} )
 	# Workaround to actually do the linking
 	WkExportConfig( ${PROJECT_NAME} )
 
-	#Testing
+	#Testing on by default.
+	set(WkCocos_ENABLE_TESTS ON CACHE BOOL "Wether or not you want the project to include the tests and enable automatic testing for WkCocos")
 	if(WIN32)
 		WkTestBuild( maintest win32/main.cpp )
 		WkTestRun( WkCocosApp maintest WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/${${PROJECT_NAME}_TEST_DIR}/${${PROJECT_NAME}_TEST_DATA_DIR} )
