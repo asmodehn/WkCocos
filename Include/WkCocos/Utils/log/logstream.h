@@ -16,62 +16,43 @@ namespace WkCocos
 
 	/**
 	* \class logstream
-	* \brief logstream provide filtering based on loglevel.
+	* \brief logstream register a user log and stream it to the buffer.
+	*		When the buffer is sync, get a callback to write the log to the different appender.
 	*
 	*/
-	///@TODO : Design should be changed as we cannot access stringbuf inside an ostringstream in a standard / portable way...
 	class LogStream : public std::ostream
 	{
-		//streambuff
-		LogStreamBuf pvm_lsb;
-
-		//level of hte log stream.
-		//anything less important than this level is ignored
-		loglevel::Level loglvl;
-
 	public:
-		//default constructor (clog output logstreambuf )
+		/**
+		* default constructor (clog output logstreambuf )
+		*/
 		LogStream();
-		explicit LogStream(LogStreamBuf* lsb);
-		~LogStream();
 
-		//to manage prefix
-		void resetprefix(const std::string & newprefix = "");
-		const std::string& getprefix() const;
+		/**
+		* Destructor
+		*/
+		virtual ~LogStream();
 
-		//to use logstream as streamthrough
-		friend std::ostream& operator<<(std::ostream& o, LogStream & l)
-		{
-			return o << l.rdbuf();
-		};
-		friend std::ostream& operator<<(std::ostream& o, const LogStream & l)
-		{
-			return o << l.rdbuf();
-		};
+		/**
+		* add Appender on logger.
+		* Class creating the appender is responsible for it's deletion.
+		* @param newAppender Appender ptr to add.
+		*/
+		inline void addAppender(LogAppender* newAppender){ _appenders.push_back(newAppender); }
 
-		LogStreamBuf* rdbuf()
-		{
-			return &pvm_lsb;
-		}
+		/**
+		* Remove an appender
+		* Iterate through appenders vector and remove if matching ptr found.
+		* @param oldAppender Appender ptr to remove
+		*/
+		void removeAppender(LogAppender* oldAppender);
 
-		const LogStreamBuf* rdbuf() const
-		{
-			return &pvm_lsb;
-		}
-		//not needed anymore since we inherit from ostringstream
-		//std::string str ( ) const { return rdbuf()->str(); }
-		//void str ( const std::string & s ) {return rdbuf()->str(s); }
 
-		///Unformatted output
-		///Put character (public member function)
-		//logstream& put ( char c );
-		///Write block of data (public member function)
-		//logstream& write ( const char* s , std::streamsize n );
 
-		///Synchronization
-		///Flush output stream buffer (public member function)
-		///flush will go to std::clog
-		//logstream& flush ( );
+		// MOVE TO APPENDER
+		//manipulator to set *messages's* level
+		friend LogStream & operator<<(LogStream  &o, loglevel::Level lvl);
+		LogStream & level(loglevel::Level l);
 
 		//set loglevel. Messages logged here will have at least this level
 		void resetLevel(loglevel::Level l = loglevel::Core_LogInfo)
@@ -83,40 +64,31 @@ namespace WkCocos
 			return loglvl;
 		}
 
-		//manipulator to set *messages's* level
-		friend LogStream & operator<<(LogStream  &o, loglevel::Level lvl);
-		LogStream & level(loglevel::Level l);
-
+	private:
+		/**
+		* Callback to synchronize appenders
+		*/
+		void syncAppenders();
 
 		/**
-		* add Appender on logger.
-		* Class creating the appender is responsible for it's deletion.
+		* Streamed buffer where the log is gonna be written.
 		*/
-		inline void addAppender(LogAppender* newAppender){ _appenders.push_back(newAppender); }
-		void removeAppender(LogAppender* oldAppender)
-		{
-			auto curAppender = _appenders.begin();
-			while (curAppender != _appenders.end() && *curAppender != oldAppender)
-			{
-				++curAppender;
-			}
-			if (curAppender != _appenders.end())
-			{
-				_appenders.erase(curAppender);
-			}
-		}
-
-	private:
-		void syncAppenders();
+		LogStreamBuf m_buffer;
 
 		/**
 		* List of appender to send the log stream to
 		*/
 		std::vector<LogAppender*> _appenders;
+
+
+
+
+		// MOVE TO APPENDER
+		//level of hte log stream.
+		//anything less important than this level is ignored
+		loglevel::Level loglvl;
 	};
 
 } //WkCocos
-
-
 
 #endif // __WKCOCOS_UTILS_LOG_LOGSTREAM_H__

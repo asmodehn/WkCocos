@@ -21,7 +21,6 @@ LOCAL_SRC_FILES := jni.cpp \
                    ../../../../../Classes/Lib/App42/Setup.cpp \
                    ../../../../../Classes/Lib/App42/Login.cpp\
                    ../../../../../Classes/Lib/Utils/CocosAppender.cpp\
-                   ../../../../../Classes/Lib/Utils/Logger.cpp\
                    ../../../../../Classes/Lib/Utils/log/logappender.cpp\
                    ../../../../../Classes/Lib/Utils/log/loglevel.cpp\
                    ../../../../../Classes/Lib/Utils/log/logstream.cpp\

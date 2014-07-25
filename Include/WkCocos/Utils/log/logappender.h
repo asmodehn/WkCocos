@@ -5,7 +5,6 @@
 
 namespace WkCocos
 {
-	class LogStream;
 	/**
 	* A log appender is basically a log output.
 	* When a log is done, the stream will go through all registered appender

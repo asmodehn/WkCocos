@@ -1,6 +1,5 @@
 #include "WkCocos/Utils/log/logappender.h"
 #include "WkCocos/Utils/log/loglevel.h"
-#include "WkCocos/Utils/log/logstream.h"
 
 #include <stdexcept>
 
