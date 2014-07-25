@@ -9,18 +9,11 @@ namespace WkCocos
 	LogAppender::LogAppender()
 		: _level(WkCocos::loglevel::Core_LogDebug)
 	{
-		//_stream.getBuf()->onOverflow(std::bind(&LogAppender::onOverflow, this, std::placeholders::_1));
 	}
 
 	LogAppender::~LogAppender()
 	{}
-
-	void LogAppender::onOverflow(int c)
-	{
-		*this << _stream;
-		std::clog << static_cast<char>(c);
-	}
-	
+		
 	CLogAppender::CLogAppender()
 	{
 	}

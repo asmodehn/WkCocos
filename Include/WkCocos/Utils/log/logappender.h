@@ -35,7 +35,6 @@ namespace WkCocos
 		*/
 		virtual LogAppender& operator << (const LogStream & msg){ return *this; };
 
-		virtual void onOverflow(int c);
 	protected:
 		/**
 		* Stream where the log goes through
