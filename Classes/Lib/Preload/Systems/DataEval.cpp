@@ -11,7 +11,7 @@ namespace WkCocos
 		namespace Systems
 		{
 			/**
-			* This function will choose a loader depending on the extension of the filename.
+			* 
 			*/
 			void DataEval::chooseLoader(entityx::Entity entity, std::string datafile, entityx::ptr<entityx::EventManager> events)
 			{
@@ -61,8 +61,6 @@ namespace WkCocos
 				{
 					//Signal Error
 					events->emit<Events::Error>(entity);
-					//we cant do more with this entity. kill it.
-					entity.destroy();
 				}
 			}
 

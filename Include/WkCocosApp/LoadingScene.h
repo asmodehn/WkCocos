@@ -16,8 +16,7 @@ public:
 	// implement the "static create()" method manually
 	CREATE_FUNC(LoadingScene);
 
-	virtual ~LoadingScene()
-	{}
+	virtual ~LoadingScene();
 
 	virtual void onEnterTransitionDidFinish() override;
 
@@ -35,34 +34,28 @@ public:
 	*/
 	void scheduleDLCCheck();
 
-	void error_CB()
-	{
-		CCLOGERROR("ERROR");
-	}
+	void error_CB();
 
 	//expects pct in [0..1]
 	void progress_CB(float pct);
 
 protected:
 
-	LoadingScene()
-		: Scene()
-		, m_loadDoneCB_called(false)
-		, m_loadDoneCB()
+	LoadingScene();
 		, m_downloadManager(5,
-		std::bind(&LoadingScene::progress_CB, this, std::placeholders::_1),
 		std::bind(&LoadingScene::error_CB, this))
 		, m_preloadManager(1,
 		std::bind(&LoadingScene::progress_CB, this, std::placeholders::_1),
 		std::bind(&LoadingScene::error_CB, this))
-	{
-	}
 
 	bool m_loadDoneCB_called;
-	std::function<void()> m_loadDoneCB;
 
+	bool m_loadMan_del_scheduled;
 	WkCocos::Download::Download m_downloadManager;
 	WkCocos::Preload::Preload m_preloadManager;
+	std::function<void()> m_loadDoneCB;
+
+
 };
 
 

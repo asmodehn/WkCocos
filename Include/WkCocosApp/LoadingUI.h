@@ -21,7 +21,7 @@ public:
 	LoadingUI();
 
 	/**
-	* Constructor
+	* Destructor
 	*/
 	virtual ~LoadingUI();
 	

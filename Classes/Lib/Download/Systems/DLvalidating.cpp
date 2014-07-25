@@ -52,4 +52,3 @@ namespace WkCocos
 		}//namespace Systems
 	}//namespace Download
 }//namespace WkCocos
-
