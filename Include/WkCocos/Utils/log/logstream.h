@@ -22,16 +22,35 @@ namespace WkCocos
 	*/
 	class LogStream : public std::ostream
 	{
-	public:
+	private:
 		/**
 		* default constructor (clog output logstreambuf )
 		*/
 		LogStream();
 
+	public:
 		/**
 		* Destructor
 		*/
 		virtual ~LogStream();
+
+		/**
+		* BOUH singleton
+		*/
+		/**
+		* Create a single instance of logger.
+		*/
+		static void create();
+
+		/**
+		* Get the single instance of logger.
+		*/
+		static LogStream* get();
+
+		/**
+		* Destroy the single instance of logger.
+		*/
+		static void destroy();
 
 		/**
 		* add Appender on logger.
@@ -69,6 +88,12 @@ namespace WkCocos
 		* Callback to synchronize appenders
 		*/
 		void syncAppenders();
+
+	private:
+		/**
+		* Unique instance
+		*/
+		static LogStream* s_logStream;
 
 		/**
 		* Streamed buffer where the log is gonna be written.

@@ -1,7 +1,10 @@
 #include "WkCocos/Utils/log/logstream.h"
+#include <assert.h>
 
 namespace WkCocos
 {
+
+	LogStream* LogStream::s_logStream = nullptr;
 
 	LogStream::LogStream()
 		: std::ostream(&m_buffer)
@@ -16,7 +19,29 @@ namespace WkCocos
 	LogStream::~LogStream()
 	{
 	}
-	
+
+	void LogStream::create()
+	{
+		if (!s_logStream)
+		{
+			s_logStream = new LogStream();
+		}
+	}
+
+	LogStream* LogStream::get()
+	{
+		assert(s_logStream);
+		return s_logStream;
+	}
+
+	void LogStream::destroy()
+	{
+		if (s_logStream)
+		{
+			delete s_logStream;
+		}
+	}
+
 	LogStream& operator<<(LogStream &ls, loglevel::Level lvl)
 	{
 		if (ls.getLevel() >= lvl)
