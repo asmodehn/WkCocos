@@ -1,7 +1,8 @@
 #ifndef __WKCOCOS_UTILS_LOG_LOGAPPENDER_H__
 #define __WKCOCOS_UTILS_LOG_LOGAPPENDER_H__
 
-#include "WkCocos/Utils/log/logstream.h"
+#include "WkCocos/Utils/log/logstreambuf.h"
+#include "WkCocos/Utils/log/loglevel.h"
 
 namespace WkCocos
 {
@@ -33,23 +34,23 @@ namespace WkCocos
 		/**
 		*
 		*/
-		virtual LogAppender& operator << (const LogStream & msg){ return *this; };
+		virtual LogAppender& operator << (const LogStreamBuf & msg){ return *this; };
 
-		virtual void onOverflow(int c);
-	protected:
 		/**
-		* Stream where the log goes through
-		* Stream should be in logger, not appender, cause anyway the same string wont give two different result.
-		* It's here because buffer behave differently based on appender.
-		* Also, buffer can be read only once, so it need to be duplicate.
-		* Not the best design, but we need something that will work for now
+		* Set level to filter
 		*/
-		LogStream	_stream;
+		inline void setLevel(loglevel::Level loglvl) { m_loglvl = loglvl; }
 
+		/**
+		* Get level filtered
+		*/
+		inline loglevel::Level  getLevel() { return m_loglvl; }
+
+	protected:
 		/**
 		* Max level to output
 		*/
-		int			_level;
+		loglevel::Level			m_loglvl;
 	};
 
 	/**
@@ -72,7 +73,7 @@ namespace WkCocos
 		/**
 		* Write in the stream buffer
 		*/
-		virtual LogAppender& operator << (const LogStream & msg);
+		virtual LogAppender& operator << (const LogStreamBuf & msg);
 	};
 
 	/**
@@ -101,7 +102,7 @@ namespace WkCocos
 		/**
 		* Write in the stream buffer
 		*/
-		virtual LogAppender& operator << (const LogStream & msg);
+		virtual LogAppender& operator << (const LogStreamBuf & msg);
 
 	private:
 		/**

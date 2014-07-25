@@ -47,7 +47,7 @@ add_subdirectory("depends/entityx")
 include_directories( "depends/entityx")
 
 # setting include directory for upper project to include it
-set( WkCocos_INCLUDE_DIRS ${WkCocos_INCLDE_DIRS} "depends/entityx")
+set( WkCocos_INCLUDE_DIRS ${WkCocos_INCLUDE_DIRS} "depends/entityx")
 
 set(BUILD_CppTests OFF CACHE BOOL "CppTests option OFF by default")
 set(BUILD_EDITOR_COCOSBUILDER OFF CACHE BOOL "EDITOR_COCOSBUILDER option OFF by default")
@@ -247,6 +247,7 @@ endif(USE_CHIPMUNK)
 
 WkDepends ("depends/App42_Cocos2DX_SDK")
 
+set( WkCocos_INCLUDE_DIRS ${WkCocos_INCLUDE_DIRS} ${WkCocos_App42_INCLUDE_DIRS})
 
 #The library. reusable for any [Wk]Cocos project.
 WkLibraryBuild(WkCocos "Classes/Lib")
@@ -306,7 +307,8 @@ if ( ${PROJECT_NAME} STREQUAL ${CMAKE_PROJECT_NAME} )
 	# Workaround to actually do the linking
 	WkExportConfig( ${PROJECT_NAME} )
 
-	#Testing
+	#Testing on by default.
+	set(WkCocos_ENABLE_TESTS ON CACHE BOOL "Wether or not you want the project to include the tests and enable automatic testing for WkCocos")
 	if(WIN32)
 		WkTestBuild( maintest win32/main.cpp )
 		WkTestRun( WkCocosApp maintest WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/${${PROJECT_NAME}_TEST_DIR}/${${PROJECT_NAME}_TEST_DATA_DIR} )

@@ -7,82 +7,121 @@
 
 //to get string << operator for logstream
 #include <string>
+#include <vector>
+
+#include "WkCocos/Utils/log/logappender.h"
 
 namespace WkCocos
 {
 
 	/**
 	* \class logstream
-	* \brief logstream provide filtering based on loglevel.
+	* \brief logstream register a user log and stream it to the buffer.
+	*		When the buffer is sync, get a callback to write the log to the different appender.
 	*
 	*/
-	///@TODO : Design should be changed as we cannot access stringbuf inside an ostringstream in a standard / portable way...
-	class LogStream : public std::ostringstream
+	class LogStream : public std::ostream
 	{
-		//streambuff
-		LogStreamBuf* pvm_lsb;
-
-		//level of hte log stream.
-		//anything less important than this level is ignored
-		loglevel::Level loglvl;
+	private:
+		/**
+		* default constructor (clog output logstreambuf )
+		*/
+		LogStream();
 
 	public:
-		//default constructor (clog output logstreambuf )
-		LogStream();
-		explicit LogStream(LogStreamBuf* lsb);
-		~LogStream();
+		/**
+		* Destructor
+		*/
+		virtual ~LogStream();
 
-		//to manage prefix
-		void resetprefix(const std::string & newprefix = "");
-		const std::string& getprefix() const;
+		/**
+		* BOUH singleton
+		*/
+		/**
+		* Create a single instance of logger.
+		*/
+		static void create();
 
-		//to use logstream as streamthrough
-		friend std::ostream& operator<<(std::ostream& o, LogStream & l)
-		{
-			return o << l.rdbuf();
-		};
-		friend std::ostream& operator<<(std::ostream& o, const LogStream & l)
-		{
-			return o << l.rdbuf();
-		};
+		/**
+		* Get the single instance of logger.
+		*/
+		static LogStream* get();
 
-		LogStreamBuf* rdbuf() const
-		{
-			return pvm_lsb;
-		}
-		//not needed anymore since we inherit from ostringstream
-		//std::string str ( ) const { return rdbuf()->str(); }
-		//void str ( const std::string & s ) {return rdbuf()->str(s); }
+		/**
+		* Destroy the single instance of logger.
+		*/
+		static void destroy();
 
-		///Unformatted output
-		///Put character (public member function)
-		//logstream& put ( char c );
-		///Write block of data (public member function)
-		//logstream& write ( const char* s , std::streamsize n );
+		/**
+		* add Appender on logger.
+		* Class creating the appender is responsible for it's deletion.
+		* @param newAppender Appender ptr to add.
+		*/
+		inline void addAppender(LogAppender* newAppender){ _appenders.push_back(newAppender); }
 
-		///Synchronization
-		///Flush output stream buffer (public member function)
-		///flush will go to std::clog
-		//logstream& flush ( );
+		/**
+		* Remove an appender
+		* Iterate through appenders vector and remove if matching ptr found.
+		* @param oldAppender Appender ptr to remove
+		*/
+		void removeAppender(LogAppender* oldAppender);
+
+		/**
+		* Set current level for the stream
+		* @param lvl Log level
+		*/
+		inline void setLevel(loglevel::Level lvl){ m_loglvl = lvl; }
+
+		//manipulator to set *messages's* level
+		LogStream & level(loglevel::Level l);
+		friend LogStream & operator<<(LogStream  &o, loglevel::Level lvl);
 
 		//set loglevel. Messages logged here will have at least this level
 		void resetLevel(loglevel::Level l = loglevel::Core_LogInfo)
 		{
-			loglvl = l;
-		}
-		loglevel::Level getLevel()
-		{
-			return loglvl;
+			m_loglvl = l;
 		}
 
-		//manipulator to set *messages's* level
-		friend LogStream & operator<<(LogStream  &o, loglevel::Level lvl);
-		LogStream & level(loglevel::Level l);
+	private:
+		/**
+		* Callback to synchronize appenders
+		*/
+		void syncAppenders();
 
+	private:
+		/**
+		* Unique instance
+		*/
+		static LogStream* s_logStream;
+
+		/**
+		* Streamed buffer where the log is gonna be written.
+		*/
+		LogStreamBuf m_buffer;
+
+		/**
+		* List of appender to send the log stream to
+		*/
+		std::vector<LogAppender*> _appenders;
+
+		/**
+		* Current Logging level for the stream
+		*/
+		loglevel::Level			m_loglvl;
 	};
 
 } //WkCocos
 
-
+#ifdef _DEBUG
+#	define LOG_DEBUG		(*WkCocos::LogStream::get()) << WkCocos::loglevel::Core_LogDebug
+#	define LOG_INFO			(*WkCocos::LogStream::get()) << WkCocos::loglevel::Core_LogInfo
+#	define LOG_WARNING		(*WkCocos::LogStream::get()) << WkCocos::loglevel::Core_LogWarning
+#	define LOG_ERROR		(*WkCocos::LogStream::get()) << WkCocos::loglevel::Core_LogError
+#else //_DEBUG
+#	define LOG_DEBUG		std::clog
+#	define LOG_INFO			std::clog
+#	define LOG_WARNING		std::clog
+#	define LOG_ERROR		std::clog
+#endif //_DEBUG
 
 #endif // __WKCOCOS_UTILS_LOG_LOGSTREAM_H__

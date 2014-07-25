@@ -1,73 +1,79 @@
 #include "WkCocos/Utils/log/logstream.h"
+#include <assert.h>
 
 namespace WkCocos
 {
 
+	LogStream* LogStream::s_logStream = nullptr;
+
 	LogStream::LogStream()
-		: std::ostringstream()
+		: std::ostream(&m_buffer)
 	{
-			//to hook up to usual stream design
-			pvm_lsb = new CLogStreamBuf();
-			this->init(pvm_lsb);
+		//setup default flags
+		this->flags(std::ios::left | std::ios::dec | std::ios::showbase | std::ios::boolalpha);
 
-			//setup default flags
-			this->flags(std::ios::left | std::ios::dec | std::ios::showbase | std::ios::boolalpha);
-
-			//setup default prefix
-			resetprefix();
-
-		}
-
-	LogStream::LogStream(LogStreamBuf* lsb)
-		: std::ostringstream()
-	{
-			//to hook up to usual stream design
-			pvm_lsb = lsb;
-			this->init(pvm_lsb);
-
-			//setup default flags
-			this->flags(std::ios::left | std::ios::dec | std::ios::showbase | std::ios::boolalpha);
-
-			//setup default prefix
-			resetprefix();
-
-		}
+		m_buffer.registerOnSync(std::bind(&LogStream::syncAppenders, this));
+		resetLevel();
+	}
 
 	LogStream::~LogStream()
 	{
 	}
 
-	//to manage prefix
-	void LogStream::resetprefix(const std::string& newprefix)
+	void LogStream::create()
 	{
-		rdbuf()->resetprefix(newprefix);
+		if (!s_logStream)
+		{
+			s_logStream = new LogStream();
+		}
 	}
 
-	const std::string & LogStream::getprefix() const
+	LogStream* LogStream::get()
 	{
-		return rdbuf()->getprefix();
+		assert(s_logStream);
+		return s_logStream;
 	}
 
+	void LogStream::destroy()
+	{
+		if (s_logStream)
+		{
+			delete s_logStream;
+		}
+	}
 
 	LogStream& operator<<(LogStream &ls, loglevel::Level lvl)
 	{
-		if (ls.getLevel() >= lvl)
-		{
-			ls.rdbuf()->filterin();
-			//dynamic casting to call the ostream << ( ostream, loglevel) operator
-			dynamic_cast<std::ostream&>(ls) << lvl;
-		}
-		else
-		{
-			ls.rdbuf()->filterout();
-		}
+		ls.setLevel(lvl);
 		return ls;
 	}
 
 	LogStream& LogStream::level(loglevel::Level l)
 	{
-		*this << l;
-		return *this;
+		return *this << l;
 	}
 
+	void LogStream::syncAppenders()
+	{
+		for (auto appender : _appenders)
+		{
+			if (m_loglvl <= appender->getLevel())
+			{
+				(*appender) << m_buffer;
+			}
+		}
+	}
+
+	void LogStream::removeAppender(LogAppender* oldAppender)
+	{
+		auto curAppender = _appenders.begin();
+		while (curAppender != _appenders.end() && *curAppender != oldAppender)
+		{
+			++curAppender;
+		}
+		if (curAppender != _appenders.end())
+		{
+			_appenders.erase(curAppender);
+		}
+	}
 } // WkCocos

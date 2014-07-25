@@ -70,34 +70,23 @@ namespace WkCocos
 	CocosLogAppender::~CocosLogAppender()
 	{}
 
-	LogAppender& CocosLogAppender::operator << (const LogStream & msg)
+	LogAppender& CocosLogAppender::operator << (const LogStreamBuf & msg)
 	{	
 		std::stringstream str;
 		str << msg;
 		
 		std::string output = str.str();
-		std::size_t prevPos = 0;
-		std::size_t pos = output.find('\n');
 
-		cocos2d::ui::TextBMFont* line = static_cast<cocos2d::ui::TextBMFont*>(_log->getItem(_log->getItems().size() - 1));
-
-		while (pos != std::string::npos)
+		if (_logSize >= _log->getItems().size())
 		{
-			line->setString(line->getString() + output.substr(prevPos, pos));
-
-			if (_logSize >= _log->getItems().size())
-			{
-				_log->removeItem(0);
-			}
-			_log->pushBackDefaultItem();
-
-			line = static_cast<cocos2d::ui::TextBMFont*>(_log->getItem(_log->getItems().size() - 1));
-			prevPos = pos + 1;
-			pos = output.find('\n', prevPos);
+			_log->removeItem(0);
 		}
 
-		line->setString(line->getString() + output.substr(prevPos, std::string::npos));
-		
+		_log->pushBackDefaultItem();
+		cocos2d::ui::TextBMFont* line = static_cast<cocos2d::ui::TextBMFont*>(_log->getItem(_log->getItems().size() - 1));
+
+		line->setString(output);
+
 		_log->jumpToBottom();
 
 		return *this;
@@ -122,11 +111,9 @@ namespace WkCocos
 	CCocosLogAppender::~CCocosLogAppender()
 	{}
 	
-	LogAppender& CCocosLogAppender::operator << (const LogStream & msg)
+	LogAppender& CCocosLogAppender::operator << (const LogStreamBuf & msg)
 	{
-		std::stringstream str;
-		str << msg;
-		CCLOG("%s", str.str().c_str());
+		CCLOG("%s", msg.str().c_str());
 
 		return *this;
 	}

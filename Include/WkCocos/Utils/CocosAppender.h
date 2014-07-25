@@ -49,6 +49,9 @@ namespace WkCocos
 
 		/**
 		* construtor
+		* @param root Node to attach to
+		* @param fontName Name of the font to use (must be .fnt type)
+		* @param res Resource for checkbox used for toggling input on log
 		*/
 		CocosLogAppender(cocos2d::Node* root, const std::string& fontName, const CheckBoxRes& res);
 
@@ -60,7 +63,7 @@ namespace WkCocos
 		/**
 		* Write the log
 		*/
-		LogAppender& operator << (const LogStream & msg);
+		LogAppender& operator << (const LogStreamBuf & msg);
 
 		/**
 		* Set the log maximum line
@@ -103,7 +106,7 @@ namespace WkCocos
 		/**
 		* Write the log
 		*/
-		LogAppender& operator << (const LogStream & msg);
+		LogAppender& operator << (const LogStreamBuf & msg);
 	};
 
 }//namespace WkCocos

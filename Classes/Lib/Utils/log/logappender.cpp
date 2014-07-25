@@ -7,20 +7,13 @@ namespace WkCocos
 {
 
 	LogAppender::LogAppender()
-		: _level(WkCocos::loglevel::Core_LogDebug)
+		: m_loglvl(WkCocos::loglevel::Core_LogDebug)
 	{
-		//_stream.getBuf()->onOverflow(std::bind(&LogAppender::onOverflow, this, std::placeholders::_1));
 	}
 
 	LogAppender::~LogAppender()
 	{}
-
-	void LogAppender::onOverflow(int c)
-	{
-		*this << _stream;
-		std::clog << static_cast<char>(c);
-	}
-	
+		
 	CLogAppender::CLogAppender()
 	{
 	}
@@ -28,9 +21,9 @@ namespace WkCocos
 	CLogAppender::~CLogAppender()
 	{}
 
-	LogAppender& CLogAppender::operator << (const LogStream & msg)
+	LogAppender& CLogAppender::operator << (const LogStreamBuf & msg)
 	{
-		std::clog << _stream;
+		std::clog << msg;
 		return *this;
 	}
 
@@ -48,14 +41,11 @@ namespace WkCocos
 		_ofstr.close();
 	}
 	
-	LogAppender& FileLogAppender::operator << (const LogStream & msg)
+	LogAppender& FileLogAppender::operator << (const LogStreamBuf & msg)
 	{
 		if (_ofstr.is_open())
 		{
-			if (_stream.tellp() > 1000)
-			{
-				_ofstr << _stream;
-			}
+			_ofstr << msg;
 		}
 		return *this;
 	}
