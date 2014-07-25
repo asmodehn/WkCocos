@@ -13,7 +13,7 @@ namespace WkCocos
 		this->flags(std::ios::left | std::ios::dec | std::ios::showbase | std::ios::boolalpha);
 
 		m_buffer.registerOnSync(std::bind(&LogStream::syncAppenders, this));
-
+		resetLevel();
 	}
 
 	LogStream::~LogStream()
@@ -44,30 +44,23 @@ namespace WkCocos
 
 	LogStream& operator<<(LogStream &ls, loglevel::Level lvl)
 	{
-		if (ls.getLevel() >= lvl)
-		{
-			//ls.rdbuf()->filterin();
-			//dynamic casting to call the ostream << ( ostream, loglevel) operator
-			dynamic_cast<std::ostream&>(ls) << lvl;
-		}
-		else
-		{
-			//ls.rdbuf()->filterout();
-		}
+		ls.setLevel(lvl);
 		return ls;
 	}
 
 	LogStream& LogStream::level(loglevel::Level l)
 	{
-		*this << l;
-		return *this;
+		return *this << l;
 	}
 
 	void LogStream::syncAppenders()
 	{
 		for (auto appender : _appenders)
 		{
-			(*appender) << m_buffer;
+			if (m_loglvl <= appender->getLevel())
+			{
+				(*appender) << m_buffer;
+			}
 		}
 	}
 

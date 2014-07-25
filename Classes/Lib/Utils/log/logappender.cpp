@@ -7,7 +7,7 @@ namespace WkCocos
 {
 
 	LogAppender::LogAppender()
-		: _level(WkCocos::loglevel::Core_LogDebug)
+		: m_loglvl(WkCocos::loglevel::Core_LogDebug)
 	{
 	}
 

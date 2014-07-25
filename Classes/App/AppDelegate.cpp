@@ -27,11 +27,14 @@ AppDelegate::AppDelegate()
 	m_consoleApp = new WkCocos::CLogAppender();
 	m_fileApp = new WkCocos::FileLogAppender("my.log");
 
+	m_consoleApp->setLevel(WkCocos::loglevel::Core_LogInfo);
+	m_fileApp->setLevel(WkCocos::loglevel::Core_LogDebug);
+
 	WkCocos::LogStream::get()->addAppender(m_consoleApp);
 	WkCocos::LogStream::get()->addAppender(m_fileApp);
 
-	LOG_INFO << "Awesome log1" << std::endl;
-	LOG_INFO << "Awesome log2" << std::endl;
+	LOG_INFO << "This is an INFO level log" << std::endl;
+	LOG_DEBUG << "This is a DEBUG level log" << std::endl;
 }
 
 AppDelegate::~AppDelegate()

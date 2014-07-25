@@ -66,21 +66,20 @@ namespace WkCocos
 		*/
 		void removeAppender(LogAppender* oldAppender);
 
+		/**
+		* Set current level for the stream
+		* @param lvl Log level
+		*/
+		inline void setLevel(loglevel::Level lvl){ m_loglvl = lvl; }
 
-
-		// MOVE TO APPENDER
 		//manipulator to set *messages's* level
-		friend LogStream & operator<<(LogStream  &o, loglevel::Level lvl);
 		LogStream & level(loglevel::Level l);
+		friend LogStream & operator<<(LogStream  &o, loglevel::Level lvl);
 
 		//set loglevel. Messages logged here will have at least this level
 		void resetLevel(loglevel::Level l = loglevel::Core_LogInfo)
 		{
-			loglvl = l;
-		}
-		loglevel::Level getLevel()
-		{
-			return loglvl;
+			m_loglvl = l;
 		}
 
 	private:
@@ -105,22 +104,19 @@ namespace WkCocos
 		*/
 		std::vector<LogAppender*> _appenders;
 
-
-
-
-		// MOVE TO APPENDER
-		//level of hte log stream.
-		//anything less important than this level is ignored
-		loglevel::Level loglvl;
+		/**
+		* Current Logging level for the stream
+		*/
+		loglevel::Level			m_loglvl;
 	};
 
 } //WkCocos
 
 #ifdef _DEBUG
-#	define LOG_DEBUG		(*WkCocos::LogStream::get())
-#	define LOG_INFO			(*WkCocos::LogStream::get())
-#	define LOG_WARNING		(*WkCocos::LogStream::get())
-#	define LOG_ERROR		(*WkCocos::LogStream::get())
+#	define LOG_DEBUG		(*WkCocos::LogStream::get()) << WkCocos::loglevel::Core_LogDebug
+#	define LOG_INFO			(*WkCocos::LogStream::get()) << WkCocos::loglevel::Core_LogInfo
+#	define LOG_WARNING		(*WkCocos::LogStream::get()) << WkCocos::loglevel::Core_LogWarning
+#	define LOG_ERROR		(*WkCocos::LogStream::get()) << WkCocos::loglevel::Core_LogError
 #else //_DEBUG
 #	define LOG_DEBUG		std::clog
 #	define LOG_INFO			std::clog

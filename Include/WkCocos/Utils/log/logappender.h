@@ -2,6 +2,7 @@
 #define __WKCOCOS_UTILS_LOG_LOGAPPENDER_H__
 
 #include "WkCocos/Utils/log/logstreambuf.h"
+#include "WkCocos/Utils/log/loglevel.h"
 
 namespace WkCocos
 {
@@ -35,11 +36,21 @@ namespace WkCocos
 		*/
 		virtual LogAppender& operator << (const LogStreamBuf & msg){ return *this; };
 
+		/**
+		* Set level to filter
+		*/
+		inline void setLevel(loglevel::Level loglvl) { m_loglvl = loglvl; }
+
+		/**
+		* Get level filtered
+		*/
+		inline loglevel::Level  getLevel() { return m_loglvl; }
+
 	protected:
 		/**
 		* Max level to output
 		*/
-		int			_level;
+		loglevel::Level			m_loglvl;
 	};
 
 	/**
