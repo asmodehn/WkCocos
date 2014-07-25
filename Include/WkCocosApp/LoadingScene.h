@@ -42,17 +42,12 @@ public:
 protected:
 
 	LoadingScene();
-		, m_downloadManager(5,
-		std::bind(&LoadingScene::error_CB, this))
-		, m_preloadManager(1,
-		std::bind(&LoadingScene::progress_CB, this, std::placeholders::_1),
-		std::bind(&LoadingScene::error_CB, this))
 
 	bool m_loadDoneCB_called;
 
 	bool m_loadMan_del_scheduled;
-	WkCocos::Download::Download m_downloadManager;
-	WkCocos::Preload::Preload m_preloadManager;
+	WkCocos::Download::Download * m_downloadManager;
+	WkCocos::Preload::Preload * m_preloadManager;
 	std::function<void()> m_loadDoneCB;
 
 

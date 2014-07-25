@@ -4,8 +4,6 @@
 
 #include "WkCocosApp/ErrorUI.h"
 
-//#include "WkCocosApp/HelloWorldScene.h"
-
 #include "ui/CocosGUI.h"
 
 #include <iostream>
@@ -17,17 +15,23 @@ LoadingScene::LoadingScene() : Scene()
 , m_loadDoneCB_called(false)
 , m_loadMan_del_scheduled(false)
 , m_loadDoneCB()
-, m_loadingManager(nullptr)
+, m_downloadManager(nullptr)
+, m_preloadManager(nullptr)
 {
-	m_loadingManager = new WkCocos::Loading::LoadingManager(5, 1,
+	m_downloadManager = new WkCocos::Download::Download(5,
+		std::bind(&LoadingScene::progress_CB, this, std::placeholders::_1),
+		std::bind(&LoadingScene::error_CB, this));
+	m_preloadManager = new WkCocos::Preload::Preload(1,
 		std::bind(&LoadingScene::progress_CB, this, std::placeholders::_1),
 		std::bind(&LoadingScene::error_CB, this));
 }
 
 LoadingScene::~LoadingScene()
 {
-	if (m_loadingManager)
-	delete m_loadingManager;
+	if (m_downloadManager)
+		delete m_downloadManager;
+	if (m_preloadManager)
+		delete m_preloadManager;
 }
 
 // on "init" you need to initialize your instance
@@ -60,13 +64,18 @@ bool LoadingScene::init()
 
 	errorui->setRefreshCallback([this, errorui](){
 		
-		m_loadingManager = new WkCocos::Loading::LoadingManager(5, 1,
+		m_downloadManager = new WkCocos::Download::Download(5,
+			std::bind(&LoadingScene::progress_CB, this, std::placeholders::_1),
+			std::bind(&LoadingScene::error_CB, this));
+
+		m_preloadManager = new WkCocos::Preload::Preload(1,
 			std::bind(&LoadingScene::progress_CB, this, std::placeholders::_1),
 			std::bind(&LoadingScene::error_CB, this));
 
 		scheduleDLCCheck();
 
-		m_loadingManager->start();
+		m_downloadManager->start();
+		m_preloadManager->start();
 
 		errorui->deactivate();
 
@@ -81,9 +90,9 @@ bool LoadingScene::init()
 
 	});
 
-	m_downloadManager.start();
-	m_preloadManager.start();
-	m_preloadManager.setEventEmmiter(m_downloadManager.getEventManager());
+	m_downloadManager->start();
+	m_preloadManager->start();
+	m_preloadManager->setEventEmmiter(m_downloadManager->getEventManager());
 
 
 	return true;
@@ -123,12 +132,17 @@ void LoadingScene::update(float delta)
 	{
 		delete m_downloadManager;
 		m_downloadManager = nullptr;
+		delete m_preloadManager;
+		m_preloadManager = nullptr;
 		m_loadMan_del_scheduled = false;
 	}
 
 	//if callback was called, loading is finished.
-	if (!m_loadDoneCB_called && m_loadingManager)
-			m_loadingManager->step(delta);
+	if (!m_loadDoneCB_called && m_downloadManager && m_preloadManager)
+	{
+		m_downloadManager->step(delta);
+		m_preloadManager->step(delta);
+	}
 }
 
 //expects pct in [0..1]

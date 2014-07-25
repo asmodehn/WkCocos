@@ -48,15 +48,6 @@ namespace WkCocos
 				unsigned short m_retries;
 			};
 
-				DataLoad(std::string filepath) : m_filepath(filepath) {}
-
-				inline std::string getFilepath() const
-				{
-					return m_filepath;
-				}
-				std::string m_filepath;
-			};*/
-
 		}//namespace Comp
 	}//namespace Download
 }//namespace WkCocos
