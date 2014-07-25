@@ -1,5 +1,6 @@
 #include "WkCocos/Utils/log/logappender.h"
 #include "WkCocos/Utils/log/loglevel.h"
+#include "WkCocos/Utils/log/logstream.h"
 
 #include <stdexcept>
 
@@ -21,9 +22,9 @@ namespace WkCocos
 	CLogAppender::~CLogAppender()
 	{}
 
-	LogAppender& CLogAppender::operator << (const LogStream & msg)
+	LogAppender& CLogAppender::operator << (const LogStreamBuf & msg)
 	{
-		std::clog << _stream;
+		std::clog << msg;
 		return *this;
 	}
 
@@ -41,14 +42,11 @@ namespace WkCocos
 		_ofstr.close();
 	}
 	
-	LogAppender& FileLogAppender::operator << (const LogStream & msg)
+	LogAppender& FileLogAppender::operator << (const LogStreamBuf & msg)
 	{
 		if (_ofstr.is_open())
 		{
-			if (_stream.tellp() > 1000)
-			{
-				_ofstr << _stream;
-			}
+			_ofstr << msg;
 		}
 		return *this;
 	}

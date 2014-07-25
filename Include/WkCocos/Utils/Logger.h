@@ -153,7 +153,7 @@ namespace WkCocos
 #ifdef RAGELOG
 		for (auto appender : _appenders)
 		{
-			(*appender) << msg;
+			//(*appender) << msg;
 		}
 #endif
 		return *this;

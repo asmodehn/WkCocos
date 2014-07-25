@@ -16,7 +16,9 @@ namespace WkCocos
 			//setup default prefix
 			resetprefix();
 
-		}
+			pvm_lsb.registerOnSync(std::bind(&LogStream::syncAppenders, this));
+
+	}
 
 	LogStream::LogStream(LogStreamBuf* lsb)
 		: std::ostream(&pvm_lsb)
@@ -68,6 +70,15 @@ namespace WkCocos
 	{
 		*this << l;
 		return *this;
+	}
+
+	void LogStream::syncAppenders()
+	{
+		for (auto appender : _appenders)
+		{
+			//(*appender) << *this;
+			(*appender) << pvm_lsb;
+		}
 	}
 
 } // WkCocos

@@ -6,7 +6,7 @@
 #include <fstream>
 #include <sstream>
 #include <locale>
-
+#include <functional>
 
 namespace WkCocos
 {
@@ -60,23 +60,35 @@ namespace WkCocos
 			ptm_filterin = true;
 		}
 
+		inline void registerOnSync(std::function<void()> syncCallback){ m_onSync = syncCallback; }
+
+		//to use logstream as streamthrough
+		friend std::ostream& operator<<(std::ostream& o, LogStreamBuf & l)
+		{
+			return o << l.str();
+		};
+		friend std::ostream& operator<<(std::ostream& o, const LogStreamBuf & l)
+		{
+			return o << l.str();
+		};
+
 
 	protected:
 
 
 		///Synchronize stream buffer
 		///must be overloaded by implementations of this abstract class (depending on log output)
-		virtual int sync() = 0;
+		virtual int sync();
 
 		std::string getlocaltime();
 
 		///Output functions (put)
 		///Write sequence of characters
-		virtual std::streamsize xsputn(const char * s, std::streamsize n);
+		//virtual std::streamsize xsputn(const char * s, std::streamsize n);
 		///Write character in the case of overflow ( endl for exemple )
-		virtual int overflow(int c = EOF);
+		//virtual int overflow(int c = EOF);
 
-
+		std::function<void()> m_onSync;
 	};
 
 	/* TODO

@@ -70,7 +70,7 @@ namespace WkCocos
 	CocosLogAppender::~CocosLogAppender()
 	{}
 
-	LogAppender& CocosLogAppender::operator << (const LogStream & msg)
+	LogAppender& CocosLogAppender::operator << (const LogStreamBuf & msg)
 	{	
 		std::stringstream str;
 		str << msg;
@@ -122,11 +122,9 @@ namespace WkCocos
 	CCocosLogAppender::~CCocosLogAppender()
 	{}
 	
-	LogAppender& CCocosLogAppender::operator << (const LogStream & msg)
+	LogAppender& CCocosLogAppender::operator << (const LogStreamBuf & msg)
 	{
-		std::stringstream str;
-		str << msg;
-		CCLOG("%s", str.str().c_str());
+		CCLOG("%s", msg.str().c_str());
 
 		return *this;
 	}

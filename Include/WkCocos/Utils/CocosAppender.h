@@ -60,7 +60,7 @@ namespace WkCocos
 		/**
 		* Write the log
 		*/
-		LogAppender& operator << (const LogStream & msg);
+		LogAppender& operator << (const LogStreamBuf & msg);
 
 		/**
 		* Set the log maximum line
@@ -103,7 +103,7 @@ namespace WkCocos
 		/**
 		* Write the log
 		*/
-		LogAppender& operator << (const LogStream & msg);
+		LogAppender& operator << (const LogStreamBuf & msg);
 	};
 
 }//namespace WkCocos

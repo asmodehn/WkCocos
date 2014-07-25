@@ -7,11 +7,11 @@ namespace WkCocos
 {
 
 	LogStreamBuf::LogStreamBuf()
-		: std::stringbuf(),//stringbuf in and out required
-		ptm_prefix(""), //default no prefix
-		ptm_logtime(true),
-		ptm_filterin(true)
-
+		: std::stringbuf() //stringbuf in and out required
+		, ptm_prefix("") //default no prefix
+		, ptm_logtime(true)
+		, ptm_filterin(true)
+		, m_onSync(nullptr)
 	{
 	}
 
@@ -48,41 +48,51 @@ namespace WkCocos
 		return std::string(timebuf);
 	}
 
-	///Output functions (put)
-	///Write sequence of characters
-	std::streamsize LogStreamBuf::xsputn(const char * s, std::streamsize n)
+	int LogStreamBuf::sync()
 	{
-		std::streamsize ressize = 0;
-		if (ptm_filterin)
+		if (m_onSync)
 		{
-			char* laststr = (char*)s;
-			//last string
-			ressize += std::stringbuf::xsputn(laststr, strlen(laststr));
+			m_onSync();
 		}
-		else // filterout
-		{
-			//fake a proper sputn.
-			ressize += n;
-		}
-		return ressize;//ressize == 0 means something is wrong -> will set ios::failbit
+		str("");
+		return 0;
 	}
 
-	int LogStreamBuf::overflow(int c)
-	{
-		int res = 0;
-		if (ptm_filterin)
-		{
-			res = std::stringbuf::overflow(c);
-			//TOTHINK ABOUT : we can do it here instead of in sync... if we want it into the stringbuf...
-			//            std::string timestr = getlocaltime();
-			//    sputn(timestr.c_str(),timestr.length());
-		}
-		else
-		{
-			res = 0; //nothing to do, message filtered out
-		}
-		return res;
-	}
+	///Output functions (put)
+	///Write sequence of characters
+	//std::streamsize LogStreamBuf::xsputn(const char * s, std::streamsize n)
+	//{
+	//	std::streamsize ressize = 0;
+	//	if (ptm_filterin)
+	//	{
+	//		char* laststr = (char*)s;
+	//		//last string
+	//		ressize += std::stringbuf::xsputn(laststr, strlen(laststr));
+	//	}
+	//	else // filterout
+	//	{
+	//		//fake a proper sputn.
+	//		ressize += n;
+	//	}
+	//	return ressize;//ressize == 0 means something is wrong -> will set ios::failbit
+	//}
+
+	//int LogStreamBuf::overflow(int c)
+	//{
+	//	int res = 0;
+	//	if (ptm_filterin)
+	//	{
+	//		res = std::stringbuf::overflow(c);
+	//		//TOTHINK ABOUT : we can do it here instead of in sync... if we want it into the stringbuf...
+	//		//            std::string timestr = getlocaltime();
+	//		//    sputn(timestr.c_str(),timestr.length());
+	//	}
+	//	else
+	//	{
+	//		res = 0; //nothing to do, message filtered out
+	//	}
+	//	return res;
+	//}
 
 
 	/***************** For clogstreambuff : to output to clog *******/

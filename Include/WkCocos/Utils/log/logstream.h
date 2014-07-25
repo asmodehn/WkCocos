@@ -7,6 +7,9 @@
 
 //to get string << operator for logstream
 #include <string>
+#include <vector>
+
+#include "WkCocos/Utils/log/logappender.h"
 
 namespace WkCocos
 {
@@ -20,7 +23,7 @@ namespace WkCocos
 	class LogStream : public std::ostream
 	{
 		//streambuff
-		CLogStreamBuf pvm_lsb;
+		LogStreamBuf pvm_lsb;
 
 		//level of hte log stream.
 		//anything less important than this level is ignored
@@ -84,6 +87,32 @@ namespace WkCocos
 		friend LogStream & operator<<(LogStream  &o, loglevel::Level lvl);
 		LogStream & level(loglevel::Level l);
 
+
+		/**
+		* add Appender on logger.
+		* Class creating the appender is responsible for it's deletion.
+		*/
+		inline void addAppender(LogAppender* newAppender){ _appenders.push_back(newAppender); }
+		void removeAppender(LogAppender* oldAppender)
+		{
+			auto curAppender = _appenders.begin();
+			while (curAppender != _appenders.end() && *curAppender != oldAppender)
+			{
+				++curAppender;
+			}
+			if (curAppender != _appenders.end())
+			{
+				_appenders.erase(curAppender);
+			}
+		}
+
+	private:
+		void syncAppenders();
+
+		/**
+		* List of appender to send the log stream to
+		*/
+		std::vector<LogAppender*> _appenders;
 	};
 
 } //WkCocos

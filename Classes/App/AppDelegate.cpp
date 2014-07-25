@@ -21,7 +21,18 @@ AppDelegate::AppDelegate()
 #endif
 
 	WkCocos::LogStream logger;
-	logger << "Awesone log";
+
+	WkCocos::CLogAppender* consoleApp = new WkCocos::CLogAppender();
+	WkCocos::FileLogAppender* fileApp = new WkCocos::FileLogAppender("my.log");
+
+	logger.addAppender(consoleApp);
+	logger.addAppender(fileApp);
+
+	logger << "Awesone log1" << std::endl;
+	logger << "Awesone log2" << std::endl;
+
+	delete fileApp;
+	delete consoleApp;
 
 }
 
