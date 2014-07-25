@@ -17,10 +17,10 @@ namespace WkCocos
 	*
 	*/
 	///@TODO : Design should be changed as we cannot access stringbuf inside an ostringstream in a standard / portable way...
-	class LogStream : public std::ostringstream
+	class LogStream : public std::ostream
 	{
 		//streambuff
-		LogStreamBuf* pvm_lsb;
+		CLogStreamBuf pvm_lsb;
 
 		//level of hte log stream.
 		//anything less important than this level is ignored
@@ -46,9 +46,14 @@ namespace WkCocos
 			return o << l.rdbuf();
 		};
 
-		LogStreamBuf* rdbuf() const
+		LogStreamBuf* rdbuf()
 		{
-			return pvm_lsb;
+			return &pvm_lsb;
+		}
+
+		const LogStreamBuf* rdbuf() const
+		{
+			return &pvm_lsb;
 		}
 		//not needed anymore since we inherit from ostringstream
 		//std::string str ( ) const { return rdbuf()->str(); }

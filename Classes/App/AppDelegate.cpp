@@ -2,6 +2,8 @@
 #include "WkCocosApp/LoadingScene.h"
 #include "WkCocosApp/HelloWorldScene.h"
 
+#include "WkCocos/WkCocos.h"
+
 USING_NS_CC;
 
 AppDelegate::AppDelegate()
@@ -18,6 +20,8 @@ AppDelegate::AppDelegate()
 	//cocos2d::FileUtils::getInstance()->addSearchPath("assets");
 #endif
 
+	WkCocos::LogStream logger;
+	logger << "Awesone log";
 
 }
 

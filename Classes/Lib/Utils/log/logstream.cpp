@@ -4,12 +4,12 @@ namespace WkCocos
 {
 
 	LogStream::LogStream()
-		: std::ostringstream()
+		: std::ostream(&pvm_lsb)
 	{
 			//to hook up to usual stream design
-			pvm_lsb = new CLogStreamBuf();
+			/*pvm_lsb = new CLogStreamBuf();
 			this->init(pvm_lsb);
-
+*/
 			//setup default flags
 			this->flags(std::ios::left | std::ios::dec | std::ios::showbase | std::ios::boolalpha);
 
@@ -19,11 +19,11 @@ namespace WkCocos
 		}
 
 	LogStream::LogStream(LogStreamBuf* lsb)
-		: std::ostringstream()
+		: std::ostream(&pvm_lsb)
 	{
 			//to hook up to usual stream design
-			pvm_lsb = lsb;
-			this->init(pvm_lsb);
+			//pvm_lsb = lsb;
+			//this->init(pvm_lsb);
 
 			//setup default flags
 			this->flags(std::ios::left | std::ios::dec | std::ios::showbase | std::ios::boolalpha);
