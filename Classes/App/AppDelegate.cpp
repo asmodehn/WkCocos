@@ -2,11 +2,13 @@
 #include "WkCocosApp/LoadingScene.h"
 #include "WkCocosApp/HelloWorldScene.h"
 
-#include "WkCocos/WkCocos.h"
 
 USING_NS_CC;
 
 AppDelegate::AppDelegate()
+: m_consoleApp(nullptr)
+, m_fileApp(nullptr)
+, m_cocosApp(nullptr)
 {
 	//initializing search paths for different platforms
 #if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
@@ -22,22 +24,36 @@ AppDelegate::AppDelegate()
 
 	WkCocos::LogStream::create();
 
-	WkCocos::CLogAppender* consoleApp = new WkCocos::CLogAppender();
-	WkCocos::FileLogAppender* fileApp = new WkCocos::FileLogAppender("my.log");
+	m_consoleApp = new WkCocos::CLogAppender();
+	m_fileApp = new WkCocos::FileLogAppender("my.log");
 
-	WkCocos::LogStream::get()->addAppender(consoleApp);
-	WkCocos::LogStream::get()->addAppender(fileApp);
+	WkCocos::LogStream::get()->addAppender(m_consoleApp);
+	WkCocos::LogStream::get()->addAppender(m_fileApp);
 
 	LOG_INFO << "Awesome log1" << std::endl;
 	LOG_INFO << "Awesome log2" << std::endl;
-
-	delete fileApp;
-	delete consoleApp;
-
 }
 
 AppDelegate::~AppDelegate()
 {
+	if (m_fileApp)
+	{
+		WkCocos::LogStream::get()->removeAppender(m_fileApp);
+		delete m_fileApp;
+		m_fileApp = nullptr;
+	}
+	if (m_consoleApp)
+	{
+		WkCocos::LogStream::get()->removeAppender(m_consoleApp);
+		delete m_consoleApp;
+		m_consoleApp = nullptr;
+	}
+	if (m_cocosApp)
+	{
+		WkCocos::LogStream::get()->removeAppender(m_cocosApp);
+		delete m_cocosApp;
+		m_cocosApp = nullptr;
+	}
 	WkCocos::LogStream::destroy();
 }
 
@@ -58,13 +74,22 @@ bool AppDelegate::applicationDidFinishLaunching() {
     director->setAnimationInterval(1.0 / 60);
 
     // create a scene. it's an autorelease object
-    LoadingScene* loadscene = LoadingScene::create();
+	LoadingScene* loadscene = LoadingScene::create();
+
+	// Test for cocos log appender
+	//WkCocos::CocosLogAppender::CheckBoxRes resource;
+	//m_cocosApp = new WkCocos::CocosLogAppender(loadscene, "fonts/Text.fnt", resource);
+	//WkCocos::LogStream::get()->addAppender(m_cocosApp);
+	//LOG_INFO << "Add " << "cocos " << "appender" << std::endl;
+	//LOG_INFO << "Next Line" << std::endl;
 
 	loadscene->scheduleDLCCheck();
 
-	loadscene->setLoadDoneCallback([](){
+	loadscene->setLoadDoneCallback([this](){
 		auto director = cocos2d::Director::getInstance();
-		director->replaceScene(cocos2d::TransitionFade::create(1.0f, HelloWorld::createScene()));
+
+		cocos2d::Scene* newScene = HelloWorld::createScene();
+		director->replaceScene(cocos2d::TransitionFade::create(1.0f, newScene));
 	});
 
 	//Initializing App42
