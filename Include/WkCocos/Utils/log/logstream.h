@@ -116,4 +116,16 @@ namespace WkCocos
 
 } //WkCocos
 
+#ifdef _DEBUG
+#	define LOG_DEBUG		(*WkCocos::LogStream::get())
+#	define LOG_INFO			(*WkCocos::LogStream::get())
+#	define LOG_WARNING		(*WkCocos::LogStream::get())
+#	define LOG_ERROR		(*WkCocos::LogStream::get())
+#else //_DEBUG
+#	define LOG_DEBUG		std::clog
+#	define LOG_INFO			std::clog
+#	define LOG_WARNING		std::clog
+#	define LOG_ERROR		std::clog
+#endif //_DEBUG
+
 #endif // __WKCOCOS_UTILS_LOG_LOGSTREAM_H__

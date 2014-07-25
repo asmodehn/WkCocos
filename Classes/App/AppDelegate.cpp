@@ -28,8 +28,8 @@ AppDelegate::AppDelegate()
 	WkCocos::LogStream::get()->addAppender(consoleApp);
 	WkCocos::LogStream::get()->addAppender(fileApp);
 
-	(*WkCocos::LogStream::get()) << "Awesome log1" << std::endl;
-	(*WkCocos::LogStream::get()) << "Awesome log2" << std::endl;
+	LOG_INFO << "Awesome log1" << std::endl;
+	LOG_INFO << "Awesome log2" << std::endl;
 
 	delete fileApp;
 	delete consoleApp;
