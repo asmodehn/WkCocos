@@ -18,6 +18,7 @@ namespace WkCocos
 			void Error::update(entityx::ptr<entityx::EntityManager> entities, entityx::ptr<entityx::EventManager> events, double dt) {}
 
 			void Error::receive(const Events::Error &err) {
+				CCLOGERROR("Download error");
 				m_error_CB();
 			}
 

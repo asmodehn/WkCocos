@@ -72,10 +72,10 @@ bool LoadingScene::init()
 			std::bind(&LoadingScene::progress_CB, this, std::placeholders::_1),
 			std::bind(&LoadingScene::error_CB, this));
 
-		scheduleDLCCheck();
-
 		m_downloadManager->start();
 		m_preloadManager->start();
+
+		scheduleDLCCheck();
 
 		errorui->deactivate();
 
@@ -138,7 +138,7 @@ void LoadingScene::update(float delta)
 	}
 
 	//if callback was called, loading is finished.
-	if (!m_loadDoneCB_called && m_downloadManager && m_preloadManager)
+	else if (!m_loadDoneCB_called)
 	{
 		m_downloadManager->step(delta);
 		m_preloadManager->step(delta);
@@ -177,7 +177,6 @@ void LoadingScene::progress_CB(float pct)
 
 void LoadingScene::error_CB()
 {
-	CCLOGERROR("ERROR");
 
 	//Error UI
 	ErrorUI* errorui = getInterface<ErrorUI>(ErrorUI::id);
