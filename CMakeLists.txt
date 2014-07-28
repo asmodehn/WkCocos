@@ -292,12 +292,6 @@ if ( ${PROJECT_NAME} STREQUAL ${CMAKE_PROJECT_NAME} )
 	)
 	endif()
 
-	if ( BUILD_EXTENSIONS )
-	target_link_libraries(WkCocosApp
-	  extensions
-	)
-	endif()
-
 	if ( USE_BOX2D )
 	target_link_libraries(WkCocosApp
 	  box2d
