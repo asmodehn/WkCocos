@@ -24,13 +24,7 @@ namespace WkCocos
 		* Destructor
 		*/
 		virtual ~LogAppender();
-
-		/**
-		* Write in the stream buffer
-		*/
-		template<typename M>
-		LogAppender& operator << (const M & msg);
-
+		
 		/**
 		*
 		*/
@@ -110,14 +104,6 @@ namespace WkCocos
 		*/
 		std::ofstream _ofstr;
 	};
-
-	template<typename M>
-	LogAppender& LogAppender::operator << (const M & msg)
-	{
-		_stream << msg;
-		*this << _stream;
-		return *this;
-	}
 
 }//namespace WkCocos
 
