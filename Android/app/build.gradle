@@ -1,15 +1,78 @@
+import groovy.transform.Field
+
+@Field
+def buildNumber = 123
+
 apply plugin: 'android'
 
 android {
     compileSdkVersion 19
-    buildToolsVersion "19.0.3"
+    buildToolsVersion '19.1.0'
 
     defaultConfig {
         minSdkVersion 9
         targetSdkVersion 19
-        versionCode 1
-        versionName "1.0"
+        //versionName can go up to "1.999.build"
+        versionCode 100000 + buildNumber // max should be 2 147 483 647
     }
+
+    flavorDimensions "api","abi"
+    //api / abi versions will be on the top 10**8 units of versionCode. that is 20 units to share
+
+    productFlavors {
+        gingerbread {
+            flavorDimension "api"
+            minSdkVersion 10
+            versionCode = 1
+        }
+        icecreamSandwich {
+            flavorDimension "api"
+            minSdkVersion 14
+            versionCode = 2
+        }
+        x86 {
+            flavorDimension "abi"
+            ndk {
+                abiFilter "x86"
+            }
+            // this is the flavor part of the version code.
+            // It must be higher than the arm one for devices supporting
+            // both, as x86 is preferred.
+            versionCode = 3
+        }
+        arm {
+            flavorDimension "abi"
+            ndk {
+                abiFilter "armeabi-v7a"
+            }
+            versionCode = 2
+        }
+        mips {
+            flavorDimension "abi"
+            ndk {
+                abiFilter "mips"
+            }
+            versionCode = 1
+        }
+        fat {
+            flavorDimension "abi"
+            // fat binary, lowest version code to be
+            // the last option
+            versionCode = 0
+        }
+    }
+
+    // make per-variant version code
+    applicationVariants.all { variant ->
+        // get the version code of each flavor
+        def apiVersion = variant.productFlavors.get(0).versionCode
+        def abiVersion = variant.productFlavors.get(1).versionCode
+
+        // set the composite code
+        //TODO : review computation
+        variant.mergedFlavor.versionCode = apiVersion * 1000000 + abiVersion * 100000 + defaultConfig.versionCode
+    }
+
     buildTypes {
         release {
             runProguard false
@@ -25,7 +88,8 @@ android {
             renderscript.srcDirs = ['src/main/java']
             res.srcDirs = ['src/main/res']
             assets.srcDirs = ['assets']
-            jniLibs.srcDirs = ['libs']
+            jniLibs.srcDirs = ['src/main/libs'] // use the jni .so compiled from the manual ndk-build command
+            jni.srcDirs = [] //disable automatic ndk-build call
         }
         test {
 
@@ -35,8 +99,28 @@ android {
 
 }
 
+task copyAssets(type: Copy) {
+    from '../../Resources'
+    into 'assets'
+}
+
+task ndkBuild(type: Exec, dependsOn: 'copyAssets') {
+    //windows only
+    def dependsDir = file('../../depends').absolutePath
+    def cpus = 1//Runtime.runtime.availableProcessors() / 2
+    //windows
+    commandLine 'cmd','/c','ndk-build', 'NDK_DEBUG=1' , '-j' ,cpus , '-C', file('src/main/jni').absolutePath, 'NDK_MODULE_PATH='+ file('..').absolutePath+';'+dependsDir+';'+dependsDir+'\\cocos2d-x;'+dependsDir+'\\cocos2d-x\\external;'+dependsDir+'\\cocos2d-x\\cocos'
+    //linux
+    commandLine 'ndk-build', 'NDK_DEBUG=1' , '-j' ,cpus , '-C', file('src/main/jni').absolutePath, 'NDK_MODULE_PATH='+ file('..').absolutePath+':'+dependsDir+':'+dependsDir+'/cocos2d-x:'+dependsDir+'/cocos2d-x/external:'+dependsDir+'/cocos2d-x/cocos'
+}
+
+tasks.withType(JavaCompile) {
+    compileTask -> compileTask.dependsOn ndkBuild
+}
+
 dependencies {
     compile project(':cocos2dx')
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile project(':wkcocos')
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:19.+'
 }

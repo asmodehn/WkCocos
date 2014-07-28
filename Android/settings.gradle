@@ -1,3 +1,6 @@
+rootProject.name="WkCocos"
 include ':app'
+include ':wkcocos'
+project(':wkcocos').projectDir = new File('lib')
 include ':cocos2dx'
-project(':cocos2dx').projectDir = new File('../cocos2d/cocos/2d/platform/android/java')
+project(':cocos2dx').projectDir = new File('../depends/cocos2d-x/cocos/platform/android/java')

@@ -1,8 +1,20 @@
 [submodule "depends/cocos2d-x"]
 	path = depends/cocos2d-x
-	url = https://github.com/asmodehn/cocos2d-x.git
+	url = git://github.com/asmodehn/cocos2d-x.git
 	branch = asmo_v3_dragonfall
 [submodule "CMake"]
 	path = CMake
-	url = https://github.com/asmodehn/wkcmake.git
+	url = git://github.com/asmodehn/wkcmake.git
+	branch = master
+[submodule "depends/App42_Cocos2DX_SDK"]
+	path = depends/App42_Cocos2DX_SDK
+	url = git://github.com/asmodehn/App42_Cocos2DX_SDK.git
+	branch = master
+[submodule "depends/entityx"]
+	path = depends/entityx
+	url = git://github.com/asmodehn/entityx.git
+	branch = master
+[submodule "tools/database"]
+	path = tools/database
+	url = https://bitbucket.org/yuri-ash/database.git
 	branch = master

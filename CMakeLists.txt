@@ -42,6 +42,19 @@ WkTestDir ( "Tests" )
 WkDataDir ( "Resources")
 WkDocDir ( "Docs" )
 
+add_subdirectory("depends/entityx")
+
+include_directories( "depends/entityx")
+
+# setting include directory for upper project to include it
+set( WkCocos_INCLUDE_DIRS ${WkCocos_INCLDE_DIRS} "depends/entityx")
+
+set(BUILD_CppTests OFF CACHE BOOL "CppTests option OFF by default")
+set(BUILD_EDITOR_COCOSBUILDER OFF CACHE BOOL "EDITOR_COCOSBUILDER option OFF by default")
+set(BUILD_EDITOR_SPINE OFF CACHE BOOL "EDITOR_SPINE option OFF by default")
+set(BUILD_LIBS_LUA OFF CACHE BOOL "BUILD_LIBS_LUA option OFF by default")
+set(BUILD_LuaTests OFF CACHE BOOL "BUILD_LuaTests option OFF by default")
+
 WkDepends("depends/cocos2d-x")
 
 set(COCOS2D_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/depends/cocos2d-x)
@@ -127,6 +140,7 @@ include_directories (
   ${COCOS2D_ROOT}/external/webp/include/linux
   ${COCOS2D_ROOT}/external/tinyxml2
   ${COCOS2D_ROOT}/external/unzip
+  ${COCOS2D_ROOT}/external/chipmunk/include/chipmunk
   ${COCOS2D_ROOT}/external/freetype2/include/linux
   ${COCOS2D_ROOT}/external/websockets/include/linux
   ${COCOS2D_ROOT}/external/spidermonkey/include/linux
@@ -221,84 +235,106 @@ if(MINGW)
   WkAddCXXFlags("-DGLEW_STATIC")
 endif()
 
-
 if(USE_CHIPMUNK)
-  message("Using chipmunk ...")
+  message(STATUS "Using chipmunk ...")
   WkAddCXXFlags("-DCC_ENABLE_CHIPMUNK_INTEGRATION=1")
 elseif(USE_BOX2D)
-  message("Using box2d ...")
+  message(STATUS "Using box2d ...")
   WkAddCXXFlags("-DCC_ENABLE_BOX2D_INTEGRATION=1")
 else(USE_CHIPMUNK)
   message(FATAL_ERROR "Must choose a physics library.")
 endif(USE_CHIPMUNK)
 
+WkDepends ("depends/App42_Cocos2DX_SDK")
 
-WkLibraryBuild(WkCocos STATIC "Classes")
-  
-  
-#Linking with all libraries
 
-if ( BUILD_EDITOR_COCOSBUILDER )
-target_link_libraries(WkCocos
-  cocosbuilder
-)
-endif()
+#The library. reusable for any [Wk]Cocos project.
+WkLibraryBuild(WkCocos "Classes/Lib")
 
-if ( BUILD_EDITOR_COCOSTUDIO )
-target_link_libraries(WkCocos
-  cocostudio
-)
-endif()
-
-if ( BUILD_EDITOR_SPINE )
-target_link_libraries(WkCocos
-  spine
-)
-endif()
-
-if ( BUILD_EXTENSIONS )
-target_link_libraries(WkCocos
-  extensions
-)
-endif()
-
-if ( USE_BOX2D )
-target_link_libraries(WkCocos
-  box2d
-)
-endif()
-
-target_link_libraries(WkCocos
-  audio
-  cocos2d
+set( WkCocos_INCLUDE_DIRS ${WkCocos_INCLUDE_DIRS}
+	CACHE PATH "Headers Directories"
 )
 
-#Testing
-if(WIN32)
-    WkTestBuild( maintest win32/main.cpp )
-    WkTestRun( WkCocos maintest WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/${${PROJECT_NAME}_TEST_DIR}/${${PROJECT_NAME}_TEST_DATA_DIR} )
-	if ( ${PROJECT_NAME}_ENABLE_TESTS ) # if the target has been defined ( tests enbled )
-	#also copying dlls to binary directory for the executable to run
-	ADD_CUSTOM_COMMAND( TARGET maintest POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
-				"${COCOS2D_ROOT}/external/win32-specific/gles/prebuilt/glew32.dll"
-				"$<TARGET_FILE_DIR:maintest>"
-				COMMENT
-			    "Copying ${COCOS2D_ROOT}/external/win32-specific/gles/prebuilt/glew32.dll to $<TARGET_FILE_DIR:maintest>"
-			    VERBATIM)
-	ADD_CUSTOM_COMMAND( TARGET maintest POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
-				"${COCOS2D_ROOT}/external/win32-specific/zlib/prebuilt/zlib1.dll"
-				"$<TARGET_FILE_DIR:maintest>"
-			    COMMENT
-			    "Copying ${COCOS2D_ROOT}/external/win32-specific/zlib/prebuilt/zlib1.dll to $<TARGET_FILE_DIR:maintest>"
-			    VERBATIM)
-	ADD_CUSTOM_COMMAND( TARGET maintest POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
-				"${COCOS2D_ROOT}/external/curl/prebuilt/win32/curl.dll"
-				"$<TARGET_FILE_DIR:maintest>"
-			    COMMENT
-			    "Copying ${COCOS2D_ROOT}/external/curl/prebuilt/win32/curl.dll to $<TARGET_FILE_DIR:maintest>"
-			    VERBATIM)
-	endif ( ${PROJECT_NAME}_ENABLE_TESTS )
-elseif (UNIX AND NOT CMAKE_TOOLCHAIN_FILE) #assumed linux
-    WkTestBuild( maintest linux/main.cpp )
-    WkTestRun( WkCocos maintest WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/${${PROJECT_NAME}_TEST_DIR}/${${PROJECT_NAME}_TEST_DATA_DIR} )
+#Add WkCocosApp only if we are the top project  
+if ( ${PROJECT_NAME} STREQUAL ${CMAKE_PROJECT_NAME} )
+	#The app. Interface to test the library.
+	WkLibraryBuild(WkCocosApp "Classes/App")
+	target_link_libraries(WkCocosApp
+	  WkCocos
+	  entityx
+	)
+
+
+	#Linking with all libraries
+
+	if ( BUILD_EDITOR_COCOSBUILDER )
+	target_link_libraries(WkCocosApp
+	  cocosbuilder
+	)
+	endif()
+
+	if ( BUILD_EDITOR_COCOSTUDIO )
+	target_link_libraries(WkCocosApp
+	  cocostudio
+	)
+	endif()
+
+	if ( BUILD_EDITOR_SPINE )
+	target_link_libraries(WkCocosApp
+	  spine
+	)
+	endif()
+
+	if ( BUILD_EXTENSIONS )
+	target_link_libraries(WkCocosApp
+	  extensions
+	)
+	endif()
+
+	if ( USE_BOX2D )
+	target_link_libraries(WkCocosApp
+	  box2d
+	)
+	endif()
+
+	target_link_libraries(WkCocosApp
+	  audio
+	  cocos2d
+	)
+
+	#WKCMAKE ISSUE 43 https://github.com/asmodehn/wkcmake/issues/43
+	# Workaround to actually do the linking
+	WkExportConfig( ${PROJECT_NAME} )
+
+	#Testing on by default.
+	set(WkCocos_ENABLE_TESTS ON CACHE BOOL "Wether or not you want the project to include the tests and enable automatic testing for WkCocos")
+	if(WIN32)
+		WkTestBuild( maintest win32/main.cpp )
+		WkTestRun( WkCocosApp maintest WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/${${PROJECT_NAME}_TEST_DIR}/${${PROJECT_NAME}_TEST_DATA_DIR} )
+		if ( ${PROJECT_NAME}_ENABLE_TESTS ) # if the target has been defined ( tests enbled )
+		#also copying dlls to binary directory for the executable to run
+		ADD_CUSTOM_COMMAND( TARGET maintest POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
+					"${COCOS2D_ROOT}/external/win32-specific/gles/prebuilt/glew32.dll"
+					"$<TARGET_FILE_DIR:maintest>"
+					COMMENT
+					"Copying ${COCOS2D_ROOT}/external/win32-specific/gles/prebuilt/glew32.dll to $<TARGET_FILE_DIR:maintest>"
+					VERBATIM)
+		ADD_CUSTOM_COMMAND( TARGET maintest POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
+					"${COCOS2D_ROOT}/external/win32-specific/zlib/prebuilt/zlib1.dll"
+					"$<TARGET_FILE_DIR:maintest>"
+					COMMENT
+					"Copying ${COCOS2D_ROOT}/external/win32-specific/zlib/prebuilt/zlib1.dll to $<TARGET_FILE_DIR:maintest>"
+					VERBATIM)
+		ADD_CUSTOM_COMMAND( TARGET maintest POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
+					"${COCOS2D_ROOT}/external/curl/prebuilt/win32/libcurl.dll"
+					"$<TARGET_FILE_DIR:maintest>"
+					COMMENT
+					"Copying ${COCOS2D_ROOT}/external/curl/prebuilt/win32/libcurl.dll to $<TARGET_FILE_DIR:maintest>"
+					VERBATIM)
+		endif ( ${PROJECT_NAME}_ENABLE_TESTS )
+	elseif (UNIX AND NOT CMAKE_TOOLCHAIN_FILE) #assumed linux
+		WkTestBuild( maintest linux/main.cpp )
+		WkTestRun( WkCocosApp maintest WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/${${PROJECT_NAME}_TEST_DIR}/${${PROJECT_NAME}_TEST_DATA_DIR} )
+	endif()
+
 endif()
