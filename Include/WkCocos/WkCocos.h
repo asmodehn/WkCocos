@@ -10,7 +10,7 @@
 #include "WkCocos/App42/Login.h"
 
 //log
-#include "WkCocos/Utils/Log/logstream.h"
+#include "WkCocos/Utils/log/logstream.h"
 #include "WkCocos/Utils/CocosAppender.h"
 
 #endif
