@@ -18,7 +18,14 @@ LOCAL_SRC_FILES := jni.cpp \
                    ../../../../../Classes/Lib/Interface.cpp \
                    ../../../../../Classes/Lib/Save/Online.cpp \
                    ../../../../../Classes/Lib/App42/Setup.cpp \
-                   ../../../../../Classes/Lib/App42/Login.cpp \
+                   ../../../../../Classes/Lib/App42/Login.cpp\
+                   ../../../../../Classes/Lib/Utils/CocosAppender.cpp\
+                   ../../../../../Classes/Lib/Utils/log/logappender.cpp\
+                   ../../../../../Classes/Lib/Utils/log/loglevel.cpp\
+                   ../../../../../Classes/Lib/Utils/log/logstream.cpp\
+                   ../../../../../Classes/Lib/Utils/log/logstreambuf.cpp\
+                   ../../../../../Classes/Lib/Utils/log/nullstream.cpp\
+                   ../../../../../Classes/Lib/Utils/log/nullstreambuf.cpp\
                    ../../../../../Classes/Lib/Loading/LoadingManager.cpp \
                    ../../../../../Classes/Lib/Loading/Systems/DataEval.cpp \
                    ../../../../../Classes/Lib/Loading/Systems/DLCchecking.cpp \
@@ -52,6 +59,7 @@ LOCAL_WHOLE_STATIC_LIBRARIES += app42SDK_static
 
 include $(BUILD_STATIC_LIBRARY)
 
+#This is for cocos2d-x
 $(call import-module,.)
 $(call import-module,audio/android)
 #$(call import-module,Box2D)
@@ -60,6 +68,7 @@ $(call import-module,audio/android)
 $(call import-module,editor-support/cocostudio)
 $(call import-module,network)
 $(call import-module,extensions)
+#WkCocos extras
 $(call import-module,entityx)
 $(call import-module,App42_Cocos2DX_SDK)
 
