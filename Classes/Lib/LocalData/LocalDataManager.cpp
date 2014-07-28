@@ -28,6 +28,10 @@ namespace WkCocos
 			system_manager->configure();
 		}
 
+		LocalDataManager::~LocalDataManager()
+		{
+		}
+
 		bool LocalDataManager::saveLoginID(std::string user, std::string passwd, short version)
 		{
 			auto newentity = entity_manager->create();

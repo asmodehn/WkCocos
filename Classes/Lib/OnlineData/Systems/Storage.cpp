@@ -17,6 +17,12 @@ namespace WkCocos
 			
 			}
 
+			Storage::~Storage()
+			{
+				//StorageService::Terminate();
+				//m_service = nullptr;
+			}
+
 			void Storage::update(entityx::ptr<entityx::EntityManager> entities, entityx::ptr<entityx::EventManager> events, double dt)
 			{/*
 				entityx::ptr<Comp::LoadProfile> l;

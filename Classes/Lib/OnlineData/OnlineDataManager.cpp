@@ -21,6 +21,10 @@ namespace WkCocos
 			system_manager->configure();
 		}
 		
+		OnlineDataManager::~OnlineDataManager()
+		{
+		}
+
 		void OnlineDataManager::loginNew(std::string userid, std::string password, std::string email, std::function<void(App42UserResponse*)> callback)
 		{
 

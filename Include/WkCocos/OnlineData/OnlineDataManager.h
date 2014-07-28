@@ -18,6 +18,11 @@ namespace WkCocos
 			* Constructor 
 			*/
 			OnlineDataManager(std::string app_access_key, std::string app_secret_key);
+
+			/**
+			* Destructor
+			*/
+			~OnlineDataManager();
 			
 			/**
 			* Create User

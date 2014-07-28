@@ -15,7 +15,7 @@ namespace WkCocos
 			struct User : public entityx::System<User>
 			{
 				User();
-				
+				~User();
 				void update(entityx::ptr<entityx::EntityManager> entities, entityx::ptr<entityx::EventManager> events, double dt) override;
 
 			protected :

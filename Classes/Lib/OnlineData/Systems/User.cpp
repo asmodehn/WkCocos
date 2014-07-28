@@ -19,6 +19,12 @@ namespace WkCocos
 			
 			}
 
+			User::~User()
+			{
+				//UserService::Terminate();
+				//m_service = nullptr;
+			}
+
 			void User::update(entityx::ptr<entityx::EntityManager> entities, entityx::ptr<entityx::EventManager> events, double dt) 
 			{
 				entityx::ptr<Comp::Create> c;
@@ -38,11 +44,11 @@ namespace WkCocos
 						auto data = entity.component<Comp::SaveUserData>();
 						if (data && !data->in_progress)
 						{
-							App42Object* app42Object = new App42Object();
-							app42Object->setObject("user_id", data->m_userid.c_str());
-							app42Object->setObject("data", data->m_user_data.c_str());
+							App42Object app42Object;
+							app42Object.setObject("user_id", data->m_userid.c_str());
+							app42Object.setObject("data", data->m_user_data.c_str());
 							App42API::setDbName(DB_NAME);
-							m_service->AddUserInfo(app42Object, data->m_collection.c_str());
+							m_service->AddUserInfo(&app42Object, data->m_collection.c_str());
 							data->in_progress = true;
 						}
 						CCLOG("Requesting App42 User creation : %s ", c->m_userid.c_str());
@@ -88,11 +94,11 @@ namespace WkCocos
 					{
 						App42User user;
 						user.userName = sud->m_userid.c_str();
-						App42Object* app42Object = new App42Object();
-						app42Object->setObject("user_id", sud->m_userid.c_str());
-						app42Object->setObject("data", sud->m_user_data.c_str());
+						App42Object app42Object;
+						app42Object.setObject("user_id", sud->m_userid.c_str());
+						app42Object.setObject("data", sud->m_user_data.c_str());
 						App42API::setDbName(DB_NAME);
-						m_service->AddUserInfo(app42Object, sud->m_collection.c_str());
+						m_service->AddUserInfo(&app42Object, sud->m_collection.c_str());
 						m_service->createOrUpdateProfile(&user, sud->m_cb);
 						sud->in_progress = true;
 					}
@@ -116,6 +122,7 @@ namespace WkCocos
 					{
 						Query* query = QueryBuilder::BuildQuery("user_id", lud->m_userid.c_str(), APP42_OP_EQUALS);
 						m_service->setQuery(DB_NAME, lud->m_collection, query);
+						delete query;
 						CCLOG("Requesting App42 User data for : %s ", lud->m_userid.c_str());
 						m_service->GetUser(lud->m_userid.c_str(), lud->m_cb);
 						lud->in_progress = true;

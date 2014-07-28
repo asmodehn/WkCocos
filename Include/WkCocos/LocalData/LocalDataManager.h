@@ -18,6 +18,11 @@ namespace WkCocos
 			* Constructor 
 			*/
 			LocalDataManager(std::function<void()> error_CB);
+
+			/**
+			* Destructor
+			*/
+			~LocalDataManager();
 			
 			/**
 			* LoginID

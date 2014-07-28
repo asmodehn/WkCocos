@@ -39,6 +39,7 @@ namespace WkCocos
 					}
 
 					done = true;
+					//userdata is deleted by App42SDK
 				};
 			}
 
@@ -69,7 +70,7 @@ namespace WkCocos
 					}
 
 					done = true;
-
+					//userdata is deleted by App42SDK
 				};
 			}
 
@@ -120,7 +121,7 @@ namespace WkCocos
 					}
 
 					done = true;
-
+					//userdata is deleted by App42SDK
 				};
 			}
 
@@ -171,7 +172,7 @@ namespace WkCocos
 					}
 
 					done = true;
-
+					//userdata is deleted by App42SDK
 				};
 			}
 

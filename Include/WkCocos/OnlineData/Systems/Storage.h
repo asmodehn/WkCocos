@@ -15,6 +15,7 @@ namespace WkCocos
 			struct Storage : public entityx::System<Storage>
 			{
 				Storage();
+				~Storage();
 				
 				void update(entityx::ptr<entityx::EntityManager> entities, entityx::ptr<entityx::EventManager> events, double dt) override;
 
