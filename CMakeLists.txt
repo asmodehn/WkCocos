@@ -47,7 +47,7 @@ add_subdirectory("depends/entityx")
 include_directories( "depends/entityx")
 
 # setting include directory for upper project to include it
-set( WkCocos_INCLUDE_DIRS ${WkCocos_INCLDE_DIRS} "depends/entityx")
+set( WkCocos_INCLUDE_DIRS ${WkCocos_INCLUDE_DIRS} "depends/entityx")
 
 set(BUILD_CppTests OFF CACHE BOOL "CppTests option OFF by default")
 set(BUILD_EDITOR_COCOSBUILDER OFF CACHE BOOL "EDITOR_COCOSBUILDER option OFF by default")
@@ -247,6 +247,7 @@ endif(USE_CHIPMUNK)
 
 WkDepends ("depends/App42_Cocos2DX_SDK")
 
+set( WkCocos_INCLUDE_DIRS ${WkCocos_INCLUDE_DIRS} ${WkCocos_App42_INCLUDE_DIRS})
 
 #The library. reusable for any [Wk]Cocos project.
 WkLibraryBuild(WkCocos "Classes/Lib")

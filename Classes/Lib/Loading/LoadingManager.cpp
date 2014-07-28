@@ -56,7 +56,7 @@ namespace WkCocos
 			bool dlcEnable = cocostudio::DictionaryHelper::getInstance()->getBooleanValue_json(json, "dlcEnable", "error");
 			std::string dlcUrl = cocostudio::DictionaryHelper::getInstance()->getStringValue_json(json, "dlcUrl", "error");
 			std::string minAppVersion = cocostudio::DictionaryHelper::getInstance()->getStringValue_json(json, "minAppVersion", "error");
-			std::string version = cocostudio::DictionaryHelper::getInstance()->getStringValue_json(json, "version", 0);
+			std::string version = cocostudio::DictionaryHelper::getInstance()->getStringValue_json(json, "version", "0");
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
 			auto locahost = dlcUrl.find("localhost");
