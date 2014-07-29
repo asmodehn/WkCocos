@@ -2,8 +2,6 @@
 
 #include "WkCocos/OnlineData/Comp/OnlineData.h"
 
-#include "Common/App42API.h"
-
 #define DB_NAME "PUBLIC"
 
 namespace WkCocos

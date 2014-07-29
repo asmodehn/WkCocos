@@ -28,4 +28,4 @@ namespace WkCocos
 	};
 } //namespace WkCocos
 
-#endif __WKCOCOS_OPTIONS_H__
+#endif //__WKCOCOS_OPTIONS_H__
