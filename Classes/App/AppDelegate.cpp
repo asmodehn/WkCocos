@@ -26,7 +26,7 @@ AppDelegate::AppDelegate()
 	WkCocos::LogStream::create();
 
 	m_consoleApp = new WkCocos::CLogAppender();
-	m_fileApp = new WkCocos::FileLogAppender("my.log");
+	m_fileApp = new WkCocos::FileLogAppender(FileUtils::getInstance()->getWritablePath() + "my.log");
 
 	m_consoleApp->setLevel(WkCocos::loglevel::Core_LogInfo);
 	m_fileApp->setLevel(WkCocos::loglevel::Core_LogDebug);

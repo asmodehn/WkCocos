@@ -108,10 +108,12 @@ task ndkBuild(type: Exec, dependsOn: 'copyAssets') {
     //windows only
     def dependsDir = file('../../depends').absolutePath
     def cpus = 1//Runtime.runtime.availableProcessors() / 2
-    //windows
-    commandLine 'cmd','/c','ndk-build', 'NDK_DEBUG=1' , '-j' ,cpus , '-C', file('src/main/jni').absolutePath, 'NDK_MODULE_PATH='+ file('..').absolutePath+';'+dependsDir+';'+dependsDir+'\\cocos2d-x;'+dependsDir+'\\cocos2d-x\\external;'+dependsDir+'\\cocos2d-x\\cocos'
-    //linux
-    commandLine 'ndk-build', 'NDK_DEBUG=1' , '-j' ,cpus , '-C', file('src/main/jni').absolutePath, 'NDK_MODULE_PATH='+ file('..').absolutePath+':'+dependsDir+':'+dependsDir+'/cocos2d-x:'+dependsDir+'/cocos2d-x/external:'+dependsDir+'/cocos2d-x/cocos'
+    if (System.properties['os.name'].toLowerCase().contains('windows')) {
+        //windows
+        commandLine 'cmd', '/c', 'ndk-build', 'NDK_DEBUG=1', '-j', cpus, '-C', file('src/main/jni').absolutePath, 'NDK_MODULE_PATH=' + file('..').absolutePath + ';' + dependsDir + ';' + dependsDir + '\\cocos2d-x;' + dependsDir + '\\cocos2d-x\\external;' + dependsDir + '\\cocos2d-x\\cocos'
+    } else {
+        commandLine 'ndk-build', 'NDK_DEBUG=1', '-j', cpus, '-C', file('src/main/jni').absolutePath, 'NDK_MODULE_PATH=' + file('..').absolutePath + ':' + dependsDir + ':' + dependsDir + '/cocos2d-x:' + dependsDir + '/cocos2d-x/external:' + dependsDir + '/cocos2d-x/cocos'
+    }
 }
 
 tasks.withType(JavaCompile) {
