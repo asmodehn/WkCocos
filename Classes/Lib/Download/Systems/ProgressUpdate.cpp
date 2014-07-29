@@ -20,31 +20,24 @@ namespace WkCocos
 				unsigned int new_curProgVal = 0;
 				for (auto entity : es->entities_with_components<Comp::ProgressValue>()) 
 				{
-
 					entityx::ptr<Comp::ProgressValue> pv = entity.component<Comp::ProgressValue>();
 					new_curProgVal += pv->progval;
-
 				}
 
 				//to keep max the max, even when we add data to load while already loading.
-				if (new_curProgVal > totalProgValMax)
+				if (new_curProgVal > curProgVal)
 				{
 					totalProgValMax = new_curProgVal + totalProgValMax - curProgVal;
 				}
 
 				curProgVal = new_curProgVal;
-				if (0 == totalProgValMax)
-				{
+				if (totalProgValMax)
+					setProgressPercent(1.0f - (float)curProgVal / (float)totalProgValMax);
+				else //nothing to do
 					setProgressPercent(1.0f);
-				}
-				else
-				{
-					setProgressPercent(1.0f - (float(curProgVal) / float(totalProgValMax)) * 1.0f);
-				}
-			};
 
-					
+			};
+		
 		}//namespace Systems
 	}//namespace Download
 }//namespace WkCocos
-

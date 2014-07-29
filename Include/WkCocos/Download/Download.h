@@ -29,6 +29,11 @@ namespace WkCocos
 					return event_manager;
 				}
 
+				entityx::ptr<entityx::SystemManager> getSystemManager()
+				{
+					return system_manager;
+				}
+
 			protected:
 				void configure() override;
 

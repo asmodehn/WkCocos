@@ -23,13 +23,18 @@ namespace WkCocos
 
 				//scheduel the load in memory of a data.
 				//DataLoad Event is sent when the load finishes.
-				bool addDataLoad(const std::vector<std::string> &  filepath);
+				bool addDataLoad(const std::vector<std::string> & filepath);
 				
 				virtual ~Preload();
 
 				entityx::ptr<entityx::EventManager> getEventManager()
 				{
 					return event_manager;
+				}
+
+				entityx::ptr<entityx::SystemManager> getSystemManager()
+				{
+					return system_manager;
 				}
 
 				void setEventEmmiter(entityx::ptr<entityx::EventManager> event_emmiter);

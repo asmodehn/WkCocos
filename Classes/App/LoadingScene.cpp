@@ -4,6 +4,9 @@
 
 #include "WkCocosApp/ErrorUI.h"
 
+#include "WkCocos/Download/Systems/ProgressUpdate.h"
+#include "WkCocos/Preload/Systems/ProgressUpdate.h"
+
 #include "ui/CocosGUI.h"
 
 #include <iostream>
@@ -44,9 +47,6 @@ bool LoadingScene::init()
 		return false;
 	}
 
-	//cocos2d::Size visibleSize = cocos2d::Director::getInstance()->getVisibleSize();
-	//cocos2d::Vec2 origin = cocos2d::Director::getInstance()->getVisibleOrigin();
-
 	//Load UI
 	LoadingUI* loadui = new LoadingUI();
 	loadui->getRoot()->setEnabled(true);
@@ -74,6 +74,7 @@ bool LoadingScene::init()
 
 		m_downloadManager->start();
 		m_preloadManager->start();
+		m_preloadManager->setEventEmmiter(m_downloadManager->getEventManager());
 
 		scheduleDLCCheck();
 
@@ -138,32 +139,47 @@ void LoadingScene::update(float delta)
 	}
 
 	//if callback was called, loading is finished.
-	else if (!m_loadDoneCB_called)
+	if (!m_loadDoneCB_called && m_downloadManager && m_preloadManager)
 	{
 		m_downloadManager->step(delta);
 		m_preloadManager->step(delta);
+
+		int downCurProgVal = m_downloadManager->getSystemManager()->system<WkCocos::Download::Systems::ProgressUpdate>()->curProgVal;
+		int downTotProgVal = m_downloadManager->getSystemManager()->system<WkCocos::Download::Systems::ProgressUpdate>()->totalProgValMax;
+		int preCurProgVal = m_preloadManager->getSystemManager()->system<WkCocos::Preload::Systems::ProgressUpdate>()->curProgVal;
+		int preTotProgVal = m_preloadManager->getSystemManager()->system<WkCocos::Preload::Systems::ProgressUpdate>()->totalProgValMax;
+
+		float pct = 1.0f - (float)(downCurProgVal + preCurProgVal) / (float)(downTotProgVal + preTotProgVal);
+
+		LoadingUI* ui = getInterface<LoadingUI>(LoadingUI::id);
+		if (ui) {
+			ui::Widget* loadbarw = ui->getRoot()->getChildByName("LoadingBar");
+			ui::LoadingBar* loadbar = dynamic_cast<ui::LoadingBar*>(loadbarw);
+			if (loadbar)
+				loadbar->setPercent(static_cast<int>(pct * 100));
+		}
+
+		if (pct >= 1.0f && !m_loadDoneCB_called) {
+			FileUtils::getInstance()->purgeCachedEntries();
+			m_loadDoneCB_called = true;
+			m_loadDoneCB();
+		}
+
 	}
 }
 
 //expects pct in [0..1]
 void LoadingScene::progress_CB(float pct)
 {
-	//CCLOG("%f%%", pct * 100);
-
-	LoadingUI* ui = getInterface<LoadingUI>(LoadingUI::id);
+	/*LoadingUI* ui = getInterface<LoadingUI>(LoadingUI::id);
 	if (ui)
 	{
-		//cocos2d::ui::Widget* loadbarpnl = ui->getRoot()->getChildByName("PNL_LoadingBar");
-		//if (loadbarpnl)
-		//{
-			ui::Widget* loadbarw = ui->getRoot()->getChildByName("LoadingBar"); //loadbarpnl->getChildByName("LoadingBar");
-			ui::LoadingBar* loadbar = dynamic_cast<ui::LoadingBar*>(loadbarw);
+		ui::Widget* loadbarw = ui->getRoot()->getChildByName("LoadingBar"); //loadbarpnl->getChildByName("LoadingBar");
+		ui::LoadingBar* loadbar = dynamic_cast<ui::LoadingBar*>(loadbarw);
 
-			if (loadbar)
-			{
-				loadbar->setPercent(static_cast<int>(pct * 100));
-			}
-		//}
+		if (loadbar)
+			loadbar->setPercent(static_cast<int>(pct * 100));
+
 	}
 
 	if (pct >= 1.0f && !m_loadDoneCB_called)
@@ -172,7 +188,7 @@ void LoadingScene::progress_CB(float pct)
 		//loading finished. lets move on.
 		m_loadDoneCB_called = true;
 		m_loadDoneCB();
-	}
+	}*/
 }
 
 void LoadingScene::error_CB()

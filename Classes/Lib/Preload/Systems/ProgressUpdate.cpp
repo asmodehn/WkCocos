@@ -31,18 +31,13 @@ namespace WkCocos
 				}
 
 				curProgVal = new_curProgVal;
-				if (0 == totalProgValMax) //nothing to do
-				{
-					setProgressPercent(1.0f);
-				}
-				else
-				{
+				if (totalProgValMax) 
 					setProgressPercent(1.0f - (float)curProgVal / (float)totalProgValMax);
-				}
-			};
+				else //nothing to do
+					setProgressPercent(1.0f);
 
+			};
 					
 		}//namespace Systems
 	}//namespace Preload
 }//namespace WkCocos
-
