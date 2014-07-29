@@ -34,11 +34,11 @@ bool TestScene::init()
 	//cocos2d::Vec2 origin = cocos2d::Director::getInstance()->getVisibleOrigin();
 
 	//Load UI
-	SavingUI* saveui = new SavingUI();
-	saveui->getRoot()->setEnabled(false);
-	saveui->getRoot()->setVisible(false);
-	addChild(saveui->getRoot());
-	m_ui[SavingUI::id] = saveui;
+	//SavingUI* saveui = new SavingUI();
+	//saveui->getRoot()->setEnabled(false);
+	//saveui->getRoot()->setVisible(false);
+	//addChild(saveui->getRoot());
+	//m_ui[SavingUI::id] = saveui;
 
 	//TimerUI
 	TimerUI* timerui = new TimerUI();

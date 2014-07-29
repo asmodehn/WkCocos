@@ -2,6 +2,8 @@
 
 #include "Wkcocos/Timer/Comp/TimeValue.h"
 
+#include "Wkcocos/Timer/Systems/Progressor.h"
+
 #include "cocos/cocos2d.h"
 
 namespace WkCocos
@@ -14,8 +16,7 @@ namespace WkCocos
 			, system_manager(entityx::SystemManager::make(entity_manager, event_manager))
 		{
 
-			//system_manager->add<Systems::JSONReader>();
-
+			system_manager->add<Systems::Progressor>();
 			system_manager->configure();
 		}
 
@@ -132,7 +133,7 @@ namespace WkCocos
 
 		void Timer::update(double dt) 
 		{
-			//system_manager->update<Systems::JSONWriter>(dt);
+			system_manager->update<Systems::Progressor>(dt);
 		}
 
 	} //namespace Timer

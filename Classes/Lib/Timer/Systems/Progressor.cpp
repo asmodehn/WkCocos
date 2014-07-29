@@ -17,7 +17,7 @@ namespace WkCocos
 				entityx::ptr<Comp::Callback> cb;
 				for (auto entity : es->entities_with_components(id, prog, cb))
 				{
-					prog->m_current += dt;
+					prog->m_current += static_cast<unsigned long>(dt * 1000 + 0.5);
 					cb->m_cb(id->m_id, prog->m_current);
 				}
 			};

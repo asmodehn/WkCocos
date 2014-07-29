@@ -25,8 +25,6 @@ public:
 	*/
 	virtual ~TimerUI();
 	
-	void update(float delta);
-
 	void startCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input);
 	void stopCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input);
 

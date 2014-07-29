@@ -43,7 +43,7 @@ TimerUI::TimerUI()
 	m_stopLabel->setPosition(m_stopButton->getPosition() + cocos2d::Vec2(0, m_stopButton->getContentSize().height));
 	m_widget->addChild(m_stopLabel);
 	
-	m_countLabel = cocos2d::ui::Text::create("? GEM", "Arial", 21);
+	m_countLabel = cocos2d::ui::Text::create("", "Arial", 21);
 	m_countLabel->setPosition(cocos2d::Vec2(
 		(visibleSize.width - m_startButton->getContentSize().width) * 2/ 4,
 		(visibleSize.height - m_startButton->getContentSize().height) * 2/ 3
@@ -61,18 +61,15 @@ TimerUI::TimerUI()
 TimerUI::~TimerUI()
 {}
 
-void TimerUI::update(float delta)
-{
-	m_countLabel->setText(WkCocos::ToolBox::itoa(GameLogic::Instance().getPlayer().m_gem) );
-}
-
 void TimerUI::startCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input)
 {
 	if (input == cocos2d::ui::Widget::TouchEventType::ENDED)
 	{
 		CCLOG("START BUTTON CLICKED");
 
-		GameLogic::Instance().getPlayer().saveData();
+		GameLogic::Instance().getPlayer().setTimer("testing", 156, [=](std::string id, unsigned long elapsed){
+			m_countLabel->setText(WkCocos::ToolBox::itoa(elapsed));
+		});
 	}
 }
 
@@ -83,7 +80,7 @@ void TimerUI::stopCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEv
 	{
 		CCLOG("STOP BUTTON CLICKED");
 
-		GameLogic::Instance().getPlayer().loadData();
+		GameLogic::Instance().getPlayer().deleteTimer("testing");
 	}
 }
 

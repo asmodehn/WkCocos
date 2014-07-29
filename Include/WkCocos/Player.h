@@ -36,7 +36,7 @@ namespace WkCocos
 		*/
 		bool setTimer(std::string id, unsigned long msecs, std::function<void(std::string id, unsigned long msecs_elapsed)> update_cb)
 		{
-			m_timer->setTimer(id,msecs,update_cb);
+			return m_timer->setTimer(id,msecs,update_cb);
 		}
 
 		/**
@@ -44,7 +44,7 @@ namespace WkCocos
 		*/
 		bool startTimer(std::string id)
 		{
-			m_timer->startTimer(id)
+			return m_timer->startTimer(id)
 		}
 
 		/**
@@ -60,7 +60,7 @@ namespace WkCocos
 		*/
 		void deleteTimer(std::string id)
 		{
-			m_timer->deleteTimer(id)
+			m_timer->deleteTimer(id);
 		}
 
 	protected:
@@ -229,6 +229,11 @@ namespace WkCocos
 	template <class T>
 	void Player<T>::Update(float deltatime)
 	{
+		if (m_timer)
+		{
+			m_timer->update(deltatime);
+		}
+
 		if (m_localdata)
 		{
 			m_localdata->update(deltatime);
