@@ -5,6 +5,7 @@
 #include "WkCocos/Utils/UUID.h"
 #include "WkCocos/LocalData/LocalDataManager.h"
 #include "WkCocos/OnlineData/OnlineDataManager.h"
+#include "WkCocos/Timer/Timer.h"
 
 #include <string>
 
@@ -27,6 +28,41 @@ namespace WkCocos
 		
 		void setOnlineDataManager(std::shared_ptr<OnlineData::OnlineDataManager> onlinedata);
 		
+		/**
+		* Setup Timer
+		* @param id identifier of the timer
+		* @param msecs duration of the timer
+		* @param update_cb function pointer called everyupdate with the current time difference passed in msec_elapsed
+		*/
+		bool setTimer(std::string id, unsigned long msecs, std::function<void(std::string id, unsigned long msecs_elapsed)> update_cb)
+		{
+			m_timer->setTimer(id,msecs,update_cb);
+		}
+
+		/**
+		* StartTimer
+		*/
+		bool startTimer(std::string id)
+		{
+			m_timer->startTimer(id)
+		}
+
+		/**
+		* Stop Timer (Doesnt trigger callback)
+		*/
+		void stopTimer(std::string id)
+		{
+			m_timer->stopTimer(id);
+		}
+
+		/**
+		* Delete Timer
+		*/
+		void deleteTimer(std::string id)
+		{
+			m_timer->deleteTimer(id)
+		}
+
 	protected:
 		Player(std::shared_ptr<LocalData::LocalDataManager> localdata);
 
@@ -40,7 +76,9 @@ namespace WkCocos
 
 		std::shared_ptr<LocalData::LocalDataManager> m_localdata;
 		std::shared_ptr<OnlineData::OnlineDataManager> m_onlinedata;
+		std::shared_ptr<Timer::Timer> m_timer;
 
+		//TODO : Implement Load and Save of Timers
 		virtual std::string get_data_json() = 0;
 		virtual void set_data_json(std::string data) = 0;
 	};
@@ -52,6 +90,8 @@ namespace WkCocos
 	{
 		//registering player class in cocos update loop
 		cocos2d::Director::getInstance()->getScheduler()->schedule(std::bind(&Player<T>::Update, this, std::placeholders::_1), this, 1.f / 15, false, "player_update");
+
+		m_timer.reset(new WkCocos::Timer::Timer());
 
 		//tried to read existing login data.
 		m_localdata->loadLoginID([=](std::string user, std::string passwd){
