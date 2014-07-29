@@ -44,7 +44,7 @@ namespace WkCocos
 		*/
 		bool startTimer(std::string id)
 		{
-			return m_timer->startTimer(id)
+			return m_timer->startTimer(id);
 		}
 
 		/**

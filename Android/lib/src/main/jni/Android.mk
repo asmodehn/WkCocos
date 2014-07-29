@@ -46,6 +46,8 @@ LOCAL_SRC_FILES := jni.cpp \
                    ../../../../../Classes/Lib/OnlineData/Comp/OnlineData.cpp \
                    ../../../../../Classes/Lib/OnlineData/Systems/Storage.cpp \
                    ../../../../../Classes/Lib/OnlineData/Systems/User.cpp \
+                   ../../../../../Classes/Lib/Timer/Timer.cpp \
+                   ../../../../../Classes/Lib/Timer/Systems/Progressor.cpp \
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../../../../Include
 
