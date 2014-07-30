@@ -1,8 +1,8 @@
-#include "Wkcocos/Timer/Timer.h"
+#include "WkCocos/Timer/Timer.h"
 
-#include "Wkcocos/Timer/Comp/TimeValue.h"
+#include "WkCocos/Timer/Comp/TimeValue.h"
 
-#include "Wkcocos/Timer/Systems/Progressor.h"
+#include "WkCocos/Timer/Systems/Progressor.h"
 
 #include "cocos/cocos2d.h"
 
