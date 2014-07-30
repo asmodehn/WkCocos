@@ -2,217 +2,201 @@
 #define __WKCOCOS_PLAYER_H__
 
 #include "cocos2d.h"
+#include "WkCocos/Utils/UUID.h"
 #include "WkCocos/LocalData/LocalDataManager.h"
+#include "WkCocos/OnlineData/OnlineDataManager.h"
 
-//cocos style platform detection
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
-#include <locale>
-#include <codecvt>
-//For UUID on windows
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-//UUID generation on Android device ( Java calls )
-#include <jni.h>
-
-#include "platform/android/jni/JniHelper.h"
-
-#include <android/log.h>
-
-#define  LOG_TAG    "main"
-#define  LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG,LOG_TAG,__VA_ARGS__)
-
-#endif
+#include <string>
 
 namespace WkCocos
 {
 	/**
 	* Hold the player information.
-	* Meyers singleton as the player is there from the beginning, and should available everywhere.
-	* we use CRTP design to allow inheritance from it.
+	* T is the class that store the player game data.
+	* T must be able to serialize and deserialized to/from JSON string.
 	*/
-	template<class T>
+	template <class T>
 	class Player
 	{
 	public:
-		static T& GetInstance()
-		{
-			//careful : this might not be thread safe ...
-			m_bSingletonCreating = true;
-			static T player;
-			m_bSingletonCreating = false;
-
-			return player;
-		}
-
-		/**
-		* Delayed intialization.
-		* Check if saved data exist, and if so it loads it
-		*/
-		bool Activate();
 
 		/**
 		* Update loop, called by cocos after Activate has been called
 		*/
 		void Update(float deltatime);
-
+		
+		void setOnlineDataManager(std::shared_ptr<OnlineData::OnlineDataManager> onlinedata);
+		
 	protected:
-		Player();
-		Player(const Player&);
-		Player& operator=(const Player&);
+		Player(std::shared_ptr<LocalData::LocalDataManager> localdata);
 
-		static bool m_bSingletonCreating;
+		bool requestLoadData();
 
+		bool requestSaveData();
+
+		bool newPlayer;
 		std::string m_user;
 		std::string m_passwd;
 
-		LocalData::LocalDataManager m_localdata;
+		std::shared_ptr<LocalData::LocalDataManager> m_localdata;
+		std::shared_ptr<OnlineData::OnlineDataManager> m_onlinedata;
 
+		virtual std::string get_data_json() = 0;
+		virtual void set_data_json(std::string data) = 0;
 	};
 
-	// Static variable initialization
-	template<class T>
-	bool Player<T>::m_bSingletonCreating = false;
-
 	//constructors
-	template<class T>
-	Player<T>::Player()
-	{
-	}
-
-	template<class T>
-	Player<T>::Player(const Player&)
-	{
-	}
-
-	//operators
-	template<class T>
-	Player<T>& Player<T>::operator=(const Player&)
-	{
-		return *this;
-	}
-
-	//member methods
-	template<class T>
-	bool Player<T>::Activate()
+	template <class T>
+	Player<T>::Player(std::shared_ptr<LocalData::LocalDataManager> localdata)
+		: m_localdata(localdata)
 	{
 		//registering player class in cocos update loop
 		cocos2d::Director::getInstance()->getScheduler()->schedule(std::bind(&Player<T>::Update, this, std::placeholders::_1), this, 1.f / 15, false, "player_update");
-		
-		//tried to read existing data.
-		m_localdata.loadLoginID([&](std::string user, std::string passwd){
+
+		//tried to read existing login data.
+		m_localdata->loadLoginID([=](std::string user, std::string passwd){
 			if (user != "" && passwd != "")
 			{
 				m_user = user;
 				m_passwd = passwd;
+
+				newPlayer = false;
+
+				if (m_onlinedata)
+				{
+					//reset online data manager to force login
+					setOnlineDataManager(m_onlinedata);
+				}
 			}
 			else
 			{
 				//generate unique ID
 				std::string user_prefix = "fake_";
+				std::string uuid = WkCocos::UUID::create();
 
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-				//generating UUID ( from Android code )
-				std::string uuid = "";
-
-				cocos2d::JniMethodInfo j_randomUUIDMI;
-				CCLOG("Calling java/util/UUID/randomUUID()Ljava.util.UUID;");
-				if (cocos2d::JniHelper::getStaticMethodInfo(j_randomUUIDMI, "java/util/UUID", "randomUUID", "()Ljava/util/UUID;"))
-				{
-					cocos2d::JniMethodInfo j_UUIDtoStringMI;
-					jobject juuid = j_randomUUIDMI.env->CallStaticObjectMethod(j_randomUUIDMI.classID, j_randomUUIDMI.methodID);
-					CCLOG("Calling java/util/UUID/toString()Ljava/lang/String;");
-					if (juuid && cocos2d::JniHelper::getMethodInfo(j_UUIDtoStringMI, "java/util/UUID", "toString", "()Ljava/lang/String;"))
-					{
-						jstring uuidjstr = (jstring)j_UUIDtoStringMI.env->CallObjectMethod(juuid, j_UUIDtoStringMI.methodID);
-						const char* uuidcstr = j_UUIDtoStringMI.env->GetStringUTFChars((jstring)uuidjstr, NULL);
-						uuid.assign(uuidcstr);
-						j_UUIDtoStringMI.env->ReleaseStringUTFChars(uuidjstr, uuidcstr);
-						//Here uuid variable is setup with a UUID string.
-						j_UUIDtoStringMI.env->DeleteLocalRef(j_UUIDtoStringMI.classID);
-						j_UUIDtoStringMI.env->DeleteLocalRef(uuidjstr);
-
-						user = user_prefix + uuid;
-						//generating password
-						passwd = uuid;
-					}
-					j_randomUUIDMI.env->DeleteLocalRef(j_randomUUIDMI.classID);
-					j_randomUUIDMI.env->DeleteLocalRef(juuid);
-				}
+				user = user_prefix + uuid;
+				//generating password
+				passwd = uuid;
 
 				//generating password (deterministic way, so we can recover password later)
 				//TODO
 
-
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
-
-				///WIN32 only code !!! from http://src.chromium.org/svn/trunk/src/net/base/keygen_handler_win.cc
-
-				//generating UUID
-				UUID win32_uuid = { 0 };
-				std::wstring wuuid;
-				std::string uuid;
-				RPC_CSTR rpc_string = NULL;
-
-				if (RPC_S_OK == UuidCreate(&win32_uuid) && RPC_S_OK == UuidToString(&win32_uuid, &rpc_string))
-				{
-					
-					//VS2013 implementation
-					uuid.assign(reinterpret_cast<char*>(rpc_string));
-
-					//VS2010 implementation
-					// RPC_WSTR is unsigned short*.  wchar_t is a built-in type of Visual C++,
-					// so the type cast is necessary.
-					//wuuid.assign(reinterpret_cast<wchar_t*>(rpc_string));
-					//RpcStringFree(&rpc_string);
-					//uuid = std::wstring_convert<std::codecvt_utf8<wchar_t> >().to_bytes(wuuid);
-
-					user = user_prefix + uuid;//TMP + uuid;
-					//generating password
-					passwd = uuid;
-				}
-
-#endif
 				if (user.length() > 0 && passwd.length() > 0)
 				{
 					m_user = user;
 					m_passwd = passwd;
-					//adding fake email on creation ( email is used for password recovery )
-					//std::string email = user + "@fake.net";
 
-					//BApp42ResponseDelegate * response = BApp42ResponseDelegate::create();
+					//store unique ID
+					m_localdata->saveLoginID(m_user, m_passwd);
 
-					//CCLOG("Requesting App42 User creation : %s ", user.c_str());
-					//UserService::getInstance()->CreateUser(user, password, email, response, callfuncND_selector(BApp42ResponseDelegate::onCreateMeRequestCompleted));
-
-					//return response->createMeRequestCompleted;
+					newPlayer = true;
+					if (m_onlinedata)
+					{
+						//reset online data manager to force login
+						setOnlineDataManager(m_onlinedata);
+					}
 				}
-
-
-
-
-
-
-
-
-
-
-
-				//store unique ID
-				m_localdata.saveLoginID(m_user,m_passwd);
 			}
-
 
 		});
 
-		
+		requestLoadData();
+	}
+	
+	template <class T>
+	void Player<T>::setOnlineDataManager(std::shared_ptr<OnlineData::OnlineDataManager> onlinedata)
+	{
+		m_onlinedata = onlinedata;
+
+		if (m_user != "")
+		{
+			if (newPlayer)
+			{
+				//adding fake email on creation ( email is used for password recovery )
+				std::string email = m_user + "@fake.net";
+
+				//autologin. create user and login
+				m_onlinedata->loginNew(m_user, m_passwd, email, [=](void * data){
+					CCLOG("login done !!!");
+					//loading again to get online value
+					//requestLoadData();
+				});
+			}
+			else
+			{
+				//autologin
+				m_onlinedata->login(m_user, m_passwd, [=](void * data){
+					CCLOG("login done !!!");
+					//loading again to get online value
+					//requestLoadData();
+				});
+			}
+		}
+		else //save not loaded yet
+		{
+			//nothing to do. it will be called again after save has been loaded
+		}
+	}
+	
+	template <class T>
+	bool Player<T>::requestLoadData()
+	{
+		m_localdata->loadPlayerData([=](std::string data){
+			set_data_json(data);
+		});
+
+		if (m_onlinedata)
+		{
+			/*m_onlinedata->load(m_user, [=](std::string data)
+			{
+				set_data_json(data);
+				CCLOG("user data loaded : %s", data.c_str());
+				//TODO : decide if we keep local or online data
+			});
+			*/
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 
 
-		return false;
 	}
 
-	template<class T>
+	template <class T>
+	bool Player<T>::requestSaveData()
+	{
+		m_localdata->savePlayerData(get_data_json());
+
+		if (m_onlinedata)
+		{
+			/*
+			m_onlinedata->save(m_user, get_data_json(), [=](std::string data)
+			{
+				CCLOG("user data saved : %s", data.c_str());
+				//TODO : decide if we keep local or online data
+			});
+			*/
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	template <class T>
 	void Player<T>::Update(float deltatime)
 	{
-		m_localdata.update(deltatime);
+		if (m_localdata)
+		{
+			m_localdata->update(deltatime);
+		}
+		if (m_onlinedata)
+		{
+			m_onlinedata->update(deltatime);
+		}
 	}
 
 } //namespace WkCocos

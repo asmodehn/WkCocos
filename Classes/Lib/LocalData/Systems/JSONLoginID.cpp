@@ -1,5 +1,4 @@
 #include "WkCocos/LocalData/Systems/JSONLoginID.h"
-
 #include "WkCocos/LocalData/Comp/LocalData.h"
 
 //including json from cocos
@@ -24,11 +23,16 @@ namespace WkCocos
 				{
 					rapidjson::Document doc;
 					doc.Parse<0>(file->m_contents.c_str());
-
-					//if we want to load data
-					if (loginid->m_load_cb)
+					if (doc.HasParseError()) {
+						CCLOG("GetParseError %s\n", doc.GetParseError());
+						//callback empty on invalid json
+						if (loginid->m_load_cb)
+						{
+							loginid->m_load_cb("", "");
+						}
+					}
+					else if (loginid->m_load_cb)//if we want to load data
 					{
-						//this will pass a null value if it doesnt exists
 						rapidjson::Value& loginvalue = doc[loginid->m_name.c_str()];
 						if (!loginvalue.IsNull()){
 							if (loginvalue.HasMember("user"))

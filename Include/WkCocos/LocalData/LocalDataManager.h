@@ -17,7 +17,12 @@ namespace WkCocos
 			/**
 			* Constructor 
 			*/
-			LocalDataManager(std::function<void()> error_CB = [](){});
+			LocalDataManager(std::function<void()> error_CB);
+
+			/**
+			* Destructor
+			*/
+			~LocalDataManager();
 			
 			/**
 			* LoginID
@@ -25,6 +30,12 @@ namespace WkCocos
 			bool saveLoginID(std::string user, std::string passwd, short version = DEFAULT_SAVE_VERSION);
 			bool loadLoginID(std::function<void(std::string user, std::string passwd)> load_cb, short version = DEFAULT_SAVE_VERSION);
 			
+			/**
+			* PlayerData
+			*/
+			bool savePlayerData(std::string data, short version = DEFAULT_SAVE_VERSION);
+			bool loadPlayerData(std::function<void(std::string data)> load_cb, short version = DEFAULT_SAVE_VERSION);
+
 			void configure();
 
 			void initialize();

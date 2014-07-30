@@ -129,6 +129,8 @@ void LoadingScene::scheduleDLCCheck()
 
 void LoadingScene::update(float delta)
 {
+	Scene::update(delta);
+
 	if (m_loadMan_del_scheduled)
 	{
 		delete m_downloadManager;

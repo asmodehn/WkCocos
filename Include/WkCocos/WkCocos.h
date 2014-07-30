@@ -5,10 +5,13 @@
 
 //our own headers
 #include "Player.h"
-#include "Utils/ToolBox.h"
+#include "WkCocos/Utils/ToolBox.h"
 
-#include "App42/Setup.h"
-#include "App42/Login.h"
+#include "WkCocos/App42/Setup.h"
+#include "WkCocos/App42/Login.h"
 
+//log
+#include "WkCocos/Utils/log/logstream.h"
+#include "WkCocos/Utils/CocosAppender.h"
 
 #endif

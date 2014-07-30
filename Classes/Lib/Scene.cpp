@@ -47,4 +47,13 @@ namespace WkCocos
 		m_ui[ui->getFilepath()] = ui;
 	}
 
+	void Scene::update(float delta)
+	{
+		std::map<std::string, Interface*>::iterator currentUI = m_ui.begin();
+		for (; currentUI != m_ui.end(); ++currentUI)
+		{
+			currentUI->second->update(delta);
+		}
+	}
+
 }//namespace WkCocos

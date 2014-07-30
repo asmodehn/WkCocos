@@ -52,6 +52,11 @@ namespace WkCocos
 		*/
 		inline cocos2d::CameraView* getUIView() const { return m_uiView; }
 
+		/**
+		* Override update to trigger update in all UIs
+		*/
+		virtual void update(float delta) override;
+
 	protected:
 		/**
 		* Default constructor.

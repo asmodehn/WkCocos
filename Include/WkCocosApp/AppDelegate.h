@@ -32,6 +32,22 @@ public:
     @param  the pointer of the application
     */
     virtual void applicationWillEnterForeground();
+
+private:
+	/**
+	* Log appender: Console
+	*/
+	WkCocos::CLogAppender*		m_consoleApp;
+
+	/**
+	* Log appender: File
+	*/
+	WkCocos::FileLogAppender*	m_fileApp;
+
+	/**
+	* Log appender: Cocos
+	*/
+	WkCocos::CocosLogAppender*	m_cocosApp;
 };
 
 #endif // _APP_DELEGATE_H_
