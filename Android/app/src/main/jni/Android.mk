@@ -11,7 +11,13 @@ LOCAL_SRC_FILES := main.cpp \
                    ../../../../../Classes/App/HelloWorldScene.cpp \
                    ../../../../../Classes/App/LoadingScene.cpp \
                    ../../../../../Classes/App/LoadingUI.cpp \
-                   ../../../../../Classes/App/ErrorUI.cpp
+                   ../../../../../Classes/App/GameLogic.cpp \
+                   ../../../../../Classes/App/MyPlayer.cpp \
+                   ../../../../../Classes/App/MyOptions.cpp \
+                   ../../../../../Classes/App/ErrorUI.cpp \
+                   ../../../../../Classes/App/TestScene.cpp \
+                   ../../../../../Classes/App/SavingUI.cpp \
+                   ../../../../../Classes/App/TimerUI.cpp \
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../../../../Include
 
