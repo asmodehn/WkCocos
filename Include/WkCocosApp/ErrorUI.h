@@ -1,12 +1,11 @@
 #ifndef __ERRORUI_H__
 #define __ERRORUI_H__
 
-#include "cocos2d.h"
 #include "ui/CocosGUI.h"
 
 #include "WkCocos/Interface.h"
 
-#include "WkCocosApp/LoadingScene.h"
+//#include "WkCocosApp/LoadingScene.h"
 
 /**
 * This UI is the main menu UI

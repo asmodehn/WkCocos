@@ -4,10 +4,6 @@
 
 #include "WkCocosApp/ErrorUI.h"
 
-//#include "WkCocosApp/HelloWorldScene.h"
-
-#include "ui/CocosGUI.h"
-
 #include <iostream>
 #include <numeric>
 

@@ -2,7 +2,7 @@
 
 #include "WkCocos/OnlineData/Comp/OnlineData.h"
 
-#include "Common/App42API.h"
+
 
 namespace WkCocos
 {

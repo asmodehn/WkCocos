@@ -1,4 +1,5 @@
 #include "WkCocos/App42/Login.h"
+#include "Common/App42API.h"
 
 namespace WkCocos
 {

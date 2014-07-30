@@ -10,10 +10,10 @@
 #include "WkCocos/Loading/Systems/Loading.h"
 #include "WkCocos/Loading/Systems/ProgressUpdate.h"
 
-#include "cocos2d.h"
+//#include "cocos2d.h"
 #include "cocostudio/CocoStudio.h"
 
-#include "WkCocos/Utils/ToolBox.h"
+//#include "WkCocos/Utils/ToolBox.h"
 
 #include <functional>
 

@@ -1,9 +1,7 @@
 #ifndef __SAVING_SCENE_H__
 #define __SAVING_SCENE_H__
 
-#include "cocos2d.h"
 #include "WkCocos/Scene.h"
-
 
 class TestScene : public WkCocos::Scene
 {

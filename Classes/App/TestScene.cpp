@@ -5,8 +5,6 @@
 
 #include "WkCocosApp/ErrorUI.h"
 
-#include "ui/CocosGUI.h"
-
 #include <iostream>
 #include <numeric>
 
@@ -33,19 +31,19 @@ bool TestScene::init()
 	//cocos2d::Size visibleSize = cocos2d::Director::getInstance()->getVisibleSize();
 	//cocos2d::Vec2 origin = cocos2d::Director::getInstance()->getVisibleOrigin();
 
-	//Load UI
-	//SavingUI* saveui = new SavingUI();
-	//saveui->getRoot()->setEnabled(false);
-	//saveui->getRoot()->setVisible(false);
-	//addChild(saveui->getRoot());
-	//m_ui[SavingUI::id] = saveui;
+	//Saving UI
+	SavingUI* saveui = new SavingUI();
+	saveui->getRoot()->setEnabled(true);
+	saveui->getRoot()->setVisible(true);
+	addChild(saveui->getRoot());
+	m_ui[SavingUI::id] = saveui;//*/
 
-	//TimerUI
+	/*/TimerUI
 	TimerUI* timerui = new TimerUI();
 	timerui->getRoot()->setEnabled(true);
 	timerui->getRoot()->setVisible(true);
 	addChild(timerui->getRoot());
-	m_ui[TimerUI::id] = timerui;
+	m_ui[TimerUI::id] = timerui;//*/
 
 	//Error UI
 	ErrorUI* errorui = new ErrorUI();
@@ -53,11 +51,10 @@ bool TestScene::init()
 	addChild(errorroot);
 	errorroot->setEnabled(false);
 	errorroot->setVisible(false);
-	m_ui[ErrorUI::id] = errorui;
+	m_ui[ErrorUI::id] = errorui;//*/
 
 	errorui->setRefreshCallback([this, errorui](){
 		
-
 		errorui->deactivate();
 
 	});
@@ -81,7 +78,6 @@ void TestScene::onExitTransitionDidStart()
 {
 
 }
-
 
 void TestScene::update(float delta)
 {

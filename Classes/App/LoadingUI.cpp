@@ -1,10 +1,9 @@
 #include "WkCocosApp/LoadingUI.h"
 
 #include "WkCocosApp/LoadingScene.h"
-//#include "WkCocosApp/HelloWorldScene.h"
 
 #include "cocos2d.h"
-#include "ui/CocosGUI.h"
+#include "cocos/ui/CocosGUI.h"
 
 const std::string LoadingUI::id = "loading";
 

@@ -1,7 +1,7 @@
 #ifndef __WKCOCOS_LOADING_ENTITY_SYSTEMS_DATAEVAL_H__
 #define __WKCOCOS_LOADING_ENTITY_SYSTEMS_DATAEVAL_H__
 
-#include "cocos2d.h"
+//#include "cocos2d.h"
 
 #include "entityx/entityx.h"
 #include "WkCocos/Loading/Comp/DataLoad.h"

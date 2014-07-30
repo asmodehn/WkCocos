@@ -1,7 +1,7 @@
 #ifndef __DFGAME_LOADING_ENTITY_SYSTEMS_PROGRESSUPDATE_H__
 #define __DFGAME_LOADING_ENTITY_SYSTEMS_PROGRESSUPDATE_H__
 
-#include "cocos2d.h"
+//#include "cocos2d.h"
 #include "entityx/entityx.h"
 
 #include "WkCocos/Loading/Comp/ProgressValue.h"

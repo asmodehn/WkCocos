@@ -5,7 +5,7 @@
 #include "WkCocos/OnlineData/Comp/OnlineData.h"
 
 #include "cocos/cocos2d.h"
-#include "Common/App42API.h"
+//#include "Common/App42API.h"
 
 namespace WkCocos
 {

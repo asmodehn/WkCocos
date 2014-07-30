@@ -1,7 +1,6 @@
 #ifndef __TIMERUI_H__
 #define __TIMERUI_H__
 
-#include "cocos2d.h"
 #include "cocos/ui/CocosGUI.h"
 
 #include "WkCocos/Interface.h"

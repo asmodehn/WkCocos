@@ -1,7 +1,7 @@
 #ifndef __WKCOCOS_TIMER_SYSTEMS_PROGRESSOR_H__
 #define __WKCOCOS_TIMER_SYSTEMS_PROGRESSOR_H__
 
-#include "cocos2d.h"
+//#include "cocos2d.h"
 
 #include "entityx/entityx.h"
 
