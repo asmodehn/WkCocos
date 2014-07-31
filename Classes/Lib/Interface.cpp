@@ -19,6 +19,8 @@ namespace WkCocos
 				widget_cache.insert(std::pair<std::string, cocos2d::ui::Widget*>(filepath, widget));
 				return widget;
 			}
+			//error cannot read Json UI
+			return nullptr;
 		}
 		else
 		{
@@ -37,9 +39,9 @@ namespace WkCocos
 		}
 	}
 
-	Interface::Interface():
-		m_widget(nullptr),
-		m_filepath("")
+	Interface::Interface()
+		: m_widget(nullptr)
+		, m_filepath("")
 	{
 	}
 
@@ -66,6 +68,11 @@ namespace WkCocos
 	Interface::~Interface()
 	{
 		forget(m_filepath);
+	}
+
+	void Interface::update(float delta)
+	{
+		//NOTHING to do here by default.
 	}
 
 } //namespace dfgame

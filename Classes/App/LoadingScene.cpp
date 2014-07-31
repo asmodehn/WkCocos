@@ -41,7 +41,7 @@ bool LoadingScene::init()
 	}
 
 	//cocos2d::Size visibleSize = cocos2d::Director::getInstance()->getVisibleSize();
-	//cocos2d::Vec2 origin = cocos2d::Director::getInstance()->getVisibleOrigin();
+	//cocos2d::Vector2 origin = cocos2d::Director::getInstance()->getVisibleOrigin();
 
 	//Load UI
 	LoadingUI* loadui = new LoadingUI();
@@ -116,6 +116,8 @@ void LoadingScene::scheduleDLCCheck()
 
 void LoadingScene::update(float delta)
 {
+	Scene::update(delta);
+
 	if (m_loadMan_del_scheduled)
 	{
 		delete m_loadingManager;

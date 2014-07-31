@@ -21,10 +21,10 @@ LoadingUI::LoadingUI()
 	loadingbar->setName("LoadingBar");
 
 	cocos2d::Size visibleSize = cocos2d::Director::getInstance()->getVisibleSize();
-	cocos2d::Vec2 origin = cocos2d::Director::getInstance()->getVisibleOrigin();
+	cocos2d::Vector2 origin = cocos2d::Director::getInstance()->getVisibleOrigin();
 
 	// position the label on the center of the screen
-	loadingbar->setPosition(cocos2d::Vec2(origin.x + visibleSize.width / 2,
+	loadingbar->setPosition(cocos2d::Vector2(origin.x + visibleSize.width / 2,
 		origin.y + loadingbar->getContentSize().height + 20 /* magic size margin */));
 
 

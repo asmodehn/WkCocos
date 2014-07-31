@@ -2,9 +2,9 @@
 
 namespace WkCocos
 {
-	Scene::Scene() :
-		m_worldView(nullptr),
-		m_uiView(nullptr)
+	Scene::Scene() //:
+	//	m_worldView(nullptr),
+	//	m_uiView(nullptr)
 	{
 	}
 
@@ -29,22 +29,31 @@ namespace WkCocos
 		}
 		else
 		{
-			m_worldView = cocos2d::CameraView::create();
-			m_worldView->setContentSize(getContentSize());
-			m_uiView = cocos2d::CameraView::create();
-			m_uiView->setContentSize(getContentSize());
+			//m_worldView = cocos2d::CameraView::create();
+			//m_worldView->setContentSize(getContentSize());
+			//m_uiView = cocos2d::CameraView::create();
+			//m_uiView->setContentSize(getContentSize());
 
-			addChild(m_worldView);
-			addChild(m_uiView);
+			//addChild(m_worldView);
+			//addChild(m_uiView);
 			return true;
 		}
 	}
 
 	void Scene::addInterface(Interface* ui)
 	{
-		m_uiView->addChild(ui->getRoot());
+		//m_uiView->addChild(ui->getRoot());
 
 		m_ui[ui->getFilepath()] = ui;
+	}
+
+	void Scene::update(float delta)
+	{
+		std::map<std::string, Interface*>::iterator currentUI = m_ui.begin();
+		for (; currentUI != m_ui.end(); ++currentUI)
+		{
+			currentUI->second->update(delta);
+		}
 	}
 
 }//namespace WkCocos
