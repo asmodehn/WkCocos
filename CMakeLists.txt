@@ -131,38 +131,12 @@ elseif(APPLE)
   )
 elseif(UNIX AND NOT CMAKE_TOOLCHAIN_FILE) #assumed linux
 include_directories ( 
-#  /usr/local/include/GLFW
-#  ${COCOS2D_ROOT}/cocos/2d
-#  ${COCOS2D_ROOT}/cocos/2d/renderer
-#  ${COCOS2D_ROOT}/cocos/platform
-#  ${COCOS2D_ROOT}/cocos/platform/desktop
-#  ${COCOS2D_ROOT}/cocos/platform/linux
-#  ${COCOS2D_ROOT}/cocos/base
-#  ${COCOS2D_ROOT}/cocos/deprecated
-#  ${COCOS2D_ROOT}/cocos/physics
-#  ${COCOS2D_ROOT}/external/edtaa3func
-#  ${COCOS2D_ROOT}/external/jpeg/include/linux
-#  ${COCOS2D_ROOT}/external/tiff/include/linux
-#  ${COCOS2D_ROOT}/external/webp/include/linux
-#  ${COCOS2D_ROOT}/external/chipmunk/include/chipmunk
-#  ${COCOS2D_ROOT}/external/freetype2/include/linux
-#  ${COCOS2D_ROOT}/external/websockets/include/linux
-#  ${COCOS2D_ROOT}/external/spidermonkey/include/linux
-#  ${COCOS2D_ROOT}/external/linux-specific/fmod/include/${ARCH_DIR}
     /usr/include
     /usr/include/GLFW
     /usr/local/include/GLFW
     ${COCOS2D_ROOT}/external/${PLATFORM_FOLDER}-specific/fmod/include/${ARCH_DIR}
   )
 link_directories(
-#  /usr/local/lib
-#  ${COCOS2D_ROOT}/external/jpeg/prebuilt/linux/${ARCH_DIR}
-#  ${COCOS2D_ROOT}/external/tiff/prebuilt/linux/${ARCH_DIR}
-#  ${COCOS2D_ROOT}/external/webp/prebuilt/linux/${ARCH_DIR}
-#  ${COCOS2D_ROOT}/external/freetype2/prebuilt/linux/${ARCH_DIR}
-#  ${COCOS2D_ROOT}/external/websockets/prebuilt/linux/${ARCH_DIR}
-#  ${COCOS2D_ROOT}/external/spidermonkey/prebuilt/linux/${ARCH_DIR}
-#  ${COCOS2D_ROOT}/external/linux-specific/fmod/prebuilt/${ARCH_DIR}
     /usr/local/lib
     ${COCOS2D_ROOT}/external/jpeg/prebuilt/${PLATFORM_FOLDER}/${ARCH_DIR}
     ${COCOS2D_ROOT}/external/tiff/prebuilt/${PLATFORM_FOLDER}/${ARCH_DIR}
