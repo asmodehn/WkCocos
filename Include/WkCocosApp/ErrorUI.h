@@ -30,8 +30,8 @@ public:
 	void setRefreshCallback(std::function<void()> cb);
 	void setSkipCallback(std::function<void()> cb);
 
-	void refreshCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input);
-	void skipCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input);
+	void refreshCallback(cocos2d::Ref* widgetRef, cocos2d::ui::TouchEventType input);
+	void skipCallback(cocos2d::Ref* widgetRef, cocos2d::ui::TouchEventType input);
 
 	void activate();
 	void deactivate();

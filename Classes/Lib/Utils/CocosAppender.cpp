@@ -21,7 +21,7 @@ namespace WkCocos
 		// setup bg
 		bg->setTouchEnabled(false);
 		bg->setSize(cocos2d::Size(1920, 1080));
-		bg->setBackGroundColorType(cocos2d::ui::Layout::BackGroundColorType::SOLID);
+		bg->setBackGroundColorType(cocos2d::ui::LAYOUT_COLOR_SOLID);
 		bg->setBackGroundColor(cocos2d::Color3B(20, 20, 20));
 		bg->setBackGroundColorOpacity(70);
 		bg->setLocalZOrder(9999);
@@ -33,8 +33,8 @@ namespace WkCocos
 		_log->setItemModel(_model);
 		_log->pushBackDefaultItem();
 		_log->setSize(cocos2d::Size(1920, 900));
-		_log->setSizePercent(cocos2d::Vec2(1.f, 0.9f));
-		_log->setBackGroundColorType(cocos2d::ui::Layout::BackGroundColorType::SOLID);
+		_log->setSizePercent(cocos2d::Vector2(1.f, 0.9f));
+		_log->setBackGroundColorType(cocos2d::ui::LAYOUT_COLOR_SOLID);
 		_log->setBackGroundColor(cocos2d::Color3B(20, 20, 20));
 		_log->setBackGroundColorOpacity(70);
 
@@ -61,7 +61,7 @@ namespace WkCocos
 		{
 			toggle->loadTextureFrontCrossDisabled(res.m_textureName[CheckBoxRes::CROSS], res.m_textureType[CheckBoxRes::CROSS]);
 		}
-		toggle->addEventListener(std::bind(&CocosLogAppender::toggleScroll, this, std::placeholders::_1, std::placeholders::_2));
+		toggle->addEventListenerCheckBox(std::bind(&CocosLogAppender::toggleScroll, this, std::placeholders::_1, std::placeholders::_2));
 
 
 		root->addChild(bg);
@@ -85,21 +85,21 @@ namespace WkCocos
 		_log->pushBackDefaultItem();
 		cocos2d::ui::TextBMFont* line = static_cast<cocos2d::ui::TextBMFont*>(_log->getItem(_log->getItems().size() - 1));
 
-		line->setString(output);
+		line->setText(output);
 
 		_log->jumpToBottom();
 
 		return *this;
 	}
 
-	void CocosLogAppender::toggleScroll(cocos2d::Ref*, cocos2d::ui::CheckBox::EventType event)
+	void CocosLogAppender::toggleScroll(cocos2d::Ref*, cocos2d::ui::CheckBoxEventType event)
 	{
 		switch (event)
 		{
-		case cocos2d::ui::CheckBox::EventType::SELECTED:
+		case cocos2d::ui::CHECKBOX_STATE_EVENT_SELECTED:
 			_log->setTouchEnabled(true);
 			break;
-		case cocos2d::ui::CheckBox::EventType::UNSELECTED:
+		case cocos2d::ui::CHECKBOX_STATE_EVENT_UNSELECTED:
 			_log->setTouchEnabled(false);
 			break;
 		}
