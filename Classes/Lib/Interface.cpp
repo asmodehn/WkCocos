@@ -70,4 +70,9 @@ namespace WkCocos
 		forget(m_filepath);
 	}
 
+	void Interface::update(float delta)
+	{
+		//NOTHING to do here by default.
+	}
+
 } //namespace dfgame

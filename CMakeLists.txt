@@ -264,6 +264,12 @@ if ( ${PROJECT_NAME} STREQUAL ${CMAKE_PROJECT_NAME} )
 	  WkCocos
 	  entityx
 	)
+	
+	if ( WIN32)
+	target_link_libraries(WkCocosApp
+	  Rpcrt4.lib #needed for UUID computation on Win32 only
+	)
+	endif(WIN32)
 
 
 	#Linking with all libraries
@@ -283,12 +289,6 @@ if ( ${PROJECT_NAME} STREQUAL ${CMAKE_PROJECT_NAME} )
 	if ( BUILD_EDITOR_SPINE )
 	target_link_libraries(WkCocosApp
 	  spine
-	)
-	endif()
-
-	if ( BUILD_EXTENSIONS )
-	target_link_libraries(WkCocosApp
-	  extensions
 	)
 	endif()
 

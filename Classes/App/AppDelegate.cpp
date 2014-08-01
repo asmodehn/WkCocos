@@ -1,6 +1,7 @@
 #include "WkCocosApp/AppDelegate.h"
 #include "WkCocosApp/LoadingScene.h"
-#include "WkCocosApp/HelloWorldScene.h"
+#include "WkCocosApp/SavingScene.h"
+#include "WkCocosApp/GameLogic.h"
 
 
 USING_NS_CC;
@@ -25,7 +26,7 @@ AppDelegate::AppDelegate()
 	WkCocos::LogStream::create();
 
 	m_consoleApp = new WkCocos::CLogAppender();
-	m_fileApp = new WkCocos::FileLogAppender("my.log");
+	m_fileApp = new WkCocos::FileLogAppender(FileUtils::getInstance()->getWritablePath() + "my.log");
 
 	m_consoleApp->setLevel(WkCocos::loglevel::Core_LogInfo);
 	m_fileApp->setLevel(WkCocos::loglevel::Core_LogDebug);
@@ -90,14 +91,11 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
 	loadscene->setLoadDoneCallback([this](){
 		auto director = cocos2d::Director::getInstance();
-
-		cocos2d::Scene* newScene = HelloWorld::createScene();
-		director->replaceScene(cocos2d::TransitionFade::create(1.0f, newScene));
+		director->replaceScene(cocos2d::TransitionFade::create(1.0f, SavingScene::create()));
 	});
 
-	//Initializing App42
-	WkCocos::App42::Setup("3a3579d378cdf38a29e7dd80ec20dc15fc2a19a6959bcfc1ea353885a1802f86", "89ff08c30c0f3d15e5b571d2b3a90fd80401a756cb7f3620cfc625756421ee35");
-	WkCocos::App42::Login();
+	//Creating gamelogic and setting player.
+	GameLogic::Instance().connectApp42("3a3579d378cdf38a29e7dd80ec20dc15fc2a19a6959bcfc1ea353885a1802f86", "89ff08c30c0f3d15e5b571d2b3a90fd80401a756cb7f3620cfc625756421ee35");
 
     // run
 	director->runWithScene(cocos2d::TransitionFade::create(1.0f, loadscene));
