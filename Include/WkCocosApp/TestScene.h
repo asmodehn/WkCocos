@@ -1,20 +1,18 @@
 #ifndef __SAVING_SCENE_H__
 #define __SAVING_SCENE_H__
 
-#include "cocos2d.h"
 #include "WkCocos/Scene.h"
 
-
-class SavingScene : public WkCocos::Scene
+class TestScene : public WkCocos::Scene
 {
 public:
 		
 	virtual bool init();
 
 	// implement the "static create()" method manually
-	CREATE_FUNC(SavingScene);
+	CREATE_FUNC(TestScene);
 
-	virtual ~SavingScene();
+	virtual ~TestScene();
 
 	virtual void onEnterTransitionDidFinish() override;
 
@@ -28,7 +26,7 @@ public:
 
 protected:
 
-	SavingScene();
+	TestScene();
 
 };
 

@@ -1,9 +1,9 @@
 #include "WkCocos/OnlineData/Comp/OnlineData.h"
 
 //including json from cocos
-#include "json/document.h"         // rapidjson's DOM-style API
-#include "json/stringbuffer.h"
-#include "json/writer.h"
+//#include "json/document.h"         // rapidjson's DOM-style API
+//#include "json/stringbuffer.h"
+//#include "json/writer.h"
 
 namespace WkCocos
 {

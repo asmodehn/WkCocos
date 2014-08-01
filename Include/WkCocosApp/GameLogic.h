@@ -7,6 +7,8 @@
 #include "WkCocosApp/MyPlayer.h"
 #include "WkCocosApp/MyOptions.h"
 
+//#include "cocos2d.h"
+
 class GameLogic{
 public:
 	static GameLogic& Instance() {

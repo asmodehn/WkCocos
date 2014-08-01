@@ -3,7 +3,7 @@
 
 #include "WkCocos/Utils/log/logappender.h"
 
-#include "cocos/2d/CCNode.h"
+//#include "cocos/2d/CCNode.h"
 #include "cocos/ui/UIWidget.h"
 #include "cocos/ui/UIListView.h"
 #include "cocos/ui/UICheckBox.h"

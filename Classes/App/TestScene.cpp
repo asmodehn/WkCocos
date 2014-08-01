@@ -1,26 +1,25 @@
-#include "WkCocosApp/SavingScene.h"
+#include "WkCocosApp/TestScene.h"
 
 #include "WkCocosApp/SavingUI.h"
+#include "WkCocosApp/TimerUI.h"
 
 #include "WkCocosApp/ErrorUI.h"
-
-#include "ui/CocosGUI.h"
 
 #include <iostream>
 #include <numeric>
 
 USING_NS_CC;
 
-SavingScene::SavingScene() : Scene()
+TestScene::TestScene() : Scene()
 {
 }
 
-SavingScene::~SavingScene()
+TestScene::~TestScene()
 {
 }
 
 // on "init" you need to initialize your instance
-bool SavingScene::init()
+bool TestScene::init()
 {
 	//////////////////////////////
 	// 1. super init first
@@ -32,12 +31,19 @@ bool SavingScene::init()
 	//cocos2d::Size visibleSize = cocos2d::Director::getInstance()->getVisibleSize();
 	//cocos2d::Vec2 origin = cocos2d::Director::getInstance()->getVisibleOrigin();
 
-	//Load UI
+	//Saving UI
 	SavingUI* saveui = new SavingUI();
 	saveui->getRoot()->setEnabled(true);
 	saveui->getRoot()->setVisible(true);
 	addChild(saveui->getRoot());
-	m_ui[SavingUI::id] = saveui;
+	m_ui[SavingUI::id] = saveui;//*/
+
+	/*/TimerUI
+	TimerUI* timerui = new TimerUI();
+	timerui->getRoot()->setEnabled(true);
+	timerui->getRoot()->setVisible(true);
+	addChild(timerui->getRoot());
+	m_ui[TimerUI::id] = timerui;//*/
 
 	//Error UI
 	ErrorUI* errorui = new ErrorUI();
@@ -45,11 +51,10 @@ bool SavingScene::init()
 	addChild(errorroot);
 	errorroot->setEnabled(false);
 	errorroot->setVisible(false);
-	m_ui[ErrorUI::id] = errorui;
+	m_ui[ErrorUI::id] = errorui;//*/
 
 	errorui->setRefreshCallback([this, errorui](){
 		
-
 		errorui->deactivate();
 
 	});
@@ -63,24 +68,23 @@ bool SavingScene::init()
 	return true;
 }
 
-void SavingScene::onEnterTransitionDidFinish()
+void TestScene::onEnterTransitionDidFinish()
 {
 	//launching update method
 	scheduleUpdate();
 }
 
-void SavingScene::onExitTransitionDidStart()
+void TestScene::onExitTransitionDidStart()
 {
 
 }
 
-
-void SavingScene::update(float delta)
+void TestScene::update(float delta)
 {
 	Scene::update(delta);
 }
 
-void SavingScene::error_CB()
+void TestScene::error_CB()
 {
 	CCLOGERROR("ERROR");
 

@@ -35,7 +35,7 @@
  * compile-time configuration.
  */
 
-#include "cocos/base/CCPlatformConfig.h"
+//#include "cocos/base/CCPlatformConfig.h"
 
 //On android, md5 is already included in curl built by cocos
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)

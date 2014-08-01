@@ -1,11 +1,9 @@
 #ifndef __LOADING_SCENE_H__
 #define __LOADING_SCENE_H__
 
-#include "cocos2d.h"
 #include "WkCocos/Scene.h"
 
 #include "WkCocos/Loading/LoadingManager.h"
-
 
 class LoadingScene : public WkCocos::Scene
 {

@@ -1,9 +1,8 @@
 #include "WkCocosApp/ErrorUI.h"
 
-#include "WkCocosApp/LoadingScene.h"
+#include "cocos/ui/CocosGUI.h"
 
 #include "cocos2d.h"
-#include "ui/CocosGUI.h"
 
 USING_NS_CC;
 

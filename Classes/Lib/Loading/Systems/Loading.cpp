@@ -4,7 +4,7 @@
 #include "WkCocos/Loading/Events/Error.h"
 #include "WkCocos/Loading/Events/Loaded.h"
 
-#include "cocos/cocos2d.h"
+//#include "cocos/cocos2d.h"
 
 namespace WkCocos
 {

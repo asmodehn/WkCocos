@@ -1,13 +1,13 @@
 #include "WkCocos/LocalData/Systems/JSONWriter.h"
-
+#include "cocos2d.h"
 #include "WkCocos/LocalData/Events/Error.h"
 #include "WkCocos/LocalData/Comp/LocalData.h"
 
 //including json from cocos
-#include "json/document.h"         // rapidjson's DOM-style API
-#include "json/prettywriter.h"     // for stringify JSON
-#include "json/filestream.h"       // wrapper of C stream for prettywriter as output
-#include "json/stringbuffer.h"
+//#include "json/document.h"         // rapidjson's DOM-style API
+//#include "json/prettywriter.h"     // for stringify JSON
+//#include "json/filestream.h"       // wrapper of C stream for prettywriter as output
+//#include "json/stringbuffer.h"
 
 namespace WkCocos
 {

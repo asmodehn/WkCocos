@@ -1,7 +1,6 @@
 #ifndef __LOADINGUI_H__
 #define __LOADINGUI_H__
 
-#include "cocos2d.h"
 #include "cocostudio/CocoStudio.h"
 
 #include "WkCocos/Interface.h"

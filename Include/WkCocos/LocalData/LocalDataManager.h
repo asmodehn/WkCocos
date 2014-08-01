@@ -3,7 +3,7 @@
 
 #include "entityx/entityx.h"
 
-#include "json/document.h"
+//#include "json/document.h"
 
 #define DEFAULT_SAVE_VERSION 1
 
@@ -35,10 +35,6 @@ namespace WkCocos
 			*/
 			bool savePlayerData(std::string data, short version = DEFAULT_SAVE_VERSION);
 			bool loadPlayerData(std::function<void(std::string data)> load_cb, short version = DEFAULT_SAVE_VERSION);
-
-			void configure();
-
-			void initialize();
 
 			void update(double dt);
 

@@ -1,7 +1,6 @@
 #ifndef __SAVINGUI_H__
 #define __SAVINGUI_H__
 
-#include "cocos2d.h"
 #include "cocos/ui/CocosGUI.h"
 
 #include "WkCocos/Interface.h"

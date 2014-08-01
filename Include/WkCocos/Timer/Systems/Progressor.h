@@ -1,5 +1,5 @@
-#ifndef __WKCOCOS_LOCALDATA_SYSTEMS_JSONPLAYERDATA_H__
-#define __WKCOCOS_LOCALDATA_SYSTEMS_JSONPLAYERDATA_H__
+#ifndef __WKCOCOS_TIMER_SYSTEMS_PROGRESSOR_H__
+#define __WKCOCOS_TIMER_SYSTEMS_PROGRESSOR_H__
 
 //#include "cocos2d.h"
 
@@ -7,19 +7,19 @@
 
 namespace WkCocos
 {
-	namespace LocalData
+	namespace Timer
 	{
 		namespace Systems
 		{
 			//system reading data to determine which loading component must be added.
-			struct JSONPlayerData : public entityx::System<JSONPlayerData>
+			struct Progressor : public entityx::System<Progressor>
 			{
 				void update(entityx::ptr<entityx::EntityManager> es, entityx::ptr<entityx::EventManager> events, double dt) override;
 
 			};
 
 		}//namespace Systems
-	}//namespace LocalData
+	}//namespace Timer
 }//namespace WkCocos
 
-#endif // __WKCOCOS_LOCALDATA_SYSTEMS_JSONPLAYERDATA_H__
+#endif // __WKCOCOS_TIMER_SYSTEMS_PROGRESSOR_H__
