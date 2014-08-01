@@ -121,6 +121,25 @@ tasks.withType(JavaCompile) {
     compileTask -> compileTask.dependsOn ndkBuild
 }
 
+task cleanAssets(type: Delete) {
+    delete 'assets'
+}
+
+task ndkClean(type: Exec, dependsOn: 'cleanAssets') {
+    //windows only
+    def dependsDir = file('../../depends').absolutePath
+    def cpus = Runtime.runtime.availableProcessors() / 2
+
+    if (System.properties['os.name'].toLowerCase().contains('windows')) {
+        //windows
+        commandLine 'cmd', '/c', 'ndk-build', 'clean', 'NDK_DEBUG=1', '-j', cpus, '-C', file('src/main/jni').absolutePath, 'NDK_MODULE_PATH=' + dependsDir + ';' + dependsDir + '\\cocos2d-x;' + dependsDir + '\\cocos2d-x\\external;' + dependsDir + '\\cocos2d-x\\cocos'
+    } else {
+        commandLine 'ndk-build', 'clean', 'NDK_DEBUG=1', '-j', cpus, '-C', file('src/main/jni').absolutePath, 'NDK_MODULE_PATH=' + dependsDir + ':' + dependsDir + '/cocos2d-x:' + dependsDir + '/cocos2d-x/external:' + dependsDir + '/cocos2d-x/cocos'
+    }
+}
+
+clean.dependsOn ndkClean
+
 dependencies {
     compile project(':cocos2dx')
     compile project(':BaseGameUtils')

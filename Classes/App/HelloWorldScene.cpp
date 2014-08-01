@@ -31,7 +31,7 @@ bool HelloWorld::init()
     }
     
     Size visibleSize = Director::getInstance()->getVisibleSize();
-    Vec2 origin = Director::getInstance()->getVisibleOrigin();
+	Vector2 origin = Director::getInstance()->getVisibleOrigin();
 
     /////////////////////////////
     // 2. add a menu item with "X" image, which is clicked to quit the program
@@ -43,12 +43,12 @@ bool HelloWorld::init()
                                            "CloseSelected.png",
                                            CC_CALLBACK_1(HelloWorld::menuCloseCallback, this));
     
-	closeItem->setPosition(Vec2(origin.x + visibleSize.width - closeItem->getContentSize().width/2 ,
+	closeItem->setPosition(Vector2(origin.x + visibleSize.width - closeItem->getContentSize().width / 2,
                                 origin.y + closeItem->getContentSize().height/2));
 
     // create menu, it's an autorelease object
     auto menu = Menu::create(closeItem, NULL);
-    menu->setPosition(Vec2::ZERO);
+    menu->setPosition(Vector2::ZERO);
     addChild(menu, 1);
 
     /////////////////////////////
@@ -60,7 +60,7 @@ bool HelloWorld::init()
 	auto label = LabelTTF::create("Hello World " + WkCocos::ToolBox::itoa(GameLogic::Instance().getPlayer().m_gem), "Arial", 24);
     
     // position the label on the center of the screen
-    label->setPosition(Vec2(origin.x + visibleSize.width/2,
+	label->setPosition(Vector2(origin.x + visibleSize.width / 2,
                             origin.y + visibleSize.height - label->getContentSize().height));
 
     // add the label as a child to this layer
@@ -70,7 +70,7 @@ bool HelloWorld::init()
     auto sprite = Sprite::create("HelloWorld.png");
 
     // position the sprite on the center of the screen
-    sprite->setPosition(Vec2(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));
+	sprite->setPosition(Vector2(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
 
     // add the sprite as a child to this layer
     addChild(sprite, 0);

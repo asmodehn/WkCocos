@@ -30,13 +30,13 @@ namespace WkCocos
 			};
 
 			std::string								m_textureName[LAST];
-			cocos2d::ui::Widget::TextureResType		m_textureType[LAST];
+			cocos2d::ui::TextureResType		m_textureType[LAST];
 			CheckBoxRes()
 			{
 				for (int i = 0; i < LAST; ++i)
 				{
 					m_textureName[i] = "";
-					m_textureType[i] = cocos2d::ui::Widget::TextureResType::LOCAL;
+					m_textureType[i] = cocos2d::ui::TextureResType::UI_TEX_TYPE_LOCAL;
 				}
 			}
 		};
@@ -74,7 +74,7 @@ namespace WkCocos
 		/**
 		* Toggle log scroll
 		*/
-		void toggleScroll(cocos2d::Ref*, cocos2d::ui::CheckBox::EventType);
+		void toggleScroll(cocos2d::Ref*, cocos2d::ui::CheckBoxEventType);
 
 	private:
 
