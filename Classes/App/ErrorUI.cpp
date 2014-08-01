@@ -14,27 +14,21 @@ ErrorUI::ErrorUI() : Interface()
 	m_widget = ui::Layout::create();
 
 	Size visibleSize = Director::getInstance()->getVisibleSize();
-
-	// position the label on the center of the screen
+	m_widget->setContentSize(Size(visibleSize.width / 2, visibleSize.height / 2));
+	Size widgetSize = m_widget->getContentSize();
 
 	auto label = LabelTTF::create("ERROR", "Arial", 48);
-	label->setPosition(Vec2(
-		visibleSize.width / 2,
-		(visibleSize.height + label->getContentSize().height) / 2));
+	label->setPosition(Vec2(0, label->getContentSize().height / 2));
 	m_widget->addChild(label);
 
 	m_refreshButton = ui::Button::create("RefreshNormal.png", "RefreshSelected.png");
 	m_refreshButton->addTouchEventListener(CC_CALLBACK_2(ErrorUI::refreshCallback, this));
-	m_refreshButton->setPosition(Vec2(
-		(visibleSize.width - m_refreshButton->getContentSize().width) / 2,
-		(visibleSize.height - m_refreshButton->getContentSize().height) / 2));
+	m_refreshButton->setPosition(Vec2(- m_refreshButton->getContentSize().width / 2, - m_refreshButton->getContentSize().height / 2));
 	m_widget->addChild(m_refreshButton);
 
 	m_skipButton = ui::Button::create("SkipNormal.png", "SkipSelected.png");
 	m_skipButton->addTouchEventListener(CC_CALLBACK_2(ErrorUI::skipCallback, this));
-	m_skipButton->setPosition(Vec2(
-		(visibleSize.width + m_skipButton->getContentSize().width) / 2,
-		(visibleSize.height - m_skipButton->getContentSize().height) / 2));
+	m_skipButton->setPosition(Vec2(m_skipButton->getContentSize().width / 2, - m_skipButton->getContentSize().height / 2));
 	m_widget->addChild(m_skipButton);
 
 	if (m_widget)

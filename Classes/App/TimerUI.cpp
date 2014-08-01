@@ -13,17 +13,16 @@ const std::string TimerUI::id = "timer";
 TimerUI::TimerUI()
 	: Interface()
 {
-	//filepath is the id for the preload memory ( not used here )
-	//m_filepath = id;
-
 	//building UI hierarchy
 	m_widget = ui::Layout::create();
 
 	Size visibleSize = Director::getInstance()->getVisibleSize();
+	m_widget->setContentSize(Size(visibleSize.width / 2, visibleSize.height / 2));
+	Size widgetSize = m_widget->getContentSize();
 
 	m_startButton = ui::Button::create("SkipNormal.png", "SkipSelected.png");
 	m_startButton->addTouchEventListener(CC_CALLBACK_2(TimerUI::startCallback, this));
-	m_startButton->setPosition(Vec2(visibleSize.width * 0.25, visibleSize.height * 0.25));
+	m_startButton->setPosition(Vec2(- widgetSize.width / 4, 0));
 	m_widget->addChild(m_startButton);
 
 	m_startLabel = ui::Text::create("START", "Arial", 21);
@@ -32,7 +31,7 @@ TimerUI::TimerUI()
 
 	m_stopButton = ui::Button::create("SkipNormal.png", "SkipSelected.png");
 	m_stopButton->addTouchEventListener(CC_CALLBACK_2(TimerUI::stopCallback, this));
-	m_stopButton->setPosition(Vec2(visibleSize.width * 0.75, visibleSize.height * 0.25));
+	m_stopButton->setPosition(Vec2(widgetSize.width / 4, 0));
 	m_widget->addChild(m_stopButton);
 
 	m_stopLabel = ui::Text::create("STOP", "Arial", 21);
@@ -40,7 +39,6 @@ TimerUI::TimerUI()
 	m_widget->addChild(m_stopLabel);
 	
 	m_countLabel = ui::Text::create("", "Arial", 21);
-	m_countLabel->setPosition(Vec2(visibleSize.width * 0.5, visibleSize.height * 0.25));
 	m_widget->addChild(m_countLabel);
 
 	if (m_widget)

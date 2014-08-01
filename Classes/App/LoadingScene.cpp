@@ -36,15 +36,16 @@ bool LoadingScene::init()
 		return false;
 	}
 
-	//cocos2d::Size visibleSize = cocos2d::Director::getInstance()->getVisibleSize();
-	//cocos2d::Vec2 origin = cocos2d::Director::getInstance()->getVisibleOrigin();
+	Size visibleSize = Director::getInstance()->getVisibleSize();
 
 	//Load UI
 	LoadingUI* loadui = new LoadingUI();
-	loadui->getRoot()->setEnabled(true);
-	loadui->getRoot()->setVisible(true);
-	addChild(loadui->getRoot());
+	auto loadroot = loadui->getRoot();
+	loadroot->setEnabled(true);
+	loadroot->setVisible(true);
+	addChild(loadroot);
 	m_ui[LoadingUI::id] = loadui;
+	loadroot->setPosition(Vec2(visibleSize.width * 0.5, visibleSize.height * 0.25));
 
 	//Error UI
 	ErrorUI* errorui = new ErrorUI();
@@ -53,6 +54,7 @@ bool LoadingScene::init()
 	errorroot->setEnabled(false);
 	errorroot->setVisible(false);
 	m_ui[ErrorUI::id] = errorui;
+	errorroot->setPosition(Vec2(visibleSize.width * 0.5, visibleSize.height * 0.75));
 
 	errorui->setRefreshCallback([this, errorui](){
 		

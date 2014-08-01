@@ -28,22 +28,28 @@ bool TestScene::init()
 		return false;
 	}
 
-	//cocos2d::Size visibleSize = cocos2d::Director::getInstance()->getVisibleSize();
-	//cocos2d::Vec2 origin = cocos2d::Director::getInstance()->getVisibleOrigin();
+	cocos2d::Size visibleSize = Director::getInstance()->getVisibleSize();
+	//cocos2d::Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
 	//Saving UI
 	SavingUI* saveui = new SavingUI();
-	saveui->getRoot()->setEnabled(true);
-	saveui->getRoot()->setVisible(true);
-	addChild(saveui->getRoot());
-	m_ui[SavingUI::id] = saveui;//*/
+	auto saveroot = saveui->getRoot();
+	saveroot->setEnabled(true);
+	saveroot->setVisible(true);
+	addChild(saveroot);
+	m_ui[SavingUI::id] = saveui;
+	saveroot->setPosition(Vec2(visibleSize.width * 0.25, visibleSize.height * 0.75));
+	//*/
 
-	/*/TimerUI
+	//TimerUI
 	TimerUI* timerui = new TimerUI();
-	timerui->getRoot()->setEnabled(true);
-	timerui->getRoot()->setVisible(true);
-	addChild(timerui->getRoot());
-	m_ui[TimerUI::id] = timerui;//*/
+	auto timerroot = timerui->getRoot();
+	timerroot->setEnabled(true);
+	timerroot->setVisible(true);
+	addChild(timerroot);
+	m_ui[TimerUI::id] = timerui;
+	timerroot->setPosition(Vec2(visibleSize.width * 0.75, visibleSize.height * 0.75));
+	//*/
 
 	//Error UI
 	ErrorUI* errorui = new ErrorUI();
@@ -51,7 +57,9 @@ bool TestScene::init()
 	addChild(errorroot);
 	errorroot->setEnabled(false);
 	errorroot->setVisible(false);
-	m_ui[ErrorUI::id] = errorui;//*/
+	m_ui[ErrorUI::id] = errorui;
+	errorroot->setPosition(Vec2(visibleSize.width * 0.75, visibleSize.height * 0.25));
+	//*/
 
 	errorui->setRefreshCallback([this, errorui](){
 		
