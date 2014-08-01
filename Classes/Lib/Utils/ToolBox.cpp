@@ -65,4 +65,35 @@ namespace WkCocos
 		return (_Ans);
 	}
 
+
+	///Get Current Time
+	struct tm ToolBox::getLocalTime()
+	{
+		time_t rawtime;
+		struct tm * timeinfo;
+
+		time(&rawtime);
+		timeinfo = localtime(&rawtime);
+		CCLOG("Current local time and date: %s", asctime(timeinfo));
+
+		//Copy of POD tm
+		return *timeinfo;
+	}
+
+	///Get Current Time
+	struct tm ToolBox::getUTCTime()
+	{
+		time_t rawtime;
+		struct tm * ptm;
+
+		time(&rawtime);
+
+		ptm = gmtime(&rawtime);
+
+		CCLOG("Current UTC time and date: %s", asctime(ptm));
+
+		//Copy of POD tm
+		return *ptm;
+	}
+
 }//namespace dfgame

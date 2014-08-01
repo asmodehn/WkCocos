@@ -25,31 +25,15 @@ namespace WkCocos
 			/**
 			* Setup Timer
 			* @param id identifier of the timer
-			* @param msecs duration of the timer
-			* @param update_cb function pointer called everyupdate with the current time difference passed in msec_elapsed
+			* @param alarm_date date whent he alarm will be triggered
 			*/
-			bool setTimer(std::string id, unsigned long msecs, std::function<void(std::string id, unsigned long msecs_elapsed)> update_cb);
-
-			/**
-			* StartTimer
-			*/
-			bool startTimer(std::string id);
+			bool setAlarm(std::string id, struct tm alarm_date);
 			
-			/**
-			* Stop Timer (Doesnt trigger callback)
-			*/
-			void stopTimer(std::string id);
-
 			/**
 			* Delete Timer
 			*/
-			void deleteTimer(std::string id);
-
-			///Get Current Time
-			struct tm getLocalTime();
-			///Get Current Time
-			struct tm getUTCTime();
-
+			void deleteAlarm(std::string id);
+			
 			void update(double dt);
 
 		protected:

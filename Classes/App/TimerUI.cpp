@@ -59,10 +59,11 @@ void TimerUI::startCallback(Ref* widgetRef, ui::Widget::TouchEventType input)
 	if (input == ui::Widget::TouchEventType::ENDED)
 	{
 		CCLOG("START BUTTON CLICKED");
-
+		/*
 		GameLogic::Instance().getPlayer().setTimer("testing", 156, [=](std::string id, unsigned long elapsed){
 			m_countLabel->setText(WkCocos::ToolBox::itoa(elapsed));
 		});
+		*/
 	}
 }
 
@@ -73,7 +74,7 @@ void TimerUI::stopCallback(Ref* widgetRef, ui::Widget::TouchEventType input)
 	{
 		CCLOG("STOP BUTTON CLICKED");
 
-		GameLogic::Instance().getPlayer().deleteTimer("testing");
+		//GameLogic::Instance().getPlayer().deleteTimer("testing");
 	}
 }
 

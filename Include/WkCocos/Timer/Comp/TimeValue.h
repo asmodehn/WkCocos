@@ -20,17 +20,13 @@ namespace WkCocos
 				std::string m_id;
 			};
 
-			struct Progress : entityx::Component<Progress>
+			struct Alarm : entityx::Component<Alarm>
 			{
-				Progress(unsigned long duration)
-				: m_duration(duration)
-				, m_current(0)
-				, m_started(false)
+				Alarm(struct tm end)
+				: m_end(end)
 				{}
 
-				unsigned long m_duration;
-				unsigned long m_current;
-				bool m_started;
+				struct tm m_end;
 			};
 
 
