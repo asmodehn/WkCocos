@@ -1,5 +1,5 @@
 #include "WkCocos/Download/Systems/DLvalidating.h"
-#include "WkCocos/Preload/Comp/Dataload.h"
+#include "WkCocos/Preload/Comp/DataLoad.h"
 #include "WkCocos/Download/Events/Error.h"
 #include "WkCocos/Download/Events/Downloaded.h"
 
