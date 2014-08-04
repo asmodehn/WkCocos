@@ -74,10 +74,10 @@ namespace WkCocos
 
 		time(&rawtime);
 		timeinfo = localtime(&rawtime);
-		CCLOG("Current local time and date: %s", asctime(timeinfo));
+		//CCLOG("Current local time and date: %s", asctime(timeinfo));
 
 		//Copy of POD tm
-		return *timeinfo;
+		return * timeinfo;
 	}
 
 	///Get Current Time
@@ -90,7 +90,7 @@ namespace WkCocos
 
 		ptm = gmtime(&rawtime);
 
-		CCLOG("Current UTC time and date: %s", asctime(ptm));
+		//CCLOG("Current UTC time and date: %s", asctime(ptm));
 
 		//Copy of POD tm
 		return *ptm;

@@ -17,7 +17,8 @@ namespace WkCocos
 			{
 				entityx::ptr<Comp::ID> id;
 				entityx::ptr<Comp::Alarm> alarm;
-				for (auto entity : es->entities_with_components(id, alarm))
+				entityx::ptr<Comp::Callback> cb;
+				for (auto entity : es->entities_with_components(id, alarm, cb))
 				{
 					struct tm now = ToolBox::getUTCTime();
 					time_t start = mktime(&alarm->m_end);
@@ -26,7 +27,10 @@ namespace WkCocos
 					if (delta < 0)
 					{
 						events->emit<Events::AlarmOff>(entity);
+						cb->m_cb(id->m_id, "alarm");
 					}
+					else
+						cb->m_cb(id->m_id, ToolBox::itoa(delta));
 				}
 			};
 

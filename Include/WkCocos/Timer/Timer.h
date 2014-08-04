@@ -27,7 +27,7 @@ namespace WkCocos
 			* @param id identifier of the timer
 			* @param alarm_date date whent he alarm will be triggered
 			*/
-			bool setAlarm(std::string id, struct tm alarm_date);
+			bool setAlarm(std::string id, struct tm alarm_date, std::function<void(std::string id, std::string msecs_left)> update_cb);
 			
 			/**
 			* Delete Timer

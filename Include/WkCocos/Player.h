@@ -34,9 +34,18 @@ namespace WkCocos
 		* @param msecs duration of the timer
 		* @param update_cb function pointer called everyupdate with the current time difference passed in msec_elapsed
 		*/
-		bool setTimer(std::string id, unsigned long msecs, std::function<void(std::string id, unsigned long msecs_elapsed)> update_cb)
+		bool setTimer(std::string id, unsigned long secs, std::function<void(std::string id, std::string msecs_left)> update_cb)
 		{
-			return m_timer->setTimer(id,msecs,update_cb);
+			struct tm timeinfo = ToolBox::getUTCTime();
+			//CCLOG(asctime(&timeinfo));
+			if (timeinfo.tm_sec / 40) {
+				timeinfo.tm_sec -= 40;
+				timeinfo.tm_min += 1;
+			}
+			else
+				timeinfo.tm_sec += 20;
+			//CCLOG(asctime(&timeinfo));
+			return m_timer->setAlarm(id, timeinfo, update_cb);
 		}
 
 		/**
@@ -60,7 +69,7 @@ namespace WkCocos
 		*/
 		void deleteTimer(std::string id)
 		{
-			m_timer->deleteTimer(id);
+			m_timer->deleteAlarm(id);
 		}
 
 	protected:
