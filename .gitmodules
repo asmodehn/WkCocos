@@ -18,3 +18,14 @@
 	path = depends/android-basic-samples
 	url = git://github.com/asmodehn/android-basic-samples.git
 	branch = master
+[submodule "depends/cocos2dx-store"]
+	path = depends/cocos2dx-store
+	url = https://github.com/asmodehn/cocos2dx-store.git
+	branch = master
+[submodule "depends/soomla-cocos2dx-core"]
+	path = depends/soomla-cocos2dx-core
+	url = https://github.com/asmodehn/soomla-cocos2dx-core.git
+	branch = master
+[submodule "depends/jansson"]
+	path = depends/jansson
+	url = https://github.com/asmodehn/jansson.git

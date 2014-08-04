@@ -142,7 +142,7 @@ clean.dependsOn ndkClean
 
 dependencies {
     compile project(':cocos2dx')
-    compile project(':BaseGameUtils')
+    compile project(':cocos2dx-store')
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:19.+'
 

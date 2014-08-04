@@ -227,7 +227,9 @@ endif(USE_CHIPMUNK)
 
 WkDepends ("depends/App42_Cocos2DX_SDK")
 
-set( WkCocos_INCLUDE_DIRS ${WkCocos_INCLUDE_DIRS} ${WkCocos_App42_INCLUDE_DIRS})
+WkDepends ("depends/cocos2dx-store")
+
+set( WkCocos_INCLUDE_DIRS ${WkCocos_INCLUDE_DIRS} ${WkCocos_App42_INCLUDE_DIRS} ${WkCocos_Cocos2dxStore_INCLUDE_DIRS})
 
 #The library. reusable for any [Wk]Cocos project.
 WkLibraryBuild(WkCocos "Classes/Lib")
