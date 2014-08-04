@@ -27,10 +27,10 @@ public:
 	
 	void update(float delta);
 
-	void saveCallback(cocos2d::Ref* widgetRef, cocos2d::ui::TouchEventType input);
-	void loadCallback(cocos2d::Ref* widgetRef, cocos2d::ui::TouchEventType input);
-	void gemrandCallback(cocos2d::Ref* widgetRef, cocos2d::ui::TouchEventType input);
-	void goldrandCallback(cocos2d::Ref* widgetRef, cocos2d::ui::TouchEventType input);
+	void saveCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input);
+	void loadCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input);
+	void gemrandCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input);
+	void goldrandCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input);
 
 protected:
 

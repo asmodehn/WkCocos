@@ -19,21 +19,21 @@ ErrorUI::ErrorUI() : Interface()
 	// position the label on the center of the screen
 
 	auto label = LabelTTF::create("ERROR", "Arial", 48);
-	label->setPosition(Vector2(
+	label->setPosition(cocos2d::Vec2(
 		visibleSize.width / 2,
 		(visibleSize.height + label->getContentSize().height) / 2));
 	m_widget->addChild(label);
 
 	m_refreshButton = ui::Button::create("RefreshNormal.png", "RefreshSelected.png");
 	m_refreshButton->addTouchEventListener(CC_CALLBACK_2(ErrorUI::refreshCallback, this));
-	m_refreshButton->setPosition(Vector2(
+	m_refreshButton->setPosition(cocos2d::Vec2(
 		(visibleSize.width - m_refreshButton->getContentSize().width) / 2,
 		(visibleSize.height - m_refreshButton->getContentSize().height) / 2));
 	m_widget->addChild(m_refreshButton);
 
 	m_skipButton = ui::Button::create("SkipNormal.png", "SkipSelected.png");
 	m_skipButton->addTouchEventListener(CC_CALLBACK_2(ErrorUI::skipCallback, this));
-	m_skipButton->setPosition(Vector2(
+	m_skipButton->setPosition(cocos2d::Vec2(
 		(visibleSize.width + m_skipButton->getContentSize().width) / 2,
 		(visibleSize.height - m_skipButton->getContentSize().height) / 2));
 	m_widget->addChild(m_skipButton);
@@ -62,17 +62,17 @@ void ErrorUI::deactivate()
 ErrorUI::~ErrorUI()
 {}
 
-void ErrorUI::refreshCallback(Ref* widgetRef, ui::TouchEventType input)
+void ErrorUI::refreshCallback(Ref* widgetRef, ui::Widget::TouchEventType input)
 {
-	if (input == ui::TouchEventType::TOUCH_EVENT_ENDED)
+	if (input == ui::Widget::TouchEventType::ENDED)
 	{
 		m_refreshCB();
 	}
 }
 
-void ErrorUI::skipCallback(Ref* widgetRef, ui::TouchEventType input)
+void ErrorUI::skipCallback(Ref* widgetRef, ui::Widget::TouchEventType input)
 {
-	if (input == ui::TouchEventType::TOUCH_EVENT_ENDED)
+	if (input == ui::Widget::TouchEventType::ENDED)
 	{
 		m_skipCB();
 	}

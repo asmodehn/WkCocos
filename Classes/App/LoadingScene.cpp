@@ -41,7 +41,7 @@ bool LoadingScene::init()
 	}
 
 	//cocos2d::Size visibleSize = cocos2d::Director::getInstance()->getVisibleSize();
-	//cocos2d::Vector2 origin = cocos2d::Director::getInstance()->getVisibleOrigin();
+	//cocos2d::Vec2 origin = cocos2d::Director::getInstance()->getVisibleOrigin();
 
 	//Load UI
 	LoadingUI* loadui = new LoadingUI();
@@ -141,7 +141,7 @@ void LoadingScene::progress_CB(float pct)
 		//cocos2d::ui::Widget* loadbarpnl = ui->getRoot()->getChildByName("PNL_LoadingBar");
 		//if (loadbarpnl)
 		//{
-			ui::Widget* loadbarw = ui->getRoot()->getChildByName("LoadingBar"); //loadbarpnl->getChildByName("LoadingBar");
+			ui::Widget* loadbarw = ui->getRoot()->getChildByName<ui::Widget*>("LoadingBar"); //loadbarpnl->getChildByName("LoadingBar");
 			ui::LoadingBar* loadbar = dynamic_cast<ui::LoadingBar*>(loadbarw);
 
 			if (loadbar)

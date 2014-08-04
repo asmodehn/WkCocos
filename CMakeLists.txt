@@ -77,6 +77,8 @@ endif()
 include_directories(
   ${COCOS2D_ROOT}
   ${COCOS2D_ROOT}/cocos
+  ${COCOS2D_ROOT}/cocos/platform/desktop
+  ${COCOS2D_ROOT}/cocos/platform/${PLATFORM_FOLDER}
   ${COCOS2D_ROOT}/cocos/audio/include
   ${COCOS2D_ROOT}/cocos/editor-support
   ${COCOS2D_ROOT}/cocos/scripting/lua-bindings/auto
@@ -85,11 +87,10 @@ include_directories(
   ${COCOS2D_ROOT}/external
   ${COCOS2D_ROOT}/external/tinyxml2
   ${COCOS2D_ROOT}/external/unzip
+  ${COCOS2D_ROOT}/external/json
   ${COCOS2D_ROOT}/external/sqlite3/include
   ${COCOS2D_ROOT}/external/edtaa3func
   ${COCOS2D_ROOT}/external/chipmunk/include/chipmunk
-  ${COCOS2D_ROOT}/cocos/2d/platform/desktop
-  ${COCOS2D_ROOT}/cocos/2d/platform/${PLATFORM_FOLDER}
   ${COCOS2D_ROOT}/external/jpeg/include/${PLATFORM_FOLDER}
   ${COCOS2D_ROOT}/external/png/include/${PLATFORM_FOLDER}
   ${COCOS2D_ROOT}/external/tiff/include/${PLATFORM_FOLDER}
@@ -98,6 +99,7 @@ include_directories(
   ${COCOS2D_ROOT}/external/freetype2/include/${PLATFORM_FOLDER}
   ${COCOS2D_ROOT}/external/websockets/include/${PLATFORM_FOLDER}
   ${COCOS2D_ROOT}/external/xxhash
+  ${COCOS2D_ROOT}/external/xxtea
 )
 
 if (WIN32)
@@ -187,8 +189,10 @@ WkAddCFlags("-DCOCOS2D_DEBUG=1")
 WkAddCXXFlags("-DCOCOS2D_DEBUG=1")
 
 if(WIN32)
-  WkAddCXXFlags("-D_USRDLL -DCOCOS2DXWIN32_EXPORTS -D_WINDOWS -DWIN32")
-
+  WkAddCXXFlags("-D_USRDLL -D_USEGUIDLL -D_USREXDLL -DIGNORE_EXPORT -DCOCOS2DXWIN32_EXPORTS -D_WINDOWS -DWIN32")
+  if(BUILD_EDITOR_COCOSTUDIO)
+    WkAddCXXFlags ("-D_USRSTUDIODLL")
+  endif(BUILD_EDITOR_COCOSTUDIO)
   if(MSVC)
     WkAddCXXFlags( "-D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS" )
     WkAddCXXFlags( "-wd4251 -wd4244 -wd4334 -wd4005 -wd4820 -wd4710 -wd4514 -wd4056 -wd4996 -wd4099" )
