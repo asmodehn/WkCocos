@@ -19,6 +19,8 @@ LOCAL_SRC_FILES := jni.cpp \
                    ../../../../../Classes/Lib/Interface.cpp \
                    ../../../../../Classes/Lib/App42/Setup.cpp \
                    ../../../../../Classes/Lib/App42/Login.cpp \
+                   ../../../../../Classes/Lib/Download/Download.cpp \
+                   ../../../../../Classes/Lib/Preload/Preload.cpp \
                    ../../../../../Classes/Lib/Utils/CocosAppender.cpp \
                    ../../../../../Classes/Lib/Utils/log/logappender.cpp \
                    ../../../../../Classes/Lib/Utils/log/loglevel.cpp \
@@ -26,16 +28,18 @@ LOCAL_SRC_FILES := jni.cpp \
                    ../../../../../Classes/Lib/Utils/log/logstreambuf.cpp \
                    ../../../../../Classes/Lib/Utils/log/nullstream.cpp \
                    ../../../../../Classes/Lib/Utils/log/nullstreambuf.cpp \
-                   ../../../../../Classes/Lib/Loading/LoadingManager.cpp \
-                   ../../../../../Classes/Lib/Loading/Systems/DataEval.cpp \
-                   ../../../../../Classes/Lib/Loading/Systems/DLCchecking.cpp \
-                   ../../../../../Classes/Lib/Loading/Systems/DLClisting.cpp \
-                   ../../../../../Classes/Lib/Loading/Systems/DLvalidating.cpp \
-                   ../../../../../Classes/Lib/Loading/Systems/CurlDL.cpp \
-                   ../../../../../Classes/Lib/Loading/Systems/Error.cpp \
-                   ../../../../../Classes/Lib/Loading/Systems/Loading.cpp \
-                   ../../../../../Classes/Lib/Loading/Systems/MD5checking.cpp \
-                   ../../../../../Classes/Lib/Loading/Systems/ProgressUpdate.cpp \
+                   ../../../../../Classes/Lib/Download/Systems/DLCchecking.cpp \
+                   ../../../../../Classes/Lib/Download/Systems/DLClisting.cpp \
+                   ../../../../../Classes/Lib/Download/Systems/DLvalidating.cpp \
+                   ../../../../../Classes/Lib/Download/Systems/CurlDL.cpp \
+                   ../../../../../Classes/Lib/Download/Systems/Error.cpp \
+                   ../../../../../Classes/Lib/Download/Systems/MD5checking.cpp \
+                   ../../../../../Classes/Lib/Download/Systems/ProgressUpdate.cpp \
+                   ../../../../../Classes/Lib/Preload/Systems/DataEval.cpp \
+                   ../../../../../Classes/Lib/Preload/Systems/Error.cpp \
+                   ../../../../../Classes/Lib/Preload/Systems/SyncLoading.cpp \
+                   ../../../../../Classes/Lib/Preload/Systems/ASyncLoading.cpp \
+                   ../../../../../Classes/Lib/Preload/Systems/ProgressUpdate.cpp \
                    ../../../../../Classes/Lib/LocalData/LocalDataManager.cpp \
                    ../../../../../Classes/Lib/LocalData/Systems/Error.cpp \
                    ../../../../../Classes/Lib/LocalData/Systems/JSONLoginID.cpp \
