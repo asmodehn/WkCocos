@@ -13,5 +13,8 @@ APP_ABI := armeabi-v7a
 APP_STL := gnustl_static
 APP_CPPFLAGS :=  -std=c++11 -fsigned-char -frtti -fexceptions
 
-#cocos flag
+#cocos flags
 APP_CPPFLAGS += -DCC_ENABLE_CHIPMUNK_INTEGRATION=1 -DCOCOS2D_DEBUG=1
+
+#soomla flags
+APP_CPPFLAGS += -DSOOMLA_DEBUG=1

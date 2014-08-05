@@ -4,6 +4,8 @@
     <mapping directory="$PROJECT_DIR$/.." vcs="Git" />
     <mapping directory="$PROJECT_DIR$/../depends/android-basic-samples" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/../depends/cocos2d-x" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../depends/cocos2dx-store" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../depends/soomla-cocos2dx-core" vcs="Git" />
   </component>
 </project>
 
