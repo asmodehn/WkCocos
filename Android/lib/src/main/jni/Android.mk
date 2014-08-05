@@ -9,7 +9,6 @@ LOCAL_MODULE_FILENAME := libwkcocos
 LOCAL_SRC_FILES := jni.cpp \
                    ../../../../../Classes/Lib/Utils/ToolBox.cpp \
                    ../../../../../Classes/Lib/Utils/libb64.c \
-#                   ../../../../../Classes/Lib/Utils/md5.c \
                    ../../../../../Classes/Lib/Utils/sha1.cpp \
                    ../../../../../Classes/Lib/Utils/Crypto.cpp \
                    ../../../../../Classes/Lib/Utils/UUID.cpp\
@@ -48,6 +47,8 @@ LOCAL_SRC_FILES := jni.cpp \
                    ../../../../../Classes/Lib/OnlineData/Systems/User.cpp \
                    ../../../../../Classes/Lib/Timer/Timer.cpp \
                    ../../../../../Classes/Lib/Timer/Systems/Alarm.cpp \
+#do not include this file, it's already in libcurl
+#                   ../../../../../Classes/Lib/Utils/md5.c \
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../../../../Include
 
