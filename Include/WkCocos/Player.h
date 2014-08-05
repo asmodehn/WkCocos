@@ -7,6 +7,8 @@
 #include "WkCocos/OnlineData/OnlineDataManager.h"
 #include "WkCocos/Timer/Timer.h"
 
+#include "WkCocos/Utils/ToolBox.h"
+
 #include <string>
 
 namespace WkCocos
@@ -53,7 +55,7 @@ namespace WkCocos
 		*/
 		bool startTimer(std::string id)
 		{
-			return m_timer->startTimer(id);
+			return false;// m_timer->startTimer(id);
 		}
 
 		/**
@@ -61,7 +63,7 @@ namespace WkCocos
 		*/
 		void stopTimer(std::string id)
 		{
-			m_timer->stopTimer(id);
+			//m_timer->stopTimer(id);
 		}
 
 		/**

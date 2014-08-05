@@ -9,7 +9,7 @@ LOCAL_MODULE_FILENAME := libwkcocos
 LOCAL_SRC_FILES := jni.cpp \
                    ../../../../../Classes/Lib/Utils/ToolBox.cpp \
                    ../../../../../Classes/Lib/Utils/libb64.c \
-                   ../../../../../Classes/Lib/Utils/md5.c \
+#                   ../../../../../Classes/Lib/Utils/md5.c \
                    ../../../../../Classes/Lib/Utils/sha1.cpp \
                    ../../../../../Classes/Lib/Utils/Crypto.cpp \
                    ../../../../../Classes/Lib/Utils/UUID.cpp\
@@ -47,7 +47,7 @@ LOCAL_SRC_FILES := jni.cpp \
                    ../../../../../Classes/Lib/OnlineData/Systems/Storage.cpp \
                    ../../../../../Classes/Lib/OnlineData/Systems/User.cpp \
                    ../../../../../Classes/Lib/Timer/Timer.cpp \
-                   ../../../../../Classes/Lib/Timer/Systems/Progressor.cpp \
+                   ../../../../../Classes/Lib/Timer/Systems/Alarm.cpp \
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../../../../Include
 
