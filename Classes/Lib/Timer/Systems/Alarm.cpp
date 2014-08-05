@@ -27,10 +27,8 @@ namespace WkCocos
 					if (delta < 0)
 					{
 						events->emit<Events::AlarmOff>(entity);
-						cb->m_cb(id->m_id, "alarm");
 					}
-					else
-						cb->m_cb(id->m_id, ToolBox::itoa(delta));
+					cb->m_cb(id->m_id, ToolBox::itoa(delta));
 				}
 			};
 

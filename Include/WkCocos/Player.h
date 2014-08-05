@@ -40,12 +40,10 @@ namespace WkCocos
 		{
 			struct tm timeinfo = ToolBox::getUTCTime();
 			//CCLOG(asctime(&timeinfo));
-			if (timeinfo.tm_sec / 40) {
-				timeinfo.tm_sec -= 40;
-				timeinfo.tm_min += 1;
-			}
-			else
-				timeinfo.tm_sec += 20;
+			timeinfo.tm_sec += secs;
+			
+			mktime(&timeinfo);
+
 			//CCLOG(asctime(&timeinfo));
 			return m_timer->setAlarm(id, timeinfo, update_cb);
 		}
@@ -72,6 +70,11 @@ namespace WkCocos
 		void deleteTimer(std::string id)
 		{
 			m_timer->deleteAlarm(id);
+		}
+		std::shared_ptr<Timer::Timer> getTimermgr()
+		{
+			return  m_timer;
+
 		}
 
 	protected:
