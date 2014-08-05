@@ -18,7 +18,7 @@ namespace WkCocos
 		{
 			struct Create : entityx::Component<Create>
 			{
-				Create(std::string userid, std::string passwd, std::string email, std::function<void(App42UserResponse*)> cb);
+				Create(std::string userid, std::string passwd, std::string email, std::function<void(::App42::App42UserResponse*)> cb);
 				
 				bool in_progress;
 				bool done;
@@ -31,7 +31,7 @@ namespace WkCocos
 
 			struct Login : entityx::Component<Login>
 			{
-				Login(std::string userid, std::string passwd, std::function<void(App42UserResponse*)> cb);
+				Login(std::string userid, std::string passwd, std::function<void(::App42::App42UserResponse*)> cb);
 
 				bool in_progress;
 				bool done;

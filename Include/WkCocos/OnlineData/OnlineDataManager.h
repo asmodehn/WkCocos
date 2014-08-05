@@ -27,12 +27,12 @@ namespace WkCocos
 			/**
 			* Create User
 			*/
-			void loginNew(std::string userid, std::string password, std::string email, std::function<void(App42UserResponse*)> callback);
+			void loginNew(std::string userid, std::string password, std::string email, std::function<void(::App42::App42UserResponse*)> callback);
 			
 			/**
 			* Login User
 			*/
-			void login(std::string userid, std::string password, std::function<void(App42UserResponse*)> callback);
+			void login(std::string userid, std::string password, std::function<void(::App42::App42UserResponse*)> callback);
 
 			/**
 			* Save User Data

@@ -16,7 +16,7 @@ namespace WkCocos
 			, entity_manager(entityx::EntityManager::make(event_manager))
 			, system_manager(entityx::SystemManager::make(entity_manager, event_manager))
 		{
-			App42API::Initialize(app_access_key, app_secret_key);
+			::App42::App42API::Initialize(app_access_key, app_secret_key);
 			system_manager->add<Systems::User>();
 			system_manager->configure();
 		}
@@ -25,12 +25,12 @@ namespace WkCocos
 		{
 		}
 
-		void OnlineDataManager::loginNew(std::string userid, std::string password, std::string email, std::function<void(App42UserResponse*)> callback)
+		void OnlineDataManager::loginNew(std::string userid, std::string password, std::string email, std::function<void(::App42::App42UserResponse*)> callback)
 		{
 
 			auto newentity = entity_manager->create();
 			//new File component for each request. The aggregator system will detect duplicates and group them
-			newentity.assign<Comp::Create>(userid, password, email, [=](App42UserResponse* r){
+			newentity.assign<Comp::Create>(userid, password, email, [=](::App42::App42UserResponse* r){
 
 				if (r->isSuccess)
 				{
@@ -46,11 +46,11 @@ namespace WkCocos
 			
 		}
 
-		void OnlineDataManager::login(std::string userid, std::string password, std::function<void(App42UserResponse*)> callback)
+		void OnlineDataManager::login(std::string userid, std::string password, std::function<void(::App42::App42UserResponse*)> callback)
 		{
 			auto newentity = entity_manager->create();
 			//new File component for each request. The aggregator system will detect duplicates and group them
-			newentity.assign<Comp::Login>(userid, password, [=](App42UserResponse* r){
+			newentity.assign<Comp::Login>(userid, password, [=](::App42::App42UserResponse* r){
 				callback(r);
 			});
 		}

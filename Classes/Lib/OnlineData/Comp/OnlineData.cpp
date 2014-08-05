@@ -11,7 +11,7 @@ namespace WkCocos
 	{
 		namespace Comp
 		{
-			Create::Create(std::string userid, std::string passwd, std::string email, std::function<void(App42UserResponse*)> cb)
+			Create::Create(std::string userid, std::string passwd, std::string email, std::function<void(::App42::App42UserResponse*)> cb)
 				: in_progress(false)
 				, done(false)
 				, m_userid(userid)
@@ -19,7 +19,7 @@ namespace WkCocos
 				, m_email(email)
 			{
 				m_cb = [=](void* data) {
-					App42UserResponse* userdata = static_cast<App42UserResponse*>(data);
+					::App42::App42UserResponse* userdata = static_cast<::App42::App42UserResponse*>(data);
 
 					CCLOG("\ncode=%d...=%d", userdata->getCode(), userdata->isSuccess);
 					CCLOG("\nResponse Body=%s", userdata->getBody().c_str());
@@ -43,14 +43,14 @@ namespace WkCocos
 				};
 			}
 
-			Login::Login(std::string userid, std::string passwd, std::function<void(App42UserResponse*)> cb)
+			Login::Login(std::string userid, std::string passwd, std::function<void(::App42::App42UserResponse*)> cb)
 				: in_progress(false)
 				, done(false)
 				, m_userid(userid)
 				, m_passwd(passwd)
 			{
 				m_cb = [=](void* data) {
-					App42UserResponse* userdata = static_cast<App42UserResponse*>(data);
+					::App42::App42UserResponse* userdata = static_cast<::App42::App42UserResponse*>(data);
 
 					CCLOG("\ncode=%d...=%d", userdata->getCode(), userdata->isSuccess);
 					CCLOG("\nResponse Body=%s", userdata->getBody().c_str());
@@ -82,7 +82,7 @@ namespace WkCocos
 				, m_user_data(user_data)
 			{
 				m_cb = [=](void* data) {
-					App42UserResponse* userdata = static_cast<App42UserResponse*>(data);
+					::App42::App42UserResponse* userdata = static_cast<::App42::App42UserResponse*>(data);
 
 					CCLOG("\ncode=%d...=%d", userdata->getCode(), userdata->isSuccess);
 					CCLOG("\nResponse Body=%s", userdata->getBody().c_str());
@@ -133,7 +133,7 @@ namespace WkCocos
 				, m_user_data("")
 			{
 				m_cb = [=](void* data) {
-					App42UserResponse* userdata = static_cast<App42UserResponse*>(data);
+					::App42::App42UserResponse* userdata = static_cast<::App42::App42UserResponse*>(data);
 
 					CCLOG("\ncode=%d...=%d", userdata->getCode(), userdata->isSuccess);
 					CCLOG("\nResponse Body=%s", userdata->getBody().c_str());
