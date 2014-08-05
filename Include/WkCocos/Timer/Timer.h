@@ -2,7 +2,7 @@
 #define __WKCOCOS_TIMER_TIMER_H__
 
 #include "entityx/entityx.h"
-
+#include "WkCocos/Timer/Comp/TimeValue.h"
 #include <ctime>
 
 namespace WkCocos
@@ -27,7 +27,7 @@ namespace WkCocos
 			* @param id identifier of the timer
 			* @param alarm_date date whent he alarm will be triggered
 			*/
-			bool setAlarm(std::string id, struct tm alarm_date, std::function<void(std::string id, std::string msecs_left)> update_cb);
+			bool setAlarm(std::string id, struct tm alarm_date, Comp::Callback::TimerFunc update_cb);
 			
 			/**
 			* Delete Timer

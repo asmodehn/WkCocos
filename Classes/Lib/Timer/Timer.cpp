@@ -27,7 +27,7 @@ namespace WkCocos
 		/**
 		* Setup Alarm
 		*/
-		bool Timer::setAlarm(std::string id, struct tm alarm_date, std::function<void(std::string id, std::string msecs_left)> update_cb)
+		bool Timer::setAlarm(std::string id, struct tm alarm_date, Comp::Callback::TimerFunc update_cb)
 		{
 			//check unicity of id
 			entityx::ptr<Comp::ID> eid;

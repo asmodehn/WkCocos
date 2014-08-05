@@ -28,7 +28,7 @@ namespace WkCocos
 					{
 						events->emit<Events::AlarmOff>(entity);
 					}
-					cb->m_cb(id->m_id, ToolBox::itoa(delta));
+					cb->m_cb(id->m_id, delta);
 				}
 			};
 

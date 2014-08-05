@@ -32,11 +32,12 @@ namespace WkCocos
 
 			struct Callback : entityx::Component<Callback>
 			{
-				Callback(std::function<void(std::string id, std::string msecs_left)> cb)
+				typedef std::function<void(std::string id, double msecs_left)> TimerFunc;
+				Callback(TimerFunc cb)
 				: m_cb(cb)
 				{}
 
-				std::function<void(std::string id, std::string msecs_left)> m_cb;
+				TimerFunc m_cb;
 			};
 
 		}//namespace Comp
