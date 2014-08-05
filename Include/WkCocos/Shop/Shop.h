@@ -36,6 +36,18 @@ namespace WkCocos
 
 				soomla::CCStoreEventDispatcher::getInstance()->addEventHandler(handler);
 
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+				soomla::CCSoomlaStore::getInstance()->startIabServiceInBg();
+#endif
+
+			}
+
+			~Shop()
+			{
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+				soomla::CCSoomlaStore::getInstance()->stopIabServiceInBg();
+#endif
+
 			}
 
 			ShopEventHandler* handler;

@@ -1,6 +1,7 @@
 #include "WkCocosApp/SavingScene.h"
 
 #include "WkCocosApp/SavingUI.h"
+#include "WkCocosApp/ShopUI.h"
 
 #include "WkCocosApp/ErrorUI.h"
 
@@ -33,11 +34,18 @@ bool SavingScene::init()
 	//cocos2d::Vector2 origin = cocos2d::Director::getInstance()->getVisibleOrigin();
 
 	//Load UI
-	SavingUI* saveui = new SavingUI();
-	saveui->getRoot()->setEnabled(true);
-	saveui->getRoot()->setVisible(true);
-	addChild(saveui->getRoot());
-	m_ui[SavingUI::id] = saveui;
+	//SavingUI* saveui = new SavingUI();
+	//saveui->getRoot()->setEnabled(true);
+	//saveui->getRoot()->setVisible(true);
+	//addChild(saveui->getRoot());
+	//m_ui[SavingUI::id] = saveui;
+
+	//ShopUI
+	ShopUI* shopui = new ShopUI();
+	shopui->getRoot()->setEnabled(true);
+	shopui->getRoot()->setVisible(true);
+	addChild(shopui->getRoot());
+	m_ui[ShopUI::id] = shopui;
 
 	//Error UI
 	ErrorUI* errorui = new ErrorUI();

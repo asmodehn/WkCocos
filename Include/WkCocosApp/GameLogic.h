@@ -3,6 +3,7 @@
 
 #include "WkCocos/LocalData/LocalDataManager.h"
 #include "WkCocos/OnlineData/OnlineDataManager.h"
+#include "WkCocos/Shop/Shop.h"
 
 #include "WkCocosApp/MyPlayer.h"
 #include "WkCocosApp/MyOptions.h"
@@ -46,6 +47,8 @@ private:
 	std::shared_ptr<WkCocos::LocalData::LocalDataManager> m_localdatamngr;
 	std::shared_ptr<WkCocos::OnlineData::OnlineDataManager> m_onlinedatamngr;
 	
+	std::shared_ptr<WkCocos::Shop::Shop> m_shop;
+
 	//overall game concepts
 	std::unique_ptr<MyPlayer> m_player;
 	std::unique_ptr<MyOptions> m_options;
