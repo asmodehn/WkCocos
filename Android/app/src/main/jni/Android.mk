@@ -19,6 +19,7 @@ LOCAL_SRC_FILES := main.cpp \
                    ../../../../../Classes/App/SavingUI.cpp \
                    ../../../../../Classes/App/TimerUI.cpp \
 
+                   
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../../../../Include
 
 LOCAL_WHOLE_STATIC_LIBRARIES := wkcocos_static

@@ -89,6 +89,8 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
 	loadscene->scheduleDLCCheck();
 
+	loadscene->addLoad({"HelloWorld.png"});
+
 	loadscene->setLoadDoneCallback([this](){
 		auto director = cocos2d::Director::getInstance();
 		director->replaceScene(cocos2d::TransitionFade::create(1.0f, TestScene::create()));

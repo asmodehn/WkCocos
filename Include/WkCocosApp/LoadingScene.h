@@ -3,7 +3,8 @@
 
 #include "WkCocos/Scene.h"
 
-#include "WkCocos/Loading/LoadingManager.h"
+#include "WkCocos/Download/Download.h"
+#include "WkCocos/Preload/Preload.h"
 
 class LoadingScene : public WkCocos::Scene
 {
@@ -44,10 +45,10 @@ protected:
 	bool m_loadDoneCB_called;
 
 	bool m_loadMan_del_scheduled;
-
+	WkCocos::Download::Download * m_downloadManager;
+	WkCocos::Preload::Preload * m_preloadManager;
 	std::function<void()> m_loadDoneCB;
 
-	WkCocos::Loading::LoadingManager * m_loadingManager;
 
 };
 
