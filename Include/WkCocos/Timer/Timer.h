@@ -36,6 +36,21 @@ namespace WkCocos
 			
 			void update(double dt);
 
+			/**
+			* Get Event manager
+			*/
+			inline entityx::ptr<entityx::EventManager> getEventManager() { return event_manager; }
+
+			/**
+			* Get Entity manager
+			*/
+			inline entityx::ptr<entityx::EntityManager> getEntityManager() { return entity_manager; }
+
+			/**
+			* Get System manager
+			*/
+			inline entityx::ptr<entityx::SystemManager> getSystemManager() { return system_manager; }
+
 		protected:
 
 			entityx::ptr<entityx::EventManager> event_manager;
