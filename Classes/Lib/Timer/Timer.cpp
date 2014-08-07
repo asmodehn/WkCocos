@@ -27,7 +27,7 @@ namespace WkCocos
 		/**
 		* Setup Alarm
 		*/
-		bool Timer::setAlarm(std::string id, struct tm alarm_date, Comp::Callback::TimerFunc update_cb)
+		bool Timer::setAlarm(std::string id, struct tm alarm_date)
 		{
 			//check unicity of id
 			entityx::ptr<Comp::ID> eid;
@@ -35,8 +35,6 @@ namespace WkCocos
 			{
 				if (id == eid->m_id)
 				{
-					entity.remove<Comp::Callback>();
-					entity.assign<Comp::Callback>(update_cb);
 					entity.remove<Comp::Alarm>();
 					entity.assign<Comp::Alarm>(alarm_date);
 					return true;
@@ -46,7 +44,6 @@ namespace WkCocos
 			//creating new entity with unique id
 			auto entity = entity_manager->create();
 			entity.assign<Comp::ID>(id);
-			entity.assign<Comp::Callback>(update_cb);
 			entity.assign<Comp::Alarm>(alarm_date);
 			return true;
 		}

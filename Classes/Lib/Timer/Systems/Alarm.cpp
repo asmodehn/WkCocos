@@ -1,6 +1,7 @@
 #include "WkCocos/Timer/Systems/Alarm.h"
 #include "WkCocos/Timer/Comp/TimeValue.h"
 #include "WkCocos/Timer/Events/AlarmOff.h"
+#include "WkCocos/Timer/Events/TimerUpdate.h"
 
 #include "WkCocos/Utils/ToolBox.h"
 
@@ -17,8 +18,7 @@ namespace WkCocos
 			{
 				entityx::ptr<Comp::ID> id;
 				entityx::ptr<Comp::Alarm> alarm;
-				entityx::ptr<Comp::Callback> cb;
-				for (auto entity : es->entities_with_components(id, alarm, cb))
+				for (auto entity : es->entities_with_components(id, alarm))
 				{
 					struct tm now = ToolBox::getUTCTime();
 					time_t start = mktime(&alarm->m_end);
@@ -28,7 +28,7 @@ namespace WkCocos
 					{
 						events->emit<Events::AlarmOff>(entity);
 					}
-					cb->m_cb(id->m_id, delta);
+					events->emit<Events::TimerUpdate>(entity, id->m_id, delta);
 				}
 			};
 

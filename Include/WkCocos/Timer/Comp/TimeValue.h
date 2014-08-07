@@ -30,15 +30,16 @@ namespace WkCocos
 			};
 
 
-			struct Callback : entityx::Component<Callback>
-			{
-				typedef std::function<void(std::string id, double msecs_left)> TimerFunc;
-				Callback(TimerFunc cb)
-				: m_cb(cb)
-				{}
+			//UNUSED
+			//struct Callback : entityx::Component<Callback>
+			//{
+			//	typedef std::function<void(std::string id, double msecs_left)> TimerFunc;
+			//	Callback(TimerFunc cb)
+			//	: m_cb(cb)
+			//	{}
 
-				TimerFunc m_cb;
-			};
+			//	TimerFunc m_cb;
+			//};
 
 		}//namespace Comp
 	}//namespace Timer
