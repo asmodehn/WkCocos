@@ -142,35 +142,34 @@ namespace WkCocos
 					{//if request succeed, we need to extract data from it
 						rapidjson::Document doc;
 						doc.Parse<0>(userdata->getBody().c_str());
-
-						//TMP debug
-						rapidjson::Value & temp = doc["app42"];
-						temp = temp["response"];
-						temp = temp["users"];
-						temp = temp["user"];
-						temp = temp["jsonDoc"];
-						temp = temp[temp.Size() - 1];
-
-						rapidjson::StringBuffer strbuf;
-						rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
-						temp["data"].Accept(writer);
-						cb(strbuf.GetString());
-
-						/*
+						
 						if (doc.HasParseError())
 						{
 							cb(""); // if parse error (also empty string), we ignore existing data.
 						}
 						else
 						{
-							if (doc.HasMember("users"))
+							rapidjson::Value & temp = doc["app42"];
+							temp = temp["response"];
+							if (temp.HasMember("users"))
 							{
-								if (doc.HasMember("data"))
+								temp = temp["users"];
+								temp = temp["user"];
+								temp = temp["jsonDoc"];
+								if (temp.Size())
 								{
-									rapidjson::StringBuffer strbuf;
-									rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
-									doc["data"].Accept(writer);
-									cb(strbuf.GetString());
+									temp = temp[temp.Size() - 1];
+									if (temp.HasMember("data"))
+									{
+										rapidjson::StringBuffer strbuf;
+										rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
+										temp["data"].Accept(writer);
+										cb(strbuf.GetString());
+									}
+									else
+									{
+										cb("");
+									}
 								}
 								else
 								{
@@ -182,8 +181,6 @@ namespace WkCocos
 								cb("");
 							}
 						}
-						*/
-
 					}
 					else// if request failed, 
 					{
