@@ -6,6 +6,7 @@
 #include "WkCocos/LocalData/LocalDataManager.h"
 #include "WkCocos/OnlineData/OnlineDataManager.h"
 #include "WkCocos/Timer/Timer.h"
+#include "WkCocos/Utils/ToolBox.h"
 
 #include <string>
 
@@ -51,18 +52,18 @@ namespace WkCocos
 		/**
 		* StartTimer
 		*/
-		bool startTimer(std::string id)
-		{
-			return m_timer->startTimer(id);
-		}
+		//bool startTimer(std::string id)
+		//{
+		//	return m_timer->startTimer(id);
+		//}
 
 		/**
 		* Stop Timer (Doesnt trigger callback)
 		*/
-		void stopTimer(std::string id)
-		{
-			m_timer->stopTimer(id);
-		}
+		//void stopTimer(std::string id)
+		//{
+		//	//m_timer->stopTimer(id);
+		//}
 
 		/**
 		* Delete Timer
