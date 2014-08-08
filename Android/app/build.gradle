@@ -1,7 +1,10 @@
 import groovy.transform.Field
 
 @Field
-def buildNumber = 123
+def buildNumber = System.getenv("BUILD_VERSION")
+if(buildNumber == null) {
+    buildNumber = 99999
+}
 
 apply plugin: 'android'
 
