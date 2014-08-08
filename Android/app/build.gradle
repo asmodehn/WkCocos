@@ -16,6 +16,7 @@ android {
         minSdkVersion 9
         targetSdkVersion 19
         //versionName can go up to "1.999.build"
+        versionName "0.1." + buildNumber
         versionCode 100000 + buildNumber // max should be 2 147 483 647
     }
 
