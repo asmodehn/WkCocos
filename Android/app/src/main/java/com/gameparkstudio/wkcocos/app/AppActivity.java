@@ -1,4 +1,4 @@
-package com.your_company.mygame.app;
+package com.gameparkstudio.wkcocos.app;
 
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
