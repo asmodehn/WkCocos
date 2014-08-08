@@ -23,12 +23,23 @@ namespace WkCocos
 					struct tm now = ToolBox::getUTCTime();
 					time_t start = mktime(&alarm->m_end);
 					time_t nowtime = mktime(&now);
-					double delta = difftime(start, nowtime );
+					// actually returns long long, despite double declaration
+					double delta = difftime(start, nowtime); 
 					if (delta < 0)
 					{
-						events->emit<Events::AlarmOff>(entity);
+						events->emit<Events::AlarmOff>(entity, id->m_id);
+						entity.remove<Comp::Alarm>();
+						entity.remove<Comp::ID>();
+						entity.destroy();
 					}
-					events->emit<Events::TimerUpdate>(entity, id->m_id, delta);
+					else
+					{
+						//if (1 <= difftime(nowtime, oldtime))
+						//{
+						//	oldtime = nowtime;
+							events->emit<Events::TimerUpdate>(entity, id->m_id, delta);
+						//}
+					}
 				}
 			};
 

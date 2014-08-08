@@ -16,9 +16,9 @@ namespace WkCocos
 				, time_left(time)
 				{}
 
-				double getTimeLeft() const
+				int getTimeLeft() const
 				{
-					return time_left;
+					return (int) time_left;
 				}
 
 				entityx::Entity timer;

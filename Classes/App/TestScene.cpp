@@ -29,7 +29,15 @@ bool TestScene::init()
 	}
 
 	cocos2d::Size visibleSize = Director::getInstance()->getVisibleSize();
-	//cocos2d::Vec2 origin = Director::getInstance()->getVisibleOrigin();
+	Vec2 origin = Director::getInstance()->getVisibleOrigin();
+
+	auto closeItem = MenuItemImage::create("CloseNormal.png", "CloseSelected.png",
+		CC_CALLBACK_1(TestScene::menuCloseCallback, this));
+	closeItem->setPosition(Vec2(origin.x + visibleSize.width - closeItem->getContentSize().width / 2,
+		origin.y + closeItem->getContentSize().height / 2));
+	auto menu = Menu::create(closeItem, NULL);
+	menu->setPosition(Vec2::ZERO);
+	addChild(menu, 1);
 
 	//Saving UI
 	SavingUI* saveui = new SavingUI();
@@ -100,4 +108,18 @@ void TestScene::error_CB()
 	ErrorUI* errorui = getInterface<ErrorUI>(ErrorUI::id);
 	errorui->activate();
 	
+}
+
+void TestScene::menuCloseCallback(Ref* pSender)
+{
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_WP8) || (CC_TARGET_PLATFORM == CC_PLATFORM_WINRT)
+	MessageBox("You pressed the close button. Windows Store Apps do not implement a close button.", "Alert");
+	return;
+#endif
+
+	Director::getInstance()->end();
+
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+	exit(0);
+#endif
 }

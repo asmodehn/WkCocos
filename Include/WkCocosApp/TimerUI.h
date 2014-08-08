@@ -27,6 +27,7 @@ public:
 	virtual ~TimerUI();
 	
 	void receive(const WkCocos::Timer::Events::TimerUpdate &tu);
+	void receive(const WkCocos::Timer::Events::AlarmOff &ao);
 
 	void startCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input);
 	void stopCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input);
