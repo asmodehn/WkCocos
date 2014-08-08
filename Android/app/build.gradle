@@ -1,7 +1,10 @@
 import groovy.transform.Field
 
 @Field
-def buildNumber = 123
+def buildNumber = System.getenv("BUILD_VERSION")
+if(buildNumber == null) {
+    buildNumber = 99999
+}
 
 apply plugin: 'android'
 
@@ -13,6 +16,7 @@ android {
         minSdkVersion 9
         targetSdkVersion 19
         //versionName can go up to "1.999.build"
+        versionName "0.1." + buildNumber
         versionCode 100000 + buildNumber // max should be 2 147 483 647
     }
 
@@ -64,6 +68,10 @@ android {
 
     // make per-variant version code
     applicationVariants.all { variant ->
+
+        def file = variant.outputFile
+        variant.outputFile = new File(file.parent, file.name.replace("app-","wkcocos-").replace(".apk", "-" + defaultConfig.versionName + ".apk"))
+
         // get the version code of each flavor
         def apiVersion = variant.productFlavors.get(0).versionCode
         def abiVersion = variant.productFlavors.get(1).versionCode
@@ -73,12 +81,23 @@ android {
         variant.mergedFlavor.versionCode = apiVersion * 1000000 + abiVersion * 100000 + defaultConfig.versionCode
     }
 
+    signingConfigs {
+        release {
+            storeFile file("mykeystore") //replaced if validateReleaseSigning is in task graph
+            storePassword "" //interactive prompt will fill this up
+            keyAlias "wkcocos"
+            keyPassword "" //interactive prompt will fill this up
+        }
+    }
+
     buildTypes {
         release {
+            signingConfig signingConfigs.release
             runProguard false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
+
     sourceSets {
         main {
             manifest.srcFile 'src/main/AndroidManifest.xml'
@@ -98,6 +117,57 @@ android {
     }
 
 }
+
+import groovy.swing.SwingBuilder
+
+//handling keystore password input UI
+gradle.taskGraph.whenReady { taskGraph ->
+    if(taskGraph.hasTask(':app:validateReleaseSigning')) {
+        //supporting keystore in different location
+        def keypath = System.getenv("KEYSTORE")
+        if(keypath != null) {
+            android.signingConfigs.release.storeFile = file(keypath)
+        }
+
+        //environment or interactive input of password
+        def pass = System.getenv("KEYSTORE_PASSWORD")
+        if(pass == null) {
+
+            if (System.console() == null) {
+                new SwingBuilder().edt {
+                    dialog(modal: true, // Otherwise the build will continue running before you closed the dialog
+                            title: 'Enter password', // Dialog title
+                            alwaysOnTop: true, // pretty much what the name says
+                            resizable: false, // Don't allow the user to resize the dialog
+                            locationRelativeTo: null, // Place dialog in center of the screen
+                            pack: true, // We need to pack the dialog (so it will take the size of it's children)
+                            show: true // Let's show it
+                    ) {
+                        vbox { // Put everything below each other
+                            label(text: "Please enter keystore password:")
+                            input = passwordField()
+                            button(defaultButton: true, text: 'OK', actionPerformed: {
+                                println input.password;
+                                pass = new String(input.password); // Set pass variable to value of input field
+                                dispose(); // Close dialog
+                            })
+                        } // vbox end
+                    } // dialog end
+                } // edt end
+            } else {
+                pass = System.console().readPassword("\nPlease enter keystore password: ")
+                pass = new String(pass)
+            }
+        }
+        if(pass.size() <= 0) {
+            throw new InvalidUserDataException("You must enter a password to proceed.")
+        }
+
+        android.signingConfigs.release.storePassword = pass
+        android.signingConfigs.release.keyPassword = pass
+
+    } // end if has task
+} // end whenReady
 
 task copyAssets(type: Copy) {
     from '../../Resources'
