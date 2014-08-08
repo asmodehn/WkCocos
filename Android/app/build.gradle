@@ -4,6 +4,8 @@ import groovy.transform.Field
 def buildNumber = System.getenv("BUILD_VERSION")
 if(buildNumber == null) {
     buildNumber = 99999
+} else {
+    buildNumber=buildNumber.toInteger()
 }
 
 apply plugin: 'android'
