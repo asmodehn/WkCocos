@@ -1,4 +1,4 @@
-package com.your_company.wkcocos.lib;
+package com.gameparkstudio.wkcocos.lib;
 
 import android.app.Activity;
 import android.os.Bundle;

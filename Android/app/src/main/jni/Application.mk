@@ -14,7 +14,11 @@ APP_STL := gnustl_static
 APP_CPPFLAGS :=  -std=c++11 -fsigned-char -frtti -fexceptions
 
 #cocos flags
-APP_CPPFLAGS += -DCC_ENABLE_CHIPMUNK_INTEGRATION=1 -DCOCOS2D_DEBUG=1
+APP_CPPFLAGS += -DCC_ENABLE_CHIPMUNK_INTEGRATION=1
 
-#soomla flags
-APP_CPPFLAGS += -DSOOMLA_DEBUG=1
+ifeq ($(APP_OPTIM),debug)
+    APP_CPPFLAGS += -DCOCOS2D_DEBUG=1
+
+    #soomla flags
+    APP_CPPFLAGS += -DSOOMLA_DEBUG=1
+endif
