@@ -64,6 +64,10 @@ android {
 
     // make per-variant version code
     applicationVariants.all { variant ->
+
+        def file = variant.outputFile
+        variant.outputFile = new File(file.parent, file.name.replace("app-","wkcocos-").replace(".apk", "-" + defaultConfig.versionName + ".apk"))
+
         // get the version code of each flavor
         def apiVersion = variant.productFlavors.get(0).versionCode
         def abiVersion = variant.productFlavors.get(1).versionCode
