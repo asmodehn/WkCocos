@@ -8,6 +8,8 @@
 #include "WkCocos/Timer/Timer.h"
 #include "WkCocos/Utils/ToolBox.h"
 
+#include "WkCocos/Utils/ToolBox.h"
+
 #include <string>
 
 namespace WkCocos
@@ -33,20 +35,17 @@ namespace WkCocos
 		* Setup Timer
 		* @param id identifier of the timer
 		* @param msecs duration of the timer
-		* @param update_cb function pointer called everyupdate with the current time difference passed in msec_elapsed
 		*/
-		bool setTimer(std::string id, unsigned long secs, std::function<void(std::string id, std::string msecs_left)> update_cb)
+		bool setTimer(std::string id, unsigned long secs)
 		{
 			struct tm timeinfo = ToolBox::getUTCTime();
 			//CCLOG(asctime(&timeinfo));
-			if (timeinfo.tm_sec / 40) {
-				timeinfo.tm_sec -= 40;
-				timeinfo.tm_min += 1;
-			}
-			else
-				timeinfo.tm_sec += 20;
+			timeinfo.tm_sec += secs;
+			
+			mktime(&timeinfo);
+
 			//CCLOG(asctime(&timeinfo));
-			return m_timer->setAlarm(id, timeinfo, update_cb);
+			return m_timer->setAlarm(id, timeinfo);
 		}
 
 		/**
@@ -54,7 +53,7 @@ namespace WkCocos
 		*/
 		//bool startTimer(std::string id)
 		//{
-		//	return m_timer->startTimer(id);
+		//	return false;// m_timer->startTimer(id);
 		//}
 
 		/**
@@ -62,7 +61,7 @@ namespace WkCocos
 		*/
 		//void stopTimer(std::string id)
 		//{
-		//	//m_timer->stopTimer(id);
+			//m_timer->stopTimer(id);
 		//}
 
 		/**
@@ -71,6 +70,11 @@ namespace WkCocos
 		void deleteTimer(std::string id)
 		{
 			m_timer->deleteAlarm(id);
+		}
+		std::shared_ptr<Timer::Timer> getTimermgr()
+		{
+			return  m_timer;
+
 		}
 
 	protected:

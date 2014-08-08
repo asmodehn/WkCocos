@@ -45,6 +45,8 @@ TimerUI::TimerUI()
 	{
 		m_widget->retain(); //we need to retain it in memory ( or cocos will drop it )
 		widget_cache.insert(std::pair<std::string, ui::Widget*>(id, m_widget));
+
+		GameLogic::Instance().getPlayer().getTimermgr()->getEventManager()->subscribe<WkCocos::Timer::Events::TimerUpdate>(*this);
 	}
 
 }
@@ -52,15 +54,18 @@ TimerUI::TimerUI()
 TimerUI::~TimerUI()
 {}
 
+void TimerUI::receive(const WkCocos::Timer::Events::TimerUpdate &tu)
+{
+	m_countLabel->setText(WkCocos::ToolBox::itoa((int) (tu.getTimeLeft()) ));
+}
+
 void TimerUI::startCallback(Ref* widgetRef, ui::Widget::TouchEventType input)
 {
 	if (input == ui::Widget::TouchEventType::ENDED)
 	{
 		CCLOG("START BUTTON CLICKED");
 		
-		GameLogic::Instance().getPlayer().setTimer("testing", 20, [=](std::string id, std::string left){
-			m_countLabel->setText(left);
-		});
+		GameLogic::Instance().getPlayer().setTimer("testing", 20);
 		
 	}
 }

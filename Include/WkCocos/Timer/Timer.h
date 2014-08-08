@@ -2,6 +2,10 @@
 #define __WKCOCOS_TIMER_TIMER_H__
 
 #include "entityx/entityx.h"
+#include "WkCocos/Timer/Comp/TimeValue.h"
+//needed for classes using Timer.
+#include "WkCocos/Timer/Events/TimerUpdate.h"
+#include "WkCocos/Timer/Events/AlarmOff.h"
 
 #include <ctime>
 
@@ -27,7 +31,7 @@ namespace WkCocos
 			* @param id identifier of the timer
 			* @param alarm_date date whent he alarm will be triggered
 			*/
-			bool setAlarm(std::string id, struct tm alarm_date, std::function<void(std::string id, std::string msecs_left)> update_cb);
+			bool setAlarm(std::string id, struct tm alarm_date);
 			
 			/**
 			* Delete Timer
@@ -35,6 +39,21 @@ namespace WkCocos
 			void deleteAlarm(std::string id);
 			
 			void update(double dt);
+
+			/**
+			* Get Event manager
+			*/
+			inline entityx::ptr<entityx::EventManager> getEventManager() { return event_manager; }
+
+			/**
+			* Get Entity manager
+			*/
+			inline entityx::ptr<entityx::EntityManager> getEntityManager() { return entity_manager; }
+
+			/**
+			* Get System manager
+			*/
+			inline entityx::ptr<entityx::SystemManager> getSystemManager() { return system_manager; }
 
 		protected:
 
