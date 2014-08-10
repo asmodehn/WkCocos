@@ -8,8 +8,6 @@
 #include "WkCocos/Timer/Timer.h"
 #include "WkCocos/Utils/ToolBox.h"
 
-#include "WkCocos/Utils/ToolBox.h"
-
 #include <string>
 
 namespace WkCocos
@@ -203,7 +201,7 @@ namespace WkCocos
 		{
 			m_onlinedata->load(m_user, [=](std::string data)
 			{
-				set_data_json(data);
+				//set_data_json(data); //temp comment, onlinedatamanager returns empty string
 				CCLOG("user data loaded : %s", data.c_str());
 				//TODO : decide if we keep local or online data
 			});

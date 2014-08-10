@@ -2,7 +2,6 @@
 #include "WkCocos/Timer/Comp/TimeValue.h"
 #include "WkCocos/Timer/Events/AlarmOff.h"
 #include "WkCocos/Timer/Events/TimerUpdate.h"
-
 #include "WkCocos/Utils/ToolBox.h"
 
 namespace WkCocos
@@ -25,7 +24,7 @@ namespace WkCocos
 					time_t nowtime = mktime(&now);
 					// actually returns long long, despite double declaration
 					double delta = difftime(start, nowtime); 
-					if (delta < 0)
+					if (delta < 0) // becomes true when delta is -1, this adds 1 sec to alarm length
 					{
 						events->emit<Events::AlarmOff>(entity, id->m_id);
 						entity.remove<Comp::Alarm>();
@@ -34,7 +33,7 @@ namespace WkCocos
 					}
 					else
 					{
-						//if (1 <= difftime(nowtime, oldtime))
+						//if (difftime(nowtime, oldtime))
 						//{
 						//	oldtime = nowtime;
 							events->emit<Events::TimerUpdate>(entity, id->m_id, delta);

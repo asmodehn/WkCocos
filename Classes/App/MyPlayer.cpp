@@ -23,11 +23,26 @@ std::string MyPlayer::get_data_json()
 	// must pass an allocator when the object may need to allocate memory
 	rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
 
-	rapidjson::Value vholder;
-	vholder.SetObject();
-	vholder.AddMember("gold", m_gold, allocator);
-	vholder.AddMember("gem", m_gem, allocator);
-	doc.AddMember("currency", vholder, allocator);
+	rapidjson::Value currency;
+	currency.SetObject();
+	currency.AddMember(sGold, m_gold, allocator);
+	currency.AddMember(sGem, m_gem, allocator);
+	doc.AddMember(sCurrency, currency, allocator);
+
+	rapidjson::Value alarms;
+	alarms.SetArray();
+	
+	entityx::ptr<WkCocos::Timer::Comp::ID> id;
+	entityx::ptr<WkCocos::Timer::Comp::Alarm> alarm;
+	for (auto entity : m_timer->getEntityManager()->entities_with_components(id, alarm))
+	{
+		rapidjson::Value time;
+		time.SetObject();
+		time.AddMember(sID, id->m_id.c_str(), allocator);
+		time.AddMember(sTime, mktime(&alarm->m_end), allocator);
+		alarms.PushBack(time, allocator);
+	}
+	doc.AddMember(sAlarms, alarms, allocator);
 
 	//TMP debug
 	rapidjson::StringBuffer strbuf;
@@ -44,23 +59,23 @@ void MyPlayer::set_data_json(std::string data)
 {
 	rapidjson::Document doc;
 	doc.Parse<0>(data.c_str());
-	if (doc.HasParseError()) 
+	if (doc.HasParseError())
 	{
 		//if parse error (also empty string), we ignore existing data.
 		doc.SetObject();
 	}
-	
-	if (doc.HasMember("currency"))
+
+	if (doc.HasMember(sCurrency))
 	{
-		rapidjson::Value& currencyvalue = doc["currency"];
+		rapidjson::Value& currencyvalue = doc[sCurrency];
 		if (!currencyvalue.IsNull()){
-			if (currencyvalue.HasMember("gold"))
+			if (currencyvalue.HasMember(sGold))
 			{
-				m_gold = currencyvalue["gold"].GetInt();
+				m_gold = currencyvalue[sGold].GetInt();
 			}
-			if (currencyvalue.HasMember("gem"))
+			if (currencyvalue.HasMember(sGem))
 			{
-				m_gem = currencyvalue["gem"].GetInt();
+				m_gem = currencyvalue[sGem].GetInt();
 			}
 		}
 	}
@@ -68,5 +83,19 @@ void MyPlayer::set_data_json(std::string data)
 	{
 		m_gold = 424242;
 		m_gem = 42;
+	}
+	
+	if (doc.HasMember(sAlarms))
+	{
+		rapidjson::Value& alarmsarray = doc[sAlarms];
+		if (alarmsarray.Size()){
+			for (rapidjson::SizeType i = 0; i < alarmsarray.Size(); i++)
+			{
+				rapidjson::Value& time = alarmsarray[i];
+				time_t temptime_t = time[sTime].GetUint64();
+				struct tm * temptm = gmtime(&temptime_t);
+				m_timer->setAlarm(time[sID].GetString(), *temptm);
+			}	
+		}
 	}
 }

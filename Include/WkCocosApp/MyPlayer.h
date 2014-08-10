@@ -47,6 +47,15 @@ public:
 	{
 		requestLoadData();
 	}
+
+private:
+	const char * sCurrency = "currency";
+	const char * sGem = "gem";
+	const char * sGold = "gold";
+	const char * sAlarms = "alarms";
+	const char * sID = "id";
+	const char * sTime = "time";
+
 };
 
 
