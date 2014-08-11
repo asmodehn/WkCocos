@@ -21,7 +21,7 @@ namespace WkCocos
 		// setup bg
 		bg->setTouchEnabled(false);
 		bg->setSize(cocos2d::Size(1920, 1080));
-		bg->setBackGroundColorType(cocos2d::ui::LAYOUT_COLOR_SOLID);
+		bg->setBackGroundColorType(cocos2d::ui::Layout::BackGroundColorType::SOLID);
 		bg->setBackGroundColor(cocos2d::Color3B(20, 20, 20));
 		bg->setBackGroundColorOpacity(70);
 		bg->setLocalZOrder(9999);
@@ -33,8 +33,8 @@ namespace WkCocos
 		_log->setItemModel(_model);
 		_log->pushBackDefaultItem();
 		_log->setSize(cocos2d::Size(1920, 900));
-		_log->setSizePercent(cocos2d::Vector2(1.f, 0.9f));
-		_log->setBackGroundColorType(cocos2d::ui::LAYOUT_COLOR_SOLID);
+		_log->setSizePercent(cocos2d::Vec2(1.f, 0.9f));
+		_log->setBackGroundColorType(cocos2d::ui::Layout::BackGroundColorType::SOLID);
 		_log->setBackGroundColor(cocos2d::Color3B(20, 20, 20));
 		_log->setBackGroundColorOpacity(70);
 
@@ -61,7 +61,7 @@ namespace WkCocos
 		{
 			toggle->loadTextureFrontCrossDisabled(res.m_textureName[CheckBoxRes::CROSS], res.m_textureType[CheckBoxRes::CROSS]);
 		}
-		toggle->addEventListenerCheckBox(std::bind(&CocosLogAppender::toggleScroll, this, std::placeholders::_1, std::placeholders::_2));
+		toggle->addEventListener(std::bind(&CocosLogAppender::toggleScroll, this, std::placeholders::_1, std::placeholders::_2));
 
 
 		root->addChild(bg);
@@ -92,14 +92,14 @@ namespace WkCocos
 		return *this;
 	}
 
-	void CocosLogAppender::toggleScroll(cocos2d::Ref*, cocos2d::ui::CheckBoxEventType event)
+	void CocosLogAppender::toggleScroll(cocos2d::Ref*, cocos2d::ui::CheckBox::EventType event)
 	{
 		switch (event)
 		{
-		case cocos2d::ui::CHECKBOX_STATE_EVENT_SELECTED:
+		case cocos2d::ui::CheckBox::EventType::SELECTED:
 			_log->setTouchEnabled(true);
 			break;
-		case cocos2d::ui::CHECKBOX_STATE_EVENT_UNSELECTED:
+		case cocos2d::ui::CheckBox::EventType::UNSELECTED:
 			_log->setTouchEnabled(false);
 			break;
 		}

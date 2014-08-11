@@ -31,7 +31,7 @@ bool SavingScene::init()
 	}
 
 	//cocos2d::Size visibleSize = cocos2d::Director::getInstance()->getVisibleSize();
-	//cocos2d::Vector2 origin = cocos2d::Director::getInstance()->getVisibleOrigin();
+	//cocos2d::Vec2 origin = cocos2d::Director::getInstance()->getVisibleOrigin();
 
 	//Load UI
 	//SavingUI* saveui = new SavingUI();

@@ -18,40 +18,40 @@ SavingUI::SavingUI()
 	m_widget = cocos2d::ui::Layout::create();
 
 	cocos2d::Size visibleSize = cocos2d::Director::getInstance()->getVisibleSize();
-	cocos2d::Vector2 origin = cocos2d::Director::getInstance()->getVisibleOrigin();
+	cocos2d::Vec2 origin = cocos2d::Director::getInstance()->getVisibleOrigin();
 
 	m_saveButton = cocos2d::ui::Button::create("SkipNormal.png", "SkipSelected.png");
 	m_saveButton->addTouchEventListener(CC_CALLBACK_2(SavingUI::saveCallback, this));
-	m_saveButton->setPosition(cocos2d::Vector2(
+	m_saveButton->setPosition(cocos2d::Vec2(
 		(visibleSize.width - m_saveButton->getContentSize().width) / 4,
 		(visibleSize.height - m_saveButton->getContentSize().height) / 3
 	));
 	m_widget->addChild(m_saveButton);
 	m_saveLabel = cocos2d::ui::Text::create("SAVE", "Arial", 21);
-	m_saveLabel->setPosition(m_saveButton->getPosition() + cocos2d::Vector2(0, m_saveButton->getContentSize().height ));
+	m_saveLabel->setPosition(m_saveButton->getPosition() + cocos2d::Vec2(0, m_saveButton->getContentSize().height ));
 	m_widget->addChild(m_saveLabel);
 
 
 	m_loadButton = cocos2d::ui::Button::create("SkipNormal.png", "SkipSelected.png");
 	m_loadButton->addTouchEventListener(CC_CALLBACK_2(SavingUI::loadCallback, this));
-	m_loadButton->setPosition(cocos2d::Vector2(
+	m_loadButton->setPosition(cocos2d::Vec2(
 		(visibleSize.width - m_saveButton->getContentSize().width) / 4,
 		(visibleSize.height - m_saveButton->getContentSize().height) * 2 / 3
 		));
 	m_widget->addChild(m_loadButton);
 	m_loadLabel = cocos2d::ui::Text::create("LOAD", "Arial", 21);
-	m_loadLabel->setPosition(m_loadButton->getPosition() + cocos2d::Vector2(0, m_loadButton->getContentSize().height));
+	m_loadLabel->setPosition(m_loadButton->getPosition() + cocos2d::Vec2(0, m_loadButton->getContentSize().height));
 	m_widget->addChild(m_loadLabel);
 	
 	m_gemLabel = cocos2d::ui::Text::create("? GEM", "Arial", 21);
-	m_gemLabel->setPosition(cocos2d::Vector2(
+	m_gemLabel->setPosition(cocos2d::Vec2(
 		(visibleSize.width - m_saveButton->getContentSize().width) * 2/ 4,
 		(visibleSize.height - m_saveButton->getContentSize().height) * 2/ 3
 		));
 	m_widget->addChild(m_gemLabel);
 
 	m_goldLabel = cocos2d::ui::Text::create("? GOLD", "Arial", 21);
-	m_goldLabel->setPosition(cocos2d::Vector2(
+	m_goldLabel->setPosition(cocos2d::Vec2(
 		(visibleSize.width - m_saveButton->getContentSize().width) * 2/ 4,
 		(visibleSize.height - m_saveButton->getContentSize().height) / 3
 		));
@@ -59,7 +59,7 @@ SavingUI::SavingUI()
 	
 	m_gemrandButton = cocos2d::ui::Button::create("RefreshNormal.png", "RefreshSelected.png");
 	m_gemrandButton->addTouchEventListener(CC_CALLBACK_2(SavingUI::gemrandCallback, this));
-	m_gemrandButton->setPosition(cocos2d::Vector2(
+	m_gemrandButton->setPosition(cocos2d::Vec2(
 		(visibleSize.width - m_saveButton->getContentSize().width) * 3/ 4,
 		(visibleSize.height - m_saveButton->getContentSize().height) * 2 / 3
 		));
@@ -67,7 +67,7 @@ SavingUI::SavingUI()
 
 	m_goldrandButton = cocos2d::ui::Button::create("RefreshNormal.png", "RefreshSelected.png");
 	m_goldrandButton->addTouchEventListener(CC_CALLBACK_2(SavingUI::goldrandCallback, this));
-	m_goldrandButton->setPosition(cocos2d::Vector2(
+	m_goldrandButton->setPosition(cocos2d::Vec2(
 		(visibleSize.width - m_saveButton->getContentSize().width) * 3/ 4,
 		(visibleSize.height - m_saveButton->getContentSize().height) * 1 / 3
 		));
@@ -90,9 +90,9 @@ void SavingUI::update(float delta)
 	m_goldLabel->setText(WkCocos::ToolBox::itoa(GameLogic::Instance().getPlayer().m_gold) + " GOLD");
 }
 
-void SavingUI::saveCallback(cocos2d::Ref* widgetRef, cocos2d::ui::TouchEventType input)
+void SavingUI::saveCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input)
 {
-	if (input == cocos2d::ui::TouchEventType::TOUCH_EVENT_ENDED)
+	if (input == cocos2d::ui::Widget::TouchEventType::ENDED)
 	{
 		CCLOG("SAVE BUTTON CLICKED");
 
@@ -101,9 +101,9 @@ void SavingUI::saveCallback(cocos2d::Ref* widgetRef, cocos2d::ui::TouchEventType
 }
 
 
-void SavingUI::loadCallback(cocos2d::Ref* widgetRef, cocos2d::ui::TouchEventType input)
+void SavingUI::loadCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input)
 {
-	if (input == cocos2d::ui::TouchEventType::TOUCH_EVENT_ENDED)
+	if (input == cocos2d::ui::Widget::TouchEventType::ENDED)
 	{
 		CCLOG("LOAD BUTTON CLICKED");
 
@@ -111,9 +111,9 @@ void SavingUI::loadCallback(cocos2d::Ref* widgetRef, cocos2d::ui::TouchEventType
 	}
 }
 
-void SavingUI::goldrandCallback(cocos2d::Ref* widgetRef, cocos2d::ui::TouchEventType input)
+void SavingUI::goldrandCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input)
 {
-	if (input == cocos2d::ui::TouchEventType::TOUCH_EVENT_ENDED)
+	if (input == cocos2d::ui::Widget::TouchEventType::ENDED)
 	{
 		CCLOG("GOLD RAND BUTTON CLICKED");
 		GameLogic::Instance().getPlayer().m_gold = rand() % 10000;
@@ -122,9 +122,9 @@ void SavingUI::goldrandCallback(cocos2d::Ref* widgetRef, cocos2d::ui::TouchEvent
 }
 
 
-void SavingUI::gemrandCallback(cocos2d::Ref* widgetRef, cocos2d::ui::TouchEventType input)
+void SavingUI::gemrandCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input)
 {
-	if (input == cocos2d::ui::TouchEventType::TOUCH_EVENT_ENDED)
+	if (input == cocos2d::ui::Widget::TouchEventType::ENDED)
 	{
 		CCLOG("GEM RAND BUTTON CLICKED");
 		GameLogic::Instance().getPlayer().m_gem = rand() % 100;

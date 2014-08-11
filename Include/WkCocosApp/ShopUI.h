@@ -27,7 +27,7 @@ public:
 	
 	void update(float delta);
 
-	void buyCallback(cocos2d::Ref* widgetRef, cocos2d::ui::TouchEventType input);
+	void buyCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input);
 
 protected:
 

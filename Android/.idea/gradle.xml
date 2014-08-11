@@ -10,7 +10,7 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/lib" />
-            <option value="$PROJECT_DIR$/../depends/cocos2d-x/cocos/2d/platform/android/java" />
+            <option value="$PROJECT_DIR$/../depends/cocos2d-x/cocos/platform/android/java" />
             <option value="$PROJECT_DIR$/../depends/cocos2dx-store/soomla-native/compilations/android" />
             <option value="$PROJECT_DIR$/../depends/soomla-cocos2dx-core/soomla-native/compilations/android" />
           </set>
