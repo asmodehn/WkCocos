@@ -93,7 +93,7 @@ void MyPlayer::set_data_json(std::string data)
 			{
 				rapidjson::Value& time = alarmsarray[i];
 				time_t temptime_t = time[sTime].GetUint64();
-				struct tm * temptm = gmtime(&temptime_t);
+				struct tm * temptm = localtime(&temptime_t);
 				m_timer->setAlarm(time[sID].GetString(), *temptm);
 			}	
 		}
