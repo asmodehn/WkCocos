@@ -87,7 +87,8 @@ bool AppDelegate::applicationDidFinishLaunching() {
 	//LOG_INFO << "Add " << "cocos " << "appender" << std::endl;
 	//LOG_INFO << "Next Line" << std::endl;
 
-	loadscene->scheduleDLCCheck();
+	//TMP COMMENT to speed up android test until timeout is implemented https://github.com/asmodehn/WkCocos/issues/23
+	//loadscene->scheduleDLCCheck();
 
 	loadscene->addLoad({"HelloWorld.png"});
 
