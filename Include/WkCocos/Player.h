@@ -9,6 +9,11 @@
 
 #include "WkCocos/Utils/ToolBox.h"
 
+#include "json/document.h"
+#include "json/stringbuffer.h"
+#include "json/writer.h"
+
+
 #include <string>
 
 namespace WkCocos
@@ -92,8 +97,8 @@ namespace WkCocos
 		std::shared_ptr<Timer::Timer> m_timer;
 
 		//TODO : Implement Load and Save of Timers
-		virtual std::string get_data_json() = 0;
-		virtual void set_data_json(std::string data) = 0;
+		virtual void get_data_json(rapidjson::Document& doc, rapidjson::Document::AllocatorType& allocator) = 0;
+		virtual void set_data_json(rapidjson::Document& doc) = 0;
 	};
 
 	//constructors
@@ -194,15 +199,30 @@ namespace WkCocos
 	template <class T>
 	bool Player<T>::requestLoadData()
 	{
-		m_localdata->loadPlayerData([=](std::string data){
-			set_data_json(data);
+		m_localdata->loadPlayerData([=](std::string data)
+		{
+			rapidjson::Document doc;
+			doc.Parse<0>(data.c_str());
+			if (doc.HasParseError())
+			{
+				//if parse error (also empty string), we ignore existing data.
+				doc.SetObject();
+			}
+			set_data_json(doc);
 		});
 
 		if (m_onlinedata)
 		{
 			m_onlinedata->load(m_user, [=](std::string data)
 			{
-				set_data_json(data);
+				rapidjson::Document doc;
+				doc.Parse<0>(data.c_str());
+				if (doc.HasParseError())
+				{
+					//if parse error (also empty string), we ignore existing data.
+					doc.SetObject();
+				}
+				set_data_json(doc);
 				CCLOG("user data loaded : %s", data.c_str());
 				//TODO : decide if we keep local or online data
 			});
@@ -220,12 +240,26 @@ namespace WkCocos
 	template <class T>
 	bool Player<T>::requestSaveData()
 	{
-		m_localdata->savePlayerData(get_data_json());
+		// create document
+		rapidjson::Document doc;
+		doc.SetObject();
+		// must pass an allocator when the object may need to allocate memory
+		rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
+
+		get_data_json(doc, allocator);
+
+		// Get the save string
+		rapidjson::StringBuffer strbuf;
+		rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
+		doc.Accept(writer);
+
+		std::string save = std::string(strbuf.GetString());
+
+		m_localdata->savePlayerData(save);
 
 		if (m_onlinedata)
 		{
-			
-			m_onlinedata->save(m_user, get_data_json(), [=](std::string data)
+			m_onlinedata->save(m_user, save, [=](std::string data)
 			{
 				CCLOG("user data saved : %s", data.c_str());
 				//TODO : decide if we keep local or online data
