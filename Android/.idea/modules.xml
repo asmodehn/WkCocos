@@ -5,7 +5,6 @@
       <module fileurl="file://$PROJECT_DIR$/WkCocos.iml" filepath="$PROJECT_DIR$/WkCocos.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/../depends/cocos2d-x/cocos/platform/android/java/cocos2dx.iml" filepath="$PROJECT_DIR$/../depends/cocos2d-x/cocos/platform/android/java/cocos2dx.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../depends/cocos2d-x/cocos/2d/platform/android/java/cocos2dx.iml" filepath="$PROJECT_DIR$/../depends/cocos2d-x/cocos/2d/platform/android/java/cocos2dx.iml" />
       <module fileurl="file://$PROJECT_DIR$/../depends/cocos2dx-store/soomla-native/compilations/android/cocos2dx-store.iml" filepath="$PROJECT_DIR$/../depends/cocos2dx-store/soomla-native/compilations/android/cocos2dx-store.iml" />
       <module fileurl="file://$PROJECT_DIR$/../depends/soomla-cocos2dx-core/soomla-native/compilations/android/soomla-cocos2dx-core.iml" filepath="$PROJECT_DIR$/../depends/soomla-cocos2dx-core/soomla-native/compilations/android/soomla-cocos2dx-core.iml" />
       <module fileurl="file://$PROJECT_DIR$/lib/wkcocos.iml" filepath="$PROJECT_DIR$/lib/wkcocos.iml" />
