@@ -39,7 +39,7 @@ std::string MyPlayer::get_data_json()
 		rapidjson::Value time;
 		time.SetObject();
 		time.AddMember(sID, id->m_id.c_str(), allocator);
-		time.AddMember(sTime, mktime(&alarm->m_end), allocator);
+		time.AddMember(sTime, (uint64_t)mktime(&alarm->m_end), allocator);
 		alarms.PushBack(time, allocator);
 	}
 	doc.AddMember(sAlarms, alarms, allocator);
