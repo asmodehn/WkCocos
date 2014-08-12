@@ -3,7 +3,9 @@ import groovy.transform.Field
 @Field
 def buildNumber = System.getenv("BUILD_VERSION")
 if(buildNumber == null) {
-    buildNumber = 99999
+    //dev build is lower versionCode
+    // so there is no accident with accidentally uploading/downloading dev version.
+    buildNumber = 0
 }
 else {
     buildNumber=buildNumber.toInteger()
