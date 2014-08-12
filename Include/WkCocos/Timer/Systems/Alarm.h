@@ -13,12 +13,13 @@ namespace WkCocos
 		{
 			//system reading data to determine which loading component must be added.
 			struct Alarm : public entityx::System<Alarm> {
-				Alarm() {
-					struct tm now = ToolBox::getUTCTime();
-					oldtime = mktime(&now);
+				Alarm() : oldtime(0)/*, timerupdatesent(false)*/ {
+					//struct tm now = ToolBox::getUTCTime();
+					//oldtime = mktime(&now);
 				}
 				void update(entityx::ptr<entityx::EntityManager> es, entityx::ptr<entityx::EventManager> events, double dt) override;
 				time_t oldtime;
+				//bool timerupdatesent;
 			};
 
 		}//namespace Systems

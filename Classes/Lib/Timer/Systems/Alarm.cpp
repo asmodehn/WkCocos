@@ -33,13 +33,15 @@ namespace WkCocos
 					}
 					else
 					{
-						if (difftime(nowtime, oldtime))
+						if (/*!timerupdatesent && */difftime(nowtime, oldtime))
 						{
 							oldtime = nowtime;
 							events->emit<Events::TimerUpdate>(entity, id->m_id, delta);
+							//timerupdatesent = true;
 						}
 					}
 				}
+				//timerupdatesent = false;
 			};
 
 		}//namespace Systems

@@ -54,8 +54,17 @@ private:
 	const char * sGold = "gold";
 	const char * sAlarms = "alarms";
 	const char * sID = "id";
-	const char * sTime = "time";
+	//const char * sTime = "time";
 
+	const char * sSec = "sec";
+	const char * sMin = "min";
+	const char * sHour = "hour";
+	const char * sMday = "mday";
+	const char * sMon = "mon";
+	const char * sYear = "year";
+	const char * sWday = "wday";
+	const char * sYday = "yday";
+	const char * sIsdst = "isdst";
 };
 
 

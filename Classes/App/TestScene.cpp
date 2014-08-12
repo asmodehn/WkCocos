@@ -8,8 +8,6 @@
 #include <iostream>
 #include <numeric>
 
-USING_NS_CC;
-
 TestScene::TestScene() : Scene()
 {
 }
@@ -28,15 +26,15 @@ bool TestScene::init()
 		return false;
 	}
 
-	cocos2d::Size visibleSize = Director::getInstance()->getVisibleSize();
-	Vec2 origin = Director::getInstance()->getVisibleOrigin();
+	cocos2d::Size visibleSize = cocos2d::Director::getInstance()->getVisibleSize();
+	cocos2d::Vec2 origin = cocos2d::Director::getInstance()->getVisibleOrigin();
 
-	auto closeItem = MenuItemImage::create("CloseNormal.png", "CloseSelected.png",
+	auto closeItem = cocos2d::MenuItemImage::create("CloseNormal.png", "CloseSelected.png",
 		CC_CALLBACK_1(TestScene::menuCloseCallback, this));
-	closeItem->setPosition(Vec2(origin.x + visibleSize.width - closeItem->getContentSize().width / 2,
+	closeItem->setPosition(cocos2d::Vec2(origin.x + visibleSize.width - closeItem->getContentSize().width / 2,
 		origin.y + closeItem->getContentSize().height / 2));
-	auto menu = Menu::create(closeItem, NULL);
-	menu->setPosition(Vec2::ZERO);
+	auto menu = cocos2d::Menu::create(closeItem, NULL);
+	menu->setPosition(cocos2d::Vec2::ZERO);
 	addChild(menu, 1);
 
 	//Saving UI
@@ -46,7 +44,7 @@ bool TestScene::init()
 	saveroot->setVisible(true);
 	addChild(saveroot);
 	m_ui[SavingUI::id] = saveui;
-	saveroot->setPosition(Vec2(visibleSize.width * 0.25, visibleSize.height * 0.75));
+	saveroot->setPosition(cocos2d::Vec2(visibleSize.width * 0.25, visibleSize.height * 0.75));
 	//*/
 
 	//TimerUI
@@ -56,7 +54,7 @@ bool TestScene::init()
 	timerroot->setVisible(true);
 	addChild(timerroot);
 	m_ui[TimerUI::id] = timerui;
-	timerroot->setPosition(Vec2(visibleSize.width * 0.75, visibleSize.height * 0.75));
+	timerroot->setPosition(cocos2d::Vec2(visibleSize.width * 0.75, visibleSize.height * 0.75));
 	//*/
 
 	//Error UI
@@ -66,7 +64,7 @@ bool TestScene::init()
 	errorroot->setEnabled(false);
 	errorroot->setVisible(false);
 	m_ui[ErrorUI::id] = errorui;
-	errorroot->setPosition(Vec2(visibleSize.width * 0.75, visibleSize.height * 0.25));
+	errorroot->setPosition(cocos2d::Vec2(visibleSize.width * 0.75, visibleSize.height * 0.25));
 	//*/
 
 	errorui->setRefreshCallback([this, errorui](){
@@ -80,6 +78,13 @@ bool TestScene::init()
 		errorui->deactivate();
 
 	});
+
+	auto sprite = cocos2d::Sprite::create("HelloWorld.png");
+	sprite->setScaleX((visibleSize.width / 2 - closeItem->getContentSize().width) / sprite->getContentSize().width);
+	sprite->setScaleY((visibleSize.height / 2 - closeItem->getContentSize().height) / sprite->getContentSize().height);
+	sprite->setPosition(cocos2d::Vec2((visibleSize.width / 2 + closeItem->getPositionX() - closeItem->getContentSize().width / 2) / 2,
+		(visibleSize.height / 2 + closeItem->getPositionY() + closeItem->getContentSize().height / 2) / 2));
+	addChild(sprite, 0);
 
 	return true;
 }
@@ -117,7 +122,7 @@ void TestScene::menuCloseCallback(Ref* pSender)
 	return;
 #endif
 
-	Director::getInstance()->end();
+	cocos2d::Director::getInstance()->end();
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
 	exit(0);
