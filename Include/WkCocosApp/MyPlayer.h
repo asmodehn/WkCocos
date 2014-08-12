@@ -24,12 +24,12 @@ public:
 	/**
 	* data accessor as json string
 	*/
-	std::string get_data_json();
+	void get_data_json(rapidjson::Document& doc, rapidjson::Document::AllocatorType& allocator) override;
 
 	/**
 	* data setter from json string
 	*/
-	void set_data_json(std::string data);
+	void set_data_json(rapidjson::Document& doc) override;
 
 	//ingame currency
 	unsigned int m_gold;

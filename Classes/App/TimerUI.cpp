@@ -58,9 +58,7 @@ void TimerUI::startCallback(Ref* widgetRef, ui::Widget::TouchEventType input)
 	{
 		CCLOG("START BUTTON CLICKED");
 		
-		GameLogic::Instance().getPlayer().setTimer("testing", 20, [=](std::string id, std::string left){
-			m_countLabel->setText(left);
-		});
+		GameLogic::Instance().getPlayer().setTimer("testing", 20);
 		
 	}
 }
