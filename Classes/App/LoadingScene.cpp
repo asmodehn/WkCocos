@@ -175,8 +175,7 @@ void LoadingScene::progress_CB(float pct)
 	/*LoadingUI* ui = getInterface<LoadingUI>(LoadingUI::id);
 	if (ui)
 	{
-		ui::Widget* loadbarw = ui->getRoot()->getChildByName("LoadingBar"); //loadbarpnl->getChildByName("LoadingBar");
-		ui::LoadingBar* loadbar = dynamic_cast<ui::LoadingBar*>(loadbarw);
+		ui::LoadingBar* loadbar = ui->getRoot()->getChildByName<ui::LoadingBar*>(loadbarw);
 
 		if (loadbar)
 			loadbar->setPercent(static_cast<int>(pct * 100));
