@@ -1,5 +1,5 @@
-#ifndef __UIACTION_H__
-#define __UIACTION_H__
+#ifndef __WKCOCOS_ACTION_UIACTION_H__
+#define __WKCOCOS_ACTION_UIACTION_H__
 
 #include "cocos2d.h"
 
@@ -85,6 +85,6 @@ namespace WkCocos
 
 	};
 
-}//namespace wkcocos
+}//namespace WkCocos
 
-#endif //__UIACTION_H__
+#endif //__WKCOCOS_ACTION_UIACTION_H__
