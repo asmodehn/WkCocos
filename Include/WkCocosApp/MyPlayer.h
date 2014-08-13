@@ -2,6 +2,7 @@
 #define __MYPLAYER_H__
 
 #include "WkCocos/Player.h"
+#include "WkCocos/Shop/ShopAssets.h"
 
 /**
 * This is the game player
@@ -13,7 +14,7 @@ public:
 	/**
 	* Constructor
 	*/
-	MyPlayer(std::shared_ptr<WkCocos::LocalData::LocalDataManager> localdatamngr);
+	MyPlayer(std::shared_ptr<WkCocos::LocalData::LocalDataManager> localdatamngr, std::string license, std::string secret, std::shared_ptr<WkCocos::Shop::ShopAssets> shopAssets);
 
 	/**
 	* Destructor

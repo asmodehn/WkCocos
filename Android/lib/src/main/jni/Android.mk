@@ -52,7 +52,7 @@ LOCAL_SRC_FILES := jni.cpp \
                    ../../../../../Classes/Lib/OnlineData/Systems/User.cpp \
                    ../../../../../Classes/Lib/Shop/Shop.cpp \
                    ../../../../../Classes/Lib/Shop/ShopEventHandler.cpp \
-                   ../../../../../Classes/Lib/Shop/MuffinRushAssets.cpp \
+                   ../../../../../Classes/Lib/Shop/ShopAssets.cpp \
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../../../../Include
 

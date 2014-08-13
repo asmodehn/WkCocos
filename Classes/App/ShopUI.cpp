@@ -8,6 +8,9 @@
 
 const std::string ShopUI::id = "shop";
 
+//to not declare whole cocos namespace but sthill have cocos macros work...
+using cocos2d::Ref;
+
 ShopUI::ShopUI()
 	: Interface()
 {
@@ -20,16 +23,62 @@ ShopUI::ShopUI()
 	cocos2d::Size visibleSize = cocos2d::Director::getInstance()->getVisibleSize();
 	cocos2d::Vec2 origin = cocos2d::Director::getInstance()->getVisibleOrigin();
 
-	m_buyButton = cocos2d::ui::Button::create("SkipNormal.png", "SkipSelected.png");
-	m_buyButton->addTouchEventListener(CC_CALLBACK_2(ShopUI::buyCallback, this));
-	m_buyButton->setPosition(cocos2d::Vec2(
-		(visibleSize.width - m_buyButton->getContentSize().width) / 4,
-		(visibleSize.height - m_buyButton->getContentSize().height) / 3
-	));
-	m_widget->addChild(m_buyButton);
-	m_buyLabel = cocos2d::ui::Text::create("BUY", "Arial", 21);
-	m_buyLabel->setPosition(m_buyButton->getPosition() + cocos2d::Vec2(0, m_buyButton->getContentSize().height));
-	m_widget->addChild(m_buyLabel);
+	//building test UI based on ShopAssets content.
+	std::vector<WkCocos::Shop::ShopAssets::VirtualCurrency> curncy = GameLogic::Instance().getShopAssets().getCurrenciesSTD();
+	std::vector<WkCocos::Shop::ShopAssets::VirtualCurrencyPack> curncyPacks = GameLogic::Instance().getShopAssets().getCurrencyPacksSTD();
+	
+	for (auto c = curncy.begin(); c != curncy.end(); ++c)
+	{
+		//filtering which pack belong to this currency
+		std::vector<WkCocos::Shop::ShopAssets::VirtualCurrencyPack> curncyPacksfiltered;
+		std::copy_if(curncyPacks.begin(), curncyPacks.end(), std::back_inserter(curncyPacksfiltered), [c](WkCocos::Shop::ShopAssets::VirtualCurrencyPack vcp) -> bool { return vcp.currencyID == c->itemid; });
+
+		//creating label for currency
+		cocos2d::ui::Text* curtxtui = cocos2d::ui::Text::create(c->name, "Arial", 21);
+		curtxtui->setPosition(cocos2d::Vec2(
+			visibleSize.width / (curncyPacksfiltered.size()+2),
+			visibleSize.height * ((curncy.end() - c) +1) / (curncy.size() + 2))
+			);
+		m_curLabel.push_back(curtxtui);
+		m_widget->addChild(curtxtui);
+
+		//parsing currency packs
+		for (auto p = curncyPacksfiltered.begin(); p != curncyPacksfiltered.end(); ++p)
+		{
+			//creating button
+			cocos2d::ui::Button * butt = cocos2d::ui::Button::create("SkipNormal.png", "SkipSelected.png");
+			butt->addTouchEventListener(std::bind(&ShopUI::buyCallback, this, *p, std::placeholders::_1,std::placeholders::_2));
+			butt->setPosition(cocos2d::Vec2(
+				(visibleSize.width - butt->getContentSize().width) * ((curncyPacksfiltered.end() - p) +1) / (curncyPacksfiltered.size() + 2 ),
+				curtxtui->getPosition().y
+				)
+			);
+			m_buyCurButton.push_back(butt);
+			m_widget->addChild(butt);
+
+			//creating label
+			cocos2d::ui::Text* curptxtui = cocos2d::ui::Text::create(p->itemid, "Arial", 21);
+			curptxtui->setPosition(cocos2d::Vec2(butt->getPosition() + cocos2d::Vec2(0, butt->getContentSize().height))
+			);
+			m_curLabel.push_back(curptxtui);
+			m_widget->addChild(curptxtui);
+		}
+
+	}
+
+	//building global shop UI
+
+	//button to test getting information from googleplay ( update in prices )
+	m_refreshButton = cocos2d::ui::Button::create("RefreshNormal.png", "RefreshSelected.png");
+	m_refreshButton->addTouchEventListener(CC_CALLBACK_2(ShopUI::refreshCallback, this));
+	m_refreshButton->setPosition(cocos2d::Vec2(
+		(visibleSize.width - m_refreshButton->getContentSize().width) * 2 / 4,
+		(visibleSize.height - m_refreshButton->getContentSize().height) / (curncy.size() + 2)
+		));
+	m_widget->addChild(m_refreshButton);
+	m_refreshLabel = cocos2d::ui::Text::create("REFRESH", "Arial", 21);
+	m_refreshLabel->setPosition(m_refreshButton->getPosition() + cocos2d::Vec2(0, m_refreshButton->getContentSize().height));
+	m_widget->addChild(m_refreshLabel);
 
 	if (m_widget)
 	{
@@ -46,22 +95,40 @@ void ShopUI::update(float delta)
 {
 }
 
-void ShopUI::buyCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input)
+void ShopUI::buyCallback( WkCocos::Shop::ShopAssets::VirtualCurrencyPack vcp, cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input)
 {
 	if (input == cocos2d::ui::Widget::TouchEventType::ENDED)
 	{
-		CCLOG("BUY BUTTON CLICKED");
+		CCLOG("%s BUY BUTTON CLICKED", vcp.itemid);
 
 		//test buy
 
 		soomla::CCError *soomlaError = NULL;
-		soomla::CCStoreInventory::sharedStoreInventory()->buyItem("muffins_10", &soomlaError);
+		soomla::CCStoreInventory::sharedStoreInventory()->buyItem(vcp.itemid.c_str(), &soomlaError);
+		
 		if (soomlaError) {
-			soomla::CCStoreUtils::logException("StoreBScene::onBuy", soomlaError);
+			soomla::CCStoreUtils::logException("ShopUI::buyCallback", soomlaError);
 			return;
 		}
 	}
 }
 
+
+void ShopUI::refreshCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input)
+{
+	if (input == cocos2d::ui::Widget::TouchEventType::ENDED)
+	{
+		CCLOG("REFRESH BUTTON CLICKED");
+
+		//test buy
+
+		soomla::CCError *soomlaError = NULL;
+		soomla::CCSoomlaStore::getInstance()->refreshInventory();
+		if (soomlaError) {
+			soomla::CCStoreUtils::logException("ShopUI::refreshCallback", soomlaError);
+			return;
+		}
+	}
+}
 
 

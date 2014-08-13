@@ -4,13 +4,19 @@
 #include "json/stringbuffer.h"
 #include "json/writer.h"
 
-MyPlayer::MyPlayer(std::shared_ptr<WkCocos::LocalData::LocalDataManager> localdatamngr)
-: WkCocos::Player<MyPlayer>(localdatamngr)
+MyPlayer::MyPlayer(std::shared_ptr<WkCocos::LocalData::LocalDataManager> localdatamngr, std::string license, std::string secret, std::shared_ptr<WkCocos::Shop::ShopAssets> shopAssets)
+: WkCocos::Player<MyPlayer>(localdatamngr,license,secret, shopAssets)
 {
+	//TMP
+	openShop();
 }
 
 MyPlayer::~MyPlayer()
-{}
+{
+
+	//TMP
+	closeShop();
+}
 
 
 /**

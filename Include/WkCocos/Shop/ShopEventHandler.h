@@ -52,6 +52,8 @@ public:
 
 	virtual void onMarketItemsRefreshed();
 
+	virtual void onMarketItemRefreshed(soomla::CCMarketItem *mi);
+
 	virtual void onMarketItemsRefreshStarted();
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)

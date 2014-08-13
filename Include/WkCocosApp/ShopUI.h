@@ -6,6 +6,8 @@
 
 #include "WkCocos/Interface.h"
 
+#include "WkCocos/Shop/ShopAssets.h"
+
 /**
 * This UI is the main menu UI
 */
@@ -27,12 +29,16 @@ public:
 	
 	void update(float delta);
 
-	void buyCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input);
+	void buyCallback(WkCocos::Shop::ShopAssets::VirtualCurrencyPack vcp, cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input);
+	void refreshCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input);
 
 protected:
 
-	cocos2d::ui::Button* m_buyButton;
-	cocos2d::ui::Text* m_buyLabel;
+	std::vector<cocos2d::ui::Text*> m_curLabel;
+	std::vector<cocos2d::ui::Button*> m_buyCurButton;
+	
+	cocos2d::ui::Button* m_refreshButton;
+	cocos2d::ui::Text* m_refreshLabel;
 };
 
 

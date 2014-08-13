@@ -5,6 +5,7 @@
 #include "WkCocos/Utils/UUID.h"
 #include "WkCocos/LocalData/LocalDataManager.h"
 #include "WkCocos/OnlineData/OnlineDataManager.h"
+#include "WkCocos/Shop/Shop.h"
 
 #include <string>
 
@@ -27,8 +28,11 @@ namespace WkCocos
 		
 		void setOnlineDataManager(std::shared_ptr<OnlineData::OnlineDataManager> onlinedata);
 		
+		void openShop();
+		void closeShop();
+
 	protected:
-		Player(std::shared_ptr<LocalData::LocalDataManager> localdata);
+		Player(std::shared_ptr<LocalData::LocalDataManager> localdata, std::string licensekey, std::string secretkey, std::shared_ptr<Shop::ShopAssets> shopAssets);
 
 		bool requestLoadData();
 
@@ -40,6 +44,8 @@ namespace WkCocos
 
 		std::shared_ptr<LocalData::LocalDataManager> m_localdata;
 		std::shared_ptr<OnlineData::OnlineDataManager> m_onlinedata;
+		
+		std::shared_ptr<WkCocos::Shop::Shop> m_shop;
 
 		virtual std::string get_data_json() = 0;
 		virtual void set_data_json(std::string data) = 0;
@@ -47,8 +53,9 @@ namespace WkCocos
 
 	//constructors
 	template <class T>
-	Player<T>::Player(std::shared_ptr<LocalData::LocalDataManager> localdata)
+	Player<T>::Player(std::shared_ptr<LocalData::LocalDataManager> localdata, std::string licensekey, std::string secretkey, std::shared_ptr<Shop::ShopAssets> shopAssets)
 		: m_localdata(localdata)
+		, m_shop(new WkCocos::Shop::Shop(licensekey, secretkey, shopAssets))
 	{
 		//registering player class in cocos update loop
 		cocos2d::Director::getInstance()->getScheduler()->schedule(std::bind(&Player<T>::Update, this, std::placeholders::_1), this, 1.f / 15, false, "player_update");
@@ -101,6 +108,7 @@ namespace WkCocos
 		});
 
 		requestLoadData();
+
 	}
 	
 	template <class T>
@@ -185,6 +193,20 @@ namespace WkCocos
 			return false;
 		}
 	}
+
+	template <class T>
+	void Player<T>::openShop()
+	{
+		m_shop->activate();
+		
+	}
+
+	template <class T>
+	void Player<T>::closeShop()
+	{
+		m_shop->deactivate();
+	}
+
 
 	template <class T>
 	void Player<T>::Update(float deltatime)

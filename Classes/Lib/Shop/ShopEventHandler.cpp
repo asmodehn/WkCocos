@@ -75,7 +75,7 @@ void ShopEventHandler::onUnexpectedErrorInStore() {
 }
 
 void ShopEventHandler::onStoreControllerInitialized() {
-	soomla::CCStoreUtils::logDebug(TAG, "StoreContorllerInitialized");
+	soomla::CCStoreUtils::logDebug(TAG, "StoreControllerInitialized");
 }
 
 void ShopEventHandler::onMarketItemsRefreshed() {
@@ -84,6 +84,19 @@ void ShopEventHandler::onMarketItemsRefreshed() {
 
 void ShopEventHandler::onMarketItemsRefreshStarted() {
 	soomla::CCStoreUtils::logDebug(TAG, "MarketItemsRefreshStarted");
+}
+
+void ShopEventHandler::onMarketItemRefreshed(soomla::CCMarketItem *mi)
+{
+	std::string productID = mi->getProductId()->getCString();
+	std::string marketPrice = mi->getMarketPrice()->getCString();
+
+	// TO DO: store productID and marketPrice into a std::map<string, string> to use in your app
+
+	std::ostringstream logmsg;
+	logmsg << "[SOOMLA MARKET onMarketItemRefreshed] product:[" << productID << "] market price: [" << marketPrice << std::endl;
+
+	soomla::CCStoreUtils::logDebug(TAG, logmsg.str().c_str());
 }
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)

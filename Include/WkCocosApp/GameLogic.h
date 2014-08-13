@@ -4,6 +4,7 @@
 #include "WkCocos/LocalData/LocalDataManager.h"
 #include "WkCocos/OnlineData/OnlineDataManager.h"
 #include "WkCocos/Shop/Shop.h"
+#include "WkCocos/Shop/ShopAssets.h"
 
 #include "WkCocosApp/MyPlayer.h"
 #include "WkCocosApp/MyOptions.h"
@@ -39,6 +40,12 @@ public:
 		return *(m_options.get());
 	}
 
+	WkCocos::Shop::ShopAssets& getShopAssets()
+	{
+		return *(m_shopAssets.get());
+	}
+
+
 private:
 	GameLogic();
 	~GameLogic();
@@ -46,8 +53,7 @@ private:
 	//overall game features ( shared between concepts )
 	std::shared_ptr<WkCocos::LocalData::LocalDataManager> m_localdatamngr;
 	std::shared_ptr<WkCocos::OnlineData::OnlineDataManager> m_onlinedatamngr;
-	
-	std::shared_ptr<WkCocos::Shop::Shop> m_shop;
+	std::shared_ptr<WkCocos::Shop::ShopAssets> m_shopAssets;
 
 	//overall game concepts
 	std::unique_ptr<MyPlayer> m_player;
