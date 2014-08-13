@@ -17,7 +17,7 @@ namespace WkCocos
 			/**
 			* Constructor 
 			*/
-			LocalDataManager(std::function<void()> error_CB);
+			LocalDataManager(std::function<void(std::string)> error_CB);
 
 			/**
 			* Destructor
@@ -44,7 +44,7 @@ namespace WkCocos
 			entityx::ptr<entityx::EntityManager> entity_manager;
 			entityx::ptr<entityx::SystemManager> system_manager;
 
-			std::function<void()> m_error_callback;
+			std::function<void(std::string)> m_error_callback;
 
 		};
 

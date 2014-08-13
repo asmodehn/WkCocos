@@ -13,7 +13,7 @@ namespace WkCocos
 	namespace LocalData
 	{
 
-		LocalDataManager::LocalDataManager(std::function<void()> error_CB)
+		LocalDataManager::LocalDataManager(std::function<void(std::string)> error_CB)
 		: m_error_callback(error_CB)
 		, event_manager(entityx::EventManager::make())
 		, entity_manager(entityx::EntityManager::make(event_manager))

@@ -36,7 +36,9 @@ namespace WkCocos
 						if (/*!timerupdatesent && */difftime(nowtime, oldtime))
 						{
 							oldtime = nowtime;
-							events->emit<Events::TimerUpdate>(entity, id->m_id, delta);
+							tm temptime = {(time_t)delta, 0, 0, 0, 0, 0, 0, 0, 0};
+							mktime(&temptime);
+							events->emit<Events::TimerUpdate>(entity, id->m_id, temptime);
 							//timerupdatesent = true;
 						}
 					}

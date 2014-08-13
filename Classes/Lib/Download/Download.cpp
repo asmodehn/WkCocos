@@ -22,7 +22,7 @@ namespace WkCocos
 
 		Download::Download(unsigned short concurrent_downloads,
 			std::function<void(float)> progress_callback,
-			std::function<void()> error_callback
+			std::function<void(std::string)> error_callback
 			)
 			: m_concurrent_downloads(concurrent_downloads)
 			, m_progress_callback(progress_callback)

@@ -33,7 +33,7 @@ public:
 	*/
 	void scheduleDLCCheck();
 
-	void error_CB();
+	void error_CB(std::string msg);
 
 	//expects pct in [0..1]
 	void progress_CB(float pct);

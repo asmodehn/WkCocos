@@ -22,7 +22,7 @@ namespace WkCocos
 
 		Preload::Preload(unsigned short concurrent_loads,
 			std::function<void(float)> progress_callback,
-			std::function<void()> error_callback
+			std::function<void(std::string)> error_callback
 			)
 			: m_concurrent_loads(concurrent_loads)
 			, m_progress_callback(progress_callback)

@@ -10,20 +10,20 @@ namespace WkCocos
 		namespace Events
 		{
 			struct TimerUpdate : public entityx::Event<TimerUpdate> {
-				TimerUpdate(entityx::Entity e, const std::string& timerID, double time) 
+				TimerUpdate(entityx::Entity e, const std::string& timerID, tm time) 
 				: timer(e)
 				, id(timerID)
 				, time_left(time)
 				{}
 
-				int getTimeLeft() const
+				tm getTimeLeft() const
 				{
-					return (int) time_left;
+					return time_left;
 				}
 
 				entityx::Entity timer;
 				std::string		id;
-				double			time_left;
+				tm				time_left;
 			};
 
 		}//namespace Events

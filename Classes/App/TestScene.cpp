@@ -105,13 +105,13 @@ void TestScene::update(float delta)
 	Scene::update(delta);
 }
 
-void TestScene::error_CB()
+void TestScene::error_CB(std::string msg)
 {
-	CCLOGERROR("ERROR");
+	//CCLOGERROR("ERROR");
 
 	//Error UI
 	ErrorUI* errorui = getInterface<ErrorUI>(ErrorUI::id);
-	errorui->activate();
+	errorui->activate(msg);
 	
 }
 

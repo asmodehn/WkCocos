@@ -32,7 +32,7 @@ public:
 	void refreshCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input);
 	void skipCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input);
 
-	void activate();
+	void activate(std::string msg);
 	void deactivate();
 
 	std::function<void()> m_refreshCB;
@@ -41,6 +41,7 @@ public:
 protected:
 	cocos2d::ui::Button* m_refreshButton;
 	cocos2d::ui::Button* m_skipButton;
+	cocos2d::ui::Text* m_label;
 };
 
 #endif // __ERRORUI_H__

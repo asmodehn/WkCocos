@@ -57,7 +57,7 @@ TimerUI::~TimerUI()
 
 void TimerUI::receive(const WkCocos::Timer::Events::TimerUpdate &tu)
 {
-	m_countLabel->setText(WkCocos::ToolBox::itoa(tu.getTimeLeft()));
+	m_countLabel->setText(WkCocos::ToolBox::itoa(tu.getTimeLeft().tm_min) + " min " + WkCocos::ToolBox::itoa(tu.getTimeLeft().tm_sec) + " sec");
 }
 
 void TimerUI::receive(const WkCocos::Timer::Events::AlarmOff &ao)
