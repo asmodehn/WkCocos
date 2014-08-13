@@ -57,11 +57,18 @@ ShopUI::ShopUI()
 			m_widget->addChild(butt);
 
 			//creating label
-			cocos2d::ui::Text* curptxtui = cocos2d::ui::Text::create(p->itemid, "Arial", 21);
+			cocos2d::ui::Text* curptxtui = cocos2d::ui::Text::create(p->name, "Arial", 21);
 			curptxtui->setPosition(cocos2d::Vec2(butt->getPosition() + cocos2d::Vec2(0, butt->getContentSize().height))
 			);
 			m_curLabel.push_back(curptxtui);
 			m_widget->addChild(curptxtui);
+
+			//creating price text
+			cocos2d::ui::Text* curppriceui = cocos2d::ui::Text::create(WkCocos::ToolBox::itoa(p->price), "Arial", 21);
+			curppriceui->setPosition(cocos2d::Vec2(butt->getPosition() - cocos2d::Vec2(0, butt->getContentSize().height))
+				);
+			m_curLabel.push_back(curppriceui);
+			m_widget->addChild(curppriceui);
 		}
 
 	}
@@ -99,7 +106,7 @@ void ShopUI::buyCallback( WkCocos::Shop::ShopAssets::VirtualCurrencyPack vcp, co
 {
 	if (input == cocos2d::ui::Widget::TouchEventType::ENDED)
 	{
-		CCLOG("%s BUY BUTTON CLICKED", vcp.itemid);
+		CCLOG("BUY ITEM %s BUTTON CLICKED", vcp.productID.c_str());
 
 		//test buy
 
