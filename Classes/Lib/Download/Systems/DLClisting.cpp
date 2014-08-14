@@ -87,9 +87,10 @@ namespace WkCocos
 						dllist->m_retries--;
 						if (0 == dllist->m_retries)
 						{
+							std::string tempURL = url.c_str();
 							CCLOGERROR("DLClisting can not read from %s, error code is %d", url.c_str(), res);
 							//signal error
-							events->emit<Events::Error>(entity);
+							events->emit<Events::Error>(entity, "DLClisting can not read from " + tempURL);
 						}
 					}
 					else

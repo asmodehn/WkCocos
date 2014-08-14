@@ -1,5 +1,6 @@
 #include "WkCocos/Download/Systems/Error.h"
 #include "WkCocos/Download/Events/Error.h"
+#include "WkCocos/Download/Comp/CurlDL.h"
 
 namespace WkCocos
 {
@@ -18,7 +19,7 @@ namespace WkCocos
 			void Error::update(entityx::ptr<entityx::EntityManager> entities, entityx::ptr<entityx::EventManager> events, double dt) {}
 
 			void Error::receive(const Events::Error &err) {
-				m_error_CB("Download error");
+				m_error_CB(err.msg);
 			}
 
 					

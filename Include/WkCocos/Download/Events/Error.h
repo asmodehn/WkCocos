@@ -11,9 +11,12 @@ namespace WkCocos
 		{
 			struct Error : public entityx::Event<Error>
 			{
-				Error(entityx::Entity e) : errored_entity(e) {}
+				Error(entityx::Entity e, std::string msg) : errored_entity(e), msg(msg) {}
 
 				entityx::Entity errored_entity;
+
+				std::string msg;
+
 			};
 
 		}//namespace Event

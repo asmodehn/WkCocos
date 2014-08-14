@@ -15,7 +15,7 @@ ErrorUI::ErrorUI() : Interface()
 	m_widget->setContentSize(cocos2d::Size(visibleSize.width / 2, visibleSize.height / 2));
 	cocos2d::Size widgetSize = m_widget->getContentSize();
 
-	m_label = cocos2d::ui::Text::create("ERROR", "Arial", 48);
+	m_label = cocos2d::ui::Text::create("ERROR", "Arial", 24);
 	m_label->setPosition(cocos2d::Vec2(0, m_label->getContentSize().height / 2));
 	m_widget->addChild(m_label);
 

@@ -82,7 +82,7 @@ namespace WkCocos
 					}
 					else if (entity.component<Comp::CurlDL>()) //this is an entity with download ongoing
 					{
-						auto dl = entity.component < Comp::CurlDL>();
+						auto dl = entity.component <Comp::CurlDL>();
 						if (dl->getFuture().wait_for(std::chrono::milliseconds(0)) == std::future_status::ready)
 						{
 							//download is done
@@ -92,10 +92,13 @@ namespace WkCocos
 							CURLcode errcode = dl->getFuture().get();
 							if (CURLE_OK != errcode)
 							{	
+								//std::string tempErrorMsg = dl->getErrorMsg().c_str();
 								CCLOGERROR("CURL ERROR : %s", dl->getErrorMsg().c_str());
+								std::string tempPath = remotefile->getPath().c_str();
+								//std::string tempURL = remotefile->getURL().c_str();
 								CCLOGERROR("ERROR Downloading %s from %s. CANCELLING.", remotefile->getPath().c_str(), remotefile->getURL().c_str());
 								//signal error
-								events->emit<Events::Error>(entity);
+								events->emit<Events::Error>(entity, "ERROR Downloading " + tempPath);
 								//we give up on this entity
 								entity.destroy();
 							}

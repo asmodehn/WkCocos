@@ -15,7 +15,6 @@ namespace WkCocos
 			//system finding error and launching error behavior
 			struct Error : public entityx::System<Error>, entityx::Receiver<Error>
 			{
-
 				Error(std::function<void(std::string)> error_CB);
 					
 				void configure(entityx::ptr<entityx::EventManager> event_manager) override;
@@ -25,6 +24,7 @@ namespace WkCocos
 				void receive(const Events::Error &err);
 
 				std::function<void(std::string)> m_error_CB;
+
 			};
 		}//namespace Systems
 	}//namespace Download
