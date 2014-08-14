@@ -44,10 +44,17 @@ namespace WkCocos
 		}
 
 		/**
+		* get widget in hierarchy
+		* @param name Name of the widget to find
+		* @root current level of hierarchy, if null, use m_widget
+		*/
+		cocos2d::ui::Widget* getWidgetInHierarchy(const std::string& name, cocos2d::ui::Widget* root = nullptr);
+
+		/**
 		* Get ui ID.
 		* @return UI ID
 		*/
-		inline std::string getFilepath() const { return m_filepath; }
+		inline const std::string& getFilepath() const { return m_filepath; }
 
 		/**
 		* update function that is called by Scene to update UI everyframe if needed.
