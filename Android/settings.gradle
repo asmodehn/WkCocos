@@ -4,7 +4,5 @@ include ':wkcocos'
 project(':wkcocos').projectDir = new File('lib')
 include ':cocos2dx'
 project(':cocos2dx').projectDir = new File('../depends/cocos2d-x/cocos/platform/android/java')
-include(':soomla-cocos2dx-core')
-project(':soomla-cocos2dx-core').projectDir = new File('../depends/soomla-cocos2dx-core/soomla-native/compilations/android/')
 include(':cocos2dx-store')
 project(':cocos2dx-store').projectDir = new File('../depends/cocos2dx-store/soomla-native/compilations/android/')
