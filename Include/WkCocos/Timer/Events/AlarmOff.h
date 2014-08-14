@@ -9,11 +9,14 @@ namespace WkCocos
 	{
 		namespace Events
 		{
-			struct AlarmOff : public entityx::Event<AlarmOff> {
-				AlarmOff(entityx::Entity e, const std::string& timerID)
-				: alarmoff_entity(e)
-				, id(timerID)
-				{}
+			struct AlarmOff : public entityx::Event<AlarmOff>
+			{
+				AlarmOff(entityx::Entity e)	: alarmoff_entity(e)
+				{
+					auto tempEntity = e.component<Comp::ID>();
+					id = tempEntity->m_id;
+
+				}
 
 				entityx::Entity alarmoff_entity;
 				std::string		id;

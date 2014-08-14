@@ -26,7 +26,7 @@ namespace WkCocos
 					double delta = difftime(start, nowtime); 
 					if (delta < 0) // becomes true when delta is -1, this adds 1 sec to alarm length
 					{
-						events->emit<Events::AlarmOff>(entity, id->m_id);
+						events->emit<Events::AlarmOff>(entity);
 						entity.remove<Comp::Alarm>();
 						entity.remove<Comp::ID>();
 						entity.destroy();
@@ -38,7 +38,7 @@ namespace WkCocos
 							oldtime = nowtime;
 							tm temptime = {(time_t)delta, 0, 0, 0, 0, 0, 0, 0, 0};
 							mktime(&temptime);
-							events->emit<Events::TimerUpdate>(entity, id->m_id, temptime);
+							events->emit<Events::TimerUpdate>(entity, temptime);
 							//timerupdatesent = true;
 						}
 					}
