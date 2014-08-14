@@ -22,6 +22,3 @@
 	path = depends/cocos2dx-store
 	url = https://github.com/asmodehn/cocos2dx-store.git
 	branch = master
-[submodule "depends/jansson"]
-	path = depends/jansson
-	url = https://github.com/asmodehn/jansson.git
