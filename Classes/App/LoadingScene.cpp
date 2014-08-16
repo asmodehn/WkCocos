@@ -19,11 +19,14 @@ LoadingScene::LoadingScene() : Scene()
 , m_preloadManager(nullptr)
 {
 	m_downloadManager = new WkCocos::Download::Download(5,
-		std::bind(&LoadingScene::progress_CB, this, std::placeholders::_1),
-		std::bind(&LoadingScene::error_CB, this, std::placeholders::_1));
+		std::bind(&LoadingScene::progress_CB, this, std::placeholders::_1)/*,
+		std::bind(&LoadingScene::error_CB, this, std::placeholders::_1)*/);
 	m_preloadManager = new WkCocos::Preload::Preload(1,
-		std::bind(&LoadingScene::progress_CB, this, std::placeholders::_1),
-		std::bind(&LoadingScene::error_CB, this, std::placeholders::_1));
+		std::bind(&LoadingScene::progress_CB, this, std::placeholders::_1)/*,
+		std::bind(&LoadingScene::error_CB, this, std::placeholders::_1)*/);
+
+	m_downloadManager->getEventManager()->subscribe<WkCocos::Download::Events::Error>(*this);
+	m_preloadManager->getEventManager()->subscribe<WkCocos::Preload::Events::Error>(*this);
 }
 
 LoadingScene::~LoadingScene()
@@ -66,12 +69,12 @@ bool LoadingScene::init()
 	errorui->setRefreshCallback([this, errorui](){
 		
 		m_downloadManager = new WkCocos::Download::Download(5,
-			std::bind(&LoadingScene::progress_CB, this, std::placeholders::_1),
-			std::bind(&LoadingScene::error_CB, this, std::placeholders::_1));
+			std::bind(&LoadingScene::progress_CB, this, std::placeholders::_1)/*,
+			std::bind(&LoadingScene::error_CB, this, std::placeholders::_1)*/);
 
 		m_preloadManager = new WkCocos::Preload::Preload(1,
-			std::bind(&LoadingScene::progress_CB, this, std::placeholders::_1),
-			std::bind(&LoadingScene::error_CB, this, std::placeholders::_1));
+			std::bind(&LoadingScene::progress_CB, this, std::placeholders::_1)/*,
+			std::bind(&LoadingScene::error_CB, this, std::placeholders::_1)*/);
 
 		m_downloadManager->start();
 		m_preloadManager->start();
@@ -203,4 +206,20 @@ void LoadingScene::error_CB(std::string msg)
 
 	m_loadMan_del_scheduled = true;
 
+}
+
+void LoadingScene::receive(const WkCocos::Download::Events::Error &de)
+{
+	ErrorUI* errorui = getInterface<ErrorUI>(ErrorUI::id);
+	errorui->activate(de.msg);
+
+	m_loadMan_del_scheduled = true;
+}
+
+void LoadingScene::receive(const WkCocos::Preload::Events::Error &pe)
+{
+	ErrorUI* errorui = getInterface<ErrorUI>(ErrorUI::id);
+	errorui->activate(pe.msg);
+
+	m_loadMan_del_scheduled = true;
 }

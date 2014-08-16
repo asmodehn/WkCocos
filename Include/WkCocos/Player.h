@@ -72,7 +72,10 @@ namespace WkCocos
 		std::shared_ptr<Timer::Timer> getTimermgr()
 		{
 			return  m_timer;
-
+		}
+		std::shared_ptr<LocalData::LocalDataManager> getLocalDatamgr()
+		{
+			return  m_localdata;
 		}
 
 	protected:
@@ -91,8 +94,29 @@ namespace WkCocos
 		std::shared_ptr<Timer::Timer> m_timer;
 
 		//TODO : Implement Load and Save of Timers
+		//virtual std::string get_data_json();
 		virtual std::string get_data_json() = 0;
+		//virtual void set_data_json(std::string data);
 		virtual void set_data_json(std::string data) = 0;
+		/*
+	private:
+
+		const char * sCurrency = "currency";
+		const char * sGem = "gem";
+		const char * sGold = "gold";
+		const char * sAlarms = "alarms";
+		const char * sID = "id";
+
+		const char * sSec = "sec";
+		const char * sMin = "min";
+		const char * sHour = "hour";
+		const char * sMday = "mday";
+		const char * sMon = "mon";
+		const char * sYear = "year";
+		const char * sWday = "wday";
+		const char * sYday = "yday";
+		const char * sIsdst = "isdst";
+		*/
 	};
 
 	//constructors
@@ -149,9 +173,7 @@ namespace WkCocos
 					}
 				}
 			}
-
 		});
-
 		requestLoadData();
 	}
 	
@@ -212,8 +234,6 @@ namespace WkCocos
 		{
 			return false;
 		}
-
-
 	}
 
 	template <class T>
@@ -245,7 +265,6 @@ namespace WkCocos
 		{
 			m_timer->update(deltatime);
 		}
-
 		if (m_localdata)
 		{
 			m_localdata->update(deltatime);

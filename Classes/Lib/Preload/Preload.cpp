@@ -2,7 +2,6 @@
 
 #include "WkCocos/Preload/Comp/DataLoad.h"
 
-#include "WkCocos/Preload/Systems/Error.h"
 #include "WkCocos/Preload/Systems/DataEval.h"
 #include "WkCocos/Preload/Systems/SyncLoading.h"
 #include "WkCocos/Preload/Systems/ASyncLoading.h"
@@ -21,12 +20,12 @@ namespace WkCocos
 	{
 
 		Preload::Preload(unsigned short concurrent_loads,
-			std::function<void(float)> progress_callback,
-			std::function<void(std::string)> error_callback
+			std::function<void(float)> progress_callback/*,
+			std::function<void(std::string)> error_callback*/
 			)
 			: m_concurrent_loads(concurrent_loads)
 			, m_progress_callback(progress_callback)
-			, m_error_callback(error_callback)
+			//, m_error_callback(error_callback)
 		{
 			//curl_global_init(CURL_GLOBAL_DEFAULT);
 		}
@@ -49,7 +48,7 @@ namespace WkCocos
 
 		void Preload::configure()
 		{
-			system_manager->add<Systems::Error>(m_error_callback);
+			//system_manager->add<Systems::Error>(m_error_callback);
 			system_manager->add<Systems::DataEval>();
 			//system_manager->add<Systems::DLClisting>();
 			//system_manager->add<Systems::DLCchecking>();
@@ -76,7 +75,7 @@ namespace WkCocos
 		void Preload::update(double dt) {
 
 			//check for error and report them if needed
-			system_manager->update<Systems::Error>(dt);
+			//system_manager->update<Systems::Error>(dt);
 			//evaluate entities containing DataLoad components
 			system_manager->update<Systems::DataEval>(dt);
 

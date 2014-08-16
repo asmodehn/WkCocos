@@ -31,16 +31,13 @@ LOCAL_SRC_FILES := jni.cpp \
                    ../../../../../Classes/Lib/Download/Systems/DLClisting.cpp \
                    ../../../../../Classes/Lib/Download/Systems/DLvalidating.cpp \
                    ../../../../../Classes/Lib/Download/Systems/CurlDL.cpp \
-                   ../../../../../Classes/Lib/Download/Systems/Error.cpp \
                    ../../../../../Classes/Lib/Download/Systems/MD5checking.cpp \
                    ../../../../../Classes/Lib/Download/Systems/ProgressUpdate.cpp \
                    ../../../../../Classes/Lib/Preload/Systems/DataEval.cpp \
-                   ../../../../../Classes/Lib/Preload/Systems/Error.cpp \
                    ../../../../../Classes/Lib/Preload/Systems/SyncLoading.cpp \
                    ../../../../../Classes/Lib/Preload/Systems/ASyncLoading.cpp \
                    ../../../../../Classes/Lib/Preload/Systems/ProgressUpdate.cpp \
                    ../../../../../Classes/Lib/LocalData/LocalDataManager.cpp \
-                   ../../../../../Classes/Lib/LocalData/Systems/Error.cpp \
                    ../../../../../Classes/Lib/LocalData/Systems/JSONLoginID.cpp \
                    ../../../../../Classes/Lib/LocalData/Systems/JSONReader.cpp \
                    ../../../../../Classes/Lib/LocalData/Systems/JSONPlayerData.cpp \

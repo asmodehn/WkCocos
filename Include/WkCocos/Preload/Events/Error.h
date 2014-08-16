@@ -2,6 +2,7 @@
 #define __DFGAME_PRELOAD_ENTITY_EVENTS_ERROR_H__
 
 #include "entityx/entityx.h"
+#include "WkCocos/Preload/Comp/DataLoad.h"
 
 namespace WkCocos
 {
@@ -11,9 +12,19 @@ namespace WkCocos
 		{
 			struct Error : public entityx::Event<Error>
 			{
-				Error(entityx::Entity e) : errored_entity(e) {}
+				Error(entityx::Entity e) : errored_entity(e)
+				{
+					auto tempDL = e.component<Comp::DataLoad>();
+					if (tempDL)
+					{
+						msg = tempDL->m_filepath + " DataEval chooseLoader error";
+					}
+				}
 
 				entityx::Entity errored_entity;
+
+				std::string msg;
+
 			};
 
 		}//namespace Event

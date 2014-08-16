@@ -2,6 +2,8 @@
 #define __DFGAME_DOWNLOAD_ENTITY_EVENTS_ERROR_H__
 
 #include "entityx/entityx.h"
+#include "WkCocos/Download/Comp/CurlDL.h"
+#include "WkCocos/Download/Comp/DataLoad.h"
 
 namespace WkCocos
 {
@@ -11,7 +13,26 @@ namespace WkCocos
 		{
 			struct Error : public entityx::Event<Error>
 			{
-				Error(entityx::Entity e, std::string msg) : errored_entity(e), msg(msg) {}
+				Error(entityx::Entity e) : errored_entity(e)
+				{
+					auto tempCDL = e.component<Comp::CurlDL>();
+					if (tempCDL)
+					{
+						msg = tempCDL->getErrorMsg();
+					}
+
+					auto tempDVC = e.component<Comp::DataVerCheck>();
+					if (tempDVC)
+					{
+						msg = "DLCchecking can not read from " + tempDVC->m_url;
+					}
+
+					auto tempDLD = e.component<Comp::DataListDownload>();
+					if (tempDLD)
+					{
+						msg = "DLClisting can not read from " + tempDLD->m_url;
+					}
+				}
 
 				entityx::Entity errored_entity;
 

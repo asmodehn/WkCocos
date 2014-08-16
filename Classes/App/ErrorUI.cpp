@@ -1,5 +1,6 @@
 #include "WkCocosApp/ErrorUI.h"
 
+#include "WkCocosApp/GameLogic.h"
 #include "cocos/ui/CocosGUI.h"
 
 #include "cocos2d.h"
@@ -33,8 +34,16 @@ ErrorUI::ErrorUI() : Interface()
 	{
 		m_widget->retain(); //we need to retain it in memory ( or cocos will drop it )
 		widget_cache.insert(std::pair<std::string, cocos2d::ui::Widget*>(id, m_widget));
-	}
 
+		GameLogic::Instance().getPlayer().getLocalDatamgr()->getEventManager()->subscribe<WkCocos::LocalData::Events::Error>(*this);
+	}
+}
+
+void ErrorUI::receive(const WkCocos::LocalData::Events::Error &LD)
+{
+	m_label->setText(LD.msg);
+	m_widget->setVisible(true);
+	m_widget->setEnabled(true);
 }
 
 void ErrorUI::activate(std::string msg)

@@ -15,7 +15,6 @@ namespace WkCocos
 				{
 					auto tempEntity = e.component<Comp::ID>();
 					id = tempEntity->m_id;
-
 				}
 
 				entityx::Entity alarmoff_entity;

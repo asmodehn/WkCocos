@@ -39,8 +39,6 @@ std::string MyPlayer::get_data_json()
 		rapidjson::Value time;
 		time.SetObject();
 		time.AddMember(sID, id->m_id.c_str(), allocator);
-		
-		//time.AddMember(sTime, (uint64_t)mktime(&alarm->m_end), allocator);
 
 		time.AddMember(sSec, alarm->m_end.tm_sec, allocator);
 		time.AddMember(sMin, alarm->m_end.tm_min, allocator);
@@ -105,9 +103,6 @@ void MyPlayer::set_data_json(std::string data)
 			{
 				rapidjson::Value& time = alarmsarray[i];
 				
-				//time_t temptime_t = time[sTime].GetUint64();
-				//struct tm * temptm = localtime(&temptime_t);
-
 				struct tm temptm;
 				temptm.tm_hour = time[sHour].GetInt();
 				temptm.tm_isdst = time[sIsdst].GetInt();
@@ -119,7 +114,7 @@ void MyPlayer::set_data_json(std::string data)
 				temptm.tm_yday = time[sYday].GetInt();
 				temptm.tm_year = time[sYear].GetInt();
 
-				m_timer->setAlarm(time[sID].GetString(), /***/temptm);
+				m_timer->setAlarm(time[sID].GetString(), temptm);
 			}	
 		}
 	}

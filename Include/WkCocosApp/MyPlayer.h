@@ -47,8 +47,9 @@ public:
 	{
 		requestLoadData();
 	}
-
+	
 private:
+
 	const char * sCurrency = "currency";
 	const char * sGem = "gem";
 	const char * sGold = "gold";
@@ -65,7 +66,6 @@ private:
 	const char * sWday = "wday";
 	const char * sYday = "yday";
 	const char * sIsdst = "isdst";
+	
 };
-
-
 #endif // __MYPLAYER_H__

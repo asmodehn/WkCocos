@@ -5,12 +5,12 @@
 
 #include "WkCocos/Interface.h"
 
-//#include "WkCocosApp/LoadingScene.h"
+#include "WkCocos/LocalData/LocalDataManager.h"
 
 /**
 * This UI is the main menu UI
 */
-class ErrorUI : public WkCocos::Interface
+class ErrorUI : public WkCocos::Interface, public entityx::Receiver<WkCocos::LocalData::Events::Error>
 {
 public:
 		
@@ -32,6 +32,7 @@ public:
 	void refreshCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input);
 	void skipCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input);
 
+	void receive(const WkCocos::LocalData::Events::Error &LD);
 	void activate(std::string msg);
 	void deactivate();
 
