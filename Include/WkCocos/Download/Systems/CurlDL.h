@@ -17,7 +17,6 @@ namespace WkCocos
 			/**
 			* This system is a simple Entity System style Facade for Curl Easy Interface.
 			* the only added behavior is the possibility to retry on some errors.
-			* Create more instances of this system to allow for multiple simultaneous connection.
 			*/
 			struct CurlDL : public entityx::System<CurlDL>
 			{

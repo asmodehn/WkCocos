@@ -222,7 +222,7 @@ namespace WkCocos
 				}
 			};
 
-			void DLCchecking::setConnectionTimeout(unsigned int timeout)
+			void DLCchecking::setConnectionTimeout(unsigned long timeout)
 			{
 				_connectionTimeout = timeout;
 			}

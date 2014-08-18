@@ -15,8 +15,7 @@ namespace WkCocos
 			{
 			public:
 				explicit Download(unsigned short concurrent_downloads,
-					std::function<void(float)> progress_callback/*,
-					std::function<void(std::string)> error_callback*/
+					std::function<void(float)> progress_callback
 					);
 
 				//the assetsManager must be added to a scene to have its update called
@@ -43,7 +42,6 @@ namespace WkCocos
 
 				unsigned short m_concurrent_downloads;
 
-				//std::function<void(std::string)> m_error_callback;
 				std::function<void(float)> m_progress_callback;
 
 				

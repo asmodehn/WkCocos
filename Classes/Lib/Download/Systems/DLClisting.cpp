@@ -149,7 +149,7 @@ namespace WkCocos
 				}
 			}
 
-			void DLClisting::setConnectionTimeout(unsigned int timeout)
+			void DLClisting::setConnectionTimeout(unsigned long timeout)
 			{
 				_connectionTimeout = timeout;
 			}
