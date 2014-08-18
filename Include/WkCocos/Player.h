@@ -98,8 +98,6 @@ namespace WkCocos
 		virtual std::string get_data_json() = 0;
 		//virtual void set_data_json(std::string data);
 		virtual void set_data_json(std::string data) = 0;
-		/*
-	private:
 
 		const char * sCurrency = "currency";
 		const char * sGem = "gem";
@@ -116,7 +114,7 @@ namespace WkCocos
 		const char * sWday = "wday";
 		const char * sYday = "yday";
 		const char * sIsdst = "isdst";
-		*/
+
 	};
 
 	//constructors

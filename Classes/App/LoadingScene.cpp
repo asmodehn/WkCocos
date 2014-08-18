@@ -80,6 +80,9 @@ bool LoadingScene::init()
 		m_preloadManager->start();
 		m_preloadManager->setEventEmmiter(m_downloadManager->getEventManager());
 
+		m_downloadManager->getEventManager()->subscribe<WkCocos::Download::Events::Error>(*this);
+		m_preloadManager->getEventManager()->subscribe<WkCocos::Preload::Events::Error>(*this);
+
 		scheduleDLCCheck();
 
 		errorui->deactivate();
