@@ -8,6 +8,11 @@
 #include "WkCocos/Timer/Timer.h"
 #include "WkCocos/Utils/ToolBox.h"
 
+//using Cocos' Rapidjson for now...
+#include "json/document.h"         // rapidjson's DOM-style API
+#include "json/stringbuffer.h"
+#include "json/writer.h"
+
 #include <string>
 
 namespace WkCocos
@@ -45,23 +50,7 @@ namespace WkCocos
 			//CCLOG(asctime(&timeinfo));
 			return m_timer->setAlarm(id, timeinfo);
 		}
-
-		/**
-		* StartTimer
-		*/
-		//bool startTimer(std::string id)
-		//{
-		//	return false;// m_timer->startTimer(id);
-		//}
-
-		/**
-		* Stop Timer (Doesnt trigger callback)
-		*/
-		//void stopTimer(std::string id)
-		//{
-			//m_timer->stopTimer(id);
-		//}
-
+		
 		/**
 		* Delete Timer
 		*/
@@ -93,17 +82,16 @@ namespace WkCocos
 		std::shared_ptr<OnlineData::OnlineDataManager> m_onlinedata;
 		std::shared_ptr<Timer::Timer> m_timer;
 
-		//TODO : Implement Load and Save of Timers
-		//virtual std::string get_data_json();
-		virtual std::string get_data_json() = 0;
-		//virtual void set_data_json(std::string data);
-		virtual void set_data_json(std::string data) = 0;
-		/*
-	private:
+		//this implements timer save and other data that we manage in this class.
+		virtual std::string get_all_data_json();
+		virtual void set_all_data_json(std::string data);
 
-		const char * sCurrency = "currency";
-		const char * sGem = "gem";
-		const char * sGold = "gold";
+		//these are meant to be used by the app for managing extra game data.
+		//they are called by get_all_data_json() and set_all_data_json(std::string data)
+		virtual std::string get_data_json() = 0;
+		virtual void set_data_json(std::string data) = 0;
+		
+	private:
 		const char * sAlarms = "alarms";
 		const char * sID = "id";
 
@@ -116,7 +104,6 @@ namespace WkCocos
 		const char * sWday = "wday";
 		const char * sYday = "yday";
 		const char * sIsdst = "isdst";
-		*/
 	};
 
 	//constructors
@@ -216,14 +203,14 @@ namespace WkCocos
 	bool Player<T>::requestLoadData()
 	{
 		m_localdata->loadPlayerData([=](std::string data){
-			set_data_json(data);
+			set_all_data_json(data);
 		});
 
 		if (m_onlinedata)
 		{
 			m_onlinedata->load(m_user, [=](std::string data)
 			{
-				//set_data_json(data); //temp comment, onlinedatamanager returns empty string
+				//set_all_data_json(data); //temp comment, onlinedatamanager returns empty string
 				CCLOG("user data loaded : %s", data.c_str());
 				//TODO : decide if we keep local or online data
 			});
@@ -239,12 +226,12 @@ namespace WkCocos
 	template <class T>
 	bool Player<T>::requestSaveData()
 	{
-		m_localdata->savePlayerData(get_data_json());
+		m_localdata->savePlayerData(get_all_data_json());
 
 		if (m_onlinedata)
 		{
 			
-			m_onlinedata->save(m_user, get_data_json(), [=](std::string data)
+			m_onlinedata->save(m_user, get_all_data_json(), [=](std::string data)
 			{
 				CCLOG("user data saved : %s", data.c_str());
 				//TODO : decide if we keep local or online data
@@ -257,6 +244,100 @@ namespace WkCocos
 			return false;
 		}
 	}
+
+	template <class T>
+	std::string Player<T>::get_all_data_json()
+	{
+		rapidjson::Document doc;
+		// must pass an allocator when the object may need to allocate memory
+		rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
+
+		//calling get_data_json to retrieve extra game data
+		std::string extra_data_json = get_data_json();
+
+		doc.Parse<0>(extra_data_json.c_str());
+		if (doc.HasParseError())
+		{
+			//if parse error (also empty string), we ignore existing data.
+			doc.SetObject();
+		}
+
+		rapidjson::Value alarms;
+		alarms.SetArray();
+
+		entityx::ptr<WkCocos::Timer::Comp::ID> id;
+		entityx::ptr<WkCocos::Timer::Comp::Alarm> alarm;
+		for (auto entity : m_timer->getEntityManager()->entities_with_components(id, alarm))
+		{
+			rapidjson::Value time;
+			time.SetObject();
+			time.AddMember(sID, id->m_id.c_str(), allocator);
+
+			time.AddMember(sSec, alarm->m_end.tm_sec, allocator);
+			time.AddMember(sMin, alarm->m_end.tm_min, allocator);
+			time.AddMember(sHour, alarm->m_end.tm_hour, allocator);
+			time.AddMember(sMday, alarm->m_end.tm_mday, allocator);
+			time.AddMember(sMon, alarm->m_end.tm_mon, allocator);
+			time.AddMember(sYear, alarm->m_end.tm_year, allocator);
+			time.AddMember(sWday, alarm->m_end.tm_wday, allocator);
+			time.AddMember(sYday, alarm->m_end.tm_yday, allocator);
+			time.AddMember(sIsdst, alarm->m_end.tm_isdst, allocator);
+
+			alarms.PushBack(time, allocator);
+		}
+		doc.AddMember(sAlarms, alarms, allocator);
+
+		rapidjson::StringBuffer strbuf;
+		rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
+		doc.Accept(writer);
+
+		return std::string(strbuf.GetString());
+		
+	}
+
+	template <class T>
+	void Player<T>::set_all_data_json(std::string data)
+	{
+		rapidjson::Document doc;
+		doc.Parse<0>(data.c_str());
+		if (doc.HasParseError())
+		{
+			//if parse error (also empty string), we ignore existing data.
+			doc.SetObject();
+		}
+
+		if (doc.HasMember(sAlarms))
+		{
+			rapidjson::Value& alarmsarray = doc[sAlarms];
+			if (alarmsarray.Size()){
+				for (rapidjson::SizeType i = 0; i < alarmsarray.Size(); i++)
+				{
+					rapidjson::Value& time = alarmsarray[i];
+
+					struct tm temptm;
+					temptm.tm_hour = time[sHour].GetInt();
+					temptm.tm_isdst = time[sIsdst].GetInt();
+					temptm.tm_mday = time[sMday].GetInt();
+					temptm.tm_min = time[sMin].GetInt();
+					temptm.tm_mon = time[sMon].GetInt();
+					temptm.tm_sec = time[sSec].GetInt();
+					temptm.tm_wday = time[sWday].GetInt();
+					temptm.tm_yday = time[sYday].GetInt();
+					temptm.tm_year = time[sYear].GetInt();
+
+					m_timer->setAlarm(time[sID].GetString(), temptm);
+				}
+			}
+			doc.RemoveMember(sAlarms);
+		}
+
+		rapidjson::StringBuffer strbuf;
+		rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
+		doc.Accept(writer);
+
+		return set_data_json(strbuf.GetString());
+	}
+
 
 	template <class T>
 	void Player<T>::Update(float deltatime)
