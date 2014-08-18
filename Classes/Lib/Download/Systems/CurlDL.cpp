@@ -95,7 +95,7 @@ namespace WkCocos
 								CCLOGERROR("CURL ERROR : %s", dl->getErrorMsg().c_str());
 								CCLOGERROR("ERROR Downloading %s from %s. CANCELLING.", remotefile->getPath().c_str(), remotefile->getURL().c_str());
 								//signal error
-								events->emit<Events::Error>(entity);
+								events->emit<Events::Error>(entity, "CurlDL system");
 								//we give up on this entity
 								entity.destroy();
 							}

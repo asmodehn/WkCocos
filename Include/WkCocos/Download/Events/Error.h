@@ -13,24 +13,25 @@ namespace WkCocos
 		{
 			struct Error : public entityx::Event<Error>
 			{
-				Error(entityx::Entity e) : errored_entity(e)
+				Error(entityx::Entity e, std::string system_msg) : errored_entity(e)
 				{
 					auto tempCDL = e.component<Comp::CurlDL>();
 					if (tempCDL)
 					{
-						msg = tempCDL->getErrorMsg();
+						
+						msg = system_msg + ", " + tempCDL->getErrorMsg();
 					}
 
 					auto tempDVC = e.component<Comp::DataVerCheck>();
 					if (tempDVC)
 					{
-						msg = "DLCchecking can not read from " + tempDVC->m_url;
+						msg = system_msg + ", can not read from " + tempDVC->m_url;
 					}
 
 					auto tempDLD = e.component<Comp::DataListDownload>();
 					if (tempDLD)
 					{
-						msg = "DLClisting can not read from " + tempDLD->m_url;
+						msg = system_msg + ", can not read from " + tempDLD->m_url;
 					}
 				}
 

@@ -12,12 +12,12 @@ namespace WkCocos
 		{
 			struct Error : public entityx::Event<Error>
 			{
-				Error(entityx::Entity e) : errored_entity(e)
+				Error(entityx::Entity e, std::string system_msg) : errored_entity(e)
 				{
 					auto tempDL = e.component<Comp::DataLoad>();
 					if (tempDL)
 					{
-						msg = tempDL->m_filepath + " DataEval chooseLoader error";
+						msg = system_msg + " " + tempDL->m_filepath;
 					}
 				}
 

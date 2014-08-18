@@ -89,7 +89,7 @@ namespace WkCocos
 						{
 							CCLOGERROR("DLClisting can not read from %s, error code is %d", url.c_str(), res);
 							//signal error
-							events->emit<Events::Error>(entity);
+							events->emit<Events::Error>(entity, "DLClisting system");
 						}
 					}
 					else

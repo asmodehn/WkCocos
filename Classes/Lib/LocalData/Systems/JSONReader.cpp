@@ -35,7 +35,7 @@ namespace WkCocos
 						if (doc.HasParseError()) {
 							CCLOG("GetParseError %s\n", doc.GetParseError());
 							//signal error
-							events->emit<Events::Error>(entity);
+							events->emit<Events::Error>(entity, "JSONReader system file read error");
 							//WHAT TO DO ?
 						}
 						//else everything is ok with this json file

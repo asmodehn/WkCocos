@@ -118,7 +118,7 @@ namespace WkCocos
 							{
 								CCLOGERROR("DLCchecking can not read from %s, error code is %d", url.c_str(), res);
 								//signal error
-								events->emit<Events::Error>(entity);
+								events->emit<Events::Error>(entity, "DLCchecking system");
 								//we give up on this entity
 								entity.destroy();
 							}
