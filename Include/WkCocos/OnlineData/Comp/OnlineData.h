@@ -61,7 +61,7 @@ namespace WkCocos
 				bool done;
 				std::string m_userid;
 				std::string m_collection;
-				std::string m_user_data;
+				//std::string m_user_data;
 				std::function<void(void*)> m_cb;
 			};
 

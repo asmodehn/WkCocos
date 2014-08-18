@@ -120,7 +120,7 @@ namespace WkCocos
 					{
 						::App42::Query* query = ::App42::QueryBuilder::BuildQuery("user_id", lud->m_userid.c_str(), APP42_OP_EQUALS);
 						m_service->setQuery(DB_NAME, lud->m_collection, query);
-						delete query;
+						//delete query;
 						CCLOG("Requesting App42 User data for : %s ", lud->m_userid.c_str());
 						m_service->GetUser(lud->m_userid.c_str(), lud->m_cb);
 						lud->in_progress = true;
