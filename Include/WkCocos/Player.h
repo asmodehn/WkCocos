@@ -32,7 +32,11 @@ namespace WkCocos
 		*/
 		void Update(float deltatime);
 		
-		void setOnlineDataManager(std::shared_ptr<OnlineData::OnlineDataManager> onlinedata);
+		/**
+		* Player by default maintain a local save.
+		* After online data manager is set, the local save is not used anymore and the online save takes priority.
+		*/
+		void setOnlineDataManager(std::shared_ptr<OnlineData::OnlineDataManager> onlinedata, std::function<void()> online_init_cb);
 		
 		/**
 		* Setup Timer
@@ -70,9 +74,9 @@ namespace WkCocos
 	protected:
 		Player(std::shared_ptr<LocalData::LocalDataManager> localdata);
 
-		bool requestLoadData();
+		bool requestLoadData(std::function<void()> loaded_cb);
 
-		bool requestSaveData();
+		bool requestSaveData(std::function<void()> saved_cb);
 
 		bool newPlayer;
 		std::string m_user;
@@ -92,6 +96,10 @@ namespace WkCocos
 		virtual void set_data_json(std::string data) = 0;
 		
 	private:
+
+		//game callbacks
+		std::function<void()> onlineDataLoaded_callback;
+
 		const char * sAlarms = "alarms";
 		const char * sID = "id";
 
@@ -125,10 +133,14 @@ namespace WkCocos
 
 				newPlayer = false;
 
-				if (m_onlinedata)
+				if (m_onlinedata && onlineDataLoaded_callback) //in case online data is set while we re loading loginID
 				{
 					//reset online data manager to force login
-					setOnlineDataManager(m_onlinedata);
+					setOnlineDataManager(m_onlinedata, onlineDataLoaded_callback);
+				}
+				else
+				{
+					requestLoadData([](){}); //we assume no callback needed there...
 				}
 			}
 			else
@@ -153,21 +165,17 @@ namespace WkCocos
 					m_localdata->saveLoginID(m_user, m_passwd);
 
 					newPlayer = true;
-					if (m_onlinedata)
-					{
-						//reset online data manager to force login
-						setOnlineDataManager(m_onlinedata);
-					}
 				}
+				//we assume there is no data to load.
 			}
 		});
-		requestLoadData();
 	}
 	
 	template <class T>
-	void Player<T>::setOnlineDataManager(std::shared_ptr<OnlineData::OnlineDataManager> onlinedata)
+	void Player<T>::setOnlineDataManager(std::shared_ptr<OnlineData::OnlineDataManager> onlinedata, std::function<void()> online_init_cb)
 	{
 		m_onlinedata = onlinedata;
+		onlineDataLoaded_callback = online_init_cb;
 
 		if (m_user != "")
 		{
@@ -180,7 +188,7 @@ namespace WkCocos
 				m_onlinedata->loginNew(m_user, m_passwd, email, [=](void * data){
 					CCLOG("login done !!!");
 					//loading again to get online value
-					requestLoadData();
+					requestLoadData(onlineDataLoaded_callback);
 				});
 			}
 			else
@@ -189,7 +197,7 @@ namespace WkCocos
 				m_onlinedata->login(m_user, m_passwd, [=](void * data){
 					CCLOG("login done !!!");
 					//loading again to get online value
-					requestLoadData();
+					requestLoadData(onlineDataLoaded_callback);
 				});
 			}
 		}
@@ -200,21 +208,28 @@ namespace WkCocos
 	}
 	
 	template <class T>
-	bool Player<T>::requestLoadData()
+	bool Player<T>::requestLoadData(std::function<void()> loaded_cb)
 	{
-		m_localdata->loadPlayerData([=](std::string data){
-			set_all_data_json(data);
-		});
-
 		if (m_onlinedata)
 		{
 			m_onlinedata->load(m_user, [=](std::string data)
 			{
-				//set_all_data_json(data); //temp comment, onlinedatamanager returns empty string
+				set_all_data_json(data);
 				CCLOG("user data loaded : %s", data.c_str());
-				//TODO : decide if we keep local or online data
+				
+				loaded_cb();
 			});
 			
+			return true;
+		}
+		else if (m_localdata)
+		{
+			m_localdata->loadPlayerData([=](std::string data){
+				set_all_data_json(data);
+
+				loaded_cb();
+			});
+
 			return true;
 		}
 		else
@@ -224,19 +239,23 @@ namespace WkCocos
 	}
 
 	template <class T>
-	bool Player<T>::requestSaveData()
+	bool Player<T>::requestSaveData(std::function<void()> saved_cb)
 	{
-		m_localdata->savePlayerData(get_all_data_json());
-
 		if (m_onlinedata)
 		{
 			
 			m_onlinedata->save(m_user, get_all_data_json(), [=](std::string data)
 			{
 				CCLOG("user data saved : %s", data.c_str());
-				//TODO : decide if we keep local or online data
+				saved_cb();
 			});
 			
+			return true;
+		}
+		else if (m_localdata)
+		{
+			m_localdata->savePlayerData(get_all_data_json());
+			saved_cb();
 			return true;
 		}
 		else
