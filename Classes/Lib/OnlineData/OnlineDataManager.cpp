@@ -1,7 +1,7 @@
 #include "WkCocos/OnlineData/OnlineDataManager.h"
 
 #include "WkCocos/OnlineData/Systems/User.h"
-
+#include "WkCocos/OnlineData/Systems/Storage.h"
 #include "WkCocos/OnlineData/Comp/OnlineData.h"
 
 #include "cocos/cocos2d.h"
@@ -18,6 +18,7 @@ namespace WkCocos
 		{
 			::App42::App42API::Initialize(app_access_key, app_secret_key);
 			system_manager->add<Systems::User>();
+			system_manager->add<Systems::Storage>();
 			system_manager->configure();
 		}
 		
@@ -72,6 +73,7 @@ namespace WkCocos
 		void OnlineDataManager::update(double dt) {
 			//check for error and report them if needed
 			system_manager->update<Systems::User>(dt);
+			system_manager->update<Systems::Storage>(dt);
 		}
 
 	} // namespace LocalData

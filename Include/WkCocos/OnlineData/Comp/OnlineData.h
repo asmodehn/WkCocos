@@ -51,6 +51,8 @@ namespace WkCocos
 				std::string m_collection;
 				std::string m_user_data;
 				std::function<void(void*)> m_cb;
+				std::function<void(void*)> m_dummy_cb;
+
 			};
 
 			struct LoadUserData : entityx::Component<LoadUserData>
@@ -63,6 +65,7 @@ namespace WkCocos
 				std::string m_collection;
 				//std::string m_user_data;
 				std::function<void(void*)> m_cb;
+
 			};
 
 		}//namespace Comp

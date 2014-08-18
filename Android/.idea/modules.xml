@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/WkCocos.iml" filepath="$PROJECT_DIR$/WkCocos.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/../depends/cocos2d-x/cocos/platform/android/java/cocos2dx.iml" filepath="$PROJECT_DIR$/../depends/cocos2d-x/cocos/platform/android/java/cocos2dx.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../depends/cocos2d-x/cocos/platform/android/java/cocos2dx.iml" filepath="$PROJECT_DIR$/../depends/cocos2d-x/cocos/platform/android/java/cocos2dx.iml" />
       <module fileurl="file://$PROJECT_DIR$/lib/wkcocos.iml" filepath="$PROJECT_DIR$/lib/wkcocos.iml" />
     </modules>
   </component>

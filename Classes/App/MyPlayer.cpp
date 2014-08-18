@@ -66,7 +66,7 @@ void MyPlayer::set_data_json(std::string data)
 	}
 	else //first time there is no save
 	{
-		//m_gold = 424242;
-		//m_gem = 42;
+		m_gold = 424242;
+		m_gem = 42;
 	}
 }

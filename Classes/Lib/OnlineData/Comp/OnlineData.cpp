@@ -81,7 +81,8 @@ namespace WkCocos
 				, m_collection(collec)
 				, m_user_data(user_data)
 			{
-				m_cb = [=](void* data) {
+				m_cb = [=](void* data)
+				{
 					::App42::App42UserResponse* userdata = static_cast<::App42::App42UserResponse*>(data);
 
 					CCLOG("\ncode=%d...=%d", userdata->getCode(), userdata->isSuccess);
@@ -123,6 +124,7 @@ namespace WkCocos
 					done = true;
 					//userdata is deleted by App42SDK
 				};
+				m_dummy_cb = [=](void* data) {};
 			}
 
 			LoadUserData::LoadUserData(std::string userid, std::string collec, std::function<void(std::string)> cb)
@@ -151,7 +153,8 @@ namespace WkCocos
 						{
 							rapidjson::Value & temp = doc["app42"];
 							temp = temp["response"];
-							if (temp.HasMember("users"))
+
+							if (temp.HasMember("users")) // old code, before storage
 							{
 								temp = temp["users"];
 								temp = temp["user"];
@@ -176,9 +179,36 @@ namespace WkCocos
 									cb("");
 								}
 							}
-							else
+							else //new code, after storage
 							{
-								cb("");
+								if (temp.HasMember("storage"))
+								{
+									temp = temp["storage"];
+									temp = temp["jsonDoc"];
+									if (temp.Size())
+									{
+										temp = temp[temp.Size() - 1];
+										if (temp.HasMember("data"))
+										{
+											rapidjson::StringBuffer strbuf;
+											rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
+											temp["data"].Accept(writer);
+											cb(strbuf.GetString());
+										}
+										else
+										{
+											cb("");
+										}
+									}
+									else
+									{
+										cb("");
+									}
+								}
+								else
+								{
+									cb("");
+								}
 							}
 						}
 					}

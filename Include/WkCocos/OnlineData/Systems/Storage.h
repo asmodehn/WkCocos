@@ -21,6 +21,7 @@ namespace WkCocos
 
 			protected :
 				::App42::StorageService* m_service;
+				const char * DB_NAME = "PUBLIC";
 			};
 		}//namespace Systems
 	}//namespace OnlineData
