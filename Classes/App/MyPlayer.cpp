@@ -18,20 +18,40 @@ MyPlayer::~MyPlayer()
 /**
 * data accessor as json string
 */
-void MyPlayer::get_data_json(rapidjson::Document& doc, rapidjson::Document::AllocatorType& allocator)
+std::string MyPlayer::get_data_json()
 {
+	rapidjson::Document doc;
+	doc.SetObject();
+	// must pass an allocator when the object may need to allocate memory
+	rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
+
 	rapidjson::Value currency;
 	currency.SetObject();
 	currency.AddMember(sGold, m_gold, allocator);
 	currency.AddMember(sGem, m_gem, allocator);
 	doc.AddMember(sCurrency, currency, allocator);
+
+	//TMP debug
+	rapidjson::StringBuffer strbuf;
+	rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
+	doc.Accept(writer);
+
+	return std::string(strbuf.GetString());
 }
 
 /**
 * data setter from json string
 */
-void MyPlayer::set_data_json(rapidjson::Document& doc)
+void MyPlayer::set_data_json(std::string data)
 {
+	rapidjson::Document doc;
+	doc.Parse<0>(data.c_str());
+	if (doc.HasParseError()) 
+	{
+		//if parse error (also empty string), we ignore existing data.
+		doc.SetObject();
+	}
+	
 	if (doc.HasMember(sCurrency))
 	{
 		rapidjson::Value& currencyvalue = doc[sCurrency];
