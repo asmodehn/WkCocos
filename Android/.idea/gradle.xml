@@ -11,7 +11,12 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/lib" />
             <option value="$PROJECT_DIR$/../depends/cocos2d-x/cocos/platform/android/java" />
-            <option value="$PROJECT_DIR$/../depends/cocos2dx-store/soomla-native/compilations/android" />
+            <option value="$PROJECT_DIR$/../depends/cocos2dx-store/soomla-native/projects/cocos2dx-android-store" />
+            <option value="$PROJECT_DIR$/../depends/cocos2dx-store/submodules/android-store/SoomlaAndroidStore" />
+            <option value="$PROJECT_DIR$/../depends/cocos2dx-store/submodules/android-store/submodules/android-store-amazon" />
+            <option value="$PROJECT_DIR$/../depends/cocos2dx-store/submodules/android-store/submodules/android-store-google-play" />
+            <option value="$PROJECT_DIR$/../depends/cocos2dx-store/submodules/android-store/submodules/soomla-android-core" />
+            <option value="$PROJECT_DIR$/../depends/cocos2dx-store/submodules/soomla-cocos2dx-core/soomla-native/projects/cocos2dx-android-core" />
           </set>
         </option>
       </GradleProjectSettings>
