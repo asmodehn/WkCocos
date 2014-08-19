@@ -89,7 +89,8 @@ void SavingUI::saveCallback(Ref* widgetRef, ui::Widget::TouchEventType input)
 	{
 		CCLOG("SAVE BUTTON CLICKED");
 
-		GameLogic::Instance().getPlayer().saveData();
+		GameLogic::Instance().getPlayer().saveData([](){
+		});
 
 	}
 }
@@ -101,7 +102,8 @@ void SavingUI::loadCallback(Ref* widgetRef, ui::Widget::TouchEventType input)
 	{
 		CCLOG("LOAD BUTTON CLICKED");
 
-		GameLogic::Instance().getPlayer().loadData();
+		GameLogic::Instance().getPlayer().loadData([](){
+		});
 
 	}
 }

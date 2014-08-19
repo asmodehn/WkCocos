@@ -2,7 +2,7 @@
 #define __WKCOCOS_LOCALDATA_LOCALDATAMANAGER_H__
 
 #include "entityx/entityx.h"
-
+#include "WkCocos/LocalData/Events/Error.h"
 //#include "json/document.h"
 
 #define DEFAULT_SAVE_VERSION 1
@@ -17,7 +17,7 @@ namespace WkCocos
 			/**
 			* Constructor 
 			*/
-			LocalDataManager(std::function<void()> error_CB);
+			LocalDataManager(/*std::function<void(std::string)> error_CB*/);
 
 			/**
 			* Destructor
@@ -38,13 +38,15 @@ namespace WkCocos
 
 			void update(double dt);
 
+			inline entityx::ptr<entityx::EventManager> getEventManager() { return event_manager; }
+
 		protected :
 
 			entityx::ptr<entityx::EventManager> event_manager;
 			entityx::ptr<entityx::EntityManager> entity_manager;
 			entityx::ptr<entityx::SystemManager> system_manager;
 
-			std::function<void()> m_error_callback;
+			//std::function<void(std::string)> m_error_callback;
 
 		};
 

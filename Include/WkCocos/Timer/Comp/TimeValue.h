@@ -29,17 +29,10 @@ namespace WkCocos
 				struct tm m_end;
 			};
 
-
-			//UNUSED
-			//struct Callback : entityx::Component<Callback>
-			//{
-			//	typedef std::function<void(std::string id, double msecs_left)> TimerFunc;
-			//	Callback(TimerFunc cb)
-			//	: m_cb(cb)
-			//	{}
-
-			//	TimerFunc m_cb;
-			//};
+			struct Stopped : entityx::Component<Stopped>
+			{
+				Stopped(){}
+			};
 
 		}//namespace Comp
 	}//namespace Timer

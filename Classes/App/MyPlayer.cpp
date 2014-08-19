@@ -6,6 +6,8 @@
 
 MyPlayer::MyPlayer(std::shared_ptr<WkCocos::LocalData::LocalDataManager> localdatamngr)
 : WkCocos::Player<MyPlayer>(localdatamngr)
+, m_gem(42)
+, m_gold(424242)
 {
 }
 
@@ -18,11 +20,11 @@ MyPlayer::~MyPlayer()
 */
 void MyPlayer::get_data_json(rapidjson::Document& doc, rapidjson::Document::AllocatorType& allocator)
 {
-	rapidjson::Value vholder;
-	vholder.SetObject();
-	vholder.AddMember("gold", m_gold, allocator);
-	vholder.AddMember("gem", m_gem, allocator);
-	doc.AddMember("currency", vholder, allocator);
+	rapidjson::Value currency;
+	currency.SetObject();
+	currency.AddMember(sGold, m_gold, allocator);
+	currency.AddMember(sGem, m_gem, allocator);
+	doc.AddMember(sCurrency, currency, allocator);
 }
 
 /**
@@ -30,23 +32,23 @@ void MyPlayer::get_data_json(rapidjson::Document& doc, rapidjson::Document::Allo
 */
 void MyPlayer::set_data_json(rapidjson::Document& doc)
 {
-	if (doc.HasMember("currency"))
+	if (doc.HasMember(sCurrency))
 	{
-		rapidjson::Value& currencyvalue = doc["currency"];
+		rapidjson::Value& currencyvalue = doc[sCurrency];
 		if (!currencyvalue.IsNull()){
-			if (currencyvalue.HasMember("gold"))
+			if (currencyvalue.HasMember(sGold))
 			{
-				m_gold = currencyvalue["gold"].GetInt();
+				m_gold = currencyvalue[sGold].GetInt();
 			}
-			if (currencyvalue.HasMember("gem"))
+			if (currencyvalue.HasMember(sGem))
 			{
-				m_gem = currencyvalue["gem"].GetInt();
+				m_gem = currencyvalue[sGem].GetInt();
 			}
 		}
 	}
-	else //first time there is no save
+	else //first time there is no save. we need sensible values.
 	{
-		m_gold = 424242;
-		m_gem = 42;
+		//these should be set in constructor
 	}
+	
 }

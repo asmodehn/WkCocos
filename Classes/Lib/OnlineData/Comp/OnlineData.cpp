@@ -1,9 +1,9 @@
 #include "WkCocos/OnlineData/Comp/OnlineData.h"
 
 //including json from cocos
-//#include "json/document.h"         // rapidjson's DOM-style API
-//#include "json/stringbuffer.h"
-//#include "json/writer.h"
+#include "json/document.h"         // rapidjson's DOM-style API
+#include "json/stringbuffer.h"
+#include "json/writer.h"
 
 namespace WkCocos
 {
@@ -11,7 +11,7 @@ namespace WkCocos
 	{
 		namespace Comp
 		{
-			Create::Create(std::string userid, std::string passwd, std::string email, std::function<void(App42UserResponse*)> cb)
+			Create::Create(std::string userid, std::string passwd, std::string email, std::function<void(::App42::App42UserResponse*)> cb)
 				: in_progress(false)
 				, done(false)
 				, m_userid(userid)
@@ -19,7 +19,7 @@ namespace WkCocos
 				, m_email(email)
 			{
 				m_cb = [=](void* data) {
-					App42UserResponse* userdata = static_cast<App42UserResponse*>(data);
+					::App42::App42UserResponse* userdata = static_cast<::App42::App42UserResponse*>(data);
 
 					CCLOG("\ncode=%d...=%d", userdata->getCode(), userdata->isSuccess);
 					CCLOG("\nResponse Body=%s", userdata->getBody().c_str());
@@ -43,14 +43,14 @@ namespace WkCocos
 				};
 			}
 
-			Login::Login(std::string userid, std::string passwd, std::function<void(App42UserResponse*)> cb)
+			Login::Login(std::string userid, std::string passwd, std::function<void(::App42::App42UserResponse*)> cb)
 				: in_progress(false)
 				, done(false)
 				, m_userid(userid)
 				, m_passwd(passwd)
 			{
 				m_cb = [=](void* data) {
-					App42UserResponse* userdata = static_cast<App42UserResponse*>(data);
+					::App42::App42UserResponse* userdata = static_cast<::App42::App42UserResponse*>(data);
 
 					CCLOG("\ncode=%d...=%d", userdata->getCode(), userdata->isSuccess);
 					CCLOG("\nResponse Body=%s", userdata->getBody().c_str());
@@ -82,14 +82,14 @@ namespace WkCocos
 				, m_user_data(user_data)
 			{
 				m_cb = [=](void* data) {
-					App42UserResponse* userdata = static_cast<App42UserResponse*>(data);
+					::App42::App42UserResponse* userdata = static_cast<::App42::App42UserResponse*>(data);
 
 					CCLOG("\ncode=%d...=%d", userdata->getCode(), userdata->isSuccess);
 					CCLOG("\nResponse Body=%s", userdata->getBody().c_str());
 
 					if (userdata->isSuccess)
 					{//if request succeed, we need to extract data from it
-					/*	rapidjson::Document doc;
+						rapidjson::Document doc;
 						doc.Parse<0>(userdata->getBody().c_str());
 						if (doc.HasParseError())
 						{
@@ -108,7 +108,7 @@ namespace WkCocos
 						{
 							cb("");
 						}
-						*/
+						
 					}
 					else// if request failed, 
 					{
@@ -125,41 +125,62 @@ namespace WkCocos
 				};
 			}
 
-			LoadUserData::LoadUserData(std::string userid,std::string collec, std::function<void(std::string)> cb)
+			LoadUserData::LoadUserData(std::string userid, std::string collec, std::function<void(std::string)> cb)
 				: in_progress(false)
 				, done(false)
 				, m_userid(userid)
 				, m_collection(collec)
-				, m_user_data("")
+				//, m_user_data("")
 			{
 				m_cb = [=](void* data) {
-					App42UserResponse* userdata = static_cast<App42UserResponse*>(data);
+					::App42::App42UserResponse* userdata = static_cast<::App42::App42UserResponse*>(data);
 
 					CCLOG("\ncode=%d...=%d", userdata->getCode(), userdata->isSuccess);
 					CCLOG("\nResponse Body=%s", userdata->getBody().c_str());
 
 					if (userdata->isSuccess)
 					{//if request succeed, we need to extract data from it
-					/*	rapidjson::Document doc;
+						rapidjson::Document doc;
 						doc.Parse<0>(userdata->getBody().c_str());
+						
 						if (doc.HasParseError())
 						{
-							//if parse error (also empty string), we ignore existing data.
-							cb("");
-						}
-						else if (doc.HasMember("data"))
-						{
-							//TMP debug
-							rapidjson::StringBuffer strbuf;
-							rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
-							doc["data"].Accept(writer);
-							cb(strbuf.GetString());
+							cb(""); // if parse error (also empty string), we ignore existing data.
 						}
 						else
 						{
-							cb("");
+							rapidjson::Value & temp = doc["app42"];
+							temp = temp["response"];
+							if (temp.HasMember("users"))
+							{
+								temp = temp["users"];
+								temp = temp["user"];
+								temp = temp["jsonDoc"];
+								if (temp.Size())
+								{
+									temp = temp[temp.Size() - 1];
+									if (temp.HasMember("data"))
+									{
+										rapidjson::StringBuffer strbuf;
+										rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
+										temp["data"].Accept(writer);
+										cb(strbuf.GetString());
+									}
+									else
+									{
+										cb("");
+									}
+								}
+								else
+								{
+									cb("");
+								}
+							}
+							else
+							{
+								cb("");
+							}
 						}
-						*/
 					}
 					else// if request failed, 
 					{

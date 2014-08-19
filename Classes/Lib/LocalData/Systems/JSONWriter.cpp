@@ -36,7 +36,7 @@ namespace WkCocos
 						{
 							CCLOG("file write error !!\n");
 							//signal error
-							events->emit<Events::Error>(entity);
+							events->emit<Events::Error>(entity, "JSONWriter system file write error");
 							//WHAT TO DO ?
 						}
 					}

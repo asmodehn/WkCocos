@@ -3,6 +3,10 @@
 
 #include "entityx/entityx.h"
 #include "WkCocos/Timer/Comp/TimeValue.h"
+//needed for classes using Timer.
+#include "WkCocos/Timer/Events/TimerUpdate.h"
+#include "WkCocos/Timer/Events/AlarmOff.h"
+
 #include <ctime>
 
 namespace WkCocos
@@ -23,16 +27,16 @@ namespace WkCocos
 			~Timer();
 			
 			/**
-			* Setup Timer
-			* @param id identifier of the timer
+			* Setup Alarm
+			* @param id identifier of the alarm
 			* @param alarm_date date whent he alarm will be triggered
 			*/
 			bool setAlarm(std::string id, struct tm alarm_date);
-			
+
 			/**
-			* Delete Timer
+			* Stops the Alarm
 			*/
-			void deleteAlarm(std::string id);
+			void stopAlarm(std::string id);
 			
 			void update(double dt);
 

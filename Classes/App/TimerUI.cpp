@@ -45,6 +45,9 @@ TimerUI::TimerUI()
 	{
 		m_widget->retain(); //we need to retain it in memory ( or cocos will drop it )
 		widget_cache.insert(std::pair<std::string, ui::Widget*>(id, m_widget));
+
+		GameLogic::Instance().getPlayer().getTimermgr()->getEventManager()->subscribe<WkCocos::Timer::Events::TimerUpdate>(*this);
+		GameLogic::Instance().getPlayer().getTimermgr()->getEventManager()->subscribe<WkCocos::Timer::Events::AlarmOff>(*this);
 	}
 
 }
@@ -52,13 +55,23 @@ TimerUI::TimerUI()
 TimerUI::~TimerUI()
 {}
 
+void TimerUI::receive(const WkCocos::Timer::Events::TimerUpdate &tu)
+{
+	m_countLabel->setText(WkCocos::ToolBox::itoa(tu.getTimeLeft().tm_min) + " min " + WkCocos::ToolBox::itoa(tu.getTimeLeft().tm_sec) + " sec");
+}
+
+void TimerUI::receive(const WkCocos::Timer::Events::AlarmOff &ao)
+{
+	m_countLabel->setText(ao.id + " alarm off");
+}
+
 void TimerUI::startCallback(Ref* widgetRef, ui::Widget::TouchEventType input)
 {
 	if (input == ui::Widget::TouchEventType::ENDED)
 	{
 		CCLOG("START BUTTON CLICKED");
 		
-		GameLogic::Instance().getPlayer().setTimer("testing", 20);
+		GameLogic::Instance().getPlayer().setTimer("testing", 60);
 		
 	}
 }
@@ -70,7 +83,7 @@ void TimerUI::stopCallback(Ref* widgetRef, ui::Widget::TouchEventType input)
 	{
 		CCLOG("STOP BUTTON CLICKED");
 
-		GameLogic::Instance().getPlayer().deleteTimer("testing");
+		GameLogic::Instance().getPlayer().stopTimer("testing");
 	}
 }
 

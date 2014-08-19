@@ -3,9 +3,12 @@
 
 #include "WkCocos/Scene.h"
 
-#include "WkCocos/Loading/LoadingManager.h"
+#include "WkCocos/Download/Download.h"
+#include "WkCocos/Preload/Preload.h"
+#include "WkCocos/Download/Events/Error.h"
+#include "WkCocos/Preload/Events/Error.h"
 
-class LoadingScene : public WkCocos::Scene
+class LoadingScene : public WkCocos::Scene, public entityx::Receiver<WkCocos::Preload::Events::Error>//, public entityx::Receiver<WkCocos::Download::Events::Error>
 {
 public:
 		
@@ -32,10 +35,13 @@ public:
 	*/
 	void scheduleDLCCheck();
 
-	void error_CB();
+	void error_CB(std::string msg);
 
 	//expects pct in [0..1]
 	void progress_CB(float pct);
+
+	void receive(const WkCocos::Download::Events::Error &de);
+	void receive(const WkCocos::Preload::Events::Error &pe);
 
 protected:
 
@@ -44,12 +50,9 @@ protected:
 	bool m_loadDoneCB_called;
 
 	bool m_loadMan_del_scheduled;
-
+	WkCocos::Download::Download * m_downloadManager;
+	WkCocos::Preload::Preload * m_preloadManager;
 	std::function<void()> m_loadDoneCB;
 
-	WkCocos::Loading::LoadingManager * m_loadingManager;
-
 };
-
-
 #endif // __LOADING_SCENE_H__

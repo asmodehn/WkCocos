@@ -9,16 +9,22 @@ namespace WkCocos
 	{
 		namespace Events
 		{
-			struct TimerUpdate : public entityx::Event<TimerUpdate> {
-				TimerUpdate(entityx::Entity e, const std::string& timerID, double time) 
-				: timer(e)
-				, id(timerID)
-				, time_left(time)
-				{}
+			struct TimerUpdate : public entityx::Event<TimerUpdate>
+			{
+				TimerUpdate(entityx::Entity e, tm time) : timer(e), time_left(time)
+				{
+					auto tempEntity = e.component<Comp::ID>();
+					id = tempEntity->m_id;
+				}
+
+				tm getTimeLeft() const
+				{
+					return time_left;
+				}
 
 				entityx::Entity timer;
 				std::string		id;
-				double			time_left;
+				tm				time_left;
 			};
 
 		}//namespace Events

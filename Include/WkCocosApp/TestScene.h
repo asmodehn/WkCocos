@@ -20,9 +20,9 @@ public:
 
 	virtual void onExitTransitionDidStart() override;
 
-	
-	void error_CB();
+	void error_CB(std::string msg);
 
+	void menuCloseCallback(cocos2d::Ref* pSender);
 
 protected:
 
