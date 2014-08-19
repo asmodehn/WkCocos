@@ -71,7 +71,7 @@ void TimerUI::startCallback(Ref* widgetRef, ui::Widget::TouchEventType input)
 	{
 		CCLOG("START BUTTON CLICKED");
 		
-		GameLogic::Instance().getPlayer().setTimer("testing", 20);
+		GameLogic::Instance().getPlayer().setTimer("testing", 60);
 		
 	}
 }

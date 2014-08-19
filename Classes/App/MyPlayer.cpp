@@ -6,6 +6,8 @@
 
 MyPlayer::MyPlayer(std::shared_ptr<WkCocos::LocalData::LocalDataManager> localdatamngr)
 : WkCocos::Player<MyPlayer>(localdatamngr)
+, m_gem(42)
+, m_gold(424242)
 {
 }
 
@@ -63,10 +65,9 @@ void MyPlayer::set_data_json(std::string data)
 			}
 		}
 	}
-	else //first time there is no save
+	else //first time there is no save. we need sensible values.
 	{
-		//m_gold = 424242;
-		//m_gem = 42;
+		//these should be set in constructor
 	}
 	
 }

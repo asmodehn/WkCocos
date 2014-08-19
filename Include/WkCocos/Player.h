@@ -23,7 +23,7 @@ namespace WkCocos
 	* T must be able to serialize and deserialized to/from JSON string.
 	*/
 	template <class T>
-	class Player
+	class Player : public entityx::Receiver<Player<T>>
 	{
 	public:
 
@@ -71,6 +71,8 @@ namespace WkCocos
 			return  m_localdata;
 		}
 
+		void receive(const WkCocos::OnlineData::Events::Error& err);
+
 	protected:
 		Player(std::shared_ptr<LocalData::LocalDataManager> localdata);
 
@@ -96,6 +98,34 @@ namespace WkCocos
 		virtual void set_data_json(std::string data) = 0;
 		
 	private:
+
+		void createNewUserID(std::string& user, std::string& passwd) const
+		{
+			//generate unique ID
+			std::string user_prefix = "fake_";
+			std::string uuid = WkCocos::UUID::create();
+
+			if (uuid.length() > 0)
+			{
+				user = user_prefix + uuid;
+				//generating password (deterministic way, so we can recover password later)
+				//TODO
+				passwd = uuid;
+			}
+		}
+
+		void loginNewUserID()
+		{
+			//adding fake email on creation ( email is used for password recovery )
+			std::string email = m_user + "@fake.net";
+
+			//autologin. create user and login
+			m_onlinedata->loginNew(m_user, m_passwd, email, [=](std::string body){
+				CCLOG("login done !!!");
+				//loading again to get online value
+				requestLoadData(onlineDataLoaded_callback);
+			});
+		}
 
 		//game callbacks
 		std::function<void()> onlineDataLoaded_callback;
@@ -132,42 +162,45 @@ namespace WkCocos
 				m_passwd = passwd;
 
 				newPlayer = false;
-
-				if (m_onlinedata && onlineDataLoaded_callback) //in case online data is set while we re loading loginID
-				{
-					//reset online data manager to force login
-					setOnlineDataManager(m_onlinedata, onlineDataLoaded_callback);
-				}
-				else
-				{
-					requestLoadData([](){}); //we assume no callback needed there...
-				}
 			}
 			else
 			{
-				//generate unique ID
-				std::string user_prefix = "fake_";
-				std::string uuid = WkCocos::UUID::create();
-
-				user = user_prefix + uuid;
-				//generating password
-				passwd = uuid;
-
-				//generating password (deterministic way, so we can recover password later)
-				//TODO
+				createNewUserID(user, passwd);
 
 				if (user.length() > 0 && passwd.length() > 0)
 				{
 					m_user = user;
 					m_passwd = passwd;
-
+					
 					//store unique ID
 					m_localdata->saveLoginID(m_user, m_passwd);
 
 					newPlayer = true;
 				}
-				//we assume there is no data to load.
 			}
+
+			if (m_onlinedata && onlineDataLoaded_callback) //in case online data is set while we re loading loginID
+			{
+				//we need to do login here
+				if (newPlayer)
+				{
+					loginNewUserID();
+				}
+				else
+				{
+					//autologin
+					m_onlinedata->login(m_user, m_passwd, [=](std::string body){
+						CCLOG("login done !!!");
+						//loading again to get online value
+						requestLoadData(onlineDataLoaded_callback);
+					});
+				}
+			}
+			else
+			{
+				requestLoadData([](){}); //we assume no callback needed there. we re loading local save.
+			}
+
 		});
 	}
 	
@@ -177,24 +210,19 @@ namespace WkCocos
 		m_onlinedata = onlinedata;
 		onlineDataLoaded_callback = online_init_cb;
 
+		//subscribing to get error events
+		m_onlinedata->getEventManager()->subscribe<WkCocos::OnlineData::Events::Error>(*this);
+		
 		if (m_user != "")
 		{
 			if (newPlayer)
 			{
-				//adding fake email on creation ( email is used for password recovery )
-				std::string email = m_user + "@fake.net";
-
-				//autologin. create user and login
-				m_onlinedata->loginNew(m_user, m_passwd, email, [=](void * data){
-					CCLOG("login done !!!");
-					//loading again to get online value
-					requestLoadData(onlineDataLoaded_callback);
-				});
+				loginNewUserID();
 			}
 			else
 			{
 				//autologin
-				m_onlinedata->login(m_user, m_passwd, [=](void * data){
+				m_onlinedata->login(m_user, m_passwd, [=](std::string body){
 					CCLOG("login done !!!");
 					//loading again to get online value
 					requestLoadData(onlineDataLoaded_callback);
@@ -372,6 +400,54 @@ namespace WkCocos
 		if (m_onlinedata)
 		{
 			m_onlinedata->update(deltatime);
+		}
+	}
+
+	template <class T>
+	void Player<T>::receive(const WkCocos::OnlineData::Events::Error& err)
+	{
+		if (err.httpErrorCode == 404 && err.app42ErrorCode == 2002 ) //Login existing: Authentication failed
+		{
+			//Major error : we recreate the user
+			std::string newUser;
+			std::string newPasswd;
+
+			//TODO : We might want to prompt the user before this.
+			createNewUserID(newUser, newPasswd);
+
+			//if new Id is aceptable we replace old one
+			if (m_user.length() > 0 && m_passwd.length() > 0)
+			{
+				m_user = newUser;
+				m_passwd = newPasswd;
+
+				//store unique ID
+				m_localdata->saveLoginID(m_user, m_passwd);
+			}
+			
+			//login with new ID ( will create non existing user )
+			loginNewUserID();
+		}
+		else if (err.httpErrorCode == 400 && err.app42ErrorCode == 2001) //Creation failed : Username already exist
+		{
+			//we recreate the user
+			std::string newUser;
+			std::string newPasswd;
+
+			createNewUserID(newUser, newPasswd);
+
+			//if new Id is aceptable we replace old one
+			if (m_user.length() > 0 && m_passwd.length() > 0)
+			{
+				m_user = newUser;
+				m_passwd = newPasswd;
+
+				//store unique ID
+				m_localdata->saveLoginID(m_user, m_passwd);
+			}
+
+			//login with new ID ( will create non existing user )
+			loginNewUserID();
 		}
 	}
 
