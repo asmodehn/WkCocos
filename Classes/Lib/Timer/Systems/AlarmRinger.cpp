@@ -1,4 +1,4 @@
-#include "WkCocos/Timer/Systems/Alarm.h"
+#include "WkCocos/Timer/Systems/AlarmRinger.h"
 #include "WkCocos/Timer/Comp/TimeValue.h"
 #include "WkCocos/Timer/Events/AlarmOff.h"
 #include "WkCocos/Timer/Events/TimerUpdate.h"
@@ -13,7 +13,7 @@ namespace WkCocos
 			/**
 			* This function will call the callback with the current progress of the timer.
 			*/
-			void Alarm::update(entityx::ptr<entityx::EntityManager> es, entityx::ptr<entityx::EventManager> events, double dt)
+			void AlarmRinger::update(entityx::ptr<entityx::EntityManager> es, entityx::ptr<entityx::EventManager> events, double dt)
 			{
 				entityx::ptr<Comp::ID> id;
 				entityx::ptr<Comp::Alarm> alarm;
@@ -27,23 +27,8 @@ namespace WkCocos
 					if (delta < 0) // becomes true when delta is -1, this adds 1 sec to alarm length
 					{
 						events->emit<Events::AlarmOff>(entity);
-						entity.remove<Comp::Alarm>();
-						entity.remove<Comp::ID>();
-						entity.destroy();
-					}
-					else
-					{
-						if (/*!timerupdatesent && */difftime(nowtime, oldtime))
-						{
-							oldtime = nowtime;
-							tm temptime = {(time_t)delta, 0, 0, 0, 0, 0, 0, 0, 0};
-							mktime(&temptime);
-							events->emit<Events::TimerUpdate>(entity, temptime);
-							//timerupdatesent = true;
-						}
 					}
 				}
-				//timerupdatesent = false;
 			};
 
 		}//namespace Systems

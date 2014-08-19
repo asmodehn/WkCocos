@@ -83,7 +83,7 @@ void TimerUI::stopCallback(Ref* widgetRef, ui::Widget::TouchEventType input)
 	{
 		CCLOG("STOP BUTTON CLICKED");
 
-		GameLogic::Instance().getPlayer().deleteTimer("testing");
+		GameLogic::Instance().getPlayer().stopTimer("testing");
 	}
 }
 

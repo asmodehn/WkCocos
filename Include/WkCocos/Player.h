@@ -56,11 +56,11 @@ namespace WkCocos
 		}
 		
 		/**
-		* Delete Timer
+		* stops Timer
 		*/
-		void deleteTimer(std::string id)
+		void stopTimer(std::string id)
 		{
-			m_timer->deleteAlarm(id);
+			m_timer->stopAlarm(id);
 		}
 		std::shared_ptr<Timer::Timer> getTimermgr()
 		{

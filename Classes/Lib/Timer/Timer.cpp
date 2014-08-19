@@ -2,7 +2,9 @@
 
 #include "WkCocos/Timer/Comp/TimeValue.h"
 
-#include "WkCocos/Timer/Systems/Alarm.h"
+#include "WkCocos/Timer/Systems/AlarmDestructor.h"
+#include "WkCocos/Timer/Systems/AlarmRinger.h"
+#include "WkCocos/Timer/Systems/TimeUpdater.h"
 
 #include "cocos/cocos2d.h"
 
@@ -16,7 +18,9 @@ namespace WkCocos
 			, system_manager(entityx::SystemManager::make(entity_manager, event_manager))
 		{
 
-			system_manager->add<Systems::Alarm>();
+			system_manager->add<Systems::TimeUpdater>();
+			system_manager->add<Systems::AlarmRinger>();
+			system_manager->add<Systems::AlarmDestructor>();
 			system_manager->configure();
 		}
 
@@ -49,23 +53,25 @@ namespace WkCocos
 		}
 		
 		/**
-		* Delete Timer
+		* stops Timer
 		*/
-		void Timer::deleteAlarm(std::string id)
+		void Timer::stopAlarm(std::string id)
 		{
 			entityx::ptr<Comp::ID> eid;
 			for (auto entity : entity_manager->entities_with_components(eid))
 			{
 				if (id == eid->m_id)
 				{
-					entity.destroy();
+					entity.assign<Comp::Stopped>();
 				}
 			}
 		}
 
 		void Timer::update(double dt) 
 		{
-			system_manager->update<Systems::Alarm>(dt);
+			system_manager->update<Systems::TimeUpdater>(dt);
+			system_manager->update<Systems::AlarmRinger>(dt);
+			system_manager->update<Systems::AlarmDestructor>(dt);
 		}
 
 	} //namespace Timer
