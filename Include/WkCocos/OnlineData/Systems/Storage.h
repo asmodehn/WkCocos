@@ -16,12 +16,10 @@ namespace WkCocos
 			{
 				Storage();
 				~Storage();
-				
 				void update(entityx::ptr<entityx::EntityManager> entities, entityx::ptr<entityx::EventManager> events, double dt) override;
 
 			protected :
 				::App42::StorageService* m_service;
-				const char * DB_NAME = "PUBLIC";
 			};
 		}//namespace Systems
 	}//namespace OnlineData

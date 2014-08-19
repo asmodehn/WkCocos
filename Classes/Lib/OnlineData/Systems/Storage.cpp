@@ -2,7 +2,7 @@
 
 #include "WkCocos/OnlineData/Comp/OnlineData.h"
 
-//#define DB_NAME "PUBLIC"
+#define DB_NAME "PUBLIC"
 
 namespace WkCocos
 {
@@ -38,14 +38,14 @@ namespace WkCocos
 					}
 					else if (!sud->in_progress)
 					{
-						//::App42::App42User user;
-						//user.userName = sud->m_userid.c_str();
+						::App42::App42User user;
+						user.userName = sud->m_userid.c_str();
 						::App42::App42Object app42Object;
 						app42Object.setObject("user_id", sud->m_userid.c_str());
 						app42Object.setObject("data", sud->m_user_data.c_str());
 						//::App42::App42API::setDbName(DB_NAME);
 						//m_service->AddUserInfo(&app42Object, sud->m_collection.c_str());
-						m_service->DeleteAllDocuments(DB_NAME, sud->m_collection.c_str(), sud->m_dummy_cb);
+						m_service->DeleteDocumentsByKeyValue(DB_NAME, sud->m_collection.c_str(), "user_id", sud->m_userid.c_str(), sud->m_dummy_cb);
 						m_service->InsertJsonDocument(DB_NAME, sud->m_collection.c_str(), &app42Object, sud->m_cb);
 						sud->in_progress = true;
 					}
@@ -70,7 +70,7 @@ namespace WkCocos
 						//m_service->setQuery(DB_NAME, lud->m_collection, query);
 						//delete query;
 						CCLOG("Requesting App42 User data for : %s ", lud->m_userid.c_str());
-						m_service->FindAllDocuments(DB_NAME, lud->m_collection.c_str(), lud->m_cb);
+						m_service->FindDocumentByKeyValue(DB_NAME, lud->m_collection.c_str(), "user_id", lud->m_userid.c_str(), lud->m_cb);
 						lud->in_progress = true;
 					}
 

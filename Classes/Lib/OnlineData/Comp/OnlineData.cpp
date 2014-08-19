@@ -83,7 +83,7 @@ namespace WkCocos
 			{
 				m_cb = [=](void* data)
 				{
-					::App42::App42UserResponse* userdata = static_cast<::App42::App42UserResponse*>(data);
+					::App42::App42StorageResponse* userdata = static_cast<::App42::App42StorageResponse*>(data);
 
 					CCLOG("\ncode=%d...=%d", userdata->getCode(), userdata->isSuccess);
 					CCLOG("\nResponse Body=%s", userdata->getBody().c_str());
@@ -135,7 +135,7 @@ namespace WkCocos
 				//, m_user_data("")
 			{
 				m_cb = [=](void* data) {
-					::App42::App42UserResponse* userdata = static_cast<::App42::App42UserResponse*>(data);
+					::App42::App42StorageResponse* userdata = static_cast<::App42::App42StorageResponse*>(data);
 
 					CCLOG("\ncode=%d...=%d", userdata->getCode(), userdata->isSuccess);
 					CCLOG("\nResponse Body=%s", userdata->getBody().c_str());
@@ -151,13 +151,11 @@ namespace WkCocos
 						}
 						else
 						{
-							rapidjson::Value & temp = doc["app42"];
-							temp = temp["response"];
-
-							if (temp.HasMember("users")) // old code, before storage
+							if (doc.HasMember("app42"))
 							{
-								temp = temp["users"];
-								temp = temp["user"];
+								rapidjson::Value & temp = doc["app42"];
+								temp = temp["response"];
+								temp = temp["storage"];
 								temp = temp["jsonDoc"];
 								if (temp.Size())
 								{
@@ -179,26 +177,17 @@ namespace WkCocos
 									cb("");
 								}
 							}
-							else //new code, after storage
+							else
 							{
-								if (temp.HasMember("storage"))
+								if (doc.Size())
 								{
-									temp = temp["storage"];
-									temp = temp["jsonDoc"];
-									if (temp.Size())
+									rapidjson::Value & temp = doc[doc.Size() - 1];
+									if (temp.HasMember("data"))
 									{
-										temp = temp[temp.Size() - 1];
-										if (temp.HasMember("data"))
-										{
-											rapidjson::StringBuffer strbuf;
-											rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
-											temp["data"].Accept(writer);
-											cb(strbuf.GetString());
-										}
-										else
-										{
-											cb("");
-										}
+										rapidjson::StringBuffer strbuf;
+										rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
+										temp["data"].Accept(writer);
+										cb(strbuf.GetString());
 									}
 									else
 									{
