@@ -17,8 +17,8 @@ namespace WkCocos
 			{
 			public:
 				explicit Preload(unsigned short concurrent_loads,
-					std::function<void(float)> progress_callback,
-					std::function<void()> error_callback
+					std::function<void(float)> progress_callback/*,
+					std::function<void(std::string)> error_callback*/
 					);
 
 				//scheduel the load in memory of a data.
@@ -50,7 +50,7 @@ namespace WkCocos
 
 				unsigned short m_concurrent_loads;
 
-				std::function<void()> m_error_callback;
+				//std::function<void(std::string)> m_error_callback;
 				std::function<void(float)> m_progress_callback;
 
 			};

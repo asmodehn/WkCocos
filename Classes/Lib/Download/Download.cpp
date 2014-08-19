@@ -1,6 +1,5 @@
 #include "WkCocos/Download/Download.h"
 
-#include "WkCocos/Download/Systems/Error.h"
 #include "WkCocos/Download/Systems/DLClisting.h"
 #include "WkCocos/Download/Systems/DLCchecking.h"
 #include "WkCocos/Download/Systems/MD5checking.h"
@@ -8,10 +7,10 @@
 #include "WkCocos/Download/Systems/DLvalidating.h"
 #include "WkCocos/Download/Systems/ProgressUpdate.h"
 
-#include "cocos2d.h"
+//#include "cocos2d.h"
 #include "cocostudio/CocoStudio.h"
 
-#include "WkCocos/Utils/ToolBox.h"
+//#include "WkCocos/Utils/ToolBox.h"
 
 #include <functional>
 
@@ -21,12 +20,10 @@ namespace WkCocos
 	{
 
 		Download::Download(unsigned short concurrent_downloads,
-			std::function<void(float)> progress_callback,
-			std::function<void()> error_callback
+			std::function<void(float)> progress_callback
 			)
 			: m_concurrent_downloads(concurrent_downloads)
 			, m_progress_callback(progress_callback)
-			, m_error_callback(error_callback)
 		{
 			curl_global_init(CURL_GLOBAL_DEFAULT);
 		}
@@ -92,16 +89,15 @@ namespace WkCocos
 
 		void Download::configure()
 		{
-			system_manager->add<Systems::Error>(m_error_callback);
-			//system_manager->add<Systems::DataEval>();
-			system_manager->add<Systems::DLClisting>();
-			system_manager->add<Systems::DLCchecking>();
+			auto dlc_list = system_manager->add<Systems::DLClisting>();
+			dlc_list->setConnectionTimeout(5);
+
+			auto dlc_check = system_manager->add<Systems::DLCchecking>();
+			dlc_check->setConnectionTimeout(5);
+
 			system_manager->add<Systems::MD5checking>();
-			//system_manager->add<Systems::CurlMultiDL>(m_concurrent_downloads);
 			system_manager->add<Systems::CurlDL>(m_concurrent_downloads);
 			system_manager->add<Systems::DLvalidating>();
-			//system_manager->add<Systems::ASyncLoading>(m_concurrent_loads);
-			//system_manager->add<Systems::SyncLoading>();
 			system_manager->add<Systems::ProgressUpdate>(m_progress_callback);
 		};
 
@@ -116,12 +112,8 @@ namespace WkCocos
 			fileUtils->setSearchPaths(searchPaths);
 		}
 
-		void Download::update(double dt) {
-
-			//check for error and report them if needed
-			system_manager->update<Systems::Error>(dt);
-			//evaluate entities containing DataLoad components
-			//system_manager->update<Systems::DataEval>(dt);
+		void Download::update(double dt) 
+		{
 			//listing versions avialable on DLC
 			system_manager->update<Systems::DLClisting>(dt);
 			//listing files in one version on DLC
@@ -130,15 +122,10 @@ namespace WkCocos
 			system_manager->update<Systems::MD5checking>(dt);
 			
 			//do the curl calls when needed
-			//system_manager->update<Systems::CurlMultiDL>(dt);
 			system_manager->update<Systems::CurlDL>(dt);
 
 			//validates if signature matches
 			system_manager->update<Systems::DLvalidating>(dt);
-			//asynchronously load data
-			//system_manager->update<Systems::ASyncLoading>(dt);
-			//synchronously load data
-			//system_manager->update<Systems::SyncLoading>(dt);
 
 			//display the progress
 			system_manager->update<Systems::ProgressUpdate>(dt);

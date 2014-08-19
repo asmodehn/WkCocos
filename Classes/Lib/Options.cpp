@@ -1,5 +1,5 @@
 #include "WkCocos/Options.h"
-
+#include "cocos2d.h"
 namespace WkCocos
 {
 		//constructors

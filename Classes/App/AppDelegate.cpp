@@ -1,6 +1,6 @@
 #include "WkCocosApp/AppDelegate.h"
 #include "WkCocosApp/LoadingScene.h"
-#include "WkCocosApp/SavingScene.h"
+#include "WkCocosApp/TestScene.h"
 #include "WkCocosApp/GameLogic.h"
 
 
@@ -87,17 +87,22 @@ bool AppDelegate::applicationDidFinishLaunching() {
 	//LOG_INFO << "Add " << "cocos " << "appender" << std::endl;
 	//LOG_INFO << "Next Line" << std::endl;
 
-	loadscene->scheduleDLCCheck();
+	//Creating gamelogic and setting player.
+	GameLogic::Instance().connectApp42("3a3579d378cdf38a29e7dd80ec20dc15fc2a19a6959bcfc1ea353885a1802f86", "89ff08c30c0f3d15e5b571d2b3a90fd80401a756cb7f3620cfc625756421ee35", [loadscene]()
+	{
+		//We launch loading scene with DLC only after login
+		loadscene->scheduleDLCCheck();
 
-	loadscene->addLoad({"HelloWorld.png"});
+		loadscene->addLoad({ "HelloWorld.png" });
 
-	loadscene->setLoadDoneCallback([this](){
-		auto director = cocos2d::Director::getInstance();
-		director->replaceScene(cocos2d::TransitionFade::create(1.0f, SavingScene::create()));
+		loadscene->setLoadDoneCallback([](){
+			auto director = cocos2d::Director::getInstance();
+			director->replaceScene(cocos2d::TransitionFade::create(1.0f, TestScene::create()));
+		});
+
 	});
 
-	//Creating gamelogic and setting player.
-	GameLogic::Instance().connectApp42("3a3579d378cdf38a29e7dd80ec20dc15fc2a19a6959bcfc1ea353885a1802f86", "89ff08c30c0f3d15e5b571d2b3a90fd80401a756cb7f3620cfc625756421ee35");
+	//TODO : improve the flow with a splash screen while login happens
 
     // run
 	director->runWithScene(cocos2d::TransitionFade::create(1.0f, loadscene));

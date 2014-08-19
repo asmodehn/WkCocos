@@ -2,7 +2,7 @@
 #define __WKCOCOS_APP42_LOGIN_H__
 
 //dependencies headers
-#include "Common/App42API.h"
+//#include "Common/App42API.h"
 
 namespace WkCocos
 {

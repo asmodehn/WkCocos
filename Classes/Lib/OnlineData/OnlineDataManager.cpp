@@ -5,7 +5,9 @@
 #include "WkCocos/OnlineData/Comp/OnlineData.h"
 
 #include "cocos/cocos2d.h"
-#include "Common/App42API.h"
+//#include "Common/App42API.h"
+
+#include "WkCocos/OnlineData/Events/Error.h"
 
 namespace WkCocos
 {
@@ -16,7 +18,7 @@ namespace WkCocos
 			, entity_manager(entityx::EntityManager::make(event_manager))
 			, system_manager(entityx::SystemManager::make(entity_manager, event_manager))
 		{
-			App42API::Initialize(app_access_key, app_secret_key);
+			::App42::App42API::Initialize(app_access_key, app_secret_key);
 			system_manager->add<Systems::User>();
 			system_manager->configure();
 		}
@@ -25,33 +27,40 @@ namespace WkCocos
 		{
 		}
 
-		void OnlineDataManager::loginNew(std::string userid, std::string password, std::string email, std::function<void(App42UserResponse*)> callback)
+		void OnlineDataManager::loginNew(std::string userid, std::string password, std::string email, std::function<void(std::string)> success_callback)
 		{
 
 			auto newentity = entity_manager->create();
 			//new File component for each request. The aggregator system will detect duplicates and group them
-			newentity.assign<Comp::Create>(userid, password, email, [=](App42UserResponse* r){
+			newentity.assign<Comp::Create>(userid, password, email, [=](::App42::App42UserResponse* r){
 
 				if (r->isSuccess)
 				{
-					login(userid, password, callback);
+					login(userid, password, success_callback);
 				}
 				else // if creation failed, 
 				{
-					//call the callback with error already
-					callback(r);
+					event_manager->emit<Events::Error>(r);
 				}
 				
 			});
 			
 		}
 
-		void OnlineDataManager::login(std::string userid, std::string password, std::function<void(App42UserResponse*)> callback)
+		void OnlineDataManager::login(std::string userid, std::string password, std::function<void(std::string)> success_callback)
 		{
 			auto newentity = entity_manager->create();
 			//new File component for each request. The aggregator system will detect duplicates and group them
-			newentity.assign<Comp::Login>(userid, password, [=](App42UserResponse* r){
-				callback(r);
+			newentity.assign<Comp::Login>(userid, password, [=](::App42::App42UserResponse* r){
+				if (! r->isSuccess)
+				{
+					event_manager->emit<Events::Error>( r );
+					//callback is not called if error
+				}
+				else
+				{
+					success_callback(r->getBody());
+				}
 			});
 		}
 
@@ -66,7 +75,7 @@ namespace WkCocos
 		{
 			auto newentity = entity_manager->create();
 			//new File component for each request. The aggregator system will detect duplicates and group them
-			newentity.assign<Comp::LoadUserData>(userid, "user_data",callback);
+			newentity.assign<Comp::LoadUserData>(userid, "user_data", callback);
 		}
 
 		void OnlineDataManager::update(double dt) {

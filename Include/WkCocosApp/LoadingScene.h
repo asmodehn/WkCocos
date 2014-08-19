@@ -1,13 +1,14 @@
 #ifndef __LOADING_SCENE_H__
 #define __LOADING_SCENE_H__
 
-#include "cocos2d.h"
 #include "WkCocos/Scene.h"
 
 #include "WkCocos/Download/Download.h"
 #include "WkCocos/Preload/Preload.h"
+#include "WkCocos/Download/Events/Error.h"
+#include "WkCocos/Preload/Events/Error.h"
 
-class LoadingScene : public WkCocos::Scene
+class LoadingScene : public WkCocos::Scene, public entityx::Receiver<WkCocos::Preload::Events::Error>//, public entityx::Receiver<WkCocos::Download::Events::Error>
 {
 public:
 		
@@ -34,10 +35,13 @@ public:
 	*/
 	void scheduleDLCCheck();
 
-	void error_CB();
+	void error_CB(std::string msg);
 
 	//expects pct in [0..1]
 	void progress_CB(float pct);
+
+	void receive(const WkCocos::Download::Events::Error &de);
+	void receive(const WkCocos::Preload::Events::Error &pe);
 
 protected:
 
@@ -50,8 +54,5 @@ protected:
 	WkCocos::Preload::Preload * m_preloadManager;
 	std::function<void()> m_loadDoneCB;
 
-
 };
-
-
 #endif // __LOADING_SCENE_H__

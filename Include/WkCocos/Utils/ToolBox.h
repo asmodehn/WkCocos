@@ -34,6 +34,13 @@ namespace WkCocos
 		*/
 		static unsigned long stoul(const std::string& _Str, size_t *_Idx = 0, int _Base = 10);
 
+
+		///Get Current Time
+		static struct tm getLocalTime();
+
+		///Get Current Time
+		static struct tm getUTCTime();
+
 	private:
 		/**
 		* Default constructor.

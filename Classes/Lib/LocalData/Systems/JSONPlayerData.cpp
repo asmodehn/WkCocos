@@ -61,7 +61,7 @@ namespace WkCocos
 						if (data.HasParseError()) {
 							CCLOG("GetParseError %s\n", data.GetParseError());
 							//signal error
-							events->emit<Events::Error>(entity);
+							events->emit<Events::Error>(entity, "JSONPlayerData system parse error");
 							//WHAT TO DO ?
 						}
 						else

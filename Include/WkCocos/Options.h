@@ -1,7 +1,7 @@
 #ifndef __WKCOCOS_OPTIONS_H__
 #define __WKCOCOS_OPTIONS_H__
 
-#include "cocos2d.h"
+//#include "cocos2d.h"
 #include "WkCocos/LocalData/LocalDataManager.h"
 
 #include <string>

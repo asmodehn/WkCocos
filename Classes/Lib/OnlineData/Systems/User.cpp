@@ -13,7 +13,7 @@ namespace WkCocos
 
 			User::User()
 			{
-				m_service = App42API::BuildUserService();
+				m_service = ::App42::App42API::BuildUserService();
 			
 			}
 
@@ -42,10 +42,10 @@ namespace WkCocos
 						auto data = entity.component<Comp::SaveUserData>();
 						if (data && !data->in_progress)
 						{
-							App42Object app42Object;
+							::App42::App42Object app42Object;
 							app42Object.setObject("user_id", data->m_userid.c_str());
 							app42Object.setObject("data", data->m_user_data.c_str());
-							App42API::setDbName(DB_NAME);
+							::App42::App42API::setDbName(DB_NAME);
 							m_service->AddUserInfo(&app42Object, data->m_collection.c_str());
 							data->in_progress = true;
 						}
@@ -90,12 +90,12 @@ namespace WkCocos
 					}
 					else if (!sud->in_progress)
 					{
-						App42User user;
+						::App42::App42User user;
 						user.userName = sud->m_userid.c_str();
-						App42Object app42Object;
+						::App42::App42Object app42Object;
 						app42Object.setObject("user_id", sud->m_userid.c_str());
 						app42Object.setObject("data", sud->m_user_data.c_str());
-						App42API::setDbName(DB_NAME);
+						::App42::App42API::setDbName(DB_NAME);
 						m_service->AddUserInfo(&app42Object, sud->m_collection.c_str());
 						m_service->createOrUpdateProfile(&user, sud->m_cb);
 						sud->in_progress = true;
@@ -118,9 +118,9 @@ namespace WkCocos
 					}
 					else if (!lud->in_progress)
 					{
-						Query* query = QueryBuilder::BuildQuery("user_id", lud->m_userid.c_str(), APP42_OP_EQUALS);
+						::App42::Query* query = ::App42::QueryBuilder::BuildQuery("user_id", lud->m_userid.c_str(), APP42_OP_EQUALS);
 						m_service->setQuery(DB_NAME, lud->m_collection, query);
-						delete query;
+						//delete query;
 						CCLOG("Requesting App42 User data for : %s ", lud->m_userid.c_str());
 						m_service->GetUser(lud->m_userid.c_str(), lud->m_cb);
 						lud->in_progress = true;

@@ -20,7 +20,7 @@ namespace WkCocos
 				void update(entityx::ptr<entityx::EntityManager> entities, entityx::ptr<entityx::EventManager> events, double dt) override;
 
 			protected :
-				StorageService* m_service;
+				::App42::StorageService* m_service;
 			};
 		}//namespace Systems
 	}//namespace OnlineData

@@ -51,11 +51,27 @@ namespace WkCocos
 						// must pass an allocator when the object may need to allocate memory
 						rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
 
-						rapidjson::Value vholder;
-						vholder.SetObject();
-						vholder.AddMember("user", loginid->m_user.c_str(), allocator);
-						vholder.AddMember("passwd", loginid->m_passwd.c_str(), allocator);
-						doc.AddMember(loginid->m_name.c_str(), vholder, allocator);
+						//if we already have a login value in the file, we need to replace it
+						if (doc.HasMember(loginid->m_name.c_str()))
+						{
+							rapidjson::Value& vholder = doc[loginid->m_name.c_str()];
+							if (vholder.HasMember("user"))
+							{
+								vholder["user"] = loginid->m_user.c_str();
+							}
+							if (vholder.HasMember("passwd"))
+							{
+								vholder["passwd"] = loginid->m_passwd.c_str();
+							}
+						}
+						else //new login id
+						{
+							rapidjson::Value vholder;
+							vholder.SetObject();
+							vholder.AddMember("user", loginid->m_user.c_str(), allocator);
+							vholder.AddMember("passwd", loginid->m_passwd.c_str(), allocator);
+							doc.AddMember(loginid->m_name.c_str(), vholder, allocator);
+						}
 
 						//TMP debug
 						rapidjson::StringBuffer strbuf;
