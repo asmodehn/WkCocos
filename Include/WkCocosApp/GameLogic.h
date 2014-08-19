@@ -7,6 +7,8 @@
 #include "WkCocosApp/MyPlayer.h"
 #include "WkCocosApp/MyOptions.h"
 
+//#include "cocos2d.h"
+
 class GameLogic{
 public:
 	static GameLogic& Instance() {
@@ -14,13 +16,10 @@ public:
 		return S;
 	}
 	
-	bool connectApp42(std::string app_access_key, std::string app_secret_key)
+	void connectApp42(std::string app_access_key, std::string app_secret_key, std::function<void()> online_init_cb)
 	{
 		m_onlinedatamngr.reset(new WkCocos::OnlineData::OnlineDataManager(app_access_key, app_secret_key));
-		m_player->setOnlineDataManager(m_onlinedatamngr);
-
-		//assumes creation succeeded
-		return true;
+		m_player->setOnlineDataManager(m_onlinedatamngr, online_init_cb);
 	}
 
 	void localDataError()
@@ -37,7 +36,7 @@ public:
 	{
 		return *(m_options.get());
 	}
-
+	
 private:
 	GameLogic();
 	~GameLogic();
@@ -49,6 +48,7 @@ private:
 	//overall game concepts
 	std::unique_ptr<MyPlayer> m_player;
 	std::unique_ptr<MyOptions> m_options;
+
 };
 
 #endif

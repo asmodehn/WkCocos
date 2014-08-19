@@ -3,11 +3,11 @@
 
 #include "entityx/entityx.h"
 
-#include "json/document.h"
-#include "json/filestream.h"
+//#include "json/document.h"
+//#include "json/filestream.h"
 
 #include "cocos/cocos2d.h"
-#include "WkCocos/Utils/ToolBox.h"
+//#include "WkCocos/Utils/ToolBox.h"
 
 #include <fstream>
 

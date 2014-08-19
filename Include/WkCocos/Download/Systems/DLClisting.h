@@ -21,10 +21,10 @@ namespace WkCocos
 
 				void update(entityx::ptr<entityx::EntityManager> es, entityx::ptr<entityx::EventManager> events, double dt) override;
 
-				void setConnectionTimeout(unsigned int timeout);
+				void setConnectionTimeout(unsigned long timeout);
 
 				void *_curl;
-				unsigned int _connectionTimeout;
+				unsigned long _connectionTimeout;
 
 				std::string m_dirlist;
 

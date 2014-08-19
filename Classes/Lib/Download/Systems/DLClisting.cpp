@@ -89,7 +89,7 @@ namespace WkCocos
 						{
 							CCLOGERROR("DLClisting can not read from %s, error code is %d", url.c_str(), res);
 							//signal error
-							events->emit<Events::Error>(entity);
+							events->emit<Events::Error>(entity, "DLClisting system");
 						}
 					}
 					else
@@ -149,7 +149,7 @@ namespace WkCocos
 				}
 			}
 
-			void DLClisting::setConnectionTimeout(unsigned int timeout)
+			void DLClisting::setConnectionTimeout(unsigned long timeout)
 			{
 				_connectionTimeout = timeout;
 			}

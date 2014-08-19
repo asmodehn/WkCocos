@@ -6,7 +6,7 @@
 #include "WkCocos/Preload/Events/Error.h"
 #include "WkCocos/Preload/Events/Loaded.h"
 
-#include "cocos/cocos2d.h"
+//#include "cocos/cocos2d.h"
 
 namespace WkCocos
 {

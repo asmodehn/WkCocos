@@ -118,7 +118,7 @@ namespace WkCocos
 							{
 								CCLOGERROR("DLCchecking can not read from %s, error code is %d", url.c_str(), res);
 								//signal error
-								events->emit<Events::Error>(entity);
+								events->emit<Events::Error>(entity, "DLCchecking system");
 								//we give up on this entity
 								entity.destroy();
 							}
@@ -135,13 +135,17 @@ namespace WkCocos
 							else
 							{
 								bool dlc_update_allowed = false;
+								bool dlc_update_required = false;
 								unsigned long version = 0;
 								try{
 									version = ToolBox::stoul(cocostudio::DictionaryHelper::getInstance()->getStringValue_json(json, "version", 0));
+									dlc_update_required = (version >= dllist->m_current_version);
 								}
 								catch (std::out_of_range oor)
 								{
 									version = LONG_MAX;
+									//TODO : improve with version string check.
+									dlc_update_required = (dllist->m_current_version == version);
 								}
 
 								std::string minAppVersion = cocostudio::DictionaryHelper::getInstance()->getStringValue_json(json, "minAppVersion", "error");
@@ -161,7 +165,7 @@ namespace WkCocos
 									}
 								}//if we cannot read the minimum app version. we dont download. better safe than sorry.
 
-								if (dlc_update_allowed && version >= dllist->m_current_version)
+								if (dlc_update_allowed && dlc_update_required)
 								{
 
 									//prepare the list of downloads
@@ -218,7 +222,7 @@ namespace WkCocos
 				}
 			};
 
-			void DLCchecking::setConnectionTimeout(unsigned int timeout)
+			void DLCchecking::setConnectionTimeout(unsigned long timeout)
 			{
 				_connectionTimeout = timeout;
 			}

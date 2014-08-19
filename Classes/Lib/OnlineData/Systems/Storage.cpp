@@ -77,7 +77,6 @@ namespace WkCocos
 				}
 
 			}
-					
 		}//namespace Systems
 	}//namespace OnlineData
 }//namespace WkCocos

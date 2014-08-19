@@ -5,6 +5,8 @@
 
 #include "Common/App42API.h"
 
+#include "WkCocos/OnlineData/Events/Error.h"
+
 #define DEFAULT_SAVE_VERSION 1
 
 namespace WkCocos
@@ -27,12 +29,12 @@ namespace WkCocos
 			/**
 			* Create User
 			*/
-			void loginNew(std::string userid, std::string password, std::string email, std::function<void(::App42::App42UserResponse*)> callback);
+			void loginNew(std::string userid, std::string password, std::string email, std::function<void(std::string)> callback);
 			
 			/**
 			* Login User
 			*/
-			void login(std::string userid, std::string password, std::function<void(::App42::App42UserResponse*)> callback);
+			void login(std::string userid, std::string password, std::function<void(std::string)> callback);
 
 			/**
 			* Save User Data
@@ -45,6 +47,12 @@ namespace WkCocos
 			void load(std::string userid, std::function<void(std::string)> callback);
 
 			void update(double dt);
+
+			//subscribe to this event manager to receive error events.
+			entityx::ptr<entityx::EventManager> getEventManager()
+			{
+				return event_manager;
+			}
 
 		protected :
 
