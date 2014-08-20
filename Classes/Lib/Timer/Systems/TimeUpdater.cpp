@@ -29,7 +29,7 @@ namespace WkCocos
 						oldtime = nowtime;
 						tm temptime = { (time_t)delta, 0, 0, 0, 0, 0, 0, 0, 0 };
 						mktime(&temptime);
-						events->emit<Events::TimerUpdate>(entity, temptime);
+						events->emit<Events::TimerUpdate>(entity, temptime, delta);
 					}
 				}
 			};
