@@ -1,7 +1,7 @@
 #ifndef __WKCOCOS_LOCALDATA_SYSTEMS_JSONPLAYERDATA_H__
 #define __WKCOCOS_LOCALDATA_SYSTEMS_JSONPLAYERDATA_H__
 
-#include "cocos2d.h"
+//#include "cocos2d.h"
 
 #include "entityx/entityx.h"
 

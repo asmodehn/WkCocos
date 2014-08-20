@@ -1,17 +1,16 @@
 #ifndef __ERRORUI_H__
 #define __ERRORUI_H__
 
-#include "cocos2d.h"
 #include "ui/CocosGUI.h"
 
 #include "WkCocos/Interface.h"
 
-#include "WkCocosApp/LoadingScene.h"
+#include "WkCocos/LocalData/LocalDataManager.h"
 
 /**
 * This UI is the main menu UI
 */
-class ErrorUI : public WkCocos::Interface
+class ErrorUI : public WkCocos::Interface, public entityx::Receiver<WkCocos::LocalData::Events::Error>
 {
 public:
 		
@@ -33,7 +32,8 @@ public:
 	void refreshCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input);
 	void skipCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input);
 
-	void activate();
+	void receive(const WkCocos::LocalData::Events::Error &LD);
+	void activate(std::string msg);
 	void deactivate();
 
 	std::function<void()> m_refreshCB;
@@ -42,6 +42,7 @@ public:
 protected:
 	cocos2d::ui::Button* m_refreshButton;
 	cocos2d::ui::Button* m_skipButton;
+	cocos2d::ui::Text* m_label;
 };
 
 #endif // __ERRORUI_H__

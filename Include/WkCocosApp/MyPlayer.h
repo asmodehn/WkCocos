@@ -38,17 +38,22 @@ public:
 	unsigned int m_gem;
 
 	//save Data for test
-	void saveData()
+	void saveData(std::function<void()> saved_cb)
 	{
-		requestSaveData();
+		requestSaveData(saved_cb);
 	}
 
 	//load Data for test
-	void loadData()
+	void loadData(std::function<void()> loaded_cb)
 	{
-		requestLoadData();
+		requestLoadData(loaded_cb);
 	}
+	
+private:
+
+	const char * sCurrency = "currency";
+	const char * sGem = "gem";
+	const char * sGold = "gold";
+	
 };
-
-
 #endif // __MYPLAYER_H__

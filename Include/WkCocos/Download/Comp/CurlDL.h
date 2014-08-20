@@ -23,7 +23,7 @@ namespace WkCocos
 		{
 			//Component storing everything needed to Curl easy download
 			struct CurlDL : entityx::Component<CurlDL> {
-				CurlDL(std::string url,std::string path, CURLSH* share_handle = nullptr, short retries = 3)
+				CurlDL(std::string url, std::string path, CURLSH* share_handle = nullptr, short retries = 3)
 				: m_retries(retries)
 				, m_url(url)
 				, m_path(path)

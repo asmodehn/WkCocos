@@ -1,7 +1,7 @@
 #include "WkCocosApp/GameLogic.h"
 
 GameLogic::GameLogic()
-: m_localdatamngr(new WkCocos::LocalData::LocalDataManager( std::bind( &GameLogic::localDataError,this) ))
+: m_localdatamngr(new WkCocos::LocalData::LocalDataManager())
 , m_options(new MyOptions(m_localdatamngr))
 //license number is in clear here as this is not a published app.
 , m_player()

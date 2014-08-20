@@ -70,7 +70,7 @@ namespace WkCocos
 				else
 				{
 					//Signal Error
-					events->emit<Events::Error>(entity);
+					events->emit<Events::Error>(entity, "DataEval system, chooseLoader error");
 				}
 			}
 

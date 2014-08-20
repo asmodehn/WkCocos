@@ -6,6 +6,8 @@
 
 MyPlayer::MyPlayer(std::shared_ptr<WkCocos::LocalData::LocalDataManager> localdatamngr, std::string license, std::string secret, std::shared_ptr<WkCocos::Shop::ShopAssets> shopAssets)
 : WkCocos::Player<MyPlayer>(localdatamngr,license,secret, shopAssets)
+, m_gem(42)
+, m_gold(424242)
 {
 	//TMP
 	openShop();
@@ -29,13 +31,12 @@ std::string MyPlayer::get_data_json()
 	// must pass an allocator when the object may need to allocate memory
 	rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
 
-	rapidjson::Value vholder;
-	vholder.SetObject();
-	vholder.AddMember("gold", m_gold, allocator);
-	vholder.AddMember("gem", m_gem, allocator);
-	doc.AddMember("currency", vholder, allocator);
+	rapidjson::Value currency;
+	currency.SetObject();
+	currency.AddMember(sGold, m_gold, allocator);
+	currency.AddMember(sGem, m_gem, allocator);
+	doc.AddMember(sCurrency, currency, allocator);
 
-	//TMP debug
 	rapidjson::StringBuffer strbuf;
 	rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
 	doc.Accept(writer);
@@ -50,29 +51,29 @@ void MyPlayer::set_data_json(std::string data)
 {
 	rapidjson::Document doc;
 	doc.Parse<0>(data.c_str());
-	if (doc.HasParseError()) 
+	if (doc.HasParseError())
 	{
 		//if parse error (also empty string), we ignore existing data.
 		doc.SetObject();
 	}
-	
-	if (doc.HasMember("currency"))
+
+	if (doc.HasMember(sCurrency))
 	{
-		rapidjson::Value& currencyvalue = doc["currency"];
+		rapidjson::Value& currencyvalue = doc[sCurrency];
 		if (!currencyvalue.IsNull()){
-			if (currencyvalue.HasMember("gold"))
+			if (currencyvalue.HasMember(sGold))
 			{
-				m_gold = currencyvalue["gold"].GetInt();
+				m_gold = currencyvalue[sGold].GetInt();
 			}
-			if (currencyvalue.HasMember("gem"))
+			if (currencyvalue.HasMember(sGem))
 			{
-				m_gem = currencyvalue["gem"].GetInt();
+				m_gem = currencyvalue[sGem].GetInt();
 			}
 		}
 	}
-	else //first time there is no save
+	else //first time there is no save. we need sensible values.
 	{
-		m_gold = 424242;
-		m_gem = 42;
+		//these should be set in constructor
 	}
+	
 }

@@ -2,7 +2,7 @@
 
 #include "WkCocos/OnlineData/Comp/OnlineData.h"
 
-#include "Common/App42API.h"
+
 
 namespace WkCocos
 {
@@ -13,7 +13,7 @@ namespace WkCocos
 
 			Storage::Storage()
 			{
-				m_service = App42API::BuildStorageService();
+				m_service = ::App42::App42API::BuildStorageService();
 			
 			}
 
@@ -106,7 +106,7 @@ namespace WkCocos
 					}
 
 				}
-				*/
+			*/	
 			}
 
 

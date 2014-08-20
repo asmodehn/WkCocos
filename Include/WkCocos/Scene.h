@@ -1,7 +1,7 @@
 #ifndef __WKCOCOS_SCENE_H__
 #define __WKCOCOS_SCENE_H__
 
-#include "cocos2d.h"
+//#include "cocos2d.h"
 #include "WkCocos/Interface.h"
 
 namespace WkCocos

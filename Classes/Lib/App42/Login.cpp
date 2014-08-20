@@ -1,4 +1,5 @@
 #include "WkCocos/App42/Login.h"
+#include "Common/App42API.h"
 
 namespace WkCocos
 {
@@ -6,7 +7,7 @@ namespace WkCocos
 	{
 		Login::Login()
 		{
-			UserService *userService = App42API::BuildUserService();
+			::App42::UserService *userService = ::App42::App42API::BuildUserService();
 		}
 
 		Login::~Login()

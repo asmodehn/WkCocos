@@ -6,9 +6,6 @@
 
 #include "WkCocos/Download/Systems/ProgressUpdate.h"
 #include "WkCocos/Preload/Systems/ProgressUpdate.h"
-
-#include "ui/CocosGUI.h"
-
 #include <iostream>
 #include <numeric>
 
@@ -22,11 +19,14 @@ LoadingScene::LoadingScene() : Scene()
 , m_preloadManager(nullptr)
 {
 	m_downloadManager = new WkCocos::Download::Download(5,
-		std::bind(&LoadingScene::progress_CB, this, std::placeholders::_1),
-		std::bind(&LoadingScene::error_CB, this));
+		std::bind(&LoadingScene::progress_CB, this, std::placeholders::_1)/*,
+		std::bind(&LoadingScene::error_CB, this, std::placeholders::_1)*/);
 	m_preloadManager = new WkCocos::Preload::Preload(1,
-		std::bind(&LoadingScene::progress_CB, this, std::placeholders::_1),
-		std::bind(&LoadingScene::error_CB, this));
+		std::bind(&LoadingScene::progress_CB, this, std::placeholders::_1)/*,
+		std::bind(&LoadingScene::error_CB, this, std::placeholders::_1)*/);
+
+	m_downloadManager->getEventManager()->subscribe<WkCocos::Download::Events::Error>(*this);
+	m_preloadManager->getEventManager()->subscribe<WkCocos::Preload::Events::Error>(*this);
 }
 
 LoadingScene::~LoadingScene()
@@ -47,12 +47,15 @@ bool LoadingScene::init()
 		return false;
 	}
 
+	Size visibleSize = Director::getInstance()->getVisibleSize();
 	//Load UI
 	LoadingUI* loadui = new LoadingUI();
-	loadui->getRoot()->setEnabled(true);
-	loadui->getRoot()->setVisible(true);
-	addChild(loadui->getRoot());
+	auto loadroot = loadui->getRoot();
+	loadroot->setEnabled(true);
+	loadroot->setVisible(true);
+	addChild(loadroot);
 	m_ui[LoadingUI::id] = loadui;
+	loadroot->setPosition(Vec2(visibleSize.width * 0.5, visibleSize.height * 0.25));
 
 	//Error UI
 	ErrorUI* errorui = new ErrorUI();
@@ -61,20 +64,24 @@ bool LoadingScene::init()
 	errorroot->setEnabled(false);
 	errorroot->setVisible(false);
 	m_ui[ErrorUI::id] = errorui;
+	errorroot->setPosition(Vec2(visibleSize.width * 0.5, visibleSize.height * 0.75));
 
 	errorui->setRefreshCallback([this, errorui](){
 		
 		m_downloadManager = new WkCocos::Download::Download(5,
-			std::bind(&LoadingScene::progress_CB, this, std::placeholders::_1),
-			std::bind(&LoadingScene::error_CB, this));
+			std::bind(&LoadingScene::progress_CB, this, std::placeholders::_1)/*,
+			std::bind(&LoadingScene::error_CB, this, std::placeholders::_1)*/);
 
 		m_preloadManager = new WkCocos::Preload::Preload(1,
-			std::bind(&LoadingScene::progress_CB, this, std::placeholders::_1),
-			std::bind(&LoadingScene::error_CB, this));
+			std::bind(&LoadingScene::progress_CB, this, std::placeholders::_1)/*,
+			std::bind(&LoadingScene::error_CB, this, std::placeholders::_1)*/);
 
 		m_downloadManager->start();
 		m_preloadManager->start();
 		m_preloadManager->setEventEmmiter(m_downloadManager->getEventManager());
+
+		m_downloadManager->getEventManager()->subscribe<WkCocos::Download::Events::Error>(*this);
+		m_preloadManager->getEventManager()->subscribe<WkCocos::Preload::Events::Error>(*this);
 
 		scheduleDLCCheck();
 
@@ -191,13 +198,29 @@ void LoadingScene::progress_CB(float pct)
 	}*/
 }
 
-void LoadingScene::error_CB()
+void LoadingScene::error_CB(std::string msg)
 {
 
 	//Error UI
 	ErrorUI* errorui = getInterface<ErrorUI>(ErrorUI::id);
-	errorui->activate();
+	errorui->activate(msg);
 
 	m_loadMan_del_scheduled = true;
 
+}
+
+void LoadingScene::receive(const WkCocos::Download::Events::Error &de)
+{
+	ErrorUI* errorui = getInterface<ErrorUI>(ErrorUI::id);
+	errorui->activate(de.msg);
+
+	m_loadMan_del_scheduled = true;
+}
+
+void LoadingScene::receive(const WkCocos::Preload::Events::Error &pe)
+{
+	ErrorUI* errorui = getInterface<ErrorUI>(ErrorUI::id);
+	errorui->activate(pe.msg);
+
+	m_loadMan_del_scheduled = true;
 }

@@ -6,7 +6,7 @@
 #include "Common/App42API.h"
 
 #include "cocos/cocos2d.h"
-#include "WkCocos/Utils/ToolBox.h"
+//#include "WkCocos/Utils/ToolBox.h"
 
 #include <fstream>
 
@@ -18,7 +18,7 @@ namespace WkCocos
 		{
 			struct Create : entityx::Component<Create>
 			{
-				Create(std::string userid, std::string passwd, std::string email, std::function<void(App42UserResponse*)> cb);
+				Create(std::string userid, std::string passwd, std::string email, std::function<void(::App42::App42UserResponse*)> cb);
 				
 				bool in_progress;
 				bool done;
@@ -31,7 +31,7 @@ namespace WkCocos
 
 			struct Login : entityx::Component<Login>
 			{
-				Login(std::string userid, std::string passwd, std::function<void(App42UserResponse*)> cb);
+				Login(std::string userid, std::string passwd, std::function<void(::App42::App42UserResponse*)> cb);
 
 				bool in_progress;
 				bool done;
@@ -61,7 +61,7 @@ namespace WkCocos
 				bool done;
 				std::string m_userid;
 				std::string m_collection;
-				std::string m_user_data;
+				//std::string m_user_data;
 				std::function<void(void*)> m_cb;
 			};
 

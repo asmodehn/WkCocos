@@ -9,7 +9,6 @@ LOCAL_MODULE_FILENAME := libwkcocos
 LOCAL_SRC_FILES := jni.cpp \
                    ../../../../../Classes/Lib/Utils/ToolBox.cpp \
                    ../../../../../Classes/Lib/Utils/libb64.c \
-                   ../../../../../Classes/Lib/Utils/md5.c \
                    ../../../../../Classes/Lib/Utils/sha1.cpp \
                    ../../../../../Classes/Lib/Utils/Crypto.cpp \
                    ../../../../../Classes/Lib/Utils/UUID.cpp\
@@ -32,16 +31,13 @@ LOCAL_SRC_FILES := jni.cpp \
                    ../../../../../Classes/Lib/Download/Systems/DLClisting.cpp \
                    ../../../../../Classes/Lib/Download/Systems/DLvalidating.cpp \
                    ../../../../../Classes/Lib/Download/Systems/CurlDL.cpp \
-                   ../../../../../Classes/Lib/Download/Systems/Error.cpp \
                    ../../../../../Classes/Lib/Download/Systems/MD5checking.cpp \
                    ../../../../../Classes/Lib/Download/Systems/ProgressUpdate.cpp \
                    ../../../../../Classes/Lib/Preload/Systems/DataEval.cpp \
-                   ../../../../../Classes/Lib/Preload/Systems/Error.cpp \
                    ../../../../../Classes/Lib/Preload/Systems/SyncLoading.cpp \
                    ../../../../../Classes/Lib/Preload/Systems/ASyncLoading.cpp \
                    ../../../../../Classes/Lib/Preload/Systems/ProgressUpdate.cpp \
                    ../../../../../Classes/Lib/LocalData/LocalDataManager.cpp \
-                   ../../../../../Classes/Lib/LocalData/Systems/Error.cpp \
                    ../../../../../Classes/Lib/LocalData/Systems/JSONLoginID.cpp \
                    ../../../../../Classes/Lib/LocalData/Systems/JSONReader.cpp \
                    ../../../../../Classes/Lib/LocalData/Systems/JSONPlayerData.cpp \
@@ -53,6 +49,13 @@ LOCAL_SRC_FILES := jni.cpp \
                    ../../../../../Classes/Lib/Shop/Shop.cpp \
                    ../../../../../Classes/Lib/Shop/ShopEventHandler.cpp \
                    ../../../../../Classes/Lib/Shop/ShopAssets.cpp \
+                   ../../../../../Classes/Lib/Timer/Timer.cpp \
+                   ../../../../../Classes/Lib/Timer/Systems/AlarmDestructor.cpp \
+                   ../../../../../Classes/Lib/Timer/Systems/AlarmRinger.cpp \
+                   ../../../../../Classes/Lib/Timer/Systems/TimeUpdater.cpp \
+
+#do not include this file, it's already in libcurl
+#                   ../../../../../Classes/Lib/Utils/md5.c \
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../../../../Include
 
