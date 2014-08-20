@@ -21,7 +21,7 @@ ShopUI::ShopUI()
 	m_widget = cocos2d::ui::Layout::create();
 
 	cocos2d::Size visibleSize = cocos2d::Director::getInstance()->getVisibleSize();
-	m_widget->setContentSize(cocos2d::Size(visibleSize.width, visibleSize.height * 0.67));
+	m_widget->setContentSize(cocos2d::Size(visibleSize.width, visibleSize.height * 0.67f));
 	cocos2d::Size widgetSize = m_widget->getContentSize();
 	cocos2d::Vec2 origin = cocos2d::Director::getInstance()->getVisibleOrigin();
 
@@ -38,8 +38,8 @@ ShopUI::ShopUI()
 		//creating label for currency
 		cocos2d::ui::Text* curtxtui = cocos2d::ui::Text::create(c->name, "Arial", 21);
 		curtxtui->setPosition(cocos2d::Vec2(
-			widgetSize.width / (curncyPacksfiltered.size() + 2),
-			widgetSize.height * ((curncy.end() - c) + 1) / (curncy.size() + 2))
+			widgetSize.width / (curncyPacksfiltered.size() + 2) - widgetSize.width/2,
+			widgetSize.height * ((curncy.end() - c) + 1) / (curncy.size() + 2) - widgetSize.height/2 )
 			);
 		m_curLabel.push_back(curtxtui);
 		m_widget->addChild(curtxtui);
@@ -51,7 +51,7 @@ ShopUI::ShopUI()
 			cocos2d::ui::Button * butt = cocos2d::ui::Button::create("SkipNormal.png", "SkipSelected.png");
 			butt->addTouchEventListener(std::bind(&ShopUI::buyCallback, this, *p, std::placeholders::_1,std::placeholders::_2));
 			butt->setPosition(cocos2d::Vec2(
-				(widgetSize.width - butt->getContentSize().width) * ((curncyPacksfiltered.end() - p) + 1) / (curncyPacksfiltered.size() + 2),
+				(widgetSize.width - butt->getContentSize().width) * ((curncyPacksfiltered.end() - p) + 1) / (curncyPacksfiltered.size() + 2) - widgetSize.width / 2,
 				curtxtui->getPosition().y
 				)
 			);
@@ -81,8 +81,8 @@ ShopUI::ShopUI()
 	m_refreshButton = cocos2d::ui::Button::create("RefreshNormal.png", "RefreshSelected.png");
 	m_refreshButton->addTouchEventListener(CC_CALLBACK_2(ShopUI::refreshCallback, this));
 	m_refreshButton->setPosition(cocos2d::Vec2(
-		(widgetSize.width - m_refreshButton->getContentSize().width) * 2 / 4,
-		(widgetSize.height - m_refreshButton->getContentSize().height) / (curncy.size() + 2)
+		(widgetSize.width - m_refreshButton->getContentSize().width) * 2 / 4 - widgetSize.width /2,
+		(widgetSize.height - m_refreshButton->getContentSize().height) / (curncy.size() + 2) - widgetSize.height/2
 		));
 	m_widget->addChild(m_refreshButton);
 	m_refreshLabel = cocos2d::ui::Text::create("REFRESH", "Arial", 21);

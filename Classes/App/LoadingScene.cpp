@@ -55,7 +55,7 @@ bool LoadingScene::init()
 	loadroot->setVisible(true);
 	addChild(loadroot);
 	m_ui[LoadingUI::id] = loadui;
-	loadroot->setPosition(Vec2(visibleSize.width * 0.5, visibleSize.height * 0.25));
+	loadroot->setPosition(Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.25f));
 
 	//Error UI
 	ErrorUI* errorui = new ErrorUI();
@@ -64,17 +64,15 @@ bool LoadingScene::init()
 	errorroot->setEnabled(false);
 	errorroot->setVisible(false);
 	m_ui[ErrorUI::id] = errorui;
-	errorroot->setPosition(Vec2(visibleSize.width * 0.5, visibleSize.height * 0.75));
+	errorroot->setPosition(Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.75f));
 
 	errorui->setRefreshCallback([this, errorui](){
 		
 		m_downloadManager = new WkCocos::Download::Download(5,
-			std::bind(&LoadingScene::progress_CB, this, std::placeholders::_1)/*,
-			std::bind(&LoadingScene::error_CB, this, std::placeholders::_1)*/);
+			std::bind(&LoadingScene::progress_CB, this, std::placeholders::_1));
 
 		m_preloadManager = new WkCocos::Preload::Preload(1,
-			std::bind(&LoadingScene::progress_CB, this, std::placeholders::_1)/*,
-			std::bind(&LoadingScene::error_CB, this, std::placeholders::_1)*/);
+			std::bind(&LoadingScene::progress_CB, this, std::placeholders::_1));
 
 		m_downloadManager->start();
 		m_preloadManager->start();
@@ -164,7 +162,7 @@ void LoadingScene::update(float delta)
 		if (ui) {
 			ui::LoadingBar* loadbar = ui->getRoot()->getChildByName<ui::LoadingBar*>("LoadingBar");
 			if (loadbar)
-				loadbar->setPercent(static_cast<int>(pct * 100));
+				loadbar->setPercent(pct * 100.0f);
 		}
 
 		if (pct >= 1.0f && !m_loadDoneCB_called) {

@@ -133,7 +133,7 @@ void TestScene::receive(const NavUI::Next &nxt)
 		{
 			cur = m_ui.begin();
 		}
-	} while (cur != m_ui.end() && cur->first == NavUI::id);
+	} while (cur->first == NavUI::id);
 	
 	uiroot = cur->second->getRoot();
 	uiroot->setEnabled(true);
@@ -160,19 +160,24 @@ void TestScene::receive(const NavUI::Prev &prv)
 
 	//reversing iterator
 	auto rcur = std::map<std::string, WkCocos::Interface*>::reverse_iterator(cur);
+	//check for rend after conversion
+	if (rcur == m_ui.rend())
+	{
+		rcur = m_ui.rbegin();
+	}
 
-	do
+	while (rcur->first == NavUI::id)
 	{
 		if (++rcur == m_ui.rend())
 		{
 			rcur = m_ui.rbegin();
 		}
-	} while (rcur != m_ui.rend() && rcur->first == NavUI::id);
+	}
 
 	uiroot = rcur->second->getRoot();
 	uiroot->setEnabled(true);
 	uiroot->setVisible(true);
-	currentUI = cur->first;
+	currentUI = rcur->first;
 
 	NavUI* nav = getInterface<NavUI>(NavUI::id);
 	nav->setTitle(currentUI);

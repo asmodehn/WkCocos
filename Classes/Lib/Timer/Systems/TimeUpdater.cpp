@@ -27,6 +27,8 @@ namespace WkCocos
 					if (difftime(nowtime, oldtime) > 0)
 					{
 						oldtime = nowtime;
+						//POTENTIAL BUG here : http://stackoverflow.com/questions/10079545/get-difference-between-two-time-t-into-a-tm-with-proper-tm-mday
+						//TOFIX with http://en.cppreference.com/w/cpp/chrono
 						tm temptime = { (time_t)delta, 0, 0, 0, 0, 0, 0, 0, 0 };
 						mktime(&temptime);
 						events->emit<Events::TimerUpdate>(entity, temptime);
