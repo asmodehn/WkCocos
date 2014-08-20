@@ -49,9 +49,9 @@ LOCAL_SRC_FILES := jni.cpp \
                    ../../../../../Classes/Lib/Timer/Timer.cpp \
                    ../../../../../Classes/Lib/Timer/Systems/AlarmDestructor.cpp \
                    ../../../../../Classes/Lib/Action/NodeAction.cpp \
-                   ../../../../../Classes/Lib/Action/UIAction.cpp 
+                   ../../../../../Classes/Lib/Action/UIAction.cpp \
                    ../../../../../Classes/Lib/Timer/Systems/AlarmRinger.cpp \
-                   ../../../../../Classes/Lib/Timer/Systems/TimeUpdater.cpp \
+                   ../../../../../Classes/Lib/Timer/Systems/TimeUpdater.cpp
 
 #do not include this file, it's already in libcurl
 #                   ../../../../../Classes/Lib/Utils/md5.c \

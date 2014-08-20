@@ -10,7 +10,7 @@
 /**
 * This UI is the main menu UI
 */
-class ErrorUI : public WkCocos::Interface, public entityx::Receiver<WkCocos::LocalData::Events::Error>
+class ErrorUI : public WkCocos::Interface, public entityx::Receiver<ErrorUI>
 {
 public:
 		
