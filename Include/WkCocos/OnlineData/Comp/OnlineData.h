@@ -41,6 +41,19 @@ namespace WkCocos
 
 			};
 
+			struct DeleteUserData : entityx::Component<DeleteUserData>
+			{
+				DeleteUserData(std::string userid, std::string m_collection, std::string user_data, std::function<void(std::string)> cb);
+
+				bool in_progress;
+				bool done;
+				std::string m_userid;
+				std::string m_collection;
+				std::string m_user_data;
+				std::function<void(void*)> m_dummy_cb;
+
+			};
+			
 			struct SaveUserData : entityx::Component<SaveUserData>
 			{
 				SaveUserData(std::string userid, std::string m_collection, std::string user_data, std::function<void(std::string)> cb);

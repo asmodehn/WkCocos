@@ -54,6 +54,11 @@ namespace WkCocos
 				return event_manager;
 			}
 
+			entityx::ptr<entityx::SystemManager> getSystemManager()
+			{
+				return system_manager;
+			}
+
 		protected :
 
 			entityx::ptr<entityx::EventManager> event_manager;

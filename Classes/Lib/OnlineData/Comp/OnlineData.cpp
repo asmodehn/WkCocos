@@ -74,6 +74,16 @@ namespace WkCocos
 				};
 			}
 
+			DeleteUserData::DeleteUserData(std::string userid, std::string collec, std::string user_data, std::function<void(std::string)> cb)
+				: in_progress(false)
+				, done(false)
+				, m_userid(userid)
+				, m_collection(collec)
+				, m_user_data(user_data)
+			{
+				m_dummy_cb = [=](void* data) {};
+			}
+
 			SaveUserData::SaveUserData(std::string userid, std::string collec, std::string user_data, std::function<void(std::string)> cb)
 				: in_progress(false)
 				, done(false)

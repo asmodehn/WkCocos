@@ -13,7 +13,7 @@ namespace WkCocos
 
 			Storage::Storage()
 			{
-				m_service = ::App42::App42API::BuildStorageService();
+				m_stor_service = ::App42::App42API::BuildStorageService();
 			}
 
 			Storage::~Storage()
@@ -24,30 +24,22 @@ namespace WkCocos
 
 			void Storage::update(entityx::ptr<entityx::EntityManager> entities, entityx::ptr<entityx::EventManager> events, double dt)
 			{
-				entityx::ptr<Comp::SaveUserData> sud;
-				for (auto entity : entities->entities_with_components(sud))
+				entityx::ptr<Comp::DeleteUserData> dud;
+				for (auto entity : entities->entities_with_components(dud))
 				{
-					if (sud->done)
+					if (dud->done)
 					{
-						entity.remove<Comp::SaveUserData>();
+						entity.remove<Comp::DeleteUserData>();
 						//if mask at 0 no request in this entity anymore
-						if (entity.component_mask() == 0)
-						{
-							entity.destroy();
-						}
+						//if (entity.component_mask() == 0)
+						//{
+						//	entity.destroy();
+						//}
 					}
-					else if (!sud->in_progress)
+					else if (!dud->in_progress)
 					{
-						::App42::App42User user;
-						user.userName = sud->m_userid.c_str();
-						::App42::App42Object app42Object;
-						app42Object.setObject("user_id", sud->m_userid.c_str());
-						app42Object.setObject("data", sud->m_user_data.c_str());
-						//::App42::App42API::setDbName(DB_NAME);
-						//m_service->AddUserInfo(&app42Object, sud->m_collection.c_str());
-						m_service->DeleteDocumentsByKeyValue(DB_NAME, sud->m_collection.c_str(), "user_id", sud->m_userid.c_str(), sud->m_dummy_cb);
-						m_service->InsertJsonDocument(DB_NAME, sud->m_collection.c_str(), &app42Object, sud->m_cb);
-						sud->in_progress = true;
+						m_stor_service->DeleteDocumentsByKeyValue(DB_NAME, dud->m_collection.c_str(), "user_id", dud->m_userid.c_str(), dud->m_dummy_cb);
+						dud->in_progress = true;
 					}
 
 				}
@@ -70,7 +62,7 @@ namespace WkCocos
 						//m_service->setQuery(DB_NAME, lud->m_collection, query);
 						//delete query;
 						CCLOG("Requesting App42 User data for : %s ", lud->m_userid.c_str());
-						m_service->FindDocumentByKeyValue(DB_NAME, lud->m_collection.c_str(), "user_id", lud->m_userid.c_str(), lud->m_cb);
+						m_stor_service->FindDocumentByKeyValue(DB_NAME, lud->m_collection.c_str(), "user_id", lud->m_userid.c_str(), lud->m_cb);
 						lud->in_progress = true;
 					}
 

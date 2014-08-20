@@ -69,6 +69,7 @@ namespace WkCocos
 		{
 			auto newentity = entity_manager->create();
 			//new File component for each request. The aggregator system will detect duplicates and group them
+			newentity.assign<Comp::DeleteUserData>(userid, "user_data", user_data, callback);
 			newentity.assign<Comp::SaveUserData>(userid, "user_data", user_data, callback);
 		}
 
@@ -81,8 +82,8 @@ namespace WkCocos
 
 		void OnlineDataManager::update(double dt) {
 			//check for error and report them if needed
-			system_manager->update<Systems::User>(dt);
 			system_manager->update<Systems::Storage>(dt);
+			system_manager->update<Systems::User>(dt);
 		}
 
 	} // namespace LocalData
