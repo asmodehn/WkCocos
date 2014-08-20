@@ -31,7 +31,7 @@ namespace WkCocos
 		//generating UUID ( from Android code )
 		
 		cocos2d::JniMethodInfo j_randomUUIDMI;
-		CCLOG("Calling java/util/UUID/randomUUID()Ljava.util.UUID;");
+		CCLOG("Calling java/util/UUID/randomUUID()Ljava/util/UUID;");
 		if (cocos2d::JniHelper::getStaticMethodInfo(j_randomUUIDMI, "java/util/UUID", "randomUUID", "()Ljava/util/UUID;"))
 		{
 			cocos2d::JniMethodInfo j_UUIDtoStringMI;
