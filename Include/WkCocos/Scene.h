@@ -38,7 +38,7 @@ namespace WkCocos
 		* @param filepath filepath or string id of the UI to fetch
 		*/
 		template <typename UI>
-		inline UI* getInterface(std::string filepath) { return dynamic_cast<UI*>(m_ui[filepath]); }
+		inline UI* getInterface(const std::string& filepath) { return dynamic_cast<UI*>(m_ui[filepath]); }
 
 		/**
 		* Get the world view

@@ -10,7 +10,7 @@
 /**
 * This UI is the main menu UI
 */
-class TimerUI : public WkCocos::Interface, public entityx::Receiver<WkCocos::Timer::Events::TimerUpdate>//, public entityx::Receiver<WkCocos::Timer::Events::AlarmOff>
+class TimerUI : public WkCocos::Interface, public entityx::Receiver<TimerUI>
 {
 public:
 		
