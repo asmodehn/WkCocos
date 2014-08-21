@@ -18,7 +18,7 @@ APP_CPPFLAGS += -DCC_ENABLE_CHIPMUNK_INTEGRATION=1
 
 ifeq ($(APP_OPTIM),debug)
     APP_CPPFLAGS += -DCOCOS2D_DEBUG=1
-
-    #soomla flags
-    APP_CPPFLAGS += -DSOOMLA_DEBUG=1
 endif
+
+#soomla flags needs to be enabled in release mode to test purchases
+APP_CPPFLAGS += -DSOOMLA_DEBUG=1
