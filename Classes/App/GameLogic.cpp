@@ -16,6 +16,9 @@ GameLogic::GameLogic()
 
 	m_shopAssets->addVirtualCurrency("Gem", "Gem Currency", "currency_gem");
 	m_shopAssets->addVirtualCurrencyPack("5 Gems", "5 Shiny Gems ", "gem_5", 5, "currency_gem", "gem_5", 1000);
+	m_shopAssets->addVirtualCurrencyPack("10 Gems", "10 Shiny Gems ", "gem_10", 10, "currency_gem", "gem_10", 1000);
+	m_shopAssets->addVirtualCurrencyPack("25 Gems", "25 Shiny Gems ", "gem_25", 25, "currency_gem", "gem_25", 1000);
+	m_shopAssets->addVirtualCurrencyPack("50 Gems", "50 Shiny Gems ", "gem_50", 50, "currency_gem", "gem_50", 1000);
 
 
 	m_player.reset(new MyPlayer(m_localdatamngr, "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgckSrYT3yMLAYSS/2NVN3jtIdypsOCikdgiTr2mDu8fmwRPa3945vTPVPCOlbL3b77IYgpBf3PMOZcftGL2Jtdyk6AReLjixQzkeyaRLYK4kq9+0JYuD9V/uvqleuCw9NkzZaEOzGBU5IlFYGbXkZm6j/TPytjnJja0kTyXhiJKxzOyCsiUJ4VhLTUk4KL2py+YjPN8/MluOr+Uc/r88Rpd7M2fVH0pdqu35C2xuxLnnbCbu9xvVBPX3l/sb0srDgxdlrRY8JxkNr0mLMdmxnreDRz2aavMuXn2MS7xjB4YgbHLo75tgvTKxD1TbTtocB5VNPIg64a4hXq8rX/z2DwIDAQAB", "53CR3T", m_shopAssets));
