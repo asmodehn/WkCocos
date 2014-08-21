@@ -3,7 +3,7 @@
 #include "WkCocosApp/SavingUI.h"
 #include "WkCocosApp/ShopUI.h"
 #include "WkCocosApp/TimerUI.h"
-#include "WkCocosApp/downloadUI.h"
+#include "WkCocosApp/DownloadUI.h"
 
 #include "WkCocosApp/ErrorUI.h"
 
