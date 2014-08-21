@@ -48,6 +48,12 @@ public:
 		requestLoadData(loaded_cb);
 	}
 	
+	//test for getting every app user
+	void getAllUsers(std::function<void()> loaded_cb)
+	{
+		requestAllUsers(loaded_cb);
+	}
+
 private:
 
 	const char * sCurrency = "currency";

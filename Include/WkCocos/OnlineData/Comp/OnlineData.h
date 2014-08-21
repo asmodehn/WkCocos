@@ -81,6 +81,16 @@ namespace WkCocos
 
 			};
 
+			struct GetAllUsers : entityx::Component<GetAllUsers>
+			{
+				GetAllUsers(std::function<void(std::string)> cb);
+
+				bool in_progress;
+				bool done;
+				std::function<void(void*)> m_cb;
+
+			};
+
 		}//namespace Comp
 	}//namespace OnlineData
 }//namespace WkCocos

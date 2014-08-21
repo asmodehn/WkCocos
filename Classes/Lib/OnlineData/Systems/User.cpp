@@ -102,6 +102,27 @@ namespace WkCocos
 
 				}
 
+				entityx::ptr<Comp::GetAllUsers> gau;
+				for (auto entity : entities->entities_with_components(gau))
+				{
+					if (gau->done)
+					{
+						entity.remove<Comp::GetAllUsers>();
+						//if mask at 0 no request in this entity anymore
+						if (entity.component_mask() == 0)
+						{
+							entity.destroy();
+						}
+					}
+					else if (!gau->in_progress)
+					{
+						CCLOG("Requesting full list of App42 Users");
+						m_user_service->GetAllUsers(gau->m_cb);
+						gau->in_progress = true;
+					}
+
+				}
+
 			}
 			
 		}//namespace Systems

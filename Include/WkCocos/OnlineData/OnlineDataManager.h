@@ -46,6 +46,11 @@ namespace WkCocos
 			*/
 			void load(std::string userid, std::function<void(std::string)> callback);
 
+			/**
+			* Get All Users
+			*/
+			void getAllUsers(std::function<void(std::string)> callback);
+
 			void update(double dt);
 
 			//subscribe to this event manager to receive error events.

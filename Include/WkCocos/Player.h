@@ -78,6 +78,8 @@ namespace WkCocos
 
 		bool requestLoadData(std::function<void()> loaded_cb);
 
+		bool requestAllUsers(std::function<void()> all_users_cb);
+
 		bool requestSaveData(std::function<void()> saved_cb);
 
 		bool newPlayer;
@@ -193,6 +195,8 @@ namespace WkCocos
 						CCLOG("login done !!!");
 						//loading again to get online value
 						requestLoadData(onlineDataLoaded_callback);
+						//temp line for testing 
+						requestAllUsers([](){});
 					});
 				}
 			}
@@ -256,6 +260,27 @@ namespace WkCocos
 				set_all_data_json(data);
 
 				loaded_cb();
+			});
+
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	template <class T>
+	bool Player<T>::requestAllUsers(std::function<void()> all_users_cb)
+	{
+		if (m_onlinedata)
+		{
+			m_onlinedata->getAllUsers([=](std::string data)
+			{
+				
+				CCLOG("all users loaded : %s", data.c_str());
+
+				all_users_cb();
 			});
 
 			return true;
