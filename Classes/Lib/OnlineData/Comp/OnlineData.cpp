@@ -1,5 +1,5 @@
 #include "WkCocos/OnlineData/Comp/OnlineData.h"
-
+#include "WkCocos/OnlineData/Events/PlayersList.h"
 //including json from cocos
 #include "json/document.h"         // rapidjson's DOM-style API
 #include "json/stringbuffer.h"
@@ -226,7 +226,7 @@ namespace WkCocos
 				};
 			}
 
-			GetAllUsers::GetAllUsers(std::function<void(std::string)> cb)
+			GetAllUsers::GetAllUsers(entityx::ptr<entityx::EventManager> event_emitter)
 				: in_progress(false)
 				, done(false)
 
@@ -242,11 +242,7 @@ namespace WkCocos
 						rapidjson::Document doc;
 						doc.Parse<0>(userdata->getBody().c_str());
 
-						if (doc.HasParseError())
-						{
-							cb(""); // if parse error (also empty string), we ignore existing data.
-						}
-						else
+						if (!doc.HasParseError())
 						{
 							if (doc.HasMember("app42"))
 							{
@@ -258,27 +254,23 @@ namespace WkCocos
 								rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
 								temp["user"].Accept(writer);
 
-								temp = temp["user"];
+								//temp = temp["user"];
 
-								if (temp.Size())
-								{
-									for (rapidjson::SizeType i = 0; i < temp.Size(); i++)
-									{
-										rapidjson::Value & userName = temp[i];
-										CCLOG("user number %d is %s\n", i, userName["userName"].GetString());
-										/*userName = userName["profile"];
-										static const char* kTypeNames[] = { "Null", "False", "True", "Object", "Array", "String", "Number" };
-										for (rapidjson::Value::ConstMemberIterator itr = userName.MemberonBegin(); itr != userName.MemberonEnd(); ++itr)
-											CCLOG("Type of member %s is %s\n", itr->name.GetString(), kTypeNames[itr->value.GetType()]);
-										*/								
-									}
-								}
-
-								cb(strbuf.GetString());
-							}
-							else
-							{
-								cb("");
+								//if (temp.Size())
+								//{
+								//	for (rapidjson::SizeType i = 0; i < temp.Size(); i++)
+								//	{
+								//		rapidjson::Value & userName = temp[i];
+								//		CCLOG("user number %d is %s\n", i, userName["userName"].GetString());
+								//		/*userName = userName["profile"];
+								//		static const char* kTypeNames[] = { "Null", "False", "True", "Object", "Array", "String", "Number" };
+								//		for (rapidjson::Value::ConstMemberIterator itr = userName.MemberonBegin(); itr != userName.MemberonEnd(); ++itr)
+								//		CCLOG("Type of member %s is %s\n", itr->name.GetString(), kTypeNames[itr->value.GetType()]);
+								//		*/
+								//	}
+								//}
+								event_emitter->emit<Events::PlayersList>(strbuf.GetString());
+								//cb(strbuf.GetString());
 							}
 						}
 					}
@@ -288,8 +280,6 @@ namespace WkCocos
 						CCLOG("\nerrorMessage:%s", userdata->errorMessage.c_str());
 						CCLOG("\nappErrorCode:%d", userdata->appErrorCode);
 						CCLOG("\nhttpErrorCode:%d", userdata->httpErrorCode);
-
-						cb("");
 					}
 
 					done = true;

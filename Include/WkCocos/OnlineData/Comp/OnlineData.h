@@ -83,7 +83,7 @@ namespace WkCocos
 
 			struct GetAllUsers : entityx::Component<GetAllUsers>
 			{
-				GetAllUsers(std::function<void(std::string)> cb);
+				GetAllUsers(entityx::ptr<entityx::EventManager> event_emitter);
 
 				bool in_progress;
 				bool done;

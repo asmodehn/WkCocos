@@ -49,9 +49,9 @@ public:
 	}
 	
 	//test for getting every app user
-	void getAllUsers(std::function<void()> loaded_cb)
+	void getAllUsers()
 	{
-		requestAllUsers(loaded_cb);
+		requestAllUsers();
 	}
 
 private:

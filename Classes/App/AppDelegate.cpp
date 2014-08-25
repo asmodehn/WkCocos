@@ -88,7 +88,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 	//LOG_INFO << "Next Line" << std::endl;
 
 	//Creating gamelogic and setting player.
-	GameLogic::Instance().connectApp42("3a3579d378cdf38a29e7dd80ec20dc15fc2a19a6959bcfc1ea353885a1802f86", "89ff08c30c0f3d15e5b571d2b3a90fd80401a756cb7f3620cfc625756421ee35", [loadscene]()
+	GameLogic::Instance().connectApp42("73a0a556fbecbb4a8dd28728a06d7796f207d017cb6b74e8c9e45973ad487c14", "f7976c94667424a528a4723eb3e4791c24ecf9b36ec770c251b9e039faa04517", [loadscene]()
 	{
 		//We launch loading scene with DLC only after login
 		loadscene->scheduleDLCCheck();

@@ -2,7 +2,7 @@
 #define __DFGAME_ONLINEDATA_EVENTS_ERROR_H__
 
 #include "entityx/entityx.h"
-#include "WkCocos/OnlineData/Comp/OnlineData.h"
+//#include "WkCocos/OnlineData/Comp/OnlineData.h"
 
 namespace WkCocos
 {

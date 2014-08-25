@@ -80,11 +80,11 @@ namespace WkCocos
 			newentity.assign<Comp::LoadUserData>(userid, "user_data", callback);
 		}
 
-		void OnlineDataManager::getAllUsers(std::function<void(std::string)> callback)
+		void OnlineDataManager::getAllUsers()
 		{
 			auto newentity = entity_manager->create();
 			//new File component for each request. The aggregator system will detect duplicates and group them
-			newentity.assign<Comp::GetAllUsers>(callback);
+			newentity.assign<Comp::GetAllUsers>(event_manager);
 		}
 
 		void OnlineDataManager::update(double dt) {

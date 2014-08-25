@@ -6,6 +6,7 @@
 #include "Common/App42API.h"
 
 #include "WkCocos/OnlineData/Events/Error.h"
+#include "WkCocos/OnlineData/Events/PlayersList.h"
 
 #define DEFAULT_SAVE_VERSION 1
 
@@ -49,7 +50,7 @@ namespace WkCocos
 			/**
 			* Get All Users
 			*/
-			void getAllUsers(std::function<void(std::string)> callback);
+			void getAllUsers();
 
 			void update(double dt);
 
