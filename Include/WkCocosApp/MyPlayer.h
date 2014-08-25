@@ -47,6 +47,12 @@ public:
 	{
 		requestLoadData(loaded_cb);
 	}
+
+	//load enemy for test
+	void loadEnemy(std::string enemy_name)
+	{
+		requestEnemyData(enemy_name);
+	}
 	
 	//test for getting every app user
 	void getAllUsers()

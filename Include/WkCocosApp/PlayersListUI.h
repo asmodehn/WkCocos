@@ -25,18 +25,18 @@ public:
 	*/
 	virtual ~PlayersListUI();
 	
-	void update(float delta);
-
-	void loadCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input);
+	void refreshCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input);
 
 	void receive(const WkCocos::OnlineData::Events::PlayersList &pl);
+	void receive(const WkCocos::OnlineData::Events::EnemyData &ed);
 
 protected:
 
-	cocos2d::ui::Button* m_loadButton;
-	cocos2d::ui::Text* m_loadLabel;
-	cocos2d::ui::Text* m_gemLabel;
-	cocos2d::ui::Text* m_goldLabel;
+	cocos2d::ui::Button* m_refreshButton;
+	cocos2d::ui::Text* m_refreshLabel;
+	cocos2d::ui::Text* m_enemyLabel;
+	cocos2d::ui::Text* m_enemyData;
+	cocos2d::Size m_widgetSize;
 
 };
 

@@ -68,6 +68,26 @@ namespace WkCocos
 
 				}
 
+				entityx::ptr<Comp::LoadEnemyData> led;
+				for (auto entity : entities->entities_with_components(led))
+				{
+					if (led->done)
+					{
+						entity.remove<Comp::LoadEnemyData>();
+						//if mask at 0 no request in this entity anymore
+						if (entity.component_mask() == 0)
+						{
+							entity.destroy();
+						}
+					}
+					else if (!led->in_progress)
+					{
+						m_stor_service->FindDocumentByKeyValue(DB_NAME, "user_data", "user_id", led->m_userid.c_str(), led->m_cb);
+						led->in_progress = true;
+					}
+
+				}
+
 			}
 		}//namespace Systems
 	}//namespace OnlineData

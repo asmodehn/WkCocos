@@ -84,6 +84,8 @@ namespace WkCocos
 
 		bool requestAllUsers();
 
+		bool requestEnemyData(std::string enemy_data);
+
 		bool requestSaveData(std::function<void()> saved_cb);
 
 		bool newPlayer;
@@ -281,9 +283,19 @@ namespace WkCocos
 			return true;
 		}
 		else
-		{
 			return false;
+	}
+
+	template <class T>
+	bool Player<T>::requestEnemyData(std::string enemy_data)
+	{
+		if (m_onlinedata)
+		{
+			m_onlinedata->loadEnemy(enemy_data);
+			return true;
 		}
+		else
+			return false;
 	}
 
 	template <class T>

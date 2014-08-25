@@ -57,7 +57,7 @@ bool TestScene::init()
 	timerroot->setPosition(cocos2d::Vec2(visibleSize.width * 0.75, visibleSize.height * 0.75));
 	//*/
 
-	//TimerUI
+	//PlayersListUI
 	PlayersListUI* playerslistui = new PlayersListUI();
 	auto playerslistroot = playerslistui->getRoot();
 	playerslistroot->setEnabled(true);
