@@ -3,6 +3,7 @@
 
 #include "WkCocos/Scene.h"
 
+#include "MyPlayer.h"
 #include "WkCocos/Download/Download.h"
 #include "WkCocos/Preload/Preload.h"
 #include "WkCocos/Download/Events/Error.h"
@@ -40,6 +41,7 @@ public:
 	//expects pct in [0..1]
 	void progress_CB(float pct);
 
+	void receive(const WkCocos::Player<MyPlayer>::Error &pe);
 	void receive(const WkCocos::Download::Events::Error &de);
 	void receive(const WkCocos::Preload::Events::Error &pe);
 

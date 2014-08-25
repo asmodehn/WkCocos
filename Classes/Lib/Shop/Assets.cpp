@@ -1,0 +1,120 @@
+#include "WkCocos/Shop/Assets.h"
+#include "WkCocos/Shop/SOOMLA/ShopAssets.h"
+using cocos2d::Ref;
+
+#include "Soomla/domain/virtualCurrencies/CCVirtualCurrency.h"
+#include "Soomla/domain/virtualCurrencies/CCVirtualCurrencyPack.h"
+#include "Soomla/domain/virtualGoods/CCVirtualGood.h"
+#include "Soomla/domain/virtualGoods/CCSingleUseVG.h"
+#include "Soomla/PurchaseTypes/CCPurchaseWithMarket.h"
+#include "Soomla/PurchaseTypes/CCPurchaseWithVirtualItem.h"
+#include "Soomla/domain/CCVirtualCategory.h"
+#include "Soomla/domain/CCNonConsumableItem.h"
+#include "Soomla/domain/virtualGoods/CCUpgradeVG.h"
+#include "Soomla/domain/virtualGoods/CCSingleUsePackVG.h"
+#include "Soomla/domain/virtualGoods/CCEquippableVG.h"
+#include "Soomla/data/CCStoreInfo.h"
+
+namespace WkCocos
+{
+
+	namespace Shop
+	{
+
+		Assets::Assets()
+			: assets(new SOOMLA::ShopAssets())
+		{
+		}
+
+		Assets::~Assets()
+		{
+
+		}
+
+		bool Assets::addVirtualCurrency(struct Assets::VirtualCurrency vc)
+		{
+			/** Virtual Currencies **/
+			soomla::CCVirtualCurrency *vCurrency = soomla::CCVirtualCurrency::create(
+				cocos2d::CCString::create(vc.name),
+				cocos2d::CCString::create(vc.description),
+				cocos2d::CCString::create(vc.itemid)
+				);
+
+			assets->addVirtualCurrency(vCurrency);
+
+			return true;
+		}
+
+		bool Assets::addVirtualCurrencyPack(struct Assets::VirtualCurrencyPack vcp)
+		{
+			/** Virtual Currency Packs **/
+			soomla::CCVirtualCurrencyPack *vCurrencyPack = soomla::CCVirtualCurrencyPack::create(
+				cocos2d::CCString::create(vcp.name),
+				cocos2d::CCString::create(vcp.description),
+				cocos2d::CCString::create(vcp.itemid),
+				cocos2d::CCInteger::create(vcp.currencyAmount),
+				cocos2d::CCString::create(vcp.currencyID),
+				soomla::CCPurchaseWithMarket::create(cocos2d::CCString::create(vcp.productID), cocos2d::CCDouble::create(vcp.price))
+				);
+
+			assets->addVirtualCurrencyPack(vCurrencyPack);
+
+			return true;
+		}
+
+		std::vector<Assets::VirtualCurrency> Assets::getCurrencies()
+		{
+			std::vector<Assets::VirtualCurrency> stdVCur;
+
+			//we need to build the vector from the CCArray.
+			cocos2d::CCObject* c;
+			cocos2d::__Array* currency_array = soomla::CCStoreInfo::sharedStoreInfo()->getVirtualCurrencies();
+			CCARRAY_FOREACH(currency_array, c)
+			{
+				soomla::CCVirtualCurrency* vc = dynamic_cast<soomla::CCVirtualCurrency*>(c);
+				cocos2d::Dictionary* vcd = vc->toDictionary();
+
+				std::string curname(vc->getName()->getCString());
+				std::string curdesc(vc->getDescription()->getCString());
+				std::string curid(vc->getItemId()->getCString());
+
+				stdVCur.push_back(VirtualCurrency(curname, curdesc, curid));
+
+			}
+			return stdVCur;
+		}
+
+		std::vector<Assets::VirtualCurrencyPack> Assets::getCurrencyPacks()
+		{
+			std::vector<Assets::VirtualCurrencyPack> stdVCPack;
+
+			//we need to build the vector from the CCArray.
+			cocos2d::CCObject* c;
+			cocos2d::__Array* currencyPack_array = soomla::CCStoreInfo::sharedStoreInfo()->getVirtualCurrencyPacks();
+			CCARRAY_FOREACH(currencyPack_array, c)
+			{
+				soomla::CCVirtualCurrencyPack* vc = dynamic_cast<soomla::CCVirtualCurrencyPack*>(c);
+				cocos2d::Dictionary* vcd = vc->toDictionary();
+
+				std::string curpname(vc->getName()->getCString());
+				std::string curpdesc(vc->getDescription()->getCString());
+				std::string curpid(vc->getItemId()->getCString());
+
+
+				unsigned int curpcurrencyamount(vc->getCurrencyAmount()->getValue());
+				std::string curpcurrencyid(vc->getCurrencyItemId()->getCString());
+
+				soomla::CCPurchaseWithMarket* pwm = dynamic_cast<soomla::CCPurchaseWithMarket*>(vc->getPurchaseType());
+
+				std::string curproductid(pwm->getMarketItem()->getProductId()->getCString());
+				unsigned int curconsume(pwm->getMarketItem()->getConsumable()->getValue());
+				double curprice(pwm->getMarketItem()->getPrice()->getValue());
+
+				stdVCPack.push_back(Assets::VirtualCurrencyPack(curpname, curpdesc, curpid, curpcurrencyamount, curpcurrencyid, curproductid, curprice));
+
+			}
+			return stdVCPack;
+		}
+
+	}//namespace Shop
+}//namespace WkCocos

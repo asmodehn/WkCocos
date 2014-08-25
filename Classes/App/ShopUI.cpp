@@ -26,22 +26,29 @@ ShopUI::ShopUI()
 	cocos2d::Vec2 origin = cocos2d::Director::getInstance()->getVisibleOrigin();
 
 	//building test UI based on ShopAssets content.
-	std::vector<WkCocos::Shop::ShopAssets::VirtualCurrency> curncy = GameLogic::Instance().getShopAssets().getCurrenciesSTD();
-	std::vector<WkCocos::Shop::ShopAssets::VirtualCurrencyPack> curncyPacks = GameLogic::Instance().getShopAssets().getCurrencyPacksSTD();
+	std::vector<WkCocos::Shop::Assets::VirtualCurrency> curncy = GameLogic::Instance().getShop().getAssets()->getCurrencies();
+	std::vector<WkCocos::Shop::Assets::VirtualCurrencyPack> curncyPacks = GameLogic::Instance().getShop().getAssets()->getCurrencyPacks();
 	
 	for (auto c = curncy.begin(); c != curncy.end(); ++c)
 	{
 		//filtering which pack belong to this currency
-		std::vector<WkCocos::Shop::ShopAssets::VirtualCurrencyPack> curncyPacksfiltered;
-		std::copy_if(curncyPacks.begin(), curncyPacks.end(), std::back_inserter(curncyPacksfiltered), [c](WkCocos::Shop::ShopAssets::VirtualCurrencyPack vcp) -> bool { return vcp.currencyID == c->itemid; });
+		std::vector<WkCocos::Shop::Assets::VirtualCurrencyPack> curncyPacksfiltered;
+		std::copy_if(curncyPacks.begin(), curncyPacks.end(), std::back_inserter(curncyPacksfiltered), [c](WkCocos::Shop::Assets::VirtualCurrencyPack vcp) -> bool { return vcp.currencyID == c->itemid; });
 
 		//creating label for currency
-		cocos2d::ui::Text* curtxtui = cocos2d::ui::Text::create(c->name, "Arial", 21);
+		soomla::CCError *err = NULL;
+		int gemBalance = soomla::CCStoreInventory::sharedStoreInventory()->getItemBalance(c->itemid.c_str(), &err);
+		if (err) {
+			soomla::CCStoreUtils::logException("ShopUI::getItemBalance", err);
+			return;
+		}
+
+		cocos2d::ui::Text* curtxtui = cocos2d::ui::Text::create(WkCocos::ToolBox::itoa(gemBalance) + c->name, "Arial", 21);
 		curtxtui->setPosition(cocos2d::Vec2(
 			widgetSize.width / (curncyPacksfiltered.size() + 2) - widgetSize.width/2,
 			widgetSize.height * ((curncy.end() - c) + 1) / (curncy.size() + 2) - widgetSize.height/2 )
 			);
-		m_curLabel.push_back(curtxtui);
+		m_curMainLabel.insert(make_pair(c->itemid,curtxtui));
 		m_widget->addChild(curtxtui);
 
 		//parsing currency packs
@@ -62,14 +69,14 @@ ShopUI::ShopUI()
 			cocos2d::ui::Text* curptxtui = cocos2d::ui::Text::create(p->name, "Arial", 21);
 			curptxtui->setPosition(cocos2d::Vec2(butt->getPosition() + cocos2d::Vec2(0, butt->getContentSize().height))
 			);
-			m_curLabel.push_back(curptxtui);
+			m_curPackLabel.push_back(curptxtui);
 			m_widget->addChild(curptxtui);
 
 			//creating price text
 			cocos2d::ui::Text* curppriceui = cocos2d::ui::Text::create(WkCocos::ToolBox::itoa(p->price), "Arial", 21);
 			curppriceui->setPosition(cocos2d::Vec2(butt->getPosition() - cocos2d::Vec2(0, butt->getContentSize().height))
 				);
-			m_curLabel.push_back(curppriceui);
+			m_curPriceLabel.push_back(curppriceui);
 			m_widget->addChild(curppriceui);
 		}
 
@@ -89,11 +96,15 @@ ShopUI::ShopUI()
 	m_refreshLabel->setPosition(m_refreshButton->getPosition() + cocos2d::Vec2(0, m_refreshButton->getContentSize().height));
 	m_widget->addChild(m_refreshLabel);
 
+	
 	if (m_widget)
 	{
 		m_widget->retain(); //we need to retain it in memory ( or cocos will drop it )
 		widget_cache.insert(std::pair<std::string, cocos2d::ui::Widget*>(id, m_widget));
 	}
+
+	//ENTITYX WAY
+	GameLogic::Instance().getShop().getEventManager()->subscribe<WkCocos::Shop::Shop::CurrencyBalanceChanged>(*this);
 
 }
 
@@ -104,21 +115,14 @@ void ShopUI::update(float delta)
 {
 }
 
-void ShopUI::buyCallback( WkCocos::Shop::ShopAssets::VirtualCurrencyPack vcp, cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input)
+void ShopUI::buyCallback( WkCocos::Shop::Assets::VirtualCurrencyPack vcp, cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input)
 {
 	if (input == cocos2d::ui::Widget::TouchEventType::ENDED)
 	{
 		CCLOG("BUY ITEM %s BUTTON CLICKED", vcp.productID.c_str());
 
 		//test buy
-
-		soomla::CCError *soomlaError = NULL;
-		soomla::CCStoreInventory::sharedStoreInventory()->buyItem(vcp.itemid.c_str(), &soomlaError);
-		
-		if (soomlaError) {
-			soomla::CCStoreUtils::logException("ShopUI::buyCallback", soomlaError);
-			return;
-		}
+		GameLogic::Instance().getPlayer().getInventory()->buy(vcp.itemid);
 	}
 }
 
@@ -129,15 +133,15 @@ void ShopUI::refreshCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::Touch
 	{
 		CCLOG("REFRESH BUTTON CLICKED");
 
-		//test buy
-
-		soomla::CCError *soomlaError = NULL;
-		soomla::CCSoomlaStore::getInstance()->refreshInventory();
-		if (soomlaError) {
-			soomla::CCStoreUtils::logException("ShopUI::refreshCallback", soomlaError);
-			return;
-		}
+		//test refresh
+		GameLogic::Instance().getPlayer().getInventory()->refresh();
 	}
 }
 
+
+void ShopUI::receive(const WkCocos::Shop::Shop::CurrencyBalanceChanged& cbc)
+{
+	auto curtext = m_curMainLabel.at(cbc.m_virtualCurrency.itemid);
+	curtext->setText(WkCocos::ToolBox::itoa(cbc.m_balance) + cbc.m_virtualCurrency.name);
+}
 

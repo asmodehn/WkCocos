@@ -72,13 +72,32 @@ namespace WkCocos
 			return  m_localdata;
 		}
 
+		WkCocos::Shop::Inventory* getInventory()
+		{
+			return m_inventory.get();
+		}
+
 		void receive(const WkCocos::OnlineData::Events::Error& err);
 
-		void openShop();
-		void closeShop();
+		struct Error : public entityx::Event<Error>
+		{
+			Error(std::string component, std::string code, std::string message)
+			: m_component(component)
+			, m_code(code)
+			, m_message(message)
+			{}
+
+			std::string m_component;
+			std::string m_code;
+			std::string m_message;
+		};
+
+		entityx::ptr<entityx::EventManager> player_events;
+
+
 
 	protected:
-		Player(std::shared_ptr<LocalData::LocalDataManager> localdata, std::string licensekey, std::string secretkey, std::shared_ptr<Shop::ShopAssets> shopAssets);
+		Player(std::shared_ptr<LocalData::LocalDataManager> localdata, std::shared_ptr<Shop::Inventory> shopInventory);
 
 		bool requestLoadData(std::function<void()> loaded_cb);
 
@@ -92,7 +111,7 @@ namespace WkCocos
 		std::shared_ptr<OnlineData::OnlineDataManager> m_onlinedata;
 		std::shared_ptr<Timer::Timer> m_timer;
 		
-		std::shared_ptr<WkCocos::Shop::Shop> m_shop;
+		std::shared_ptr<WkCocos::Shop::Inventory> m_inventory;
 
 		//this implements timer save and other data that we manage in this class.
 		virtual std::string get_all_data_json();
@@ -152,9 +171,10 @@ namespace WkCocos
 
 	//constructors
 	template <class T>
-	Player<T>::Player(std::shared_ptr<LocalData::LocalDataManager> localdata, std::string licensekey, std::string secretkey, std::shared_ptr<Shop::ShopAssets> shopAssets)
+	Player<T>::Player(std::shared_ptr<LocalData::LocalDataManager> localdata, std::shared_ptr<Shop::Inventory> shopInventory)
 		: m_localdata(localdata)
-		, m_shop(new WkCocos::Shop::Shop(licensekey, secretkey, shopAssets))
+		, m_inventory(shopInventory)
+		, player_events(entityx::EventManager::make())
 	{
 		//registering player class in cocos update loop
 		cocos2d::Director::getInstance()->getScheduler()->schedule(std::bind(&Player<T>::Update, this, std::placeholders::_1), this, 1.f / 15, false, "player_update");
@@ -301,20 +321,6 @@ namespace WkCocos
 	}
 
 	template <class T>
-	void Player<T>::openShop()
-	{
-		m_shop->activate();
-		
-	}
-
-	template <class T>
-	void Player<T>::closeShop()
-	{
-		m_shop->deactivate();
-	}
-
-
-	template <class T>
 	std::string Player<T>::get_all_data_json()
 	{
 		rapidjson::Document doc;
@@ -428,7 +434,17 @@ namespace WkCocos
 	template <class T>
 	void Player<T>::receive(const WkCocos::OnlineData::Events::Error& err)
 	{
-		if (err.httpErrorCode == 404 && err.app42ErrorCode == 2002 ) //Login existing: Authentication failed
+		if (err.httpErrorCode == 401 && err.app42ErrorCode == 1401) //Unauthorized access
+		{
+			//Major error : we cannot do anything, just trigger an error event.
+			//IN COCOS THREAD !!!
+			cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, err](){
+
+				this->player_events->emit<Error>("app42", ToolBox::itoa(err.httpErrorCode), ToolBox::itoa(err.errorMessage));
+			});
+
+		}
+		else if (err.httpErrorCode == 404 && err.app42ErrorCode == 2002) //Login existing: Authentication failed
 		{
 			//Major error : we recreate the user
 			std::string newUser;

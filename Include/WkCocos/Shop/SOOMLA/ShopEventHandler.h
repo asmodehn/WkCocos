@@ -4,6 +4,7 @@
 #include <string>
 #include "Cocos2dxStore.h"
 
+#include "entityx/entityx.h"
 
 #define EVENT_ON_CURRENCY_BALANCE_CHANGED "onCurrencyBalanceChanged"
 #define EVENT_ON_GOOD_BALANCE_CHANGED "onGoodBalanceChanged"
@@ -13,8 +14,16 @@
 
 using namespace std;
 
+//EventHandler translating StoreEvents to entityx Events
 class ShopEventHandler : public soomla::CCStoreEventHandler {
 public:
+
+	ShopEventHandler()
+	: m_event_manager(entityx::EventManager::make())
+	{
+	};
+
+	entityx::ptr<entityx::EventManager> m_event_manager;
 
 	virtual void onBillingNotSupported();
 
