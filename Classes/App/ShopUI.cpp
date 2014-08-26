@@ -51,6 +51,7 @@ ShopUI::ShopUI()
 		m_curMainLabel.insert(make_pair(c->itemid,curtxtui));
 		m_widget->addChild(curtxtui);
 
+		/* DOING IT ON REFRESH EVENT ONLY.
 		//parsing currency packs
 		for (auto p = curncyPacksfiltered.begin(); p != curncyPacksfiltered.end(); ++p)
 		{
@@ -73,13 +74,13 @@ ShopUI::ShopUI()
 			m_widget->addChild(curptxtui);
 
 			//creating price text
-			cocos2d::ui::Text* curppriceui = cocos2d::ui::Text::create(WkCocos::ToolBox::itoa(p->price), "Arial", 21);
+			cocos2d::ui::Text* curppriceui = cocos2d::ui::Text::create(WkCocos::ToolBox::itoa(p->marketPrice), "Arial", 21);
 			curppriceui->setPosition(cocos2d::Vec2(butt->getPosition() - cocos2d::Vec2(0, butt->getContentSize().height))
 				);
 			m_curPriceLabel.push_back(curppriceui);
 			m_widget->addChild(curppriceui);
 		}
-
+		*/
 	}
 
 	//building global shop UI
@@ -105,6 +106,7 @@ ShopUI::ShopUI()
 
 	//ENTITYX WAY
 	GameLogic::Instance().getShop().getEventManager()->subscribe<WkCocos::Shop::Shop::CurrencyBalanceChanged>(*this);
+	GameLogic::Instance().getShop().getEventManager()->subscribe<WkCocos::Shop::Shop::MarketItemsRefreshed>(*this);
 
 }
 
@@ -143,5 +145,101 @@ void ShopUI::receive(const WkCocos::Shop::Shop::CurrencyBalanceChanged& cbc)
 {
 	auto curtext = m_curMainLabel.at(cbc.m_virtualCurrency.itemid);
 	curtext->setText(WkCocos::ToolBox::itoa(cbc.m_balance) + cbc.m_virtualCurrency.name);
+}
+
+void ShopUI::receive(const WkCocos::Shop::Shop::MarketItemsRefreshed& mir)
+{
+	soomla::CCStoreUtils::logDebug("ShopUI", "MarketItemsRefreshed !!!");
+	CCLOG("ShopUI::receive (MarketItemsRefreshed)");
+
+	//REbuilding test UI based on ShopAssets content.
+	std::vector<WkCocos::Shop::Assets::VirtualCurrency> curncy = GameLogic::Instance().getShop().getAssets()->getCurrencies();
+	std::vector<WkCocos::Shop::Assets::VirtualCurrencyPack> curncyPacks = GameLogic::Instance().getShop().getAssets()->getCurrencyPacks();
+	cocos2d::Size widgetSize = m_widget->getContentSize();
+
+	for (auto c = curncy.begin(); c != curncy.end(); ++c)
+	{
+		auto curlabel = m_curMainLabel.find(c->itemid);
+		if (curlabel != m_curMainLabel.end())
+		{
+			//filtering which pack belong to this currency
+			std::vector<WkCocos::Shop::Assets::VirtualCurrencyPack> curncyPacksfiltered;
+			std::copy_if(curncyPacks.begin(), curncyPacks.end(), std::back_inserter(curncyPacksfiltered), [c](WkCocos::Shop::Assets::VirtualCurrencyPack vcp) -> bool { return vcp.currencyID == c->itemid; });
+
+			//parsing currency packs
+			for (auto p = curncyPacksfiltered.begin(); p != curncyPacksfiltered.end(); ++p)
+			{
+				cocos2d::Vec2 position;
+				cocos2d::Size contentSize;
+
+				std::ostringstream logmsg;
+				logmsg << "Currency Pack Item " << p->itemid << " product " << p->productID << " price " << p->marketPrice << std::endl;
+				soomla::CCStoreUtils::logDebug("ShopUI", "Currency Pack");
+				CCLOG("ShopUI::receive (MarketItemsRefreshed) : %s ", logmsg.str().c_str());
+
+				auto buybutt = m_buyCurButton.find(p->itemid);
+				if (buybutt != m_buyCurButton.end())
+				{ //button already exists
+					//no change. just get position
+					position = buybutt->second->getPosition();
+					contentSize = buybutt->second->getContentSize();
+				}
+				else
+				{
+					//creating button
+					cocos2d::ui::Button * butt = cocos2d::ui::Button::create("SkipNormal.png", "SkipSelected.png");
+					butt->addTouchEventListener(std::bind(&ShopUI::buyCallback, this, *p, std::placeholders::_1, std::placeholders::_2));
+					butt->setPosition(cocos2d::Vec2(
+						(widgetSize.width - butt->getContentSize().width) * ((curncyPacksfiltered.end() - p) + 1) / (curncyPacksfiltered.size() + 2) - widgetSize.width / 2,
+						curlabel->second->getPosition().y
+						)
+						);
+					m_buyCurButton.insert(make_pair(p->itemid,butt));
+					m_widget->addChild(butt);
+					position = butt->getPosition();
+					contentSize = butt->getContentSize();
+				}
+
+				auto txtlbl = m_curPackLabel.find(p->itemid);
+				if (txtlbl != m_curPackLabel.end())
+				{ //label already exists
+					txtlbl->second->setText(p->name);
+				}
+				else
+				{
+					//creating label
+					cocos2d::ui::Text* curptxtui = cocos2d::ui::Text::create(p->name, "Arial", 21);
+					curptxtui->setPosition(cocos2d::Vec2(position + cocos2d::Vec2(0, contentSize.height))
+						);
+					m_curPackLabel.insert(make_pair(p->itemid, curptxtui));
+					m_widget->addChild(curptxtui);
+				}
+
+				auto pricelbl = m_curPriceLabel.find(p->itemid);
+				if (pricelbl != m_curPriceLabel.end())
+				{ //label already exists
+					CCLOG("Setting pack price at : %s", p->marketPrice.c_str());
+					pricelbl->second->setText(p->marketPrice);
+				}
+				else
+				{
+					//creating price text
+					CCLOG("Creating pack price at : %s", p->marketPrice.c_str());
+					cocos2d::ui::Text* curppriceui = cocos2d::ui::Text::create(p->marketPrice, "Arial", 21);
+					curppriceui->setPosition(cocos2d::Vec2(position - cocos2d::Vec2(0, contentSize.height))
+						);
+					m_curPriceLabel.insert(make_pair(p->itemid,curppriceui));
+					m_widget->addChild(curppriceui);
+				}
+			}
+		}
+		else
+		{//we dont know which currency this pack refers to : ignoreit
+
+		}
+
+	}
+
+
 }
 

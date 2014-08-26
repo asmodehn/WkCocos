@@ -47,8 +47,10 @@ LOCAL_SRC_FILES := jni.cpp \
                    ../../../../../Classes/Lib/OnlineData/Systems/Storage.cpp \
                    ../../../../../Classes/Lib/OnlineData/Systems/User.cpp \
                    ../../../../../Classes/Lib/Shop/Shop.cpp \
-                   ../../../../../Classes/Lib/Shop/ShopEventHandler.cpp \
-                   ../../../../../Classes/Lib/Shop/ShopAssets.cpp \
+                   ../../../../../Classes/Lib/Shop/Inventory.cpp \
+                   ../../../../../Classes/Lib/Shop/Assets.cpp \
+                   ../../../../../Classes/Lib/Shop/SOOMLA/ShopEventHandler.cpp \
+                   ../../../../../Classes/Lib/Shop/SOOMLA/ShopAssets.cpp \
                    ../../../../../Classes/Lib/Timer/Timer.cpp \
                    ../../../../../Classes/Lib/Timer/Systems/AlarmDestructor.cpp \
                    ../../../../../Classes/Lib/Timer/Systems/AlarmRinger.cpp \

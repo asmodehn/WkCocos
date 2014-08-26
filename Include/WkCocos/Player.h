@@ -440,7 +440,8 @@ namespace WkCocos
 			//IN COCOS THREAD !!!
 			cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, err](){
 
-				this->player_events->emit<Error>("app42", ToolBox::itoa(err.httpErrorCode), ToolBox::itoa(err.errorMessage));
+				//TMP Android build
+				//this->player_events->emit<Player<T>::Error>("app42", ToolBox::itoa(err.httpErrorCode), ToolBox::itoa(err.errorMessage));
 			});
 
 		}

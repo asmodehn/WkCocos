@@ -1,4 +1,5 @@
 #include "WkCocosApp/GameLogic.h"
+#include "WkCocos/Shop/Assets.h"
 
 GameLogic::GameLogic()
 : m_localdatamngr(new WkCocos::LocalData::LocalDataManager())
@@ -7,14 +8,18 @@ GameLogic::GameLogic()
 , m_player()
 , m_shop()
 {
-	auto shopAssets = make_unique<WkCocos::Shop::Assets>();
+	auto shopAssets = std::unique_ptr<WkCocos::Shop::Assets>(new WkCocos::Shop::Assets());
 
+	//THIS IS TOO DANGEROUS for now : if a user has a android.test purchase in his list of purchase, other purchase will fail ( with a signature fail error ).
+	// => we must prevent users to use static test response.
+	//If it ever happens there is code to uncomment ( just for one time use ) in iabHelper.java to clean up your list of purchase.
+	/*
 	shopAssets->addVirtualCurrency("Static", "Static Test Currency", "currency_static_test");
 	shopAssets->addVirtualCurrencyPack("Test Purchased", "Static Response Test Purchased ", GOOGLE_PLAY_PURCHASED_STATIC_PRODUCT_ID, 5, "currency_static_test", GOOGLE_PLAY_PURCHASED_STATIC_PRODUCT_ID, 1000);
 	shopAssets->addVirtualCurrencyPack("Test Canceled", "Static Response Test Canceled", GOOGLE_PLAY_CANCELED_STATIC_PRODUCT_ID, 5, "currency_static_test", GOOGLE_PLAY_CANCELED_STATIC_PRODUCT_ID, 1000);
 	shopAssets->addVirtualCurrencyPack("Test Refunded", "Static Response Test Refunded", GOOGLE_PLAY_REFUND_STATIC_PRODUCT_ID, 5, "currency_static_test", GOOGLE_PLAY_REFUND_STATIC_PRODUCT_ID, 1000);
 	shopAssets->addVirtualCurrencyPack("Test Unavailable", "Static Response Test Unavailable", GOOGLE_PLAY_UNAVAILABLE_STATIC_PRODUCT_ID, 5, "currency_static_test", GOOGLE_PLAY_UNAVAILABLE_STATIC_PRODUCT_ID, 1000);
-
+	*/
 	shopAssets->addVirtualCurrency("Gem", "Gem Currency", "currency_gem");
 	shopAssets->addVirtualCurrencyPack("5 Gems", "5 Shiny Gems ", "gem_5", 5, "currency_gem", "gem_5", 1000);
 	shopAssets->addVirtualCurrencyPack("10 Gems", "10 Shiny Gems ", "gem_10", 10, "currency_gem", "gem_10", 1000);

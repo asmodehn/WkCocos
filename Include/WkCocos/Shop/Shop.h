@@ -163,7 +163,7 @@ namespace WkCocos
 			struct IabServiceStarted : public entityx::Event<IabServiceStarted>{
 			};
 			
-			struct IabServiceStopped : public entityx::Event<<IadServiceStopped>{
+			struct IabServiceStopped : public entityx::Event<IabServiceStopped>{
 			};
 #endif
 

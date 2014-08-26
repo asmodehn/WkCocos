@@ -34,13 +34,14 @@ public:
 	void refreshCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input);
 
 	void receive(const WkCocos::Shop::Shop::CurrencyBalanceChanged& cbc);
+	void receive(const WkCocos::Shop::Shop::MarketItemsRefreshed& cbc);
 
 protected:
 
 	std::map<std::string, cocos2d::ui::Text*> m_curMainLabel;
-	std::vector<cocos2d::ui::Text*> m_curPackLabel;
-	std::vector<cocos2d::ui::Text*> m_curPriceLabel;
-	std::vector<cocos2d::ui::Button*> m_buyCurButton;
+	std::map<std::string, cocos2d::ui::Text*> m_curPackLabel;
+	std::map<std::string, cocos2d::ui::Text*> m_curPriceLabel;
+	std::map<std::string, cocos2d::ui::Button*> m_buyCurButton;
 	
 	cocos2d::ui::Button* m_refreshButton;
 	cocos2d::ui::Text* m_refreshLabel;

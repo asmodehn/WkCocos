@@ -4,6 +4,8 @@
 
 
 #include "WkCocos/Shop/SOOMLA/ShopAssets.h"
+//to grab event when market items are refreshed, and maintain the market price list
+#include "WkCocos/Shop/SOOMLA/ShopEventHandler.h"
 
 #include "CCVirtualCurrency.h"
 #include "CCVirtualCurrencyPack.h"
@@ -11,23 +13,14 @@
 #include "CCSingleUseVG.h"
 #include "CCPurchaseWithMarket.h"
 #include "CCPurchaseWithVirtualItem.h"
+#include "CCMarketItem.h"
 #include "CCVirtualCategory.h"
 #include "CCNonConsumableItem.h"
 #include "CCUpgradeVG.h"
 #include "CCSingleUsePackVG.h"
 #include "CCEquippableVG.h"
 
-#define MUFFIN_CURRENCY_ITEM_ID "currency_muffin"
-#define TENMUFF_PACK_PRODUCT_ID "android.test.refunded"
-#define FIFTYMUFF_PACK_PRODUCT_ID "android.test.canceled"
-#define FOURHUNDMUFF_PACK_PRODUCT_ID "android.test.purchased"
-#define THOUSANDMUFF_PACK_PRODUCT_ID "android.test.item_unavailable"
-#define NO_ADDS_NONCONS_PRODUCT_ID "gem_5"
-
-#define MUFFINCAKE_ITEM_ID "fruit_cake"
-#define PAVLOVA_ITEM_ID "pavlova"
-#define CHOCLATECAKE_ITEM_ID "chocolate_cake"
-#define CREAMCUP_ITEM_ID "cream_cup"
+#define TAG "ShopAssets >>>"
 
 namespace WkCocos
 {
@@ -54,6 +47,7 @@ namespace WkCocos
 				mCategories->retain();
 				mNonConsumableItems = cocos2d::CCArray::create();
 				mNonConsumableItems->retain();
+				
 			}
 
 			bool ShopAssets::addVirtualCurrency(soomla::CCVirtualCurrency * vc)
@@ -116,12 +110,12 @@ namespace WkCocos
 					cocos2d::CCString::create(description),
 					cocos2d::CCString::create(itemID),
 					soomla::CCPurchaseWithMarket::createWithMarketItem(
-					soomla::CCMarketItem::create(
-					cocos2d::CCString::create(productID),
-					cocos2d::CCInteger::create(soomla::CCMarketItem::NONCONSUMABLE), cocos2d::CCDouble::create(price)
-					)
-					)
-					);
+						soomla::CCMarketItem::create(
+							cocos2d::CCString::create(productID),
+							cocos2d::CCInteger::create(soomla::CCMarketItem::NONCONSUMABLE),
+							cocos2d::CCDouble::create(price)
+						)
+					));
 
 				mNonConsumableItems->addObject(nonConsumable);
 

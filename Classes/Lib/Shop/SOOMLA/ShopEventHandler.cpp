@@ -118,14 +118,20 @@ void ShopEventHandler::onMarketItemRefreshed(soomla::CCMarketItem *mi)
 	logmsg << "[SOOMLA MARKET onMarketItemRefreshed] product:[" << productID << "] market price: [" << marketPrice << std::endl;
 
 	soomla::CCStoreUtils::logDebug(TAG, logmsg.str().c_str());
+
+	cocos2d::Director::getInstance()->getEventDispatcher()->dispatchCustomEvent(EVENT_ON_MARKET_ITEM_REFRESHED, mi);
+
 	m_event_manager->emit(WkCocos::Shop::Shop::MarketItemRefreshed(mi));
+	
 }
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
 
 void ShopEventHandler::onMarketRefund(soomla::CCPurchasableVirtualItem *purchasableVirtualItem) {
+	std::string itemID = purchasableVirtualItem->getItemId()->getCString();
+
 	std::ostringstream logmsg;
-	logmsg << "[SOOMLA MARKET onMarketRefund] product:[" << productID << "] market price: [" << marketPrice << std::endl;
+	logmsg << "[SOOMLA MARKET onMarketRefund] item:[" << itemID << "] " << std::endl;
 	soomla::CCStoreUtils::logDebug(TAG, "MarketRefund");
 	m_event_manager->emit(WkCocos::Shop::Shop::MarketRefund(purchasableVirtualItem));
 }

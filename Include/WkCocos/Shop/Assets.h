@@ -25,8 +25,8 @@ namespace WkCocos
 			};
 
 			struct VirtualCurrencyPack{
-				VirtualCurrencyPack(std::string aname, std::string adesc, std::string aitemid, unsigned long acurrencyAmount, std::string acurrencyID, std::string aproductID, double aprice)
-				: name(aname), description(adesc), itemid(aitemid), currencyAmount(acurrencyAmount), currencyID(acurrencyID), productID(aproductID), price(aprice)
+				VirtualCurrencyPack(std::string aname, std::string adesc, std::string aitemid, unsigned long acurrencyAmount, std::string acurrencyID, std::string aproductID, double aprice, std::string amarketPrice, std::string amarketTitle, std::string amarketDescription)
+				: name(aname), description(adesc), itemid(aitemid), currencyAmount(acurrencyAmount), currencyID(acurrencyID), productID(aproductID), price(aprice), marketPrice(amarketPrice), marketTitle(amarketTitle), marketDescription(amarketDescription)
 				{}
 				std::string name;
 				std::string description;
@@ -35,6 +35,9 @@ namespace WkCocos
 				std::string currencyID;
 				std::string productID;
 				double price;
+				std::string marketPrice;
+				std::string marketTitle;
+				std::string marketDescription;
 			};
 
 			/**
@@ -60,7 +63,8 @@ namespace WkCocos
 			*/
 			inline bool addVirtualCurrencyPack(std::string name, std::string description, std::string itemid, unsigned long currencyAmount, std::string currencyID, std::string productID, double price)
 			{
-				return addVirtualCurrencyPack(VirtualCurrencyPack(name, description, itemid, currencyAmount, currencyID, productID, price));
+				//creating virutal currency pack without information from the market
+				return addVirtualCurrencyPack(VirtualCurrencyPack(name, description, itemid, currencyAmount, currencyID, productID, price, "", "", ""));
 			}
 			bool addVirtualCurrencyPack(VirtualCurrencyPack vcp);
 
@@ -74,6 +78,8 @@ namespace WkCocos
 			friend class Shop;
 			std::shared_ptr<SOOMLA::ShopAssets> assets;
 
+			//SOOMLA BUG workaround
+			std::map<std::string, std::string> marketPrices;
 		};
 
 	}//namespace Shop

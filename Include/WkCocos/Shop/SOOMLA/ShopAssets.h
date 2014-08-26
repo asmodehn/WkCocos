@@ -55,8 +55,8 @@ namespace WkCocos
 				virtual int getVersion();
 
 
-				bool ShopAssets::addVirtualCurrency(soomla::CCVirtualCurrency * vc);
-				bool ShopAssets::addVirtualCurrencyPack(soomla::CCVirtualCurrencyPack * vcp);
+				bool addVirtualCurrency(soomla::CCVirtualCurrency * vc);
+				bool addVirtualCurrencyPack(soomla::CCVirtualCurrencyPack * vcp);
 
 				//uses structure to provide differnet interface using structure.
 				bool addVirtualGood(std::string name, std::string description, std::string idemID, std::string vCurrencyID, unsigned int price);

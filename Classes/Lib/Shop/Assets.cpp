@@ -1,5 +1,6 @@
 #include "WkCocos/Shop/Assets.h"
 #include "WkCocos/Shop/SOOMLA/ShopAssets.h"
+#include "WkCocos/Shop/SOOMLA/ShopEventHandler.h"
 using cocos2d::Ref;
 
 #include "Soomla/domain/virtualCurrencies/CCVirtualCurrency.h"
@@ -15,6 +16,7 @@ using cocos2d::Ref;
 #include "Soomla/domain/virtualGoods/CCEquippableVG.h"
 #include "Soomla/data/CCStoreInfo.h"
 
+#define TAG "Assets"
 namespace WkCocos
 {
 
@@ -24,6 +26,31 @@ namespace WkCocos
 		Assets::Assets()
 			: assets(new SOOMLA::ShopAssets())
 		{
+			//HACK to fix soomla refresh prices
+			cocos2d::Director::getInstance()->getEventDispatcher()->addCustomEventListener(EVENT_ON_MARKET_ITEM_REFRESHED, [=](cocos2d::EventCustom* ec){
+
+				//we cannot dynamic cast on void*
+				soomla::CCMarketItem* mi = static_cast<soomla::CCMarketItem*>(ec->getUserData());
+				if (mi)
+				{
+					std::string productID = mi->getProductId()->getCString();
+					std::string marketPrice = mi->getMarketPrice()->getCString();
+
+					std::ostringstream logmsg;
+					logmsg << "[SOOMLA MARKET onMarketItemRefreshed Listener] product:[" << productID << "] market price: [" << marketPrice << std::endl;
+					soomla::CCStoreUtils::logDebug(TAG, logmsg.str().c_str());
+
+					if (marketPrices.end() == marketPrices.find(productID))
+					{
+						marketPrices.insert(make_pair(productID, marketPrice));
+					}
+					else
+					{
+						marketPrices.at(productID) = marketPrice;
+					}
+				}
+			});
+
 		}
 
 		Assets::~Assets()
@@ -100,7 +127,6 @@ namespace WkCocos
 				std::string curpdesc(vc->getDescription()->getCString());
 				std::string curpid(vc->getItemId()->getCString());
 
-
 				unsigned int curpcurrencyamount(vc->getCurrencyAmount()->getValue());
 				std::string curpcurrencyid(vc->getCurrencyItemId()->getCString());
 
@@ -110,7 +136,32 @@ namespace WkCocos
 				unsigned int curconsume(pwm->getMarketItem()->getConsumable()->getValue());
 				double curprice(pwm->getMarketItem()->getPrice()->getValue());
 
-				stdVCPack.push_back(Assets::VirtualCurrencyPack(curpname, curpdesc, curpid, curpcurrencyamount, curpcurrencyid, curproductid, curprice));
+				cocos2d::CCString* marketPrice = pwm->getMarketItem()->getMarketPrice();
+				std::string curMPrice;
+				if (marketPrice) //will be null if no refresh of the store was possible yet
+				{
+					curMPrice = std::string(marketPrice->getCString());
+				}
+				else if (marketPrices.end() != marketPrices.find(curproductid)) //if it s null but we have it in the market price workaround list
+				{
+					curMPrice = marketPrices.at(curproductid);
+				}
+
+				cocos2d::CCString* marketTitle = pwm->getMarketItem()->getMarketTitle();
+				std::string curMTitle;
+				if (marketTitle)//will be null if no refresh of the store was possible yet
+				{
+					curMTitle = std::string(marketTitle->getCString());
+				}
+
+				cocos2d::CCString* marketDescription = pwm->getMarketItem()->getMarketDescription();
+				std::string curMDescription;
+				if (marketDescription)//will be null if no refresh of the store was possible yet
+				{
+					curMDescription = std::string(marketDescription->getCString());
+				}
+
+				stdVCPack.push_back(Assets::VirtualCurrencyPack(curpname, curpdesc, curpid, curpcurrencyamount, curpcurrencyid, curproductid, curprice, curMPrice, curMTitle, curMDescription));
 
 			}
 			return stdVCPack;
