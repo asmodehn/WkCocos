@@ -36,11 +36,11 @@ PlayersListUI::PlayersListUI()
 		m_refreshLabel->setPosition(m_refreshButton->getPosition() + Vec2(0, m_refreshButton->getContentSize().height));
 		m_widget->addChild(m_refreshLabel);
 	
-		m_enemyData = ui::Text::create("0 GEMS and 0 GOLD", "Arial", 21);
+		m_enemyData = ui::Text::create("... GEMS and ... GOLD", "Arial", 21);
 		m_enemyData->setPosition(Vec2(m_widgetSize.width / 2, m_widgetSize.height / 3));
 		m_widget->addChild(m_enemyData);
 
-		m_enemyLabel = ui::Text::create("player ... has", "Arial", 21);
+		m_enemyLabel = ui::Text::create("player ... has", "Arial", 18);
 		m_enemyLabel->setPosition(m_enemyData->getPosition() + Vec2(0, m_enemyData->getContentSize().height));
 		m_widget->addChild(m_enemyLabel);
 
@@ -59,15 +59,21 @@ PlayersListUI::~PlayersListUI()
 
 void PlayersListUI::receive(const WkCocos::OnlineData::Events::EnemyData &ed)
 {
-	m_enemyLabel->setText("player " + ed.enemy_name + " has");
-	m_enemyData->setText(WkCocos::ToolBox::itoa(ed.enemy_gems) + " GEMS and " + WkCocos::ToolBox::itoa(ed.enemy_gold) + " GOLD");
+	cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([=]()
+	{
+		m_enemyLabel->setText("player " + ed.enemy_name + " has");
+		if (ed.enemy_docs)
+			m_enemyData->setText(WkCocos::ToolBox::itoa(ed.enemy_gems) + " GEMS and " + WkCocos::ToolBox::itoa(ed.enemy_gold) + " GOLD");
+		else
+			m_enemyData->setText("no saved documents");
+	});
 }
 
 void PlayersListUI::refreshCallback(Ref* widgetRef, ui::Widget::TouchEventType input)
 {
 	if (input == ui::Widget::TouchEventType::ENDED)
 	{
-		GameLogic::Instance().getPlayer().loadData([](){});
+		GameLogic::Instance().getPlayer().getAllUsers();
 	}
 }
 
@@ -92,12 +98,13 @@ void PlayersListUI::receive(const WkCocos::OnlineData::Events::PlayersList &pl)
 					playertextbutton->setPosition(Vec2(-m_widgetSize.width / 2, m_widgetSize.height * (1 - 2.0 / (doc.Size() + 1) * (i + 1))));
 					playertextbutton->setTouchEnabled(true);
 
-					playertextbutton->addTouchEventListener(CC_CALLBACK_2([enemy_name](Ref* widgetRef, ui::Widget::TouchEventType input)
+					playertextbutton->addTouchEventListener(
+						[=](Ref* widgetRef, ui::Widget::TouchEventType input)
 					{
 						if (input == ui::Widget::TouchEventType::ENDED)
 							GameLogic::Instance().getPlayer().loadEnemy(enemy_name);
 					}
-					, this));
+					);
 										
 					m_widget->addChild(playertextbutton);
 

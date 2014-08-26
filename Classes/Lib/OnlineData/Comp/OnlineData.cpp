@@ -253,30 +253,22 @@ namespace WkCocos
 									temp = temp[temp.Size() - 1];
 									if (temp.HasMember("data"))
 									{
-										rapidjson::StringBuffer strbuf;
-										rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
-										temp["data"].Accept(writer);
-										//cb(strbuf.GetString());
-										event_emitter->emit<Events::EnemyData>("", 0, 0);
+										temp = temp["data"];
+										temp = temp["currency"];
+										event_emitter->emit<Events::EnemyData>(userid, temp["gold"].GetInt(), temp["gem"].GetInt(), true);
 									}
+									else
+										event_emitter->emit<Events::EnemyData>(userid, 0, 0, false);
 								}
+								else
+									event_emitter->emit<Events::EnemyData>(userid, 0, 0, false);
 							}
 							else
-							{
-								if (doc.Size())
-								{
-									rapidjson::Value & temp = doc[doc.Size() - 1];
-									if (temp.HasMember("data"))
-									{
-										rapidjson::StringBuffer strbuf;
-										rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
-										temp["data"].Accept(writer);
-										//cb(strbuf.GetString());
-										event_emitter->emit<Events::EnemyData>("", 0, 0);
-									}
-								}
-							}
+								event_emitter->emit<Events::EnemyData>(userid, 0, 0, false);
 						}
+						else
+							event_emitter->emit<Events::EnemyData>(userid, 0, 0, false);
+
 					}
 					else// if request failed, 
 					{
@@ -284,6 +276,7 @@ namespace WkCocos
 						CCLOG("\nerrorMessage:%s", userdata->errorMessage.c_str());
 						CCLOG("\nappErrorCode:%d", userdata->appErrorCode);
 						CCLOG("\nhttpErrorCode:%d", userdata->httpErrorCode);
+						event_emitter->emit<Events::EnemyData>(userid, 0, 0, false);
 					}
 
 					done = true;
