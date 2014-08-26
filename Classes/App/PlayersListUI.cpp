@@ -55,7 +55,15 @@ PlayersListUI::PlayersListUI()
 }
 
 PlayersListUI::~PlayersListUI()
-{}
+{
+	std::map<std::string, cocos2d::ui::Text*>::iterator currentPTB = m_ptb.begin();
+	for (; currentPTB != m_ptb.end(); ++currentPTB)
+	{
+		m_widget->removeChild(currentPTB->second);
+		//delete currentPTB->second;
+	}
+	m_ptb.clear();
+}
 
 void PlayersListUI::receive(const WkCocos::OnlineData::Events::EnemyData &ed)
 {
@@ -70,9 +78,17 @@ void PlayersListUI::receive(const WkCocos::OnlineData::Events::EnemyData &ed)
 }
 
 void PlayersListUI::refreshCallback(Ref* widgetRef, ui::Widget::TouchEventType input)
-{
+{	
 	if (input == ui::Widget::TouchEventType::ENDED)
-	{
+	{	
+		std::map<std::string, cocos2d::ui::Text*>::iterator currentPTB = m_ptb.begin();
+		for (; currentPTB != m_ptb.end(); ++currentPTB)
+		{
+			m_widget->removeChild(currentPTB->second);
+			//delete currentPTB->second;
+		}
+		m_ptb.clear();
+
 		GameLogic::Instance().getPlayer().getAllUsers();
 	}
 }
@@ -105,10 +121,10 @@ void PlayersListUI::receive(const WkCocos::OnlineData::Events::PlayersList &pl)
 							GameLogic::Instance().getPlayer().loadEnemy(enemy_name);
 					}
 					);
+
+					m_ptb[enemy_name] = playertextbutton;
 										
 					m_widget->addChild(playertextbutton);
-
-
 				}
 			}
 		}

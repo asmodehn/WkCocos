@@ -38,6 +38,8 @@ protected:
 	cocos2d::ui::Text* m_enemyData;
 	cocos2d::Size m_widgetSize;
 
+	std::map<std::string, cocos2d::ui::Text*> m_ptb;
+
 };
 
 #endif // __PLAYERSLISTUI_H__
