@@ -40,7 +40,7 @@ PlayersListUI::PlayersListUI()
 		m_enemyData->setPosition(Vec2(m_widgetSize.width / 2, m_widgetSize.height / 3));
 		m_widget->addChild(m_enemyData);
 
-		m_enemyLabel = ui::Text::create("player ... has", "Arial", 18);
+		m_enemyLabel = ui::Text::create("player ... has", "Arial", 15);
 		m_enemyLabel->setPosition(m_enemyData->getPosition() + Vec2(0, m_enemyData->getContentSize().height));
 		m_widget->addChild(m_enemyLabel);
 

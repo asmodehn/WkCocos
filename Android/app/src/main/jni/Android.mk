@@ -17,6 +17,7 @@ LOCAL_SRC_FILES := main.cpp \
                    ../../../../../Classes/App/TestScene.cpp \
                    ../../../../../Classes/App/SavingUI.cpp \
                    ../../../../../Classes/App/TimerUI.cpp \
+                   ../../../../../Classes/App/PlayersListUI.cpp \
 
                    
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../../../../Include
