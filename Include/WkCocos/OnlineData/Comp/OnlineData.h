@@ -83,11 +83,12 @@ namespace WkCocos
 
 			struct LoadEnemyData : entityx::Component<LoadEnemyData>
 			{
-				LoadEnemyData(std::string userid, entityx::ptr<entityx::EventManager> event_emitter);
+				LoadEnemyData(std::string userid, std::string m_collection, entityx::ptr<entityx::EventManager> event_emitter);
 
 				bool in_progress;
 				bool done;
 				std::string m_userid;
+				std::string m_collection;
 				std::function<void(void*)> m_cb;
 
 			};

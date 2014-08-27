@@ -227,10 +227,11 @@ namespace WkCocos
 				};
 			}
 
-			LoadEnemyData::LoadEnemyData(std::string userid, entityx::ptr<entityx::EventManager> event_emitter)
+			LoadEnemyData::LoadEnemyData(std::string userid, std::string collec, entityx::ptr<entityx::EventManager> event_emitter)
 				: in_progress(false)
 				, done(false)
 				, m_userid(userid)
+				, m_collection(collec)
 			{
 				m_cb = [=](void* data) {
 					::App42::App42StorageResponse* userdata = static_cast<::App42::App42StorageResponse*>(data);

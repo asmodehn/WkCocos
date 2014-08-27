@@ -82,7 +82,7 @@ namespace WkCocos
 					}
 					else if (!led->in_progress)
 					{
-						m_stor_service->FindDocumentByKeyValue(DB_NAME, "user_data", "user_id", led->m_userid.c_str(), led->m_cb);
+						m_stor_service->FindDocumentByKeyValue(DB_NAME, led->m_collection.c_str(), "user_id", led->m_userid.c_str(), led->m_cb);
 						led->in_progress = true;
 					}
 

@@ -84,7 +84,7 @@ namespace WkCocos
 		{
 			auto newentity = entity_manager->create();
 			//new File component for each request. The aggregator system will detect duplicates and group them
-			newentity.assign<Comp::LoadEnemyData>(userid, event_manager);
+			newentity.assign<Comp::LoadEnemyData>(userid, "user_data", event_manager);
 		}
 
 		void OnlineDataManager::getAllUsers()
