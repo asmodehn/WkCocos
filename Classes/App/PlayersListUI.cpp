@@ -103,27 +103,32 @@ void PlayersListUI::receive(const WkCocos::OnlineData::Events::PlayersList &pl)
 		{
 			if (doc.Size())
 			{
-				//
-				for (rapidjson::SizeType i = 0; i < doc.Size(); i++)
+				// with this value font size is no more than 15 and player name does not exceed half screen width
+				int listSize = 42; 
+				if (doc.Size() < listSize)
+					listSize = doc.Size();
+
+				for (rapidjson::SizeType i = 0; i < listSize; i++)
 				{
 					rapidjson::Value & userName = doc[i];
 
 					std::string enemy_name = userName["userName"].GetString();
 
-					cocos2d::ui::Text* playertextbutton = ui::Text::create("#" + WkCocos::ToolBox::itoa(i) + " " + enemy_name, "Arial", 2 * m_widgetSize.height / doc.Size());
-					playertextbutton->setPosition(Vec2(-m_widgetSize.width / 2, m_widgetSize.height * (1 - 2.0 / (doc.Size() + 1) * (i + 1))));
+					cocos2d::ui::Text* playertextbutton = ui::Text::create("#" + WkCocos::ToolBox::itoa(i) + " " + enemy_name, "Arial", 15);
+					playertextbutton->setPosition(Vec2(-m_widgetSize.width / 2, m_widgetSize.height * (1 - 2.0 / (listSize + 1) * (i + 1))));
 					playertextbutton->setTouchEnabled(true);
 
-					playertextbutton->addTouchEventListener(
+					playertextbutton->addTouchEventListener
+					(
 						[=](Ref* widgetRef, ui::Widget::TouchEventType input)
-					{
-						if (input == ui::Widget::TouchEventType::ENDED)
-							GameLogic::Instance().getPlayer().loadEnemy(enemy_name);
-					}
+						{
+							if (input == ui::Widget::TouchEventType::ENDED)
+								GameLogic::Instance().getPlayer().loadEnemy(enemy_name);
+						}
 					);
 
 					m_ptb[enemy_name] = playertextbutton;
-										
+
 					m_widget->addChild(playertextbutton);
 				}
 			}
