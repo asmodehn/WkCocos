@@ -207,7 +207,7 @@ void LoadingScene::error_CB(std::string msg)
 
 }
 
-void LoadingScene::receive(const WkCocos::Player<MyPlayer>::Error &pe)
+void LoadingScene::receive(const WkCocos::Player::Error &pe)
 {
 	ErrorUI* errorui = getInterface<ErrorUI>(ErrorUI::id);
 	errorui->activate(pe.m_message);

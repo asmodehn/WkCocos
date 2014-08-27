@@ -37,11 +37,11 @@ ErrorUI::ErrorUI() : Interface()
 
 		GameLogic::Instance().getPlayer().getLocalDatamgr()->getEventManager()->subscribe<WkCocos::LocalData::Events::Error>(*this);
 
-		GameLogic::Instance().getPlayer().player_events->subscribe<WkCocos::Player<MyPlayer>::Error>(*this);
+		GameLogic::Instance().getPlayer().player_events->subscribe<WkCocos::Player::Error>(*this);
 	}
 }
 
-void ErrorUI::receive(const WkCocos::Player<MyPlayer>::Error &PL)
+void ErrorUI::receive(const WkCocos::Player::Error &PL)
 {
 	std::string errmsg = PL.m_component + " : " + PL.m_code + " - " + PL.m_message;
 	m_label->setText(errmsg);

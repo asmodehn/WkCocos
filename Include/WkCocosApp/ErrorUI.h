@@ -34,7 +34,7 @@ public:
 	void skipCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input);
 
 	void receive(const WkCocos::LocalData::Events::Error &LD);
-	void receive(const WkCocos::Player<MyPlayer>::Error &PL);
+	void receive(const WkCocos::Player::Error &PL);
 	void activate(std::string msg);
 	void deactivate();
 

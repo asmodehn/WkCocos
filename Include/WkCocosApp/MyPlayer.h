@@ -7,7 +7,7 @@
 /**
 * This is the game player
 */
-class MyPlayer : public WkCocos::Player<MyPlayer>
+class MyPlayer : public WkCocos::Player
 {
 public:
 

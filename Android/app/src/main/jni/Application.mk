@@ -16,9 +16,10 @@ APP_CPPFLAGS :=  -std=c++11 -fsigned-char -frtti -fexceptions
 #cocos flags
 APP_CPPFLAGS += -DCC_ENABLE_CHIPMUNK_INTEGRATION=1
 
-#ifeq ($(APP_OPTIM),debug)
+#APP_DEBUG is set by using NDK_DEBUG command line option
+ifeq ($(APP_DEBUG),true)
     APP_CPPFLAGS += -DCOCOS2D_DEBUG=1
-#endif
+endif
 
-#soomla flags needs to be enabled in release mode to test purchases
+#soomla flags needs to be enabled in release mode to test real purchases
 APP_CPPFLAGS += -DSOOMLA_DEBUG=1

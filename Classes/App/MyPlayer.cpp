@@ -5,7 +5,7 @@
 #include "json/writer.h"
 
 MyPlayer::MyPlayer(std::shared_ptr<WkCocos::LocalData::LocalDataManager> localdatamngr, std::shared_ptr<WkCocos::Shop::Inventory> shopInventory)
-: WkCocos::Player<MyPlayer>(localdatamngr, shopInventory)
+: WkCocos::Player(localdatamngr, shopInventory)
 , m_gem(42)
 , m_gold(424242)
 {
