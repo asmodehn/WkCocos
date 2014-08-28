@@ -33,8 +33,8 @@ namespace WkCocos
 			/**
 			* PlayerData
 			*/
-			bool savePlayerData(std::string data, short version = DEFAULT_SAVE_VERSION);
-			bool loadPlayerData(std::function<void(std::string data)> load_cb, short version = DEFAULT_SAVE_VERSION);
+			bool saveData(const std::string& saveName, std::string data, short version = DEFAULT_SAVE_VERSION);
+			bool loadData(const std::string& saveName, std::function<void(std::string data)> load_cb, short version = DEFAULT_SAVE_VERSION);
 
 			void update(double dt);
 

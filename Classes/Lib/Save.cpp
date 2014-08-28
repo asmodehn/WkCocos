@@ -33,7 +33,7 @@ namespace WkCocos
 		{
 			if (m_onlinedata)
 			{
-				m_onlinedata->load(m_user, [=](std::string data)
+				m_onlinedata->load(m_user, m_name, [=](std::string data)
 				{
 					m_onLoading(data);
 					CCLOG("user data loaded : %s", data.c_str());
@@ -52,7 +52,7 @@ namespace WkCocos
 		{
 			if (m_localdata)
 			{
-				m_localdata->loadPlayerData([=](std::string data){
+				m_localdata->loadData(m_name, [=](std::string data){
 					m_onLoading(data);
 
 					loaded_cb();
@@ -92,7 +92,7 @@ namespace WkCocos
 		{
 			if (m_onlinedata)
 			{
-				m_onlinedata->save(m_user, m_onSaving(), [=](std::string data)
+				m_onlinedata->save(m_user, m_name, m_onSaving(), [=](std::string data)
 				{
 					CCLOG("user data saved : %s", data.c_str());
 					saved_cb();
@@ -111,7 +111,7 @@ namespace WkCocos
 		{
 			if (m_localdata)
 			{
-				m_localdata->savePlayerData(m_onSaving());
+				m_localdata->saveData(m_name, m_onSaving());
 				saved_cb();
 				return true;
 			}

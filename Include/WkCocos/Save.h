@@ -77,6 +77,11 @@ namespace WkCocos
 		*/
 		inline void setOnlineDataMgr(std::shared_ptr<OnlineData::OnlineDataManager> onlinedata) { m_onlinedata = onlinedata; }
 
+		/**
+		* Set user name
+		*/
+		inline void setUserName(const std::string& userName){ m_user = userName; }
+
 	private:
 		/**
 		* Name of the save

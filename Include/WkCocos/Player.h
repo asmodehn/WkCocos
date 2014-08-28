@@ -147,7 +147,7 @@ namespace WkCocos
 	template <class T>
 	Player<T>::Player(std::shared_ptr<LocalData::LocalDataManager> localdata)
 		: m_localdata(localdata)
-		, m_playerData("LocalData", Save::Mode::OFFLINE )
+		, m_playerData("user_data", Save::Mode::OFFLINE )
 	{
 		//registering player class in cocos update loop
 		cocos2d::Director::getInstance()->getScheduler()->schedule(std::bind(&Player<T>::Update, this, std::placeholders::_1), this, 1.f / 15, false, "player_update");
@@ -166,6 +166,7 @@ namespace WkCocos
 			{
 				m_user = user;
 				m_passwd = passwd;
+				m_playerData.setUserName(m_user);
 
 				newPlayer = false;
 			}
@@ -177,6 +178,7 @@ namespace WkCocos
 				{
 					m_user = user;
 					m_passwd = passwd;
+					m_playerData.setUserName(m_user);
 					
 					//store unique ID
 					m_localdata->saveLoginID(m_user, m_passwd);
