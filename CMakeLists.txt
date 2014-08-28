@@ -58,148 +58,130 @@ set(BUILD_LuaTests OFF CACHE BOOL "BUILD_LuaTests option OFF by default")
 WkDepends("depends/cocos2d-x")
 
 set(COCOS2D_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/depends/cocos2d-x)
-if (WIN32)
-include_directories (
-  ${COCOS2D_ROOT}
-  ${COCOS2D_ROOT}/cocos
-  ${COCOS2D_ROOT}/cocos/audio/include
-  ${COCOS2D_ROOT}/cocos/2d
-  ${COCOS2D_ROOT}/cocos/2d/renderer
-  ${COCOS2D_ROOT}/cocos/platform
-  ${COCOS2D_ROOT}/cocos/platform/desktop
-  ${COCOS2D_ROOT}/cocos/platform/win32
-  ${COCOS2D_ROOT}/cocos/base
-  ${COCOS2D_ROOT}/cocos/deprecated
-  ${COCOS2D_ROOT}/cocos/physics
-  ${COCOS2D_ROOT}/cocos/editor-support
-  ${COCOS2D_ROOT}/cocos/math
-  ${COCOS2D_ROOT}/extensions
-  ${COCOS2D_ROOT}/external
-  ${COCOS2D_ROOT}/external/edtaa3func
-  ${COCOS2D_ROOT}/external/jpeg/include/win32
-  ${COCOS2D_ROOT}/external/png/include/win32
-  ${COCOS2D_ROOT}/external/tiff/include/win32
-  ${COCOS2D_ROOT}/external/webp/include/win32
-  ${COCOS2D_ROOT}/external/curl/include/win32
-  ${COCOS2D_ROOT}/external/tinyxml2
-  ${COCOS2D_ROOT}/external/unzip
-  ${COCOS2D_ROOT}/external/sqlite3/include
-  ${COCOS2D_ROOT}/external/chipmunk/include/chipmunk
-  ${COCOS2D_ROOT}/external/freetype2/include/win32
-  ${COCOS2D_ROOT}/external/websockets/include/win32
-  ${COCOS2D_ROOT}/external/spidermonkey/include/win32
-  ${COCOS2D_ROOT}/external/glfw3/include/win32
-  ${COCOS2D_ROOT}/external/win32-specific/gles/include/OGLES
-  ${COCOS2D_ROOT}/external/win32-specific/icon/include
-  ${COCOS2D_ROOT}/external/win32-specific/zlib/include
-  ${COCOS2D_ROOT}/external/xxhash
-)
-link_directories(
-  /usr/local/lib
-  ${COCOS2D_ROOT}/external/png/prebuilt/win32
-  ${COCOS2D_ROOT}/external/jpeg/prebuilt/win32
-  ${COCOS2D_ROOT}/external/tiff/prebuilt/win32
-  ${COCOS2D_ROOT}/external/glfw3/prebuilt/win32
-  ${COCOS2D_ROOT}/external/webp/prebuilt/win32
-  ${COCOS2D_ROOT}/external/curl/prebuilt/win32
-  ${COCOS2D_ROOT}/external/sqlite3/libraries/win32
-  ${COCOS2D_ROOT}/external/freetype2/prebuilt/win32
-  ${COCOS2D_ROOT}/external/websockets/prebuilt/win32
-  ${COCOS2D_ROOT}/external/spidermonkey/prebuilt/win32
-  ${COCOS2D_ROOT}/external/win32-specific/gles/prebuilt
-  ${COCOS2D_ROOT}/external/win32-specific/icon/prebuilt
-  ${COCOS2D_ROOT}/external/win32-specific/zlib/prebuilt
-)
 
-elseif(UNIX AND NOT CMAKE_TOOLCHAIN_FILE) #assumed linux
 # architecture
 if ( CMAKE_SIZEOF_VOID_P EQUAL 8 )
-	set(ARCH_DIR "64-bit")
+set(ARCH_DIR "64-bit")
 else()
-	set(ARCH_DIR "32-bit")
+set(ARCH_DIR "32-bit")
 endif()
-include_directories ( 
-  /usr/local/include/GLFW
+
+if(WIN32) # Win32
+  set(PLATFORM_FOLDER win32)
+elseif(APPLE)# osx or ios
+  set(PLATFORM_FOLDER mac)
+else() # Assume Linux
+  set(PLATFORM_FOLDER linux)
+endif()
+
+include_directories(
   ${COCOS2D_ROOT}
   ${COCOS2D_ROOT}/cocos
-  ${COCOS2D_ROOT}/cocos/audio/include
-  ${COCOS2D_ROOT}/cocos/2d
-  ${COCOS2D_ROOT}/cocos/2d/renderer
-  ${COCOS2D_ROOT}/cocos/platform
   ${COCOS2D_ROOT}/cocos/platform/desktop
-  ${COCOS2D_ROOT}/cocos/platform/linux
-  ${COCOS2D_ROOT}/cocos/base
-  ${COCOS2D_ROOT}/cocos/deprecated
-  ${COCOS2D_ROOT}/cocos/physics
+  ${COCOS2D_ROOT}/cocos/platform/${PLATFORM_FOLDER}
+  ${COCOS2D_ROOT}/cocos/audio/include
   ${COCOS2D_ROOT}/cocos/editor-support
+  ${COCOS2D_ROOT}/cocos/scripting/lua-bindings/auto
+  ${COCOS2D_ROOT}/cocos/scripting/lua-bindings/manual
   ${COCOS2D_ROOT}/extensions
   ${COCOS2D_ROOT}/external
-  ${COCOS2D_ROOT}/external/edtaa3func
-  ${COCOS2D_ROOT}/external/jpeg/include/linux
-  ${COCOS2D_ROOT}/external/tiff/include/linux
-  ${COCOS2D_ROOT}/external/webp/include/linux
   ${COCOS2D_ROOT}/external/tinyxml2
   ${COCOS2D_ROOT}/external/unzip
+  ${COCOS2D_ROOT}/external/json
+  ${COCOS2D_ROOT}/external/sqlite3/include
+  ${COCOS2D_ROOT}/external/edtaa3func
   ${COCOS2D_ROOT}/external/chipmunk/include/chipmunk
-  ${COCOS2D_ROOT}/external/freetype2/include/linux
-  ${COCOS2D_ROOT}/external/websockets/include/linux
-  ${COCOS2D_ROOT}/external/spidermonkey/include/linux
-  ${COCOS2D_ROOT}/external/linux-specific/fmod/include/${ARCH_DIR}
+  ${COCOS2D_ROOT}/external/jpeg/include/${PLATFORM_FOLDER}
+  ${COCOS2D_ROOT}/external/png/include/${PLATFORM_FOLDER}
+  ${COCOS2D_ROOT}/external/tiff/include/${PLATFORM_FOLDER}
+  ${COCOS2D_ROOT}/external/webp/include/${PLATFORM_FOLDER}
+  ${COCOS2D_ROOT}/external/glfw3/include/${PLATFORM_FOLDER}
+  ${COCOS2D_ROOT}/external/freetype2/include/${PLATFORM_FOLDER}
+  ${COCOS2D_ROOT}/external/websockets/include/${PLATFORM_FOLDER}
   ${COCOS2D_ROOT}/external/xxhash
-)
-link_directories(
-  /usr/local/lib
-  ${COCOS2D_ROOT}/external/jpeg/prebuilt/linux/${ARCH_DIR}
-  ${COCOS2D_ROOT}/external/tiff/prebuilt/linux/${ARCH_DIR}
-  ${COCOS2D_ROOT}/external/webp/prebuilt/linux/${ARCH_DIR}
-  ${COCOS2D_ROOT}/external/freetype2/prebuilt/linux/${ARCH_DIR}
-  ${COCOS2D_ROOT}/external/websockets/prebuilt/linux/${ARCH_DIR}
-  ${COCOS2D_ROOT}/external/spidermonkey/prebuilt/linux/${ARCH_DIR}
-  ${COCOS2D_ROOT}/external/linux-specific/fmod/prebuilt/${ARCH_DIR}
+  ${COCOS2D_ROOT}/external/xxtea
 )
 
-elseif(CMAKE_TOOLCHAIN_FILE) #assumed Android
+if (WIN32)
+include_directories (
+    ${COCOS2D_ROOT}/external/${PLATFORM_FOLDER}-specific/gles/include/OGLES
+    ${COCOS2D_ROOT}/external/${PLATFORM_FOLDER}-specific/icon/include
+    ${COCOS2D_ROOT}/external/${PLATFORM_FOLDER}-specific/zlib/include
+    ${COCOS2D_ROOT}/external/curl/include/${PLATFORM_FOLDER}
+  )
+  if(NOT MINGW)
+  link_directories(
+    ${COCOS2D_ROOT}/external/glfw3/prebuilt/${PLATFORM_FOLDER}
+    ${COCOS2D_ROOT}/external/sqlite3/libraries/${PLATFORM_FOLDER}
+    ${COCOS2D_ROOT}/external/jpeg/prebuilt/${PLATFORM_FOLDER}
+    ${COCOS2D_ROOT}/external/tiff/prebuilt/${PLATFORM_FOLDER}
+    ${COCOS2D_ROOT}/external/png/prebuilt/${PLATFORM_FOLDER}
+    ${COCOS2D_ROOT}/external/freetype2/prebuilt/${PLATFORM_FOLDER}
+    ${COCOS2D_ROOT}/external/curl/prebuilt/${PLATFORM_FOLDER}
+    ${COCOS2D_ROOT}/external/websockets/prebuilt/${PLATFORM_FOLDER}
+    ${COCOS2D_ROOT}/external/webp/prebuilt/${PLATFORM_FOLDER}
+    ${COCOS2D_ROOT}/external/${PLATFORM_FOLDER}-specific/icon/prebuilt
+    ${COCOS2D_ROOT}/external/${PLATFORM_FOLDER}-specific/zlib/prebuilt
+    ${COCOS2D_ROOT}/external/${PLATFORM_FOLDER}-specific/gles/prebuilt
+  )
+  endif()
+#link_directories(
+#)
+elseif(APPLE)
+  include_directories(
+  	${COCOS2D_ROOT}/external/curl/include/${PLATFORM_FOLDER}
+  )
+elseif(UNIX AND NOT CMAKE_TOOLCHAIN_FILE) #assumed linux
 include_directories ( 
-  ${COCOS2D_ROOT}
-  ${COCOS2D_ROOT}/cocos
-  ${COCOS2D_ROOT}/cocos/audio/include
-  ${COCOS2D_ROOT}/cocos/audio/android
-  ${COCOS2D_ROOT}/cocos/2d
-  ${COCOS2D_ROOT}/cocos/2d/renderer
-  ${COCOS2D_ROOT}/cocos/platform
-  ${COCOS2D_ROOT}/cocos/platform/android
-  ${COCOS2D_ROOT}/cocos/base
-  ${COCOS2D_ROOT}/cocos/deprecated
-  ${COCOS2D_ROOT}/cocos/physics
-  ${COCOS2D_ROOT}/cocos/editor-support
-  ${COCOS2D_ROOT}/extensions
-  ${COCOS2D_ROOT}/external
-  ${COCOS2D_ROOT}/external/edtaa3func
-  ${COCOS2D_ROOT}/external/jpeg/include/android
-  ${COCOS2D_ROOT}/external/png/include/android
-  ${COCOS2D_ROOT}/external/tiff/include/android
-  ${COCOS2D_ROOT}/external/webp/include/android
-  ${COCOS2D_ROOT}/external/curl/include/android
-  ${COCOS2D_ROOT}/external/tinyxml2
-  ${COCOS2D_ROOT}/external/unzip
-  ${COCOS2D_ROOT}/external/sqlite3/include
-  ${COCOS2D_ROOT}/external/freetype2/include/android
-  ${COCOS2D_ROOT}/external/freetype2/include/android/freetype2
-  ${COCOS2D_ROOT}/external/websockets/include/android
-  ${COCOS2D_ROOT}/external/spidermonkey/include/android
-  ${COCOS2D_ROOT}/external/xxhash
-)
+    /usr/include
+    /usr/include/GLFW
+    /usr/local/include/GLFW
+    ${COCOS2D_ROOT}/external/${PLATFORM_FOLDER}-specific/fmod/include/${ARCH_DIR}
+  )
 link_directories(
-  ${COCOS2D_ROOT}/external/png/prebuilt/android/${ANDROID_ABI}
-  ${COCOS2D_ROOT}/external/jpeg/prebuilt/android/${ANDROID_ABI}
-  ${COCOS2D_ROOT}/external/tiff/prebuilt/android/${ANDROID_ABI}
-  ${COCOS2D_ROOT}/external/webp/prebuilt/android/${ANDROID_ABI}
-  ${COCOS2D_ROOT}/external/curl/prebuilt/android/${ANDROID_ABI}
-  ${COCOS2D_ROOT}/external/sqlite3/libraries/android/${ANDROID_ABI}
-  ${COCOS2D_ROOT}/external/freetype2/prebuilt/android/${ANDROID_ABI}
-  ${COCOS2D_ROOT}/external/websockets/prebuilt/android/${ANDROID_ABI}
-  ${COCOS2D_ROOT}/external/spidermonkey/prebuilt/android/${ANDROID_ABI}
-)
+    /usr/local/lib
+    ${COCOS2D_ROOT}/external/jpeg/prebuilt/${PLATFORM_FOLDER}/${ARCH_DIR}
+    ${COCOS2D_ROOT}/external/tiff/prebuilt/${PLATFORM_FOLDER}/${ARCH_DIR}
+    ${COCOS2D_ROOT}/external/webp/prebuilt/${PLATFORM_FOLDER}/${ARCH_DIR}
+    ${COCOS2D_ROOT}/external/png/prebuilt/${PLATFORM_FOLDER}/${ARCH_DIR}
+    ${COCOS2D_ROOT}/external/freetype2/prebuilt/${PLATFORM_FOLDER}/${ARCH_DIR}
+    ${COCOS2D_ROOT}/external/websockets/prebuilt/${PLATFORM_FOLDER}/${ARCH_DIR}
+    ${COCOS2D_ROOT}/external/${PLATFORM_FOLDER}-specific/fmod/prebuilt/${ARCH_DIR}
+  )
+
+elseif(CMAKE_TOOLCHAIN_FILE) #assumed Android
+#include_directories ( 
+#  ${COCOS2D_ROOT}/cocos/audio/android
+#  ${COCOS2D_ROOT}/cocos/2d
+#  ${COCOS2D_ROOT}/cocos/2d/renderer
+#  ${COCOS2D_ROOT}/cocos/platform
+#  ${COCOS2D_ROOT}/cocos/platform/android
+#  ${COCOS2D_ROOT}/cocos/base
+#  ${COCOS2D_ROOT}/cocos/deprecated
+#  ${COCOS2D_ROOT}/cocos/physics
+#  ${COCOS2D_ROOT}/external/edtaa3func
+#  ${COCOS2D_ROOT}/external/jpeg/include/android
+#  ${COCOS2D_ROOT}/external/png/include/android
+#  ${COCOS2D_ROOT}/external/tiff/include/android
+#  ${COCOS2D_ROOT}/external/webp/include/android
+#  ${COCOS2D_ROOT}/external/curl/include/android
+#  ${COCOS2D_ROOT}/external/sqlite3/include
+#  ${COCOS2D_ROOT}/external/freetype2/include/android
+#  ${COCOS2D_ROOT}/external/freetype2/include/android/freetype2
+#  ${COCOS2D_ROOT}/external/websockets/include/android
+#  ${COCOS2D_ROOT}/external/spidermonkey/include/android
+#)
+#link_directories(
+#  ${COCOS2D_ROOT}/external/png/prebuilt/android/${ANDROID_ABI}
+#  ${COCOS2D_ROOT}/external/jpeg/prebuilt/android/${ANDROID_ABI}
+#  ${COCOS2D_ROOT}/external/tiff/prebuilt/android/${ANDROID_ABI}
+#  ${COCOS2D_ROOT}/external/webp/prebuilt/android/${ANDROID_ABI}
+#  ${COCOS2D_ROOT}/external/curl/prebuilt/android/${ANDROID_ABI}
+#  ${COCOS2D_ROOT}/external/sqlite3/libraries/android/${ANDROID_ABI}
+#  ${COCOS2D_ROOT}/external/freetype2/prebuilt/android/${ANDROID_ABI}
+#  ${COCOS2D_ROOT}/external/websockets/prebuilt/android/${ANDROID_ABI}
+#  ${COCOS2D_ROOT}/external/spidermonkey/prebuilt/android/${ANDROID_ABI}
+#)
 endif()
 
 
@@ -207,8 +189,10 @@ WkAddCFlags("-DCOCOS2D_DEBUG=1")
 WkAddCXXFlags("-DCOCOS2D_DEBUG=1")
 
 if(WIN32)
-  WkAddCXXFlags("-D_USRDLL -DCOCOS2DXWIN32_EXPORTS -D_WINDOWS -DWIN32")
-
+  WkAddCXXFlags("-D_USRDLL -D_USEGUIDLL -D_USREXDLL -DIGNORE_EXPORT -DCOCOS2DXWIN32_EXPORTS -D_WINDOWS -DWIN32")
+  if(BUILD_EDITOR_COCOSTUDIO)
+    WkAddCXXFlags ("-D_USRSTUDIODLL")
+  endif(BUILD_EDITOR_COCOSTUDIO)
   if(MSVC)
     WkAddCXXFlags( "-D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS" )
     WkAddCXXFlags( "-wd4251 -wd4244 -wd4334 -wd4005 -wd4820 -wd4710 -wd4514 -wd4056 -wd4996 -wd4099" )

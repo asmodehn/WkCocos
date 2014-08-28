@@ -160,9 +160,9 @@ void LoadingScene::update(float delta)
 		float pct = 1.0f - (float)(downCurProgVal + preCurProgVal) / (float)(downTotProgVal + preTotProgVal);
 
 		LoadingUI* ui = getInterface<LoadingUI>(LoadingUI::id);
-		if (ui) {
-			ui::Widget* loadbarw = ui->getRoot()->getChildByName("LoadingBar");
-			ui::LoadingBar* loadbar = dynamic_cast<ui::LoadingBar*>(loadbarw);
+		if (ui)
+		{
+			ui::LoadingBar* loadbar = ui->getRoot()->getChildByName<ui::LoadingBar*>("LoadingBar");
 			if (loadbar)
 				loadbar->setPercent(static_cast<int>(pct * 100));
 		}
@@ -182,12 +182,9 @@ void LoadingScene::progress_CB(float pct)
 	/*LoadingUI* ui = getInterface<LoadingUI>(LoadingUI::id);
 	if (ui)
 	{
-		ui::Widget* loadbarw = ui->getRoot()->getChildByName("LoadingBar"); //loadbarpnl->getChildByName("LoadingBar");
-		ui::LoadingBar* loadbar = dynamic_cast<ui::LoadingBar*>(loadbarw);
-
+		ui::LoadingBar* loadbar = ui->getRoot()->getChildByName<ui::LoadingBar*>("LoadingBar");
 		if (loadbar)
 			loadbar->setPercent(static_cast<int>(pct * 100));
-
 	}
 
 	if (pct >= 1.0f && !m_loadDoneCB_called)
