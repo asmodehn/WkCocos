@@ -332,6 +332,53 @@ namespace WkCocos
 				};
 			}
 
+			GetUsersWithDocs::GetUsersWithDocs(entityx::ptr<entityx::EventManager> event_emitter)
+				: in_progress(false)
+				, done(false)
+
+			{
+				m_cb = [=](void* data) {/*
+					::App42::App42UserResponse* userdata = static_cast<::App42::App42UserResponse*>(data);
+
+					//CCLOG("\ncode=%d...=%d", userdata->getCode(), userdata->isSuccess);
+					//following line causes crash!
+					//CCLOG("\nResponse Body=%s", userdata->getBody().c_str());
+
+					if (userdata->isSuccess)
+					{
+						rapidjson::Document doc;
+						doc.Parse<0>(userdata->getBody().c_str());
+
+						if (!doc.HasParseError())
+						{
+							if (doc.HasMember("app42"))
+							{
+								rapidjson::Value & temp = doc["app42"];
+								temp = temp["response"];
+								temp = temp["users"];
+
+								rapidjson::StringBuffer strbuf;
+								rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
+								temp["user"].Accept(writer);
+
+								event_emitter->emit<Events::PlayersList>(strbuf.GetString());
+
+							}
+						}
+					}
+					else
+					{
+						CCLOG("\nerrordetails:%s", userdata->errorDetails.c_str());
+						CCLOG("\nerrorMessage:%s", userdata->errorMessage.c_str());
+						CCLOG("\nappErrorCode:%d", userdata->appErrorCode);
+						CCLOG("\nhttpErrorCode:%d", userdata->httpErrorCode);
+					}
+
+					done = true;
+					//userdata is deleted by App42SDK*/
+				};
+			}
+
 		}
 
 	}//namespace OnlineData

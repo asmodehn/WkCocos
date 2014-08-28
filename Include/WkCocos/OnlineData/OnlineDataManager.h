@@ -58,6 +58,11 @@ namespace WkCocos
 			*/
 			void getAllUsers();
 
+			/**
+			* Get Selected Users
+			*/
+			void getUsersWithDocs();
+
 			void update(double dt);
 
 			//subscribe to this event manager to receive error events.

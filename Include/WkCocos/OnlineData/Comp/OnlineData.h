@@ -103,6 +103,16 @@ namespace WkCocos
 
 			};
 
+			struct GetUsersWithDocs : entityx::Component<GetUsersWithDocs>
+			{
+				GetUsersWithDocs(entityx::ptr<entityx::EventManager> event_emitter);
+
+				bool in_progress;
+				bool done;
+				std::function<void(void*)> m_cb;
+
+			};
+
 		}//namespace Comp
 	}//namespace OnlineData
 }//namespace WkCocos

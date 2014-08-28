@@ -52,6 +52,7 @@ PlayersListUI::PlayersListUI()
 	GameLogic::Instance().getPlayer().getOnlineDatamgr()->getEventManager()->subscribe<WkCocos::OnlineData::Events::PlayersList>(*this);
 	GameLogic::Instance().getPlayer().getOnlineDatamgr()->getEventManager()->subscribe<WkCocos::OnlineData::Events::EnemyData>(*this);
 	GameLogic::Instance().getPlayer().getAllUsers();
+	//GameLogic::Instance().getPlayer().getUsersWithDocs();
 }
 
 PlayersListUI::~PlayersListUI()

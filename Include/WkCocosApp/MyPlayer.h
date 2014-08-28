@@ -6,7 +6,7 @@
 /**
 * This is the game player
 */
-class MyPlayer : public WkCocos::Player<MyPlayer>
+class MyPlayer : public WkCocos::Player
 {
 public:
 
@@ -58,6 +58,12 @@ public:
 	void getAllUsers()
 	{
 		requestAllUsers();
+	}
+
+	//test for getting users with at least one saved doc
+	void getUsersWithDocs()
+	{
+		requestUsersWithDocs();
 	}
 
 private:

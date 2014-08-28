@@ -94,6 +94,13 @@ namespace WkCocos
 			newentity.assign<Comp::GetAllUsers>(event_manager);
 		}
 
+		void OnlineDataManager::getUsersWithDocs()
+		{
+			auto newentity = entity_manager->create();
+			//new File component for each request. The aggregator system will detect duplicates and group them
+			newentity.assign<Comp::GetUsersWithDocs>(event_manager);
+		}
+
 		void OnlineDataManager::update(double dt) {
 			//check for error and report them if needed
 			system_manager->update<Systems::Storage>(dt);
