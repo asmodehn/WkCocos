@@ -7,6 +7,7 @@
 #include "WkCocos/OnlineData/OnlineDataManager.h"
 #include "WkCocos/Timer/Timer.h"
 #include "WkCocos/Utils/ToolBox.h"
+#include "WkCocos/Save.h"
 
 //using Cocos' Rapidjson for now...
 #include "json/document.h"         // rapidjson's DOM-style API
@@ -75,11 +76,7 @@ namespace WkCocos
 
 	protected:
 		Player(std::shared_ptr<LocalData::LocalDataManager> localdata);
-
-		bool requestLoadData(std::function<void()> loaded_cb);
-
-		bool requestSaveData(std::function<void()> saved_cb);
-
+		
 		bool newPlayer;
 		std::string m_user;
 		std::string m_passwd;
@@ -97,7 +94,7 @@ namespace WkCocos
 		virtual std::string get_data_json() = 0;
 		virtual void set_data_json(std::string data) = 0;
 
-
+		Save		m_playerData;
 		
 	private:
 
@@ -125,7 +122,7 @@ namespace WkCocos
 			m_onlinedata->loginNew(m_user, m_passwd, email, [=](std::string body){
 				CCLOG("login done !!!");
 				//loading again to get online value
-				requestLoadData(onlineDataLoaded_callback);
+				m_playerData.requestLoadData(onlineDataLoaded_callback);
 			});
 		}
 
@@ -150,11 +147,18 @@ namespace WkCocos
 	template <class T>
 	Player<T>::Player(std::shared_ptr<LocalData::LocalDataManager> localdata)
 		: m_localdata(localdata)
+		, m_playerData("LocalData", Save::Mode::OFFLINE )
 	{
 		//registering player class in cocos update loop
 		cocos2d::Director::getInstance()->getScheduler()->schedule(std::bind(&Player<T>::Update, this, std::placeholders::_1), this, 1.f / 15, false, "player_update");
 
 		m_timer.reset(new WkCocos::Timer::Timer());
+
+		// Init Save
+		m_playerData.registerLoadingCallback(std::bind(&Player<T>::set_all_data_json, this, std::placeholders::_1));
+		m_playerData.registerSavingCallback(std::bind(&Player<T>::get_all_data_json, this));
+		m_playerData.setLocalDataMgr(m_localdata);
+		m_playerData.setOnlineDataMgr(m_onlinedata);
 
 		//tried to read existing login data.
 		m_localdata->loadLoginID([=](std::string user, std::string passwd){
@@ -194,13 +198,13 @@ namespace WkCocos
 					m_onlinedata->login(m_user, m_passwd, [=](std::string body){
 						CCLOG("login done !!!");
 						//loading again to get online value
-						requestLoadData(onlineDataLoaded_callback);
+						m_playerData.requestLoadData(onlineDataLoaded_callback);
 					});
 				}
 			}
 			else
 			{
-				requestLoadData([](){}); //we assume no callback needed there. we re loading local save.
+				m_playerData.requestLoadData([](){}); //we assume no callback needed there. we re loading local save.
 			}
 
 		});
@@ -227,98 +231,13 @@ namespace WkCocos
 				m_onlinedata->login(m_user, m_passwd, [=](std::string body){
 					CCLOG("login done !!!");
 					//loading again to get online value
-					requestLoadData(onlineDataLoaded_callback);
+					m_playerData.requestLoadData(onlineDataLoaded_callback);
 				});
 			}
 		}
 		else //save not loaded yet
 		{
 			//nothing to do. it will be called again after save has been loaded
-		}
-	}
-	
-	template <class T>
-	bool Player<T>::requestLoadData(std::function<void()> loaded_cb)
-	{
-	/*	m_localdata->loadPlayerData([=](std::string data)
-		{
-			rapidjson::Document doc;
-			doc.Parse<0>(data.c_str());
-			if (doc.HasParseError())
-			{
-				//if parse error (also empty string), we ignore existing data.
-				doc.SetObject();
-			}
-			set_data_json(doc);
-		});*/
-
-
-		if (m_onlinedata)
-		{
-			m_onlinedata->load(m_user, [=](std::string data)
-			{
-				set_all_data_json(data);
-				CCLOG("user data loaded : %s", data.c_str());
-				
-				loaded_cb();
-			});
-			
-			return true;
-		}
-		else if (m_localdata)
-		{
-			m_localdata->loadPlayerData([=](std::string data){
-				set_all_data_json(data);
-
-				loaded_cb();
-			});
-
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
-
-	template <class T>
-	bool Player<T>::requestSaveData(std::function<void()> saved_cb)
-	{
-	/*	// create document
-		rapidjson::Document doc;
-		doc.SetObject();
-		// must pass an allocator when the object may need to allocate memory
-		rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
-
-		get_data_json(doc, allocator);
-
-		// Get the save string
-		rapidjson::StringBuffer strbuf;
-		rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
-		doc.Accept(writer);
-
-		std::string save = std::string(strbuf.GetString());
-
-		m_localdata->savePlayerData(save);*/
-		if (m_onlinedata)
-		{
-			m_onlinedata->save(m_user, get_all_data_json(), [=](std::string data)
-			{
-				CCLOG("user data saved : %s", data.c_str());
-				saved_cb();
-			});
-			
-			return true;
-		}
-		else if (m_localdata)
-		{
-			m_localdata->savePlayerData(get_all_data_json());
-			saved_cb();
-			return true;
-		}
-		else
-		{
-			return false;
 		}
 	}
 

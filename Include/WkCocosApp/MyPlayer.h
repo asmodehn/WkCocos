@@ -39,13 +39,13 @@ public:
 	//save Data for test
 	void saveData(std::function<void()> saved_cb)
 	{
-		requestSaveData(saved_cb);
+		m_playerData.requestSaveData(saved_cb);
 	}
 
 	//load Data for test
 	void loadData(std::function<void()> loaded_cb)
 	{
-		requestLoadData(loaded_cb);
+		m_playerData.requestLoadData(loaded_cb);
 	}
 	
 private:
