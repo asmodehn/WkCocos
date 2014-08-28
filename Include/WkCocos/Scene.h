@@ -44,13 +44,13 @@ namespace WkCocos
 		* Get the world view
 		* @return the world view
 		*/
-		//inline cocos2d::CameraView* getWorldView() const { return m_worldView; }
+		inline cocos2d::CameraView* getWorldView() const { return m_worldView; }
 
 		/**
 		* Get the ui view
 		* @return the ui view
 		*/
-		//inline cocos2d::CameraView* getUIView() const { return m_uiView; }
+		inline cocos2d::CameraView* getUIView() const { return m_uiView; }
 
 		/**
 		* Override update to trigger update in all UIs
@@ -72,12 +72,12 @@ namespace WkCocos
 		/**
 		* View use for object of the world, such as character
 		*/
-		//cocos2d::CameraView*		m_worldView;
+		cocos2d::CameraView*		m_worldView;
 
 		/**
 		* View use for UI, not supposed to move with the world camera
 		*/
-		//cocos2d::CameraView*		m_uiView;
+		cocos2d::CameraView*		m_uiView;
 	};
 }//namespace WkCocos
 
