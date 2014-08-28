@@ -6,6 +6,7 @@
 //our own headers
 //#include "Player.h"
 #include "WkCocos/Utils/ToolBox.h"
+#include "WkCocos/Save.h"
 
 //#include "WkCocos/App42/Setup.h"
 //#include "WkCocos/App42/Login.h"

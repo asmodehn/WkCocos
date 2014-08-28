@@ -6,6 +6,8 @@ namespace WkCocos
 {
 	Save::Save(const std::string& saveName, Mode mode)
 		: m_name(saveName)
+		, m_onLoading(nullptr)
+		, m_onSaving(nullptr)
 	{
 		m_saveModes[static_cast<int>(mode)] = 1;
 	}
