@@ -64,7 +64,6 @@ namespace WkCocos
 		}
 		toggle->addEventListener(std::bind(&CocosLogAppender::toggleScroll, this, std::placeholders::_1, std::placeholders::_2));
 
-
 		root->addChild(bg);
 	}
 	
@@ -86,7 +85,7 @@ namespace WkCocos
 		_log->pushBackDefaultItem();
 		cocos2d::ui::TextBMFont* line = static_cast<cocos2d::ui::TextBMFont*>(_log->getItem(_log->getItems().size() - 1));
 
-		line->setString(output);
+		line->setText(output);
 
 		_log->jumpToBottom();
 
