@@ -41,6 +41,24 @@ namespace WkCocos
 		inline UI* getInterface(const std::string& filepath) { return dynamic_cast<UI*>(m_ui.at(filepath)); }
 		
 		/**
+		* find UI loaded
+		* @param filepath filepath or string id of the UI to fetch
+		* @return nullptr if UI was not loaded
+		*/
+		template <typename UI = Interface>
+		inline UI* findInterface(const std::string& filepath) {
+			auto ui_it = m_ui.find(filepath);
+			if (ui_it == m_ui.end())
+			{
+				return nullptr;
+			}
+			else
+			{
+				return dynamic_cast<UI*>(ui_it->second);
+			}
+		}
+
+		/**
 		* Get the world view
 		* @return the world view
 		*/
