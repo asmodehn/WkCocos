@@ -14,7 +14,11 @@
 	path = depends/entityx
 	url = git://github.com/asmodehn/entityx.git
 	branch = master
-[submodule "tools/database"]
-	path = tools/database
-	url = https://bitbucket.org/yuri-ash/database.git
+[submodule "depends/android-basic-samples"]
+	path = depends/android-basic-samples
+	url = git://github.com/asmodehn/android-basic-samples.git
+	branch = master
+[submodule "depends/cocos2dx-store"]
+	path = depends/cocos2dx-store
+	url = https://github.com/asmodehn/cocos2dx-store.git
 	branch = master

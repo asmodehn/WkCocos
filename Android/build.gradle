@@ -9,6 +9,9 @@ buildscript {
     }
 }
 
+//TODO : check http://tools.android.com/tech-docs/new-build-system/user-guide#TOC-Creating-a-Library-Project
+// and http://www.gradle.org/docs/current/userguide/multi_project_builds.html
+
 allprojects {
     repositories {
         mavenCentral()

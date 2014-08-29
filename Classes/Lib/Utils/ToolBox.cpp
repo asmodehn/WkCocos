@@ -15,15 +15,7 @@ namespace WkCocos
 
 	ToolBox::~ToolBox()
 	{}
-	
-	std::string ToolBox::itoa(int value)
-	{
-		std::stringstream str;
-		str << value;
-
-		return str.str();
-	}
-	
+		
 	/* Opens the file, creating directories in its pathspec if necessary */
 	FILE* ToolBox::FOpen(std::string name, std::string mode)
 	{

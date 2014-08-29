@@ -99,6 +99,9 @@ android {
 
 }
 
+/*
+THIS SHOULD BE DONE IN APP ONLY
+
 task copyAssets(type: Copy) {
     from '../../Resources'
     into 'assets'
@@ -111,9 +114,9 @@ task ndkBuild(type: Exec, dependsOn: 'copyAssets') {
 
     if (System.properties['os.name'].toLowerCase().contains('windows')) {
         //windows
-        commandLine 'cmd', '/c', 'ndk-build', 'NDK_DEBUG=1', '-j', cpus, '-C', file('src/main/jni').absolutePath, 'NDK_MODULE_PATH=' + dependsDir + ';' + dependsDir + '\\cocos2d-x;' + dependsDir + '\\cocos2d-x\\external;' + dependsDir + '\\cocos2d-x\\cocos'
+        commandLine 'cmd', '/c', 'ndk-build', 'NDK_DEBUG=1', '-j', cpus, '-C', file('src/main/jni').absolutePath, 'NDK_MODULE_PATH=' + dependsDir + ';' + dependsDir + '\\cocos2dx-store\\submodules;' + dependsDir + '\\cocos2dx-store\\submodules\\soomla-cocos2dx-core\\submodules;' + dependsDir + '\\cocos2d-x;' + dependsDir + '\\cocos2d-x\\external;' + dependsDir + '\\cocos2d-x\\cocos'
     } else {
-        commandLine 'ndk-build', 'NDK_DEBUG=1', '-j', cpus, '-C', file('src/main/jni').absolutePath, 'NDK_MODULE_PATH=' + dependsDir + ':' + dependsDir + '/cocos2d-x:' + dependsDir + '/cocos2d-x/external:' + dependsDir + '/cocos2d-x/cocos'
+        commandLine 'ndk-build', 'NDK_DEBUG=1', '-j', cpus, '-C', file('src/main/jni').absolutePath, 'NDK_MODULE_PATH=' + dependsDir + ':' + dependsDir + '/cocos2dx-store/submodules:' + dependsDir + '/cocos2dx-store/submodules/soomla-cocos2dx-core/submodules:' + dependsDir + '/cocos2d-x:' + dependsDir + '/cocos2d-x/external:' + dependsDir + '/cocos2d-x/cocos'
     }
 }
 
@@ -132,16 +135,17 @@ task ndkClean(type: Exec, dependsOn: 'cleanAssets') {
 
     if (System.properties['os.name'].toLowerCase().contains('windows')) {
         //windows
-        commandLine 'cmd', '/c', 'ndk-build', 'clean', 'NDK_DEBUG=1', '-j', cpus, '-C', file('src/main/jni').absolutePath, 'NDK_MODULE_PATH=' + dependsDir + ';' + dependsDir + '\\cocos2d-x;' + dependsDir + '\\cocos2d-x\\external;' + dependsDir + '\\cocos2d-x\\cocos'
+        commandLine 'cmd', '/c', 'ndk-build', 'clean', 'NDK_DEBUG=1', '-j', cpus, '-C', file('src/main/jni').absolutePath, 'NDK_MODULE_PATH=' + dependsDir + ';' + dependsDir + '\\cocos2dx-store\\submodules;' + dependsDir + '\\cocos2dx-store\\submodules\\soomla-cocos2dx-core\\submodules;' + dependsDir + '\\cocos2d-x;' + dependsDir + '\\cocos2d-x\\external;' + dependsDir + '\\cocos2d-x\\cocos'
     } else {
-        commandLine 'ndk-build', 'clean', 'NDK_DEBUG=1', '-j', cpus, '-C', file('src/main/jni').absolutePath, 'NDK_MODULE_PATH=' + dependsDir + ':' + dependsDir + '/cocos2d-x:' + dependsDir + '/cocos2d-x/external:' + dependsDir + '/cocos2d-x/cocos'
+        commandLine 'ndk-build', 'clean', 'NDK_DEBUG=1', '-j', cpus, '-C', file('src/main/jni').absolutePath, 'NDK_MODULE_PATH=' + dependsDir + ':' + dependsDir + '/cocos2dx-store/submodules:' + dependsDir + '/cocos2dx-store/submodules/soomla-cocos2dx-core/submodules:' + dependsDir + '/cocos2d-x:' + dependsDir + '/cocos2d-x/external:' + dependsDir + '/cocos2d-x/cocos'
     }
 }
 
 clean.dependsOn ndkClean
+*/
 
 dependencies {
-    compile project(':cocos2dx')
-    compile fileTree(include: ['*.jar'], dir: 'libs')
+    //compile project(':cocos2dx')
+    //compile project(':cocos2dx-android-store')
     compile 'com.android.support:appcompat-v7:19.+'
 }

@@ -1,10 +1,14 @@
+//reference : http://ph0b.com/android-studio-gradle-and-ndk-integration/
 import groovy.transform.Field
 
 @Field
 def buildNumber = System.getenv("BUILD_VERSION")
 if(buildNumber == null) {
-    buildNumber = 99999
-} else {
+    //dev build is lower versionCode
+    // so there is no accident with accidentally uploading/downloading dev version.
+    buildNumber = 0
+}
+else {
     buildNumber=buildNumber.toInteger()
 }
 
@@ -68,21 +72,6 @@ android {
         }
     }
 
-    // make per-variant version code
-    applicationVariants.all { variant ->
-
-        def file = variant.outputFile
-        variant.outputFile = new File(file.parent, file.name.replace("app-","wkcocos-").replace(".apk", "-" + defaultConfig.versionName + ".apk"))
-
-        // get the version code of each flavor
-        def apiVersion = variant.productFlavors.get(0).versionCode
-        def abiVersion = variant.productFlavors.get(1).versionCode
-
-        // set the composite code
-        //TODO : review computation
-        variant.mergedFlavor.versionCode = apiVersion * 1000000 + abiVersion * 100000 + defaultConfig.versionCode
-    }
-
     signingConfigs {
         release {
             storeFile file("mykeystore") //replaced if validateReleaseSigning is in task graph
@@ -93,7 +82,16 @@ android {
     }
 
     buildTypes {
+        debug {
+            applicationIdSuffix ".debug"
+            debuggable true
+            //TODO : use versionNameSuffix
+            jniDebugBuild true
+        }
         release {
+            debuggable false
+            //TODO : use versionNameSuffix
+            jniDebugBuild false
             signingConfig signingConfigs.release
             runProguard false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
@@ -118,6 +116,70 @@ android {
 
     }
 
+    // make per-variant version code
+    applicationVariants.all { variant ->
+        //TODO : different build settings for different variants
+        if ( variant.buildType.jniDebugBuild ) {
+            println variant.name + ' is jniDebugBuild '
+            variant.javaCompile.dependsOn ndkCustomBuildDebug
+        } else {
+            //making ndkbuild a release build
+            println variant.name + ' is NOT jniDebugBuild '
+            variant.javaCompile.dependsOn ndkCustomBuildRelease
+        }
+
+        def file = variant.outputFile
+        variant.outputFile = new File(file.parent, file.name.replace("app-","wkcocos-").replace(".apk", "-" + defaultConfig.versionName + ".apk"))
+
+        // get the version code of each flavor
+        def apiVersion = variant.productFlavors.get(0).versionCode
+        def abiVersion = variant.productFlavors.get(1).versionCode
+
+        // set the composite code
+        //TODO : review computation
+        variant.mergedFlavor.versionCode = apiVersion * 1000000 + abiVersion * 100000 + defaultConfig.versionCode
+    }
+
+}
+
+
+task cleanNdkLibs(type: Delete) {
+  //we need to manually delete the binary produced by NDK because they are not cleaned by NDK, and debug and release override each other
+  delete fileTree(dir:"src/main/obj/local/").include("**/*.a").include("**/*.so")
+}
+
+task ndkCustomBuildDebug(type: Exec, dependsOn: ['cleanNdkLibs', 'copyAssets']) {
+    //windows only
+    def dependsDir = file('../../depends').absolutePath
+    def cpus = Runtime.runtime.availableProcessors() / 2
+    if (System.properties['os.name'].toLowerCase().contains('windows')) {
+        //windows
+        commandLine 'cmd', '/c', 'ndk-build', 'NDK_DEBUG=1', 'V=1', '-j', cpus, '-C', file('src/main/jni').absolutePath, 'NDK_MODULE_PATH=' + file('..').absolutePath + ';' + dependsDir + ';' + dependsDir + '\\cocos2dx-store\\submodules;' + dependsDir + '\\cocos2dx-store\\submodules\\soomla-cocos2dx-core\\submodules;' + dependsDir + '\\cocos2d-x;' + dependsDir + '\\cocos2d-x\\external;' + dependsDir + '\\cocos2d-x\\cocos'
+    } else {
+        commandLine 'ndk-build', 'NDK_DEBUG=1', 'V=1', '-j', cpus, '-C', file('src/main/jni').absolutePath, 'NDK_MODULE_PATH=' + file('..').absolutePath + ':' + dependsDir + ':' + dependsDir + '/cocos2dx-store/submodules:' + dependsDir + '/cocos2dx-store/submodules/soomla-cocos2dx-core/submodules:' + dependsDir + '/cocos2d-x:' + dependsDir + '/cocos2d-x/external:' + dependsDir + '/cocos2d-x/cocos'
+    }
+
+    //run after commandLine executes
+    doLast{
+
+    }
+}
+
+task ndkCustomBuildRelease(type: Exec, dependsOn: ['cleanNdkLibs', 'copyAssets']) {
+    //windows only
+    def dependsDir = file('../../depends').absolutePath
+    def cpus = Runtime.runtime.availableProcessors() / 2
+    if (System.properties['os.name'].toLowerCase().contains('windows')) {
+        //windows
+        commandLine 'cmd', '/c', 'ndk-build', 'NDK_DEBUG=0','V=1',  '-j', cpus, '-C', file('src/main/jni').absolutePath, 'NDK_MODULE_PATH=' + file('..').absolutePath + ';' + dependsDir + ';' + dependsDir + '\\cocos2dx-store\\submodules;' + dependsDir + '\\cocos2dx-store\\submodules\\soomla-cocos2dx-core\\submodules;' + dependsDir + '\\cocos2d-x;' + dependsDir + '\\cocos2d-x\\external;' + dependsDir + '\\cocos2d-x\\cocos'
+    } else {
+        commandLine 'ndk-build', 'NDK_DEBUG=0','V=1',  '-j', cpus, '-C', file('src/main/jni').absolutePath, 'NDK_MODULE_PATH=' + file('..').absolutePath + ':' + dependsDir + ':' + dependsDir + '/cocos2dx-store/submodules:' + dependsDir + '/cocos2dx-store/submodules/soomla-cocos2dx-core/submodules:' + dependsDir + '/cocos2d-x:' + dependsDir + '/cocos2d-x/external:' + dependsDir + '/cocos2d-x/cocos'
+    }
+
+    //run after commandLine executes
+    doLast{
+
+    }
 }
 
 import groovy.swing.SwingBuilder
@@ -176,44 +238,51 @@ task copyAssets(type: Copy) {
     into 'assets'
 }
 
-task ndkBuild(type: Exec, dependsOn: 'copyAssets') {
-    //windows only
-    def dependsDir = file('../../depends').absolutePath
-    def cpus = Runtime.runtime.availableProcessors() / 2
-    if (System.properties['os.name'].toLowerCase().contains('windows')) {
-        //windows
-        commandLine 'cmd', '/c', 'ndk-build', 'NDK_DEBUG=1', '-j', cpus, '-C', file('src/main/jni').absolutePath, 'NDK_MODULE_PATH=' + file('..').absolutePath + ';' + dependsDir + ';' + dependsDir + '\\cocos2d-x;' + dependsDir + '\\cocos2d-x\\external;' + dependsDir + '\\cocos2d-x\\cocos'
-    } else {
-        commandLine 'ndk-build', 'NDK_DEBUG=1', '-j', cpus, '-C', file('src/main/jni').absolutePath, 'NDK_MODULE_PATH=' + file('..').absolutePath + ':' + dependsDir + ':' + dependsDir + '/cocos2d-x:' + dependsDir + '/cocos2d-x/external:' + dependsDir + '/cocos2d-x/cocos'
-    }
-}
-
-tasks.withType(JavaCompile) {
-    compileTask -> compileTask.dependsOn ndkBuild
-}
-
 task cleanAssets(type: Delete) {
     delete 'assets'
 }
 
-task ndkClean(type: Exec, dependsOn: 'cleanAssets') {
+task ndkCleanDebug(type: Exec, dependsOn: 'cleanAssets') {
     //windows only
     def dependsDir = file('../../depends').absolutePath
     def cpus = Runtime.runtime.availableProcessors() / 2
 
     if (System.properties['os.name'].toLowerCase().contains('windows')) {
         //windows
-        commandLine 'cmd', '/c', 'ndk-build', 'clean', 'NDK_DEBUG=1', '-j', cpus, '-C', file('src/main/jni').absolutePath, 'NDK_MODULE_PATH=' + file('..').absolutePath + ';' + dependsDir + ';' + dependsDir + '\\cocos2d-x;' + dependsDir + '\\cocos2d-x\\external;' + dependsDir + '\\cocos2d-x\\cocos'
+        commandLine 'cmd', '/c', 'ndk-build', 'NDK_DEBUG=1', 'clean', '-j', cpus, '-C', file('src/main/jni').absolutePath, 'NDK_MODULE_PATH=' + file('..').absolutePath + ';' + dependsDir + ';' + dependsDir + '\\cocos2dx-store\\submodules;' + dependsDir + '\\cocos2dx-store\\submodules\\soomla-cocos2dx-core\\submodules;' + dependsDir + '\\cocos2d-x;' + dependsDir + '\\cocos2d-x\\external;' + dependsDir + '\\cocos2d-x\\cocos'
     } else {
-        commandLine 'ndk-build', 'clean', 'NDK_DEBUG=1', '-j', cpus, '-C', file('src/main/jni').absolutePath, 'NDK_MODULE_PATH=' + file('..').absolutePath + ':' + dependsDir + ':' + dependsDir + '/cocos2d-x:' + dependsDir + '/cocos2d-x/external:' + dependsDir + '/cocos2d-x/cocos'
+        commandLine 'ndk-build', 'NDK_DEBUG=1', 'clean', '-j', cpus, '-C', file('src/main/jni').absolutePath, 'NDK_MODULE_PATH=' + file('..').absolutePath + ':' + dependsDir + ':' + dependsDir + '/cocos2dx-store/submodules:' + dependsDir + '/cocos2dx-store/submodules/soomla-cocos2dx-core/submodules:' + dependsDir + '/cocos2d-x:' + dependsDir + '/cocos2d-x/external:' + dependsDir + '/cocos2d-x/cocos'
+    }
+
+    //run after commandLine executes
+    doLast{
+
     }
 }
 
-clean.dependsOn ndkClean
+task ndkCleanRelease(type: Exec, dependsOn: 'cleanAssets') {
+    //windows only
+    def dependsDir = file('../../depends').absolutePath
+    def cpus = Runtime.runtime.availableProcessors() / 2
+
+    if (System.properties['os.name'].toLowerCase().contains('windows')) {
+        //windows
+        commandLine 'cmd', '/c', 'ndk-build', 'NDK_DEBUG=0', 'clean', '-j', cpus, '-C', file('src/main/jni').absolutePath, 'NDK_MODULE_PATH=' + file('..').absolutePath + ';' + dependsDir + ';' + dependsDir + '\\cocos2dx-store\\submodules;' + dependsDir + '\\cocos2dx-store\\submodules\\soomla-cocos2dx-core\\submodules;' + dependsDir + '\\cocos2d-x;' + dependsDir + '\\cocos2d-x\\external;' + dependsDir + '\\cocos2d-x\\cocos'
+    } else {
+        commandLine 'ndk-build', 'NDK_DEBUG=0', 'clean', '-j', cpus, '-C', file('src/main/jni').absolutePath, 'NDK_MODULE_PATH=' + file('..').absolutePath + ':' + dependsDir + ':' + dependsDir + '/cocos2dx-store/submodules:' + dependsDir + '/cocos2dx-store/submodules/soomla-cocos2dx-core/submodules:' + dependsDir + '/cocos2d-x:' + dependsDir + '/cocos2d-x/external:' + dependsDir + '/cocos2d-x/cocos'
+    }
+
+    //run after commandLine executes
+    doLast{
+
+    }
+}
+
+clean.dependsOn ndkCleanDebug, ndkCleanRelease
 
 dependencies {
     compile project(':cocos2dx')
     compile project(':wkcocos')
-    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile project(':cocos2dx-android-store')
     compile 'com.android.support:appcompat-v7:19.+'
 }

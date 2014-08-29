@@ -6,15 +6,13 @@
 #include "cocos2d.h"
 #include "cocos/ui/CocosGUI.h"
 
-USING_NS_CC;
-
 const std::string TimerUI::id = "timer";
 
 TimerUI::TimerUI()
 	: Interface()
 {
 	//building UI hierarchy
-	m_widget = ui::Layout::create();
+	m_widget = cocos2d::ui::Layout::create();
 
 	if (m_widget)
 	{
@@ -45,7 +43,7 @@ TimerUI::TimerUI()
 		m_widget->addChild(m_countLabel);
 
 		m_widget->retain(); //we need to retain it in memory ( or cocos will drop it )
-		widget_cache.insert(std::pair<std::string, ui::Widget*>(id, m_widget));
+		widget_cache.insert(std::pair<std::string, cocos2d::ui::Widget*>(id, m_widget));
 
 	}
 	GameLogic::Instance().getPlayer().getTimermgr()->getEventManager()->subscribe<WkCocos::Timer::Events::TimerUpdate>(*this);
@@ -65,9 +63,9 @@ void TimerUI::receive(const WkCocos::Timer::Events::AlarmOff &ao)
 	m_countLabel->setText(ao.id + " alarm off");
 }
 
-void TimerUI::startCallback(Ref* widgetRef, ui::Widget::TouchEventType input)
+void TimerUI::startCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input)
 {
-	if (input == ui::Widget::TouchEventType::ENDED)
+	if (input == cocos2d::ui::Widget::TouchEventType::ENDED)
 	{
 		CCLOG("START BUTTON CLICKED");
 		
@@ -77,9 +75,9 @@ void TimerUI::startCallback(Ref* widgetRef, ui::Widget::TouchEventType input)
 }
 
 
-void TimerUI::stopCallback(Ref* widgetRef, ui::Widget::TouchEventType input)
+void TimerUI::stopCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input)
 {
-	if (input == ui::Widget::TouchEventType::ENDED)
+	if (input == cocos2d::ui::Widget::TouchEventType::ENDED)
 	{
 		CCLOG("STOP BUTTON CLICKED");
 

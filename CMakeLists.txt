@@ -32,6 +32,11 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 INCLUDE ( "CMake/WkCMake.cmake" )
 WkCMakeDir( "CMake" )
 
+if (WIN32 AND MSVC)
+	#visual only allows debugging 4096 objects maximum...
+	WkRmFlags(CMAKE_C_FLAGS_DEBUG "/Zi")
+	WkRmFlags(CMAKE_CXX_FLAGS_DEBUG "/Zi")
+endif()
 
 #Project Declaration
 WkProject( WkCocos CXX )
@@ -116,6 +121,7 @@ include_directories (
     ${COCOS2D_ROOT}/external/jpeg/prebuilt/${PLATFORM_FOLDER}
     ${COCOS2D_ROOT}/external/tiff/prebuilt/${PLATFORM_FOLDER}
     ${COCOS2D_ROOT}/external/png/prebuilt/${PLATFORM_FOLDER}
+    ${COCOS2D_ROOT}/external/sqlite3/libraries/${PLATFORM_FOLDER}
     ${COCOS2D_ROOT}/external/freetype2/prebuilt/${PLATFORM_FOLDER}
     ${COCOS2D_ROOT}/external/curl/prebuilt/${PLATFORM_FOLDER}
     ${COCOS2D_ROOT}/external/websockets/prebuilt/${PLATFORM_FOLDER}
@@ -188,6 +194,9 @@ endif()
 WkAddCFlags("-DCOCOS2D_DEBUG=1")
 WkAddCXXFlags("-DCOCOS2D_DEBUG=1")
 
+WkAddCFlags("-DSOOMLA_DEBUG=1")
+WkAddCXXFlags("-DSOOMLA_DEBUG=1")
+
 if(WIN32)
   WkAddCXXFlags("-D_USRDLL -D_USEGUIDLL -D_USREXDLL -DIGNORE_EXPORT -DCOCOS2DXWIN32_EXPORTS -D_WINDOWS -DWIN32")
   if(BUILD_EDITOR_COCOSTUDIO)
@@ -195,8 +204,9 @@ if(WIN32)
   endif(BUILD_EDITOR_COCOSTUDIO)
   if(MSVC)
     WkAddCXXFlags( "-D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS" )
-    WkAddCXXFlags( "-wd4251 -wd4244 -wd4334 -wd4005 -wd4820 -wd4710 -wd4514 -wd4056 -wd4996 -wd4099" )
+    WkAddCXXFlags( "-wd4251 -wd4334 -wd4820 -wd4710 -wd4514 -wd4056 -wd4996 -wd4099 -wd4819" )
     WkAddCXXFlags( "-MP -Qpar" )
+    WkAddCXXFlags( "-Zi" )
   else(MSVC)#MINGW
   
   endif(MSVC)
@@ -220,10 +230,8 @@ if(MINGW)
 endif()
 
 if(USE_CHIPMUNK)
-  message(STATUS "Using chipmunk ...")
   WkAddCXXFlags("-DCC_ENABLE_CHIPMUNK_INTEGRATION=1")
 elseif(USE_BOX2D)
-  message(STATUS "Using box2d ...")
   WkAddCXXFlags("-DCC_ENABLE_BOX2D_INTEGRATION=1")
 else(USE_CHIPMUNK)
   message(FATAL_ERROR "Must choose a physics library.")
@@ -231,7 +239,11 @@ endif(USE_CHIPMUNK)
 
 WkDepends ("depends/App42_Cocos2DX_SDK")
 
-set( WkCocos_INCLUDE_DIRS ${WkCocos_INCLUDE_DIRS} ${WkCocos_App42_INCLUDE_DIRS})
+WkDepends ("depends/cocos2dx-store")
+#Temporary work around wkcmake bug with dependencies at multiple levels
+set ( WkCocos_Cocos2dxStore_LIBRARIES Cocos2dxStore ${Cocos2dxStore_SoomlaCocos2dxCore_LIBRARIES} CACHE PATH "Cocos2dxStore Libraries")
+
+set( WkCocos_INCLUDE_DIRS ${WkCocos_INCLUDE_DIRS} ${WkCocos_App42_INCLUDE_DIRS} ${WkCocos_Cocos2dxStore_INCLUDE_DIRS})
 
 #The library. reusable for any [Wk]Cocos project.
 WkLibraryBuild(WkCocos "Classes/Lib")
@@ -246,7 +258,7 @@ if ( ${PROJECT_NAME} STREQUAL ${CMAKE_PROJECT_NAME} )
 	WkLibraryBuild(WkCocosApp "Classes/App")
 	target_link_libraries(WkCocosApp
 	  WkCocos
-	  entityx
+	  entityx  # needed because entityx is not a wkcmake project
 	)
 	
 	if ( WIN32)

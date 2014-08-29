@@ -35,9 +35,9 @@ namespace WkCocos
 					{
 						//QUICK file reading ( similar to C code, but still using C++ streams )
 						ifs.seekg(0, std::ios::end);
-						size_t size = ifs.tellg();
+						std::streamoff size = ifs.tellg();
 
-						m_contents.resize(size);
+						m_contents.resize(static_cast<std::string::size_type>(size));
 						ifs.seekg(0);
 						//this doesnt change size of string ( therefore the previous "resize()" call )
 						ifs.read(&m_contents[0], size);//WARNING this is supposed to work with C++11 only ( continous string in memory )

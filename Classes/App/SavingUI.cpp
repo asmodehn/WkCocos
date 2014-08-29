@@ -5,9 +5,6 @@
 
 #include "cocos2d.h"
 #include "cocos/ui/CocosGUI.h"
-
-USING_NS_CC;
-
 const std::string SavingUI::id = "saving";
 
 SavingUI::SavingUI()
@@ -17,7 +14,7 @@ SavingUI::SavingUI()
 	//m_filepath = id;
 
 	//building UI hierarchy
-	m_widget = ui::Layout::create();
+	m_widget = cocos2d::ui::Layout::create();
 
 	if (m_widget)
 	{
@@ -63,7 +60,7 @@ SavingUI::SavingUI()
 		m_widget->addChild(m_goldrandButton);
 
 		m_widget->retain(); //we need to retain it in memory ( or cocos will drop it )
-		widget_cache.insert(std::pair<std::string, ui::Widget*>(id, m_widget));
+		widget_cache.insert(std::pair<std::string, cocos2d::ui::Widget*>(id, m_widget));
 	}
 
 }
@@ -84,9 +81,9 @@ void SavingUI::update(float delta)
 
 }
 
-void SavingUI::saveCallback(Ref* widgetRef, ui::Widget::TouchEventType input)
+void SavingUI::saveCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input)
 {
-	if (input == ui::Widget::TouchEventType::ENDED)
+	if (input == cocos2d::ui::Widget::TouchEventType::ENDED)
 	{
 		CCLOG("SAVE BUTTON CLICKED");
 
@@ -97,9 +94,9 @@ void SavingUI::saveCallback(Ref* widgetRef, ui::Widget::TouchEventType input)
 }
 
 
-void SavingUI::loadCallback(Ref* widgetRef, ui::Widget::TouchEventType input)
+void SavingUI::loadCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input)
 {
-	if (input == ui::Widget::TouchEventType::ENDED)
+	if (input == cocos2d::ui::Widget::TouchEventType::ENDED)
 	{
 		CCLOG("LOAD BUTTON CLICKED");
 
@@ -109,9 +106,9 @@ void SavingUI::loadCallback(Ref* widgetRef, ui::Widget::TouchEventType input)
 	}
 }
 
-void SavingUI::goldrandCallback(Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input)
+void SavingUI::goldrandCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input)
 {
-	if (input == ui::Widget::TouchEventType::ENDED)
+	if (input == cocos2d::ui::Widget::TouchEventType::ENDED)
 	{
 		CCLOG("GOLD RAND BUTTON CLICKED");
 
@@ -121,9 +118,9 @@ void SavingUI::goldrandCallback(Ref* widgetRef, cocos2d::ui::Widget::TouchEventT
 }
 
 
-void SavingUI::gemrandCallback(Ref* widgetRef, ui::Widget::TouchEventType input)
+void SavingUI::gemrandCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input)
 {
-	if (input == ui::Widget::TouchEventType::ENDED)
+	if (input == cocos2d::ui::Widget::TouchEventType::ENDED)
 	{
 		CCLOG("GEM RAND BUTTON CLICKED");
 
