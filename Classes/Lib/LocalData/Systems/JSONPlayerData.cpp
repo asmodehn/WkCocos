@@ -80,7 +80,7 @@ namespace WkCocos
 							doc.Accept(writer);
 
 							file->m_contents = strbuf.GetString();
-							CCLOG("new contents :  %s", file->m_contents.c_str());
+							//CCLOG("new contents :  %s", file->m_contents.c_str());
 						}
 					}
 
