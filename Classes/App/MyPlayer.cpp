@@ -31,6 +31,7 @@ std::string MyPlayer::get_data_json()
 	currency.AddMember(sGem, m_gem, allocator);
 	doc.AddMember(sCurrency, currency, allocator);
 
+	//TMP debug
 	rapidjson::StringBuffer strbuf;
 	rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
 	doc.Accept(writer);
@@ -45,12 +46,12 @@ void MyPlayer::set_data_json(std::string data)
 {
 	rapidjson::Document doc;
 	doc.Parse<0>(data.c_str());
-	if (doc.HasParseError())
+	if (doc.HasParseError()) 
 	{
 		//if parse error (also empty string), we ignore existing data.
 		doc.SetObject();
 	}
-
+	
 	if (doc.HasMember(sCurrency))
 	{
 		rapidjson::Value& currencyvalue = doc[sCurrency];

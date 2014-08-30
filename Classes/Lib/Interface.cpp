@@ -75,4 +75,28 @@ namespace WkCocos
 		//NOTHING to do here by default.
 	}
 
+	cocos2d::ui::Widget* Interface::getWidgetInHierarchy(const std::string& name, cocos2d::ui::Widget* root/* = nullptr*/)
+	{
+		cocos2d::ui::Widget* found = nullptr;
+		if (!root)
+		{
+			root = m_widget;
+		}
+		if (root->getName() == name)
+		{
+			found = root;
+		}
+		else
+		{
+			auto currentChildren = root->getChildren().begin();
+			while (currentChildren != root->getChildren().end() && found == nullptr)
+			{
+				found = getWidgetInHierarchy(name, static_cast<cocos2d::ui::Widget*>(*currentChildren));
+				++currentChildren;
+			}
+		}
+
+		return found;
+	}
+
 } //namespace dfgame

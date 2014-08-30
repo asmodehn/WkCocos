@@ -96,6 +96,8 @@ namespace WkCocos
 		//they are called by get_all_data_json() and set_all_data_json(std::string data)
 		virtual std::string get_data_json() = 0;
 		virtual void set_data_json(std::string data) = 0;
+
+
 		
 	private:
 
@@ -238,6 +240,19 @@ namespace WkCocos
 	template <class T>
 	bool Player<T>::requestLoadData(std::function<void()> loaded_cb)
 	{
+	/*	m_localdata->loadPlayerData([=](std::string data)
+		{
+			rapidjson::Document doc;
+			doc.Parse<0>(data.c_str());
+			if (doc.HasParseError())
+			{
+				//if parse error (also empty string), we ignore existing data.
+				doc.SetObject();
+			}
+			set_data_json(doc);
+		});*/
+
+
 		if (m_onlinedata)
 		{
 			m_onlinedata->load(m_user, [=](std::string data)
@@ -269,9 +284,24 @@ namespace WkCocos
 	template <class T>
 	bool Player<T>::requestSaveData(std::function<void()> saved_cb)
 	{
+	/*	// create document
+		rapidjson::Document doc;
+		doc.SetObject();
+		// must pass an allocator when the object may need to allocate memory
+		rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
+
+		get_data_json(doc, allocator);
+
+		// Get the save string
+		rapidjson::StringBuffer strbuf;
+		rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
+		doc.Accept(writer);
+
+		std::string save = std::string(strbuf.GetString());
+
+		m_localdata->savePlayerData(save);*/
 		if (m_onlinedata)
 		{
-			
 			m_onlinedata->save(m_user, get_all_data_json(), [=](std::string data)
 			{
 				CCLOG("user data saved : %s", data.c_str());

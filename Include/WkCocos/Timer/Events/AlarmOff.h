@@ -2,6 +2,7 @@
 #define __WKCOCOS_TIMER_EVENTS_ALARMOFF_H__
 
 #include "entityx/entityx.h"
+#include "WkCocos/Timer/Comp/TimeValue.h"
 
 namespace WkCocos
 {
