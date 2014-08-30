@@ -1,7 +1,7 @@
 #include "WkCocos/OnlineData/OnlineDataManager.h"
 
 #include "WkCocos/OnlineData/Systems/User.h"
-
+#include "WkCocos/OnlineData/Systems/Storage.h"
 #include "WkCocos/OnlineData/Comp/OnlineData.h"
 
 #include "cocos/cocos2d.h"
@@ -20,6 +20,7 @@ namespace WkCocos
 		{
 			::App42::App42API::Initialize(app_access_key, app_secret_key);
 			system_manager->add<Systems::User>();
+			system_manager->add<Systems::Storage>();
 			system_manager->configure();
 		}
 		
@@ -68,6 +69,7 @@ namespace WkCocos
 		{
 			auto newentity = entity_manager->create();
 			//new File component for each request. The aggregator system will detect duplicates and group them
+			newentity.assign<Comp::DeleteUserData>(userid, "user_data", user_data, callback);
 			newentity.assign<Comp::SaveUserData>(userid, "user_data", user_data, callback);
 		}
 
@@ -78,8 +80,30 @@ namespace WkCocos
 			newentity.assign<Comp::LoadUserData>(userid, "user_data", callback);
 		}
 
+		void OnlineDataManager::loadEnemy(std::string userid)
+		{
+			auto newentity = entity_manager->create();
+			//new File component for each request. The aggregator system will detect duplicates and group them
+			newentity.assign<Comp::LoadEnemyData>(userid, "user_data", event_manager);
+		}
+
+		void OnlineDataManager::getAllUsers()
+		{
+			auto newentity = entity_manager->create();
+			//new File component for each request. The aggregator system will detect duplicates and group them
+			newentity.assign<Comp::GetAllUsers>(event_manager);
+		}
+
+		void OnlineDataManager::getUsersWithDocs()
+		{
+			auto newentity = entity_manager->create();
+			//new File component for each request. The aggregator system will detect duplicates and group them
+			newentity.assign<Comp::GetUsersWithDocs>(event_manager);
+		}
+
 		void OnlineDataManager::update(double dt) {
 			//check for error and report them if needed
+			system_manager->update<Systems::Storage>(dt);
 			system_manager->update<Systems::User>(dt);
 		}
 

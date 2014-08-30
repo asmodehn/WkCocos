@@ -13,8 +13,7 @@ namespace WkCocos
 
 			User::User()
 			{
-				m_service = ::App42::App42API::BuildUserService();
-			
+				m_user_service = ::App42::App42API::BuildUserService();
 			}
 
 			User::~User()
@@ -46,11 +45,11 @@ namespace WkCocos
 							app42Object.setObject("user_id", data->m_userid.c_str());
 							app42Object.setObject("data", data->m_user_data.c_str());
 							::App42::App42API::setDbName(DB_NAME);
-							m_service->AddUserInfo(&app42Object, data->m_collection.c_str());
+							m_user_service->AddUserInfo(&app42Object, data->m_collection.c_str());
 							data->in_progress = true;
 						}
 						CCLOG("Requesting App42 User creation : %s ", c->m_userid.c_str());
-						m_service->CreateUser(c->m_userid.c_str(), c->m_passwd.c_str(), c->m_email.c_str(), c->m_cb);
+						m_user_service->CreateUser(c->m_userid.c_str(), c->m_passwd.c_str(), c->m_email.c_str(), c->m_cb);
 						c->in_progress = true;
 					}
 				}
@@ -70,12 +69,12 @@ namespace WkCocos
 					else if (!l->in_progress)
 					{
 						CCLOG("Requesting App42 User login : %s ", l->m_userid.c_str());
-						m_service->Authenticate(l->m_userid.c_str(), l->m_passwd.c_str(), l->m_cb);
+						m_user_service->Authenticate(l->m_userid.c_str(), l->m_passwd.c_str(), l->m_cb);
 						l->in_progress = true;
 					}
 
 				}
-				
+
 				entityx::ptr<Comp::SaveUserData> sud;
 				for (auto entity : entities->entities_with_components(sud))
 				{
@@ -96,38 +95,34 @@ namespace WkCocos
 						app42Object.setObject("user_id", sud->m_userid.c_str());
 						app42Object.setObject("data", sud->m_user_data.c_str());
 						::App42::App42API::setDbName(DB_NAME);
-						m_service->AddUserInfo(&app42Object, sud->m_collection.c_str());
-						m_service->createOrUpdateProfile(&user, sud->m_cb);
+						m_user_service->AddUserInfo(&app42Object, sud->m_collection.c_str());
+						m_user_service->createOrUpdateProfile(&user, sud->m_cb);
 						sud->in_progress = true;
 					}
 
 				}
 
-
-				entityx::ptr<Comp::LoadUserData> lud;
-				for (auto entity : entities->entities_with_components(lud))
+				entityx::ptr<Comp::GetAllUsers> gau;
+				for (auto entity : entities->entities_with_components(gau))
 				{
-					if (lud->done)
+					if (gau->done)
 					{
-						entity.remove<Comp::LoadUserData>();
+						entity.remove<Comp::GetAllUsers>();
 						//if mask at 0 no request in this entity anymore
 						if (entity.component_mask() == 0)
 						{
 							entity.destroy();
 						}
 					}
-					else if (!lud->in_progress)
+					else if (!gau->in_progress)
 					{
-						::App42::Query* query = ::App42::QueryBuilder::BuildQuery("user_id", lud->m_userid.c_str(), APP42_OP_EQUALS);
-						m_service->setQuery(DB_NAME, lud->m_collection, query);
-						//delete query;
-						CCLOG("Requesting App42 User data for : %s ", lud->m_userid.c_str());
-						m_service->GetUser(lud->m_userid.c_str(), lud->m_cb);
-						lud->in_progress = true;
+						CCLOG("Requesting full list of App42 Users");
+						m_user_service->GetAllUsers(gau->m_cb);
+						gau->in_progress = true;
 					}
 
 				}
-				
+
 			}
 			
 		}//namespace Systems

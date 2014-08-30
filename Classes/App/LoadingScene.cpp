@@ -31,10 +31,10 @@ LoadingScene::LoadingScene() : Scene()
 
 LoadingScene::~LoadingScene()
 {
-	if (m_downloadManager)
-		delete m_downloadManager;
 	if (m_preloadManager)
 		delete m_preloadManager;
+	if (m_downloadManager)
+		delete m_downloadManager;
 }
 
 // on "init" you need to initialize your instance
@@ -78,7 +78,7 @@ bool LoadingScene::init()
 
 		m_downloadManager->start();
 		m_preloadManager->start();
-		m_preloadManager->setEventEmmiter(m_downloadManager->getEventManager());
+		m_preloadManager->setEventEmitter(m_downloadManager->getEventManager());
 
 		m_downloadManager->getEventManager()->subscribe<WkCocos::Download::Events::Error>(*this);
 		m_preloadManager->getEventManager()->subscribe<WkCocos::Preload::Events::Error>(*this);
@@ -100,8 +100,7 @@ bool LoadingScene::init()
 
 	m_downloadManager->start();
 	m_preloadManager->start();
-	m_preloadManager->setEventEmmiter(m_downloadManager->getEventManager());
-
+	m_preloadManager->setEventEmitter(m_downloadManager->getEventManager());
 
 	return true;
 }
@@ -140,10 +139,10 @@ void LoadingScene::update(float delta)
 
 	if (m_loadMan_del_scheduled)
 	{
-		delete m_downloadManager;
-		m_downloadManager = nullptr;
 		delete m_preloadManager;
 		m_preloadManager = nullptr;
+		delete m_downloadManager;
+		m_downloadManager = nullptr;
 		m_loadMan_del_scheduled = false;
 	}
 
@@ -161,7 +160,8 @@ void LoadingScene::update(float delta)
 		float pct = 1.0f - (float)(downCurProgVal + preCurProgVal) / (float)(downTotProgVal + preTotProgVal);
 
 		LoadingUI* ui = getInterface<LoadingUI>(LoadingUI::id);
-		if (ui) {
+		if (ui)
+		{
 			ui::LoadingBar* loadbar = ui->getRoot()->getChildByName<ui::LoadingBar*>("LoadingBar");
 			if (loadbar)
 				loadbar->setPercent(static_cast<int>(pct * 100));
@@ -182,12 +182,9 @@ void LoadingScene::progress_CB(float pct)
 	/*LoadingUI* ui = getInterface<LoadingUI>(LoadingUI::id);
 	if (ui)
 	{
-		ui::Widget* loadbarw = ui->getRoot()->getChildByName<ui::Widget*>("LoadingBar"); //loadbarpnl->getChildByName("LoadingBar");
-		ui::LoadingBar* loadbar = dynamic_cast<ui::LoadingBar*>(loadbarw);
-
+		ui::LoadingBar* loadbar = ui->getRoot()->getChildByName<ui::LoadingBar*>("LoadingBar");
 		if (loadbar)
 			loadbar->setPercent(static_cast<int>(pct * 100));
-
 	}
 
 	if (pct >= 1.0f && !m_loadDoneCB_called)

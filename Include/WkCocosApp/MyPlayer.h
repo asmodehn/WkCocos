@@ -6,7 +6,7 @@
 /**
 * This is the game player
 */
-class MyPlayer : public WkCocos::Player<MyPlayer>
+class MyPlayer : public WkCocos::Player
 {
 public:
 
@@ -47,7 +47,25 @@ public:
 	{
 		requestLoadData(loaded_cb);
 	}
+
+	//load enemy for test
+	void loadEnemy(std::string enemy_name)
+	{
+		requestEnemyData(enemy_name);
+	}
 	
+	//test for getting every app user
+	void getAllUsers()
+	{
+		requestAllUsers();
+	}
+
+	//test for getting users with at least one saved doc
+	void getUsersWithDocs()
+	{
+		requestUsersWithDocs();
+	}
+
 private:
 
 	const char * sCurrency = "currency";

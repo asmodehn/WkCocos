@@ -2,7 +2,7 @@
 
 #include "WkCocos/OnlineData/Comp/OnlineData.h"
 
-
+#define DB_NAME "PUBLIC"
 
 namespace WkCocos
 {
@@ -13,8 +13,7 @@ namespace WkCocos
 
 			Storage::Storage()
 			{
-				m_service = ::App42::App42API::BuildStorageService();
-			
+				m_stor_service = ::App42::App42API::BuildStorageService();
 			}
 
 			Storage::~Storage()
@@ -24,93 +23,72 @@ namespace WkCocos
 			}
 
 			void Storage::update(entityx::ptr<entityx::EntityManager> entities, entityx::ptr<entityx::EventManager> events, double dt)
-			{/*
-				entityx::ptr<Comp::LoadProfile> l;
-				for (auto entity : entities->entities_with_components(l))
+			{
+				entityx::ptr<Comp::DeleteUserData> dud;
+				for (auto entity : entities->entities_with_components(dud))
 				{
-					if (l->done)
+					if (dud->done)
 					{
-						entity.remove<Comp::Create>();
+						entity.remove<Comp::DeleteUserData>();
+						//if mask at 0 no request in this entity anymore
+						//if (entity.component_mask() == 0)
+						//{
+						//	entity.destroy();
+						//}
+					}
+					else if (!dud->in_progress)
+					{
+						m_stor_service->DeleteDocumentsByKeyValue(DB_NAME, dud->m_collection.c_str(), "user_id", dud->m_userid.c_str(), dud->m_dummy_cb);
+						dud->in_progress = true;
+					}
+
+				}
+
+				entityx::ptr<Comp::LoadUserData> lud;
+				for (auto entity : entities->entities_with_components(lud))
+				{
+					if (lud->done)
+					{
+						entity.remove<Comp::LoadUserData>();
 						//if mask at 0 no request in this entity anymore
 						if (entity.component_mask() == 0)
 						{
 							entity.destroy();
 						}
 					}
-					else if (!l->in_progress)
+					else if (!lud->in_progress)
 					{
-						CCLOG("Loading data Id : %s ", l->m_userid.c_str());
-						m_service->FindDocumentById(l->m_userid.c_str(), l->m_passwd.c_str(), l->m_email.c_str(), c->m_cb);
-						l->in_progress = true;
+						//::App42::Query* query = ::App42::QueryBuilder::BuildQuery("user_id", lud->m_userid.c_str(), APP42_OP_EQUALS);
+						//m_service->setQuery(DB_NAME, lud->m_collection, query);
+						//delete query;
+						CCLOG("Requesting App42 User data for : %s ", lud->m_userid.c_str());
+						m_stor_service->FindDocumentByKeyValue(DB_NAME, lud->m_collection.c_str(), "user_id", lud->m_userid.c_str(), lud->m_cb);
+						lud->in_progress = true;
 					}
+
 				}
 
-				entityx::ptr<Comp::Save> s;
-				for (auto entity : entities->entities_with_components(s))
+				entityx::ptr<Comp::LoadEnemyData> led;
+				for (auto entity : entities->entities_with_components(led))
 				{
-					if (s->done)
+					if (led->done)
 					{
-						entity.remove<Comp::Login>();
+						entity.remove<Comp::LoadEnemyData>();
 						//if mask at 0 no request in this entity anymore
 						if (entity.component_mask() == 0)
 						{
 							entity.destroy();
 						}
 					}
-					else if (!s->in_progress)
+					else if (!led->in_progress)
 					{
-						CCLOG("Saving data Id : %s ", s->m_userid.c_str());
-						m_service->InsertJsonDocument(s->m_userid.c_str(), s->m_passwd.c_str(), s->m_cb);
-						s->in_progress = true;
-					}
-					
-				}
-
-				entityx::ptr<Comp::PublicLoad> pl;
-				for (auto entity : entities->entities_with_components(pl))
-				{
-					if (c->done)
-					{
-						entity.remove<Comp::Create>();
-						//if mask at 0 no request in this entity anymore
-						if (entity.component_mask() == 0)
-						{
-							entity.destroy();
-						}
-					}
-					else if (!pl->in_progress)
-					{
-						CCLOG("Loading data Id : %s ", pl->m_userid.c_str());
-						m_service->FindDocumentById(pl->m_userid.c_str(), pl->m_passwd.c_str(), pl->m_email.c_str(), pl->m_cb);
-						pl->in_progress = true;
-					}
-				}
-
-				entityx::ptr<Comp::Save> ps;
-				for (auto entity : entities->entities_with_components(ps))
-				{
-					if (ps->done)
-					{
-						entity.remove<Comp::Login>();
-						//if mask at 0 no request in this entity anymore
-						if (entity.component_mask() == 0)
-						{
-							entity.destroy();
-						}
-					}
-					else if (!ps->in_progress)
-					{
-						CCLOG("Saving data Id : %s ", ps->m_userid.c_str());
-						m_service->InsertJsonDocument(ps->m_userid.c_str(), ps->m_passwd.c_str(), ps->m_cb);
-						ps->in_progress = true;
+						m_stor_service->FindDocumentByKeyValue(DB_NAME, led->m_collection.c_str(), "user_id", led->m_userid.c_str(), led->m_cb);
+						led->in_progress = true;
 					}
 
 				}
-			*/	
+
 			}
-
-
-					
 		}//namespace Systems
 	}//namespace OnlineData
 }//namespace WkCocos

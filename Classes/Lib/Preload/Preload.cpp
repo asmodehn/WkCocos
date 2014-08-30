@@ -88,9 +88,9 @@ namespace WkCocos
 			system_manager->update<Systems::ProgressUpdate>(dt);
 		}
 
-		void Preload::setEventEmmiter(entityx::ptr<entityx::EventManager> event_emmiter)
+		void Preload::setEventEmitter(entityx::ptr<entityx::EventManager> event_emitter)
 		{
-			event_emmiter->subscribe<Download::Events::Downloaded>(*this);
+			event_emitter->subscribe<Download::Events::Downloaded>(*this);
 		}
 
 		void Preload::receive(const Download::Events::Downloaded &dl)

@@ -2,8 +2,8 @@
 
 #include "WkCocosApp/SavingUI.h"
 #include "WkCocosApp/TimerUI.h"
-
 #include "WkCocosApp/ErrorUI.h"
+#include "WkCocosApp/PlayersListUI.h"
 
 #include <iostream>
 #include <numeric>
@@ -37,7 +37,7 @@ bool TestScene::init()
 	menu->setPosition(cocos2d::Vec2::ZERO);
 	addChild(menu, 1);
 
-	//Saving UI
+	/*/Saving UI
 	SavingUI* saveui = new SavingUI();
 	auto saveroot = saveui->getRoot();
 	saveroot->setEnabled(true);
@@ -47,7 +47,7 @@ bool TestScene::init()
 	saveroot->setPosition(cocos2d::Vec2(visibleSize.width * 0.25, visibleSize.height * 0.75));
 	//*/
 
-	//TimerUI
+	/*/TimerUI
 	TimerUI* timerui = new TimerUI();
 	auto timerroot = timerui->getRoot();
 	timerroot->setEnabled(true);
@@ -55,6 +55,16 @@ bool TestScene::init()
 	addChild(timerroot);
 	m_ui[TimerUI::id] = timerui;
 	timerroot->setPosition(cocos2d::Vec2(visibleSize.width * 0.75, visibleSize.height * 0.75));
+	//*/
+
+	//PlayersListUI
+	PlayersListUI* playerslistui = new PlayersListUI();
+	auto playerslistroot = playerslistui->getRoot();
+	playerslistroot->setEnabled(true);
+	playerslistroot->setVisible(true);
+	addChild(playerslistroot);
+	m_ui[PlayersListUI::id] = playerslistui;
+	playerslistroot->setPosition(cocos2d::Vec2(visibleSize.width * 0.5, visibleSize.height * 0.5));
 	//*/
 
 	//Error UI
@@ -65,7 +75,6 @@ bool TestScene::init()
 	errorroot->setVisible(false);
 	m_ui[ErrorUI::id] = errorui;
 	errorroot->setPosition(cocos2d::Vec2(visibleSize.width * 0.75, visibleSize.height * 0.25));
-	//*/
 
 	errorui->setRefreshCallback([this, errorui](){
 		
@@ -78,6 +87,7 @@ bool TestScene::init()
 		errorui->deactivate();
 
 	});
+	//*/
 
 	auto sprite = cocos2d::Sprite::create("HelloWorld.png");
 	sprite->setScaleX((visibleSize.width / 2 - closeItem->getContentSize().width) / sprite->getContentSize().width);

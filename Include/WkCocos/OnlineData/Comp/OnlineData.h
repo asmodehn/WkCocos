@@ -41,6 +41,19 @@ namespace WkCocos
 
 			};
 
+			struct DeleteUserData : entityx::Component<DeleteUserData>
+			{
+				DeleteUserData(std::string userid, std::string m_collection, std::string user_data, std::function<void(std::string)> cb);
+
+				bool in_progress;
+				bool done;
+				std::string m_userid;
+				std::string m_collection;
+				std::string m_user_data;
+				std::function<void(void*)> m_dummy_cb;
+
+			};
+			
 			struct SaveUserData : entityx::Component<SaveUserData>
 			{
 				SaveUserData(std::string userid, std::string m_collection, std::string user_data, std::function<void(std::string)> cb);
@@ -51,6 +64,8 @@ namespace WkCocos
 				std::string m_collection;
 				std::string m_user_data;
 				std::function<void(void*)> m_cb;
+				std::function<void(void*)> m_dummy_cb;
+
 			};
 
 			struct LoadUserData : entityx::Component<LoadUserData>
@@ -63,6 +78,39 @@ namespace WkCocos
 				std::string m_collection;
 				//std::string m_user_data;
 				std::function<void(void*)> m_cb;
+
+			};
+
+			struct LoadEnemyData : entityx::Component<LoadEnemyData>
+			{
+				LoadEnemyData(std::string userid, std::string m_collection, entityx::ptr<entityx::EventManager> event_emitter);
+
+				bool in_progress;
+				bool done;
+				std::string m_userid;
+				std::string m_collection;
+				std::function<void(void*)> m_cb;
+
+			};
+
+			struct GetAllUsers : entityx::Component<GetAllUsers>
+			{
+				GetAllUsers(entityx::ptr<entityx::EventManager> event_emitter);
+
+				bool in_progress;
+				bool done;
+				std::function<void(void*)> m_cb;
+
+			};
+
+			struct GetUsersWithDocs : entityx::Component<GetUsersWithDocs>
+			{
+				GetUsersWithDocs(entityx::ptr<entityx::EventManager> event_emitter);
+
+				bool in_progress;
+				bool done;
+				std::function<void(void*)> m_cb;
+
 			};
 
 		}//namespace Comp

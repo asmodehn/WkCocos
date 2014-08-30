@@ -37,7 +37,7 @@ namespace WkCocos
 					return system_manager;
 				}
 
-				void setEventEmmiter(entityx::ptr<entityx::EventManager> event_emmiter);
+				void setEventEmitter(entityx::ptr<entityx::EventManager> event_emitter);
 
 				void receive(const Download::Events::Downloaded &dl);
 

@@ -6,6 +6,8 @@
 #include "Common/App42API.h"
 
 #include "WkCocos/OnlineData/Events/Error.h"
+#include "WkCocos/OnlineData/Events/PlayersList.h"
+#include "WkCocos/OnlineData/Events/EnemyData.h"
 
 #define DEFAULT_SAVE_VERSION 1
 
@@ -46,12 +48,32 @@ namespace WkCocos
 			*/
 			void load(std::string userid, std::function<void(std::string)> callback);
 
+			/**
+			* Load Enemy Data
+			*/
+			void loadEnemy(std::string userid);
+
+			/**
+			* Get All Users
+			*/
+			void getAllUsers();
+
+			/**
+			* Get Selected Users
+			*/
+			void getUsersWithDocs();
+
 			void update(double dt);
 
 			//subscribe to this event manager to receive error events.
 			entityx::ptr<entityx::EventManager> getEventManager()
 			{
 				return event_manager;
+			}
+
+			entityx::ptr<entityx::SystemManager> getSystemManager()
+			{
+				return system_manager;
 			}
 
 		protected :
