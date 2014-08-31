@@ -66,6 +66,12 @@ public:
 		requestUsersWithDocs();
 	}
 
+	//test for getting server time
+	void getServerTime()
+	{
+		requestServerTime();
+	}
+
 private:
 
 	const char * sCurrency = "currency";

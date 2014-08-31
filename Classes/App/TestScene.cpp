@@ -7,6 +7,8 @@
 #include "WkCocosApp/ErrorUI.h"
 #include "WkCocosApp/PlayersListUI.h"
 
+#include "WkCocosApp/GameLogic.h"
+
 #include "ui/CocosGUI.h"
 
 #include <iostream>
@@ -75,7 +77,7 @@ bool TestScene::init()
 	timerroot->setPosition(cocos2d::Vec2(visibleSize.width * 0.75, visibleSize.height * 0.75));
 	//*/
 
-	//PlayersListUI
+	/*/PlayersListUI
 	PlayersListUI* playerslistui = new PlayersListUI();
 	auto playerslistroot = playerslistui->getRoot();
 	playerslistroot->setEnabled(true);
@@ -106,13 +108,17 @@ bool TestScene::init()
 
 	});
 	//*/
-
+	
+	//
 	auto sprite = cocos2d::Sprite::create("HelloWorld.png");
 	sprite->setScaleX((visibleSize.width / 2 - closeItem->getContentSize().width) / sprite->getContentSize().width);
 	sprite->setScaleY((visibleSize.height / 2 - closeItem->getContentSize().height) / sprite->getContentSize().height);
 	sprite->setPosition(cocos2d::Vec2((visibleSize.width / 2 + closeItem->getPositionX() - closeItem->getContentSize().width / 2) / 2,
 		(visibleSize.height / 2 + closeItem->getPositionY() + closeItem->getContentSize().height / 2) / 2));
 	addChild(sprite, 0);
+
+	sprite->setVisible(false);
+	//*/
 
 	//ShopUI
 	ShopUI* shopui = new ShopUI();
@@ -135,6 +141,13 @@ bool TestScene::init()
 	saveroot->setVisible(true);
 	currentUI = SavingUI::id;
 	navui->setTitle(currentUI);
+	
+	m_time = cocos2d::ui::Text::create("", "Arial", 20);
+	m_time->setPosition(cocos2d::Vec2(sprite->getPositionX(), closeItem->getPositionY()));
+	CCLOG("\nTimeX=%d TimeY=%d", sprite->getPositionX(), closeItem->getPositionY());
+	addChild(m_time);
+
+	GameLogic::Instance().getPlayer().getOnlineDatamgr()->getEventManager()->subscribe<WkCocos::OnlineData::Events::ServerTime>(*this);
 	return true;
 }
 
@@ -151,6 +164,12 @@ void TestScene::onExitTransitionDidStart()
 
 void TestScene::update(float delta)
 {
+	if (!m_waiting_for_server_time)
+	{
+		GameLogic::Instance().getPlayer().getServerTime();
+		m_waiting_for_server_time = true;
+	}
+
 	Scene::update(delta);
 }
 
@@ -224,6 +243,15 @@ void TestScene::receive(const NavUI::Prev &prv)
 	nav->setTitle(currentUI);
 }
 
+
+void TestScene::receive(const WkCocos::OnlineData::Events::ServerTime &st)
+{
+	m_waiting_for_server_time = false;
+	cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([=]()
+	{
+		m_time->setText(st.serverTime);
+	});
+}
 
 void TestScene::error_CB(std::string msg)
 {

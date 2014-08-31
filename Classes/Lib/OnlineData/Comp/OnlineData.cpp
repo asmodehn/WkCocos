@@ -1,6 +1,7 @@
 #include "WkCocos/OnlineData/Comp/OnlineData.h"
 #include "WkCocos/OnlineData/Events/PlayersList.h"
 #include "WkCocos/OnlineData/Events/EnemyData.h"
+#include "WkCocos/OnlineData/Events/ServerTime.h"
 //including json from cocos
 #include "json/document.h"         // rapidjson's DOM-style API
 #include "json/stringbuffer.h"
@@ -376,6 +377,21 @@ namespace WkCocos
 
 					done = true;
 					//userdata is deleted by App42SDK*/
+				};
+			}
+
+			ServerTime::ServerTime(entityx::ptr<entityx::EventManager> event_emitter)
+				: in_progress(false)
+				, done(false)
+			{
+				m_cb = [=](void* data)
+				{
+					::App42::App42TimerResponse* userdata = static_cast<::App42::App42TimerResponse*>(data);
+
+					if (userdata->isSuccess)
+					{
+						event_emitter->emit<Events::ServerTime>(userdata->app42Timer.currentTime);
+					}
 				};
 			}
 

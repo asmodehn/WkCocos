@@ -16,7 +16,7 @@ PlayersListUI::PlayersListUI()
 	//m_filepath = id;
 
 	//building UI hierarchy
-	m_widget = ui::Layout::create();
+	m_widget = cocos2d::ui::Layout::create();
 
 	if (m_widget)
 	{

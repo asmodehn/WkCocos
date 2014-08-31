@@ -7,6 +7,8 @@
 
 #include "WkCocosApp/NavUI.h"
 
+#include "WkCocos/OnlineData/OnlineDataManager.h"
+
 class TestScene : public WkCocos::Scene, public entityx::Receiver<TestScene>
 {
 public:
@@ -31,6 +33,8 @@ public:
 	void receive(const NavUI::Next &dl);
 	void receive(const NavUI::Prev &dl);
 
+	void receive(const WkCocos::OnlineData::Events::ServerTime &st);
+
 protected:
 
 	TestScene();
@@ -39,6 +43,10 @@ protected:
 	entityx::ptr<entityx::EventManager> ui_event_manager;
 
 	std::string currentUI;
+
+	cocos2d::ui::Text* m_time;
+
+	bool m_waiting_for_server_time = false;
 };
 
 

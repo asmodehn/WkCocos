@@ -183,6 +183,17 @@ namespace WkCocos
 		}
 	}
 
+	bool Player::requestServerTime()
+	{
+		if (m_onlinedata)
+		{
+			m_onlinedata->getServerTime();
+			return true;
+		}
+		else
+			return false;
+	}
+
 	std::string Player::get_all_data_json()
 	{
 		rapidjson::Document doc;

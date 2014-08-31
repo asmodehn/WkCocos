@@ -9,7 +9,7 @@
 /**
 * This UI is the main menu UI
 */
-class PlayersListUI : public WkCocos::Interface, public entityx::Receiver<WkCocos::OnlineData::Events::PlayersList>
+class PlayersListUI : public WkCocos::Interface, public entityx::Receiver<PlayersListUI>
 {
 public:
 		

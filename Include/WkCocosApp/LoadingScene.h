@@ -9,7 +9,7 @@
 #include "WkCocos/Download/Events/Error.h"
 #include "WkCocos/Preload/Events/Error.h"
 
-class LoadingScene : public WkCocos::Scene, public entityx::Receiver<WkCocos::Preload::Events::Error>//, public entityx::Receiver<WkCocos::Download::Events::Error>
+class LoadingScene : public WkCocos::Scene, public entityx::Receiver<LoadingScene>
 {
 public:
 		

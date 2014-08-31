@@ -1,0 +1,50 @@
+#include "WkCocos/OnlineData/Systems/Timer.h"
+
+#include "WkCocos/OnlineData/Comp/OnlineData.h"
+
+#define DB_NAME "PUBLIC"
+
+namespace WkCocos
+{
+	namespace OnlineData
+	{
+		namespace Systems
+		{
+
+			Timer::Timer()
+			{
+				m_timer_service = ::App42::App42API::BuildTimerService();
+			}
+
+			Timer::~Timer()
+			{
+				//UserService::Terminate();
+				//m_service = nullptr;
+			}
+
+			void Timer::update(entityx::ptr<entityx::EntityManager> entities, entityx::ptr<entityx::EventManager> events, double dt)
+			{
+
+				entityx::ptr<Comp::ServerTime> st;
+				for (auto entity : entities->entities_with_components(st))
+				{
+					if (st->done)
+					{
+						entity.remove<Comp::ServerTime>();
+						//if mask at 0 no request in this entity anymore
+						if (entity.component_mask() == 0)
+							entity.destroy();
+					}
+					else if (!st->in_progress)
+					{
+						m_timer_service->GetCurrentTimeNoWinBase(st->m_cb);
+						st->in_progress = true;
+					}
+				}
+
+			}
+			
+		}//namespace Systems
+	}//namespace OnlineData
+}//namespace WkCocos
+
