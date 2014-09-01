@@ -249,7 +249,7 @@ void TestScene::receive(const WkCocos::OnlineData::Events::ServerTime &st)
 	m_waiting_for_server_time = false;
 	cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([=]()
 	{
-		m_time->setText(st.serverTime);
+		m_time->setText(WkCocos::ToolBox::itoa(st.serverTime.tm_hour) + ":" + WkCocos::ToolBox::itoa(st.serverTime.tm_min) + ":" + WkCocos::ToolBox::itoa(st.serverTime.tm_sec));
 	});
 }
 

@@ -2,7 +2,7 @@
 #define __DFGAME_ONLINEDATA_EVENTS_SERVERTIME_H__
 
 #include "entityx/entityx.h"
-//#include "WkCocos/OnlineData/Comp/OnlineData.h"
+#include "WkCocos/Utils/ToolBox.h"
 
 namespace WkCocos
 {
@@ -12,14 +12,20 @@ namespace WkCocos
 		{
 			struct ServerTime : public entityx::Event<ServerTime>
 			{
-				ServerTime(std::string serverTime) : serverTime(serverTime)
+				ServerTime(std::string s_iso8601)// : serverTime(s_iso8601)
 				{
-					
-
+					serverTime = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+					char* pos;
+					serverTime.tm_year = strtoul(s_iso8601.c_str(), &pos, 10);
+					serverTime.tm_mon = strtoul(++pos, &pos, 10);
+					serverTime.tm_mday = strtoul(++pos, &pos, 10);
+					serverTime.tm_hour = strtoul(++pos, &pos, 10);
+					serverTime.tm_min = strtoul(++pos, &pos, 10);
+					serverTime.tm_sec = strtoul(++pos, &pos, 10);
 				}
 
-				std::string serverTime;
-
+				struct tm serverTime;
+				//std::string serverTime;
 			};
 
 		}//namespace Event
