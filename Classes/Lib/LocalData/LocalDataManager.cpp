@@ -79,6 +79,14 @@ namespace WkCocos
 			return true;
 		}
 
+		bool LocalDataManager::deleteData(const std::string& saveName, std::function<void(std::string data)> delete_cb, short version)
+		{
+			auto newentity = entity_manager->create();
+			//new File component for each request. The aggregator system will detect duplicates and group them
+			newentity.assign<Comp::File>(cocos2d::FileUtils::getInstance()->getWritablePath() + saveName, true);
+			return true;
+		}
+
 		void LocalDataManager::update(double dt) {
 
 			//check for error and report them if needed

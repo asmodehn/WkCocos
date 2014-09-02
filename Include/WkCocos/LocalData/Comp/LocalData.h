@@ -19,8 +19,9 @@ namespace WkCocos
 		{
 			struct File : entityx::Component<File>
 			{
-				File(std::string filename)
+				File(std::string filename, bool remove = false)
 				: m_filename(filename)
+				, m_remove(remove)
 				{}
 
 				~File()
@@ -51,8 +52,15 @@ namespace WkCocos
 
 				bool write()
 				{
-					std::ofstream ofs(cocos2d::FileUtils::getInstance()->fullPathForFilename(m_filename), std::ios::out);
-					ofs.write(m_contents.c_str(), m_contents.size());
+					if (m_remove)
+					{
+						std::remove(cocos2d::FileUtils::getInstance()->fullPathForFilename(m_filename).c_str());
+					}
+					else
+					{
+						std::ofstream ofs(cocos2d::FileUtils::getInstance()->fullPathForFilename(m_filename), std::ios::out);
+						ofs.write(m_contents.c_str(), m_contents.size());
+					}
 
 					return true;
 				}
@@ -69,6 +77,7 @@ namespace WkCocos
 
 				std::string m_filename;
 				std::string m_contents;
+				bool		m_remove;
 			};
 
 			struct LoginID_v1 : entityx::Component<LoginID_v1>

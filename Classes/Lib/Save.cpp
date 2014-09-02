@@ -99,8 +99,6 @@ namespace WkCocos
 					CCLOG("user data saved : %s", data.c_str());
 					saved_cb();
 				});
-
-				return true;
 			}
 			else
 			{
@@ -115,7 +113,6 @@ namespace WkCocos
 			{
 				m_localdata->saveData(m_name, m_onSaving());
 				saved_cb();
-				return true;
 			}
 			else
 			{
@@ -127,4 +124,27 @@ namespace WkCocos
 		return loaded;
 		
 	}
+
+	bool Save::requestDeleteData(std::function<void()> delete_cb)
+	{
+		bool deleteSave = true;
+		if (isMode(Mode::ONLINE))
+		{
+			LOG_WARNING << "Online save deletion not supported!" << std::endl;
+		}
+		if (isMode(Mode::OFFLINE))
+		{
+			if (m_localdata)
+			{
+				m_localdata->deleteData(m_name, [](std::string){});
+			}
+			else
+			{
+				LOG_WARNING << "Offline deletion requested but no offline manager!" << std::endl;
+				deleteSave = false;
+			}
+		}
+		return deleteSave;
+	}
+
 }// namespace WkCocos

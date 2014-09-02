@@ -53,6 +53,11 @@ namespace WkCocos
 		bool requestSaveData(std::function<void()> saved_cb);
 
 		/**
+		* Request data to be saved
+		*/
+		bool requestDeleteData(std::function<void()> delete_cb);
+
+		/**
 		* Register callback filling the save string
 		*/
 		inline void registerSavingCallback(std::function<std::string()> onSaving) { m_onSaving = onSaving; }
