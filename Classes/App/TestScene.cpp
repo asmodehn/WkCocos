@@ -87,7 +87,7 @@ bool TestScene::init()
 	playerslistroot->setPosition(cocos2d::Vec2(visibleSize.width * 0.5, visibleSize.height * 0.5));
 	//*/
 
-	//Error UI
+	/*/Error UI
 	ErrorUI* errorui = new ErrorUI();
 	auto errorroot = errorui->getRoot();
 	addChild(errorroot);
