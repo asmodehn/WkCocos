@@ -144,7 +144,6 @@ bool TestScene::init()
 	
 	m_time = cocos2d::ui::Text::create("", "Arial", 20);
 	m_time->setPosition(cocos2d::Vec2(sprite->getPositionX(), closeItem->getPositionY()));
-	CCLOG("\nTimeX=%d TimeY=%d", sprite->getPositionX(), closeItem->getPositionY());
 	addChild(m_time);
 
 	GameLogic::Instance().getPlayer().getOnlineDatamgr()->getEventManager()->subscribe<WkCocos::OnlineData::Events::ServerTime>(*this);

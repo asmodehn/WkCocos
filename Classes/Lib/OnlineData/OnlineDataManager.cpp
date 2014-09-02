@@ -34,7 +34,6 @@ namespace WkCocos
 		{
 
 			auto newentity = entity_manager->create();
-			//new File component for each request. The aggregator system will detect duplicates and group them
 			newentity.assign<Comp::Create>(userid, password, email, [=](::App42::App42UserResponse* r){
 
 				if (r->isSuccess)
@@ -53,7 +52,6 @@ namespace WkCocos
 		void OnlineDataManager::login(std::string userid, std::string password, std::function<void(std::string)> success_callback)
 		{
 			auto newentity = entity_manager->create();
-			//new File component for each request. The aggregator system will detect duplicates and group them
 			newentity.assign<Comp::Login>(userid, password, [=](::App42::App42UserResponse* r){
 				if (! r->isSuccess)
 				{
@@ -70,43 +68,38 @@ namespace WkCocos
 		void OnlineDataManager::save(std::string userid, std::string user_data, std::function<void(std::string)> callback)
 		{
 			auto newentity = entity_manager->create();
-			//new File component for each request. The aggregator system will detect duplicates and group them
-			newentity.assign<Comp::DeleteUserData>(userid, "user_data", user_data, callback);
+			//temp comment
+			//newentity.assign<Comp::DeleteUserData>(userid, "user_data", user_data, callback);
 			newentity.assign<Comp::SaveUserData>(userid, "user_data", user_data, callback);
 		}
 
 		void OnlineDataManager::load(std::string userid, std::function<void(std::string)> callback)
 		{
 			auto newentity = entity_manager->create();
-			//new File component for each request. The aggregator system will detect duplicates and group them
 			newentity.assign<Comp::LoadUserData>(userid, "user_data", callback);
 		}
 
 		void OnlineDataManager::loadEnemy(std::string userid)
 		{
 			auto newentity = entity_manager->create();
-			//new File component for each request. The aggregator system will detect duplicates and group them
 			newentity.assign<Comp::LoadEnemyData>(userid, "user_data", event_manager);
 		}
 
 		void OnlineDataManager::getAllUsers()
 		{
 			auto newentity = entity_manager->create();
-			//new File component for each request. The aggregator system will detect duplicates and group them
 			newentity.assign<Comp::GetAllUsers>(event_manager);
 		}
 
 		void OnlineDataManager::getUsersWithDocs()
 		{
 			auto newentity = entity_manager->create();
-			//new File component for each request. The aggregator system will detect duplicates and group them
 			newentity.assign<Comp::GetUsersWithDocs>(event_manager);
 		}
 
 		void OnlineDataManager::getServerTime()
 		{
 			auto newentity = entity_manager->create();
-			//new File component for each request. The aggregator system will detect duplicates and group them
 			newentity.assign<Comp::ServerTime>(event_manager);
 		}
 

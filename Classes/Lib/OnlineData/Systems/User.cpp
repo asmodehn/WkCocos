@@ -75,7 +75,7 @@ namespace WkCocos
 
 				}
 
-				entityx::ptr<Comp::SaveUserData> sud;
+				/*entityx::ptr<Comp::SaveUserData> sud;
 				for (auto entity : entities->entities_with_components(sud))
 				{
 					if (sud->done)
@@ -100,7 +100,7 @@ namespace WkCocos
 						sud->in_progress = true;
 					}
 
-				}
+				}*/
 
 				entityx::ptr<Comp::GetAllUsers> gau;
 				for (auto entity : entities->entities_with_components(gau))
@@ -119,6 +119,30 @@ namespace WkCocos
 						CCLOG("Requesting full list of App42 Users");
 						m_user_service->GetAllUsers(gau->m_cb);
 						gau->in_progress = true;
+					}
+
+				}
+
+				entityx::ptr<Comp::LoadUserData> lud;
+				for (auto entity : entities->entities_with_components(lud))
+				{
+					if (lud->done)
+					{
+						entity.remove<Comp::LoadUserData>();
+						if (entity.component_mask() == 0)
+						{
+							entity.destroy();
+						}
+					}
+					else if (!lud->in_progress)
+					{
+						CCLOG("Requesting App42 storage of user : %s ", lud->m_userid.c_str());
+						::App42::App42API::setLoggedInUser(lud->m_userid.c_str());
+						::App42::App42API::setDbName(DB_NAME);
+						m_user_service->setQuery(lud->m_collection.c_str(), NULL); //This will tell
+						//App42 that you are requesting all the data linked to the above userName
+						m_user_service->GetUser(lud->m_userid.c_str(), lud->m_cb);
+						lud->in_progress = true;
 					}
 
 				}

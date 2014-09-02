@@ -95,7 +95,8 @@ namespace WkCocos
 			{
 				m_cb = [=](void* data)
 				{
-					::App42::App42StorageResponse* userdata = static_cast<::App42::App42StorageResponse*>(data);
+					::App42::App42UserResponse* userdata = static_cast<::App42::App42UserResponse*>(data);
+					//::App42::App42StorageResponse* userdata = static_cast<::App42::App42StorageResponse*>(data);
 
 					CCLOG("\ncode=%d...=%d", userdata->getCode(), userdata->isSuccess);
 					CCLOG("\nResponse Body=%s", userdata->getBody().c_str());
@@ -148,6 +149,7 @@ namespace WkCocos
 			{
 				m_cb = [=](void* data) {
 					::App42::App42StorageResponse* userdata = static_cast<::App42::App42StorageResponse*>(data);
+					//::App42::App42UserResponse* userdata = static_cast<::App42::App42UserResponse*>(data);
 
 					CCLOG("\ncode=%d...=%d", userdata->getCode(), userdata->isSuccess);
 					CCLOG("\nResponse Body=%s", userdata->getBody().c_str());
@@ -156,6 +158,7 @@ namespace WkCocos
 					{//if request succeed, we need to extract data from it
 						rapidjson::Document doc;
 						doc.Parse<0>(userdata->getBody().c_str());
+						//doc.Parse<0>(userdata->storages./*here should be something*/);
 						
 						if (doc.HasParseError())
 						{
@@ -167,22 +170,15 @@ namespace WkCocos
 							{
 								rapidjson::Value & temp = doc["app42"];
 								temp = temp["response"];
-								temp = temp["storage"];
+								temp = temp["users"];
+								temp = temp["user"];
 								temp = temp["jsonDoc"];
 								if (temp.Size())
 								{
-									temp = temp[temp.Size() - 1];
-									if (temp.HasMember("data"))
-									{
-										rapidjson::StringBuffer strbuf;
-										rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
-										temp["data"].Accept(writer);
-										cb(strbuf.GetString());
-									}
-									else
-									{
-										cb("");
-									}
+									rapidjson::StringBuffer strbuf;
+									rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
+									temp[temp.Size() - 1].Accept(writer);
+									cb(strbuf.GetString());
 								}
 								else
 								{
@@ -191,25 +187,7 @@ namespace WkCocos
 							}
 							else
 							{
-								if (doc.Size())
-								{
-									rapidjson::Value & temp = doc[doc.Size() - 1];
-									if (temp.HasMember("data"))
-									{
-										rapidjson::StringBuffer strbuf;
-										rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
-										temp["data"].Accept(writer);
-										cb(strbuf.GetString());
-									}
-									else
-									{
-										cb("");
-									}
-								}
-								else
-								{
-									cb("");
-								}
+								cb("");
 							}
 						}
 					}
