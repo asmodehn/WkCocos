@@ -14,7 +14,3 @@ url=https://github.com/asmodehn/App42_Cocos2DX_SDK.git
 	path = depends/entityx
 	url = git://github.com/asmodehn/entityx.git
 	branch = master
-[submodule "tools/database"]
-	path = tools/database
-	url = https://bitbucket.org/yuri-ash/database.git
-	branch = master
