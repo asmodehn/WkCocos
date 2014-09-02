@@ -66,7 +66,7 @@ bool TestScene::init()
 	saveroot->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.67f));
 	m_ui[SavingUI::id] = saveui;
 
-	/*/TimerUI
+	//TimerUI
 	TimerUI* timerui = new TimerUI();
 	auto timerroot = timerui->getRoot();
 	timerroot->setEnabled(false);
