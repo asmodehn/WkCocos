@@ -103,7 +103,9 @@ void PlayersListUI::receive(const WkCocos::OnlineData::Events::PlayersList &pl)
 			if (doc.Size())
 			{
 				// with this value font size is no more than 15 and player name does not exceed half screen width
-				unsigned int listSize = 42; 
+				//unsigned int listSize = 42; 
+				// leaving lower half screen free for navui
+				unsigned int listSize = 21; 
 				if (doc.Size() < listSize)
 					listSize = doc.Size();
 
@@ -114,7 +116,7 @@ void PlayersListUI::receive(const WkCocos::OnlineData::Events::PlayersList &pl)
 					std::string enemy_name = userName["userName"].GetString();
 
 					cocos2d::ui::Text* playertextbutton = cocos2d::ui::Text::create("#" + WkCocos::ToolBox::itoa(i) + " " + enemy_name, "Arial", 15);
-					playertextbutton->setPosition(cocos2d::Vec2(-m_widgetSize.width / 2, m_widgetSize.height * (1 - 2.0 / (listSize + 1) * (i + 1))));
+					playertextbutton->setPosition(cocos2d::Vec2(-m_widgetSize.width / 2, m_widgetSize.height * (1 - /*2.0*/ 1.0 / (listSize + 1) * (i + 1))));
 					playertextbutton->setTouchEnabled(true);
 
 					playertextbutton->addTouchEventListener

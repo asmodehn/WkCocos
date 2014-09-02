@@ -77,11 +77,11 @@ bool TestScene::init()
 	timerroot->setPosition(cocos2d::Vec2(visibleSize.width * 0.75, visibleSize.height * 0.75));
 	//*/
 
-	/*/PlayersListUI
+	//PlayersListUI
 	PlayersListUI* playerslistui = new PlayersListUI();
 	auto playerslistroot = playerslistui->getRoot();
-	playerslistroot->setEnabled(true);
-	playerslistroot->setVisible(true);
+	playerslistroot->setEnabled(false);
+	playerslistroot->setVisible(false);
 	addChild(playerslistroot);
 	m_ui[PlayersListUI::id] = playerslistui;
 	playerslistroot->setPosition(cocos2d::Vec2(visibleSize.width * 0.5, visibleSize.height * 0.5));
