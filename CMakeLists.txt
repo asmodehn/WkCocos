@@ -189,10 +189,7 @@ WkAddCFlags("-DCOCOS2D_DEBUG=1")
 WkAddCXXFlags("-DCOCOS2D_DEBUG=1")
 
 if(WIN32)
-  WkAddCXXFlags("-D_USRDLL -D_USEGUIDLL -D_USREXDLL -DIGNORE_EXPORT -DCOCOS2DXWIN32_EXPORTS -D_WINDOWS -DWIN32")
-  if(BUILD_EDITOR_COCOSTUDIO)
-    WkAddCXXFlags ("-D_USRSTUDIODLL")
-  endif(BUILD_EDITOR_COCOSTUDIO)
+  WkAddCXXFlags("-DIGNORE_EXPORT -D_WINDOWS -DWIN32")
   if(MSVC)
     WkAddCXXFlags( "-D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS" )
     WkAddCXXFlags( "-wd4251 -wd4244 -wd4334 -wd4005 -wd4820 -wd4710 -wd4514 -wd4056 -wd4996 -wd4099" )
@@ -299,6 +296,24 @@ if ( ${PROJECT_NAME} STREQUAL ${CMAKE_PROJECT_NAME} )
 		if ( ${PROJECT_NAME}_ENABLE_TESTS ) # if the target has been defined ( tests enbled )
 		#also copying dlls to binary directory for the executable to run
 		ADD_CUSTOM_COMMAND( TARGET maintest POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
+					"$<TARGET_FILE:cocos2d>"
+					"$<TARGET_FILE_DIR:maintest>"
+					COMMENT
+					"Copying $<TARGET_FILE:cocos2d> to $<TARGET_FILE_DIR:maintest>"
+					VERBATIM)
+		ADD_CUSTOM_COMMAND( TARGET maintest POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
+					"$<TARGET_FILE:cocosui>"
+					"$<TARGET_FILE_DIR:maintest>"
+					COMMENT
+					"Copying $<TARGET_FILE:cocosui> to $<TARGET_FILE_DIR:maintest>"
+					VERBATIM)
+		ADD_CUSTOM_COMMAND( TARGET maintest POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
+					"$<TARGET_FILE:cocostudio>"
+					"$<TARGET_FILE_DIR:maintest>"
+					COMMENT
+					"Copying $<TARGET_FILE:cocostudio> to $<TARGET_FILE_DIR:maintest>"
+					VERBATIM)
+		ADD_CUSTOM_COMMAND( TARGET maintest POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
 					"${COCOS2D_ROOT}/external/win32-specific/gles/prebuilt/glew32.dll"
 					"$<TARGET_FILE_DIR:maintest>"
 					COMMENT
@@ -316,6 +331,19 @@ if ( ${PROJECT_NAME} STREQUAL ${CMAKE_PROJECT_NAME} )
 					COMMENT
 					"Copying ${COCOS2D_ROOT}/external/curl/prebuilt/win32/libcurl.dll to $<TARGET_FILE_DIR:maintest>"
 					VERBATIM)
+		ADD_CUSTOM_COMMAND( TARGET maintest POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
+					"${COCOS2D_ROOT}/external/sqlite3/libraries/win32/sqlite3.dll"
+					"$<TARGET_FILE_DIR:maintest>"
+					COMMENT
+					"Copying ${COCOS2D_ROOT}/external/sqlite3/libraries/win32/sqlite3.dll to $<TARGET_FILE_DIR:maintest>"
+					VERBATIM)
+		ADD_CUSTOM_COMMAND( TARGET maintest POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
+					"${COCOS2D_ROOT}/external/websockets/prebuilt/win32/websockets.dll"
+					"$<TARGET_FILE_DIR:maintest>"
+					COMMENT
+					"Copying ${COCOS2D_ROOT}/external/websockets/prebuilt/win32/websockets.dll to $<TARGET_FILE_DIR:maintest>"
+					VERBATIM)
+					
 		endif ( ${PROJECT_NAME}_ENABLE_TESTS )
 	elseif (UNIX AND NOT CMAKE_TOOLCHAIN_FILE) #assumed linux
 		WkTestBuild( maintest linux/main.cpp )
