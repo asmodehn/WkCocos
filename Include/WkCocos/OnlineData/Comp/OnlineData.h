@@ -56,7 +56,7 @@ namespace WkCocos
 			
 			struct SaveUserData : entityx::Component<SaveUserData>
 			{
-				SaveUserData(std::string userid, std::string m_collection, std::string user_data, std::function<void(std::string)> cb);
+				SaveUserData(std::string userid, std::string m_collection, std::string user_data, std::function<void(::App42::App42UserResponse*)> cb);
 
 				bool in_progress;
 				bool done;

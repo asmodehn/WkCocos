@@ -86,7 +86,7 @@ namespace WkCocos
 				m_dummy_cb = [=](void* data) {};
 			}
 
-			SaveUserData::SaveUserData(std::string userid, std::string collec, std::string user_data, std::function<void(std::string)> cb)
+			SaveUserData::SaveUserData(std::string userid, std::string collec, std::string user_data, std::function<void(::App42::App42UserResponse*)> cb)
 				: in_progress(false)
 				, done(false)
 				, m_userid(userid)
@@ -101,38 +101,33 @@ namespace WkCocos
 					CCLOG("\ncode=%d...=%d", userdata->getCode(), userdata->isSuccess);
 					CCLOG("\nResponse Body=%s", userdata->getBody().c_str());
 
-					if (userdata->isSuccess)
-					{//if request succeed, we need to extract data from it
-						rapidjson::Document doc;
-						doc.Parse<0>(userdata->getBody().c_str());
-						if (doc.HasParseError())
-						{
+					//if (userdata->isSuccess)
+					//{//if request succeed, we need to extract data from it
+						//rapidjson::Document doc;
+						//doc.Parse<0>(userdata->getBody().c_str());
+						//if (doc.HasParseError())
+						//{
 							//if parse error (also empty string), we ignore existing data.
-							cb("");
-						}
-						else if (doc.HasMember("data"))
-						{
+							//cb(userdata);
+						//}
+						//else
+						//{
 							//TMP debug
-							rapidjson::StringBuffer strbuf;
-							rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
-							doc["data"].Accept(writer);
-							cb(strbuf.GetString());
-						}
-						else
-						{
-							cb("");
-						}
-						
-					}
-					else// if request failed, 
-					{
+							//rapidjson::StringBuffer strbuf;
+							//rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
+							//doc.Accept(writer);
+							//cb(strbuf.GetString());
+						//}
+					//}
+					//else// if request failed, 
+					//{
 						CCLOG("\nerrordetails:%s", userdata->errorDetails.c_str());
 						CCLOG("\nerrorMessage:%s", userdata->errorMessage.c_str());
 						CCLOG("\nappErrorCode:%d", userdata->appErrorCode);
 						CCLOG("\nhttpErrorCode:%d", userdata->httpErrorCode);
 
-						cb("");
-					}
+						cb(userdata);
+					//}
 
 					done = true;
 					//userdata is deleted by App42SDK
