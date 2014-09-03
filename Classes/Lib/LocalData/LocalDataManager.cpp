@@ -36,6 +36,7 @@ namespace WkCocos
 			auto newentity = entity_manager->create();
 			//new File component for each request. The aggregator system will detect duplicates and group them
 			newentity.assign<Comp::File>(cocos2d::FileUtils::getInstance()->getWritablePath() + "LocalID.txt");
+			newentity.assign<Comp::Read>();
 			if (1 == version)
 			{
 				newentity.assign<Comp::LoginID_v1>(user,passwd);
@@ -48,6 +49,7 @@ namespace WkCocos
 			auto newentity = entity_manager->create();
 			//new File component for each request. The aggregator system will detect duplicates and group them
 			newentity.assign<Comp::File>(cocos2d::FileUtils::getInstance()->getWritablePath() + "LocalID.txt");
+			newentity.assign<Comp::Read>();
 			if (1 == version)
 			{
 				newentity.assign<Comp::LoginID_v1>(load_cb);
@@ -60,6 +62,7 @@ namespace WkCocos
 			auto newentity = entity_manager->create();
 			//new File component for each request. The aggregator system will detect duplicates and group them
 			newentity.assign<Comp::File>(cocos2d::FileUtils::getInstance()->getWritablePath() + saveName);
+			newentity.assign<Comp::Read>();
 			if (1 == version)
 			{
 				newentity.assign<Comp::PlayerData_v1>(data);
@@ -72,6 +75,7 @@ namespace WkCocos
 			auto newentity = entity_manager->create();
 			//new File component for each request. The aggregator system will detect duplicates and group them
 			newentity.assign<Comp::File>(cocos2d::FileUtils::getInstance()->getWritablePath() + saveName);
+			newentity.assign<Comp::Read>();
 			if (1 == version)
 			{
 				newentity.assign<Comp::PlayerData_v1>(load_cb);
@@ -84,6 +88,7 @@ namespace WkCocos
 			auto newentity = entity_manager->create();
 			//new File component for each request. The aggregator system will detect duplicates and group them
 			newentity.assign<Comp::File>(cocos2d::FileUtils::getInstance()->getWritablePath() + saveName, true);
+			newentity.assign<Comp::Read>();
 			return true;
 		}
 

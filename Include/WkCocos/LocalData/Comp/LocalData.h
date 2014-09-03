@@ -124,6 +124,12 @@ namespace WkCocos
 				std::function<void(std::string data)> m_load_cb;
 			};
 
+			struct Read : entityx::Component<Read>
+			{
+				Read(){}
+
+			};
+
 
 		}//namespace Comp
 	}//namespace LocalData
