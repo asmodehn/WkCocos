@@ -8,11 +8,18 @@ namespace WkCocos
 	//constructors
 	Player::Player(std::shared_ptr<LocalData::LocalDataManager> localdata)
 		: m_localdata(localdata)
+		, m_playerData("user_data", Save::Mode::OFFLINE)
 	{
 		//registering player class in cocos update loop
 		cocos2d::Director::getInstance()->getScheduler()->schedule(std::bind(&Player::Update, this, std::placeholders::_1), this, 1.f / 15, false, "player_update");
 
 		m_timer.reset(new WkCocos::Timer::Timer());
+
+		// Init Save
+		m_playerData.registerLoadingCallback(std::bind(&Player::set_all_data_json, this, std::placeholders::_1));
+		m_playerData.registerSavingCallback(std::bind(&Player::get_all_data_json, this));
+		m_playerData.setLocalDataMgr(m_localdata);
+		m_playerData.setOnlineDataMgr(m_onlinedata);
 
 		//tried to read existing login data.
 		m_localdata->loadLoginID([=](std::string user, std::string passwd){
@@ -20,6 +27,7 @@ namespace WkCocos
 			{
 				m_user = user;
 				m_passwd = passwd;
+				m_playerData.setUserName(m_user);
 
 				newPlayer = false;
 			}
@@ -31,6 +39,7 @@ namespace WkCocos
 				{
 					m_user = user;
 					m_passwd = passwd;
+					m_playerData.setUserName(m_user);
 
 					//store unique ID
 					m_localdata->saveLoginID(m_user, m_passwd); //TODO : encyrpt this
@@ -52,13 +61,13 @@ namespace WkCocos
 					m_onlinedata->login(m_user, m_passwd, [=](std::string body){
 						CCLOG("login done !!!");
 						//loading again to get online value
-						requestLoadData(onlineDataLoaded_callback);
+						m_playerData.requestLoadData(onlineDataLoaded_callback);
 					});
 				}
 			}
 			else
 			{
-				requestLoadData([](){}); //we assume no callback needed there. we re loading local save.
+				m_playerData.requestLoadData([](){}); //we assume no callback needed there. we re loading local save.
 			}
 
 		});
@@ -84,44 +93,13 @@ namespace WkCocos
 				m_onlinedata->login(m_user, m_passwd, [=](std::string body){
 					CCLOG("login done !!!");
 					//loading again to get online value
-					requestLoadData(onlineDataLoaded_callback);
+					m_playerData.requestLoadData(onlineDataLoaded_callback);
 				});
 			}
 		}
 		else //save not loaded yet
 		{
 			//nothing to do. it will be called again after save has been loaded
-		}
-	}
-
-	bool Player::requestLoadData(std::function<void()> loaded_cb, std::string key)
-	{
-		if (m_onlinedata)
-		{
-			//no encryption for online data
-			m_onlinedata->load(m_user, [=](std::string data)
-			{
-				set_all_data_json(data);
-				CCLOG("user data loaded : %s", data.c_str());
-
-				loaded_cb();
-			});
-
-			return true;
-		}
-		else if (m_localdata)
-		{
-			m_localdata->loadPlayerData([=](std::string data){
-				set_all_data_json(data);
-
-				loaded_cb();
-			}, key);
-
-			return true;
-		}
-		else
-		{
-			return false;
 		}
 	}
 
@@ -156,33 +134,6 @@ namespace WkCocos
 		}
 		else
 			return false;
-	}
-
-	bool Player::requestSaveData(std::function<void()> saved_cb, std::string key)
-	{
-		if (m_onlinedata)
-		{
-			//no encryption for online data
-
-			m_onlinedata->save(m_user, get_all_data_json(), [=](std::string data)
-			{
-				//TODO : not working as expected : fix it.
-				CCLOG("user data saved : %s", data.c_str());
-				saved_cb();
-			});
-
-			return true;
-		}
-		else if (m_localdata)
-		{
-			m_localdata->savePlayerData(get_all_data_json(),key);
-			saved_cb();
-			return true;
-		}
-		else
-		{
-			return false;
-		}
 	}
 
 	std::string Player::get_all_data_json()

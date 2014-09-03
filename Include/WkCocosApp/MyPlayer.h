@@ -40,13 +40,13 @@ public:
 	//save Data for test
 	void saveData(std::function<void()> saved_cb)
 	{
-		requestSaveData(saved_cb, "53cr3t");
+		m_playerData.requestSaveData(saved_cb, "53cr3t");
 	}
 
 	//load Data for test
 	void loadData(std::function<void()> loaded_cb)
 	{
-		requestLoadData(loaded_cb, "53cr3t");
+		m_playerData.requestLoadData(loaded_cb, "53cr3t");
 	}
 
 	//load enemy for test

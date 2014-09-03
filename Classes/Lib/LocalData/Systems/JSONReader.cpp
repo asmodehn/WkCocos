@@ -22,7 +22,8 @@ namespace WkCocos
 			void JSONReader::update(entityx::ptr<entityx::EntityManager> es, entityx::ptr<entityx::EventManager> events, double dt)
 			{
 				entityx::ptr<Comp::File> file;
-				for (auto entity : es->entities_with_components(file))
+				entityx::ptr<Comp::Read> read;
+				for (auto entity : es->entities_with_components(file, read))
 				{
 					rapidjson::Document doc;
 
@@ -47,8 +48,10 @@ namespace WkCocos
 						rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
 						doc.Accept(writer);
 						file->setContents( strbuf.GetString());
-						CCLOG("new contents :  %s", file->getContents().c_str());
+						//CCLOG("new contents :  %s", file->getContents().c_str());
 					}
+
+					entity.remove<Comp::Read>();
 				}
 			}
 

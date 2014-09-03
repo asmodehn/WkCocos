@@ -65,19 +65,19 @@ namespace WkCocos
 			});
 		}
 
-		void OnlineDataManager::save(std::string userid, std::string user_data, std::function<void(std::string)> callback)
+		void OnlineDataManager::save(const std::string& userid, const std::string& saveName, std::string user_data, std::function<void(std::string)> callback)
 		{
 			auto newentity = entity_manager->create();
 			//new File component for each request. The aggregator system will detect duplicates and group them
-			newentity.assign<Comp::DeleteUserData>(userid, "user_data", user_data, callback);
-			newentity.assign<Comp::SaveUserData>(userid, "user_data", user_data, callback);
+			newentity.assign<Comp::DeleteUserData>(userid, saveName, user_data, callback);
+			newentity.assign<Comp::SaveUserData>(userid, saveName, user_data, callback);
 		}
 
-		void OnlineDataManager::load(std::string userid, std::function<void(std::string)> callback)
+		void OnlineDataManager::load(const std::string& userid, const std::string& saveName, std::function<void(std::string)> callback)
 		{
 			auto newentity = entity_manager->create();
 			//new File component for each request. The aggregator system will detect duplicates and group them
-			newentity.assign<Comp::LoadUserData>(userid, "user_data", callback);
+			newentity.assign<Comp::LoadUserData>(userid, saveName, callback);
 		}
 
 		void OnlineDataManager::loadEnemy(std::string userid)

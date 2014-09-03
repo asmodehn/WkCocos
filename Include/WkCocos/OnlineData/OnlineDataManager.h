@@ -41,12 +41,12 @@ namespace WkCocos
 			/**
 			* Save User Data
 			*/
-			void save(std::string userid, std::string user_data, std::function<void(std::string)> callback);
+			void save(const std::string& userid, const std::string& saveName, std::string user_data, std::function<void(std::string)> callback);
 
 			/**
 			* Load User Data
 			*/
-			void load(std::string userid, std::function<void(std::string)> callback);
+			void load(const std::string& userid, const std::string& saveName, std::function<void(std::string)> callback);
 
 			/**
 			* Load Enemy Data

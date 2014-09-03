@@ -22,10 +22,12 @@ namespace WkCocos
 			{
 				File()
 					: m_filename("")
+				, m_remove(false)
 				{}
 
-				File(std::string filename, std::string key = "")
+				File(std::string filename, std::string key = "", bool remove = false)
 				: m_filename(filename)
+				, m_remove(remove)
 				, m_sbox(key)
 				{
 				}
@@ -72,18 +74,25 @@ namespace WkCocos
 
 				bool write()
 				{
-					std::string str;
-					if (m_sbox.isEncrypted())
+					if (m_remove)
 					{
-						str = m_sbox.get_encryptedHex();
+						std::remove(cocos2d::FileUtils::getInstance()->fullPathForFilename(m_filename).c_str());
 					}
 					else
 					{
-						str = m_sbox.get<std::string>();
-					}
+						std::string str;
+						if (m_sbox.isEncrypted())
+						{
+							str = m_sbox.get_encryptedHex();
+						}
+						else
+						{
+							str = m_sbox.get<std::string>();
+						}
 
-					std::ofstream ofs(cocos2d::FileUtils::getInstance()->fullPathForFilename(m_filename), std::ios::out);
-					ofs.write(str.c_str(), str.size());
+						std::ofstream ofs(cocos2d::FileUtils::getInstance()->fullPathForFilename(m_filename), std::ios::out);
+						ofs.write(str.c_str(), str.size());
+					}
 
 					return true;
 				}
@@ -106,6 +115,7 @@ namespace WkCocos
 			private:
 				std::string m_filename;
 				WkCocos::StrongBox::StrongBox m_sbox;
+				bool		m_remove;
 			};
 
 			struct LoginID_v1 : entityx::Component<LoginID_v1>
@@ -150,6 +160,12 @@ namespace WkCocos
 				std::string m_data;
 
 				std::function<void(std::string data)> m_load_cb;
+			};
+
+			struct Read : entityx::Component<Read>
+			{
+				Read(){}
+
 			};
 
 

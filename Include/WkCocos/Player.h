@@ -7,6 +7,7 @@
 #include "WkCocos/OnlineData/OnlineDataManager.h"
 #include "WkCocos/Timer/Timer.h"
 #include "WkCocos/Utils/ToolBox.h"
+#include "WkCocos/Save.h"
 
 //using Cocos' Rapidjson for now...
 #include "json/document.h"         // rapidjson's DOM-style API
@@ -76,7 +77,7 @@ namespace WkCocos
 
 	protected:
 		Player(std::shared_ptr<LocalData::LocalDataManager> localdata);
-
+		
 		bool requestLoadData(std::function<void()> loaded_cb, std::string key = "");
 
 		bool requestAllUsers();
@@ -86,7 +87,6 @@ namespace WkCocos
 		bool requestEnemyData(std::string enemy_data);
 
 		bool requestSaveData(std::function<void()> saved_cb, std::string key = "");
-
 		bool newPlayer;
 		std::string m_user;
 		std::string m_passwd;
@@ -104,7 +104,7 @@ namespace WkCocos
 		virtual std::string get_data_json() = 0;
 		virtual void set_data_json(std::string data) = 0;
 
-
+		Save		m_playerData;
 		
 	private:
 
@@ -132,7 +132,7 @@ namespace WkCocos
 			m_onlinedata->loginNew(m_user, m_passwd, email, [=](std::string body){
 				CCLOG("login done !!!");
 				//loading again to get online value
-				requestLoadData(onlineDataLoaded_callback);
+				m_playerData.requestLoadData(onlineDataLoaded_callback);
 			});
 		}
 
