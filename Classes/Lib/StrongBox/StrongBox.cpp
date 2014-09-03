@@ -46,11 +46,14 @@ namespace WkCocos
 			, m_key_len(0)
 			, m_key(nullptr)
 		{
-			//we truncate/fill the key here, to be safe.
-			char keyc[17];
-			strncpy(keyc, key.c_str(), 16);
-			keyc[16] = '\0';
-			copy_key(reinterpret_cast<unsigned char*>(keyc), 16);
+			if (key.length() > 0)
+			{
+				//we truncate/fill the key here, to be safe.
+				char keyc[17];
+				strncpy(keyc, key.c_str(), 16);
+				keyc[16] = '\0';
+				copy_key(reinterpret_cast<unsigned char*>(keyc), 16);
+			}
 		}
 		
 		StrongBox::StrongBox(const StrongBox& sb)
@@ -118,29 +121,44 @@ namespace WkCocos
 
 		//specialized getters and setters
 		template<>
-		void StrongBox::set(std::string value)
+		void StrongBox::set<std::string>(std::string value)
 		{
-			xxtea_long data_len = sizeof(value.c_str());
+			xxtea_long data_len = strlen(value.c_str());
 			unsigned char* data = static_cast<unsigned char*>(malloc(sizeof(unsigned char) * data_len));
 			strncpy(reinterpret_cast<char*>(data), value.c_str(), data_len); //seeing value as a pack of bytes
 
-			xxtea_long ret_len;
-			//this will malloc.
-			m_value = xxtea_encrypt(data, data_len, m_key, m_key_len, &ret_len);
-			m_value_len = ret_len;
-
+			if (isEncrypted())
+			{
+				xxtea_long ret_len;
+				//this will malloc.
+				m_value = xxtea_encrypt(data, data_len, m_key, m_key_len, &ret_len);
+				m_value_len = ret_len;
+			}
+			else
+			{
+				m_value = data;
+				m_value_len = data_len;
+			}
 		}
 
 		template<>
-		std::string StrongBox::get()
+		std::string StrongBox::get<std::string>() const
 		{
 			xxtea_long ret_len;
-			unsigned char* data = xxtea_decrypt(m_value, m_value_len, m_key, m_key_len, &ret_len);
-
-			return std::string(reinterpret_cast<char*>(data));
+			unsigned char* data;
+			if (isEncrypted())
+			{
+				data = xxtea_decrypt(m_value, m_value_len, m_key, m_key_len, &ret_len);
+			}
+			else
+			{
+				data = m_value;
+				ret_len = m_value_len;
+			}
+			return std::string(reinterpret_cast<char*>(data),ret_len);
 		}
 
-		void StrongBox::set_encrypted(std::string encrypted_value)
+		void StrongBox::set_encryptedHex(std::string encrypted_value)
 		{
 			//removing existing value
 			if (m_value_len > 0)
@@ -174,7 +192,7 @@ namespace WkCocos
 			}
 		}
 
-		std::string StrongBox::get_encrypted()
+		std::string StrongBox::get_encryptedHex() const
 		{
 			//reading m_value and converting to hex representation
 			std::stringstream ss;
@@ -185,5 +203,5 @@ namespace WkCocos
 			}
 			return ss.str();
 		}
-	}
-}
+	} //namespace StrongBox
+}//namespace WkCocos

@@ -6,8 +6,8 @@
 
 MyPlayer::MyPlayer(std::shared_ptr<WkCocos::LocalData::LocalDataManager> localdatamngr)
 : WkCocos::Player(localdatamngr)
-, m_gem(42)
-, m_gold(424242)
+, m_gem(42,"53cr3t") //encrypted
+, m_gold(424242) // not encrypted
 {
 }
 
@@ -27,7 +27,7 @@ std::string MyPlayer::get_data_json()
 
 	rapidjson::Value currency;
 	currency.SetObject();
-	currency.AddMember(sGold, m_gold, allocator);
+	currency.AddMember(sGold, m_gold.get<int>(), allocator);
 	currency.AddMember(sGem, m_gem.get<int>(), allocator);
 	doc.AddMember(sCurrency, currency, allocator);
 
@@ -58,7 +58,7 @@ void MyPlayer::set_data_json(std::string data)
 		if (!currencyvalue.IsNull()){
 			if (currencyvalue.HasMember(sGold) && currencyvalue[sGold].IsInt())
 			{
-				m_gold = currencyvalue[sGold].GetInt();
+				m_gold.set<int>(currencyvalue[sGold].GetInt());
 			}
 			if (currencyvalue.HasMember(sGem) && currencyvalue[sGem].IsInt())
 			{

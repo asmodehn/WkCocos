@@ -33,20 +33,20 @@ public:
 	void set_data_json(std::string data);
 
 	//ingame currency
-	unsigned int m_gold;
+	WkCocos::StrongBox::StrongBox m_gold;
 	//premium currency
 	WkCocos::StrongBox::StrongBox m_gem;
 
 	//save Data for test
 	void saveData(std::function<void()> saved_cb)
 	{
-		requestSaveData(saved_cb);
+		requestSaveData(saved_cb, "53cr3t");
 	}
 
 	//load Data for test
 	void loadData(std::function<void()> loaded_cb)
 	{
-		requestLoadData(loaded_cb);
+		requestLoadData(loaded_cb, "53cr3t");
 	}
 
 	//load enemy for test

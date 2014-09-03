@@ -79,7 +79,7 @@ void SavingUI::update(float delta)
 	}
 	if (m_goldLabel->isVisible())
 	{
-		m_goldLabel->setText(WkCocos::ToolBox::itoa(GameLogic::Instance().getPlayer().m_gold) + " GOLD");
+		m_goldLabel->setText(WkCocos::ToolBox::itoa(GameLogic::Instance().getPlayer().m_gold.get<int>()) + " GOLD");
 	}
 
 }
@@ -115,7 +115,7 @@ void SavingUI::goldrandCallback(Ref* widgetRef, cocos2d::ui::Widget::TouchEventT
 	{
 		CCLOG("GOLD RAND BUTTON CLICKED");
 
-		GameLogic::Instance().getPlayer().m_gold = rand() % 10000;
+		GameLogic::Instance().getPlayer().m_gold.set<int>( rand() % 10000);
 
 	}
 }

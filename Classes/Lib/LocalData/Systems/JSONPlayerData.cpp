@@ -23,7 +23,7 @@ namespace WkCocos
 				for (auto entity : es->entities_with_components(file, playerData))
 				{
 					rapidjson::Document doc;
-					doc.Parse<0>(file->m_contents.c_str());
+					doc.Parse<0>(file->getContents().c_str());
 					if (doc.HasParseError()) {
 						CCLOG("GetParseError %s\n", doc.GetParseError());
 						//callback empty on invalid json
@@ -79,8 +79,8 @@ namespace WkCocos
 							rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
 							doc.Accept(writer);
 
-							file->m_contents = strbuf.GetString();
-							CCLOG("new contents :  %s", file->m_contents.c_str());
+							file->setContents( strbuf.GetString());
+							CCLOG("new contents :  %s", file->getContents().c_str());
 						}
 					}
 

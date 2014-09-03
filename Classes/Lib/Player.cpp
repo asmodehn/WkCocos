@@ -33,7 +33,7 @@ namespace WkCocos
 					m_passwd = passwd;
 
 					//store unique ID
-					m_localdata->saveLoginID(m_user, m_passwd);
+					m_localdata->saveLoginID(m_user, m_passwd); //TODO : encyrpt this
 
 					newPlayer = true;
 				}
@@ -94,10 +94,11 @@ namespace WkCocos
 		}
 	}
 
-	bool Player::requestLoadData(std::function<void()> loaded_cb)
+	bool Player::requestLoadData(std::function<void()> loaded_cb, std::string key)
 	{
 		if (m_onlinedata)
 		{
+			//no encryption for online data
 			m_onlinedata->load(m_user, [=](std::string data)
 			{
 				set_all_data_json(data);
@@ -114,7 +115,7 @@ namespace WkCocos
 				set_all_data_json(data);
 
 				loaded_cb();
-			});
+			}, key);
 
 			return true;
 		}
@@ -157,10 +158,11 @@ namespace WkCocos
 			return false;
 	}
 
-	bool Player::requestSaveData(std::function<void()> saved_cb)
+	bool Player::requestSaveData(std::function<void()> saved_cb, std::string key)
 	{
 		if (m_onlinedata)
 		{
+			//no encryption for online data
 
 			m_onlinedata->save(m_user, get_all_data_json(), [=](std::string data)
 			{
@@ -173,7 +175,7 @@ namespace WkCocos
 		}
 		else if (m_localdata)
 		{
-			m_localdata->savePlayerData(get_all_data_json());
+			m_localdata->savePlayerData(get_all_data_json(),key);
 			saved_cb();
 			return true;
 		}

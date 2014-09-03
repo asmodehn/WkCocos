@@ -77,7 +77,7 @@ namespace WkCocos
 	protected:
 		Player(std::shared_ptr<LocalData::LocalDataManager> localdata);
 
-		bool requestLoadData(std::function<void()> loaded_cb);
+		bool requestLoadData(std::function<void()> loaded_cb, std::string key = "");
 
 		bool requestAllUsers();
 
@@ -85,7 +85,7 @@ namespace WkCocos
 
 		bool requestEnemyData(std::string enemy_data);
 
-		bool requestSaveData(std::function<void()> saved_cb);
+		bool requestSaveData(std::function<void()> saved_cb, std::string key = "");
 
 		bool newPlayer;
 		std::string m_user;
@@ -118,7 +118,7 @@ namespace WkCocos
 			{
 				user = user_prefix + uuid;
 				//generating password (deterministic way, so we can recover password later)
-				//TODO
+				//TODO : this must be set by the game ( so that reading WkCocos code doesnt give passwords away )
 				passwd = uuid;
 			}
 		}
@@ -153,35 +153,6 @@ namespace WkCocos
 		const char * sIsdst = "isdst";
 	};
 
-	/*	m_localdata->loadPlayerData([=](std::string data)
-		{
-			rapidjson::Document doc;
-			doc.Parse<0>(data.c_str());
-			if (doc.HasParseError())
-			{
-				//if parse error (also empty string), we ignore existing data.
-				doc.SetObject();
-			}
-			set_data_json(doc);
-		});*/
-
-
-	/*	// create document
-		rapidjson::Document doc;
-		doc.SetObject();
-		// must pass an allocator when the object may need to allocate memory
-		rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
-
-		get_data_json(doc, allocator);
-
-		// Get the save string
-		rapidjson::StringBuffer strbuf;
-		rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
-		doc.Accept(writer);
-
-		std::string save = std::string(strbuf.GetString());
-
-		m_localdata->savePlayerData(save);*/
 } //namespace WkCocos
 
 #endif //__WKCOCOS_PLAYER_H__
