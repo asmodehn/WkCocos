@@ -75,7 +75,7 @@ void SavingUI::update(float delta)
 {
 	if (m_gemLabel->isVisible())
 	{
-		m_gemLabel->setText(WkCocos::ToolBox::itoa(GameLogic::Instance().getPlayer().m_gem) + " GEM");
+		m_gemLabel->setText(WkCocos::ToolBox::itoa(GameLogic::Instance().getPlayer().m_gem.get<int>()) + " GEM");
 	}
 	if (m_goldLabel->isVisible())
 	{
@@ -127,7 +127,7 @@ void SavingUI::gemrandCallback(Ref* widgetRef, ui::Widget::TouchEventType input)
 	{
 		CCLOG("GEM RAND BUTTON CLICKED");
 
-		GameLogic::Instance().getPlayer().m_gem = rand() % 100;
+		GameLogic::Instance().getPlayer().m_gem.set<int>(rand() % 100);
 
 	}
 }

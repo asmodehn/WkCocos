@@ -108,7 +108,7 @@ namespace WkCocos
 							//if parse error (also empty string), we ignore existing data.
 							cb("");
 						}
-						else if (doc.HasMember("data"))
+						else if (doc.HasMember("data")) //TOFIX : data is not first level member of the response...
 						{
 							//TMP debug
 							rapidjson::StringBuffer strbuf;

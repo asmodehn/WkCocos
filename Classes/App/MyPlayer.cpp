@@ -28,7 +28,7 @@ std::string MyPlayer::get_data_json()
 	rapidjson::Value currency;
 	currency.SetObject();
 	currency.AddMember(sGold, m_gold, allocator);
-	currency.AddMember(sGem, m_gem, allocator);
+	currency.AddMember(sGem, m_gem.get<int>(), allocator);
 	doc.AddMember(sCurrency, currency, allocator);
 
 	//TMP debug
@@ -56,13 +56,13 @@ void MyPlayer::set_data_json(std::string data)
 	{
 		rapidjson::Value& currencyvalue = doc[sCurrency];
 		if (!currencyvalue.IsNull()){
-			if (currencyvalue.HasMember(sGold))
+			if (currencyvalue.HasMember(sGold) && currencyvalue[sGold].IsInt())
 			{
 				m_gold = currencyvalue[sGold].GetInt();
 			}
-			if (currencyvalue.HasMember(sGem))
+			if (currencyvalue.HasMember(sGem) && currencyvalue[sGem].IsInt())
 			{
-				m_gem = currencyvalue[sGem].GetInt();
+				m_gem.set<int>(currencyvalue[sGem].GetInt());
 			}
 		}
 	}

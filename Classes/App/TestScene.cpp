@@ -37,7 +37,7 @@ bool TestScene::init()
 	menu->setPosition(cocos2d::Vec2::ZERO);
 	addChild(menu, 1);
 
-	/*/Saving UI
+	//Saving UI
 	SavingUI* saveui = new SavingUI();
 	auto saveroot = saveui->getRoot();
 	saveroot->setEnabled(true);
@@ -57,7 +57,7 @@ bool TestScene::init()
 	timerroot->setPosition(cocos2d::Vec2(visibleSize.width * 0.75, visibleSize.height * 0.75));
 	//*/
 
-	//PlayersListUI
+	/*//PlayersListUI
 	PlayersListUI* playerslistui = new PlayersListUI();
 	auto playerslistroot = playerslistui->getRoot();
 	playerslistroot->setEnabled(true);

@@ -2,6 +2,7 @@
 #define __MYPLAYER_H__
 
 #include "WkCocos/Player.h"
+#include "WkCocos/StrongBox/StrongBox.h"
 
 /**
 * This is the game player
@@ -34,7 +35,7 @@ public:
 	//ingame currency
 	unsigned int m_gold;
 	//premium currency
-	unsigned int m_gem;
+	WkCocos::StrongBox::StrongBox m_gem;
 
 	//save Data for test
 	void saveData(std::function<void()> saved_cb)

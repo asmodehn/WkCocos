@@ -105,7 +105,7 @@ void PlayersListUI::receive(const WkCocos::OnlineData::Events::PlayersList &pl)
 			if (doc.Size())
 			{
 				// with this value font size is no more than 15 and player name does not exceed half screen width
-				int listSize = 42; 
+				unsigned int listSize = 42; 
 				if (doc.Size() < listSize)
 					listSize = doc.Size();
 
