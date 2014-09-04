@@ -21,7 +21,7 @@ public:
 	{
 		m_onlinedatamngr.reset(new WkCocos::OnlineData::OnlineDataManager(app_access_key, app_secret_key));
 		//TMP forcing local save
-		//m_player->setOnlineDataManager(m_onlinedatamngr, online_init_cb);
+		m_player->setOnlineDataManager(m_onlinedatamngr, online_init_cb);
 	}
 
 	void localDataError()
