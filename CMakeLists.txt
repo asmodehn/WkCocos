@@ -87,68 +87,69 @@ include_directories(
   ${COCOS2D_ROOT}/cocos/scripting/lua-bindings/manual
   ${COCOS2D_ROOT}/extensions
   ${COCOS2D_ROOT}/external
-  ${COCOS2D_ROOT}/external/tinyxml2
-  ${COCOS2D_ROOT}/external/unzip
-  ${COCOS2D_ROOT}/external/json
-  ${COCOS2D_ROOT}/external/sqlite3/include
-  ${COCOS2D_ROOT}/external/edtaa3func
+  ${COCOS2D_ROOT}/external-bin
+  ${COCOS2D_ROOT}/external-bin/tinyxml2
+  ${COCOS2D_ROOT}/external-bin/unzip
+  ${COCOS2D_ROOT}/external-bin/json
+  ${COCOS2D_ROOT}/external-bin/sqlite3/include
+  ${COCOS2D_ROOT}/external-bin/edtaa3func
   ${COCOS2D_ROOT}/external/chipmunk/include/chipmunk
-  ${COCOS2D_ROOT}/external/jpeg/include/${PLATFORM_FOLDER}
-  ${COCOS2D_ROOT}/external/png/include/${PLATFORM_FOLDER}
-  ${COCOS2D_ROOT}/external/tiff/include/${PLATFORM_FOLDER}
-  ${COCOS2D_ROOT}/external/webp/include/${PLATFORM_FOLDER}
-  ${COCOS2D_ROOT}/external/glfw3/include/${PLATFORM_FOLDER}
-  ${COCOS2D_ROOT}/external/freetype2/include/${PLATFORM_FOLDER}
-  ${COCOS2D_ROOT}/external/websockets/include/${PLATFORM_FOLDER}
-  ${COCOS2D_ROOT}/external/xxhash
+  ${COCOS2D_ROOT}/external-bin/jpeg/include/${PLATFORM_FOLDER}
+  ${COCOS2D_ROOT}/external-bin/png/include/${PLATFORM_FOLDER}
+  ${COCOS2D_ROOT}/external-bin/tiff/include/${PLATFORM_FOLDER}
+  ${COCOS2D_ROOT}/external-bin/webp/include/${PLATFORM_FOLDER}
+  ${COCOS2D_ROOT}/external-bin/glfw3/include/${PLATFORM_FOLDER}
+  ${COCOS2D_ROOT}/external-bin/freetype2/include/${PLATFORM_FOLDER}
+  ${COCOS2D_ROOT}/external-bin/websockets/include/${PLATFORM_FOLDER}
+  ${COCOS2D_ROOT}/external-bin/xxhash
   ${COCOS2D_ROOT}/external/xxtea
 )
 
 if (WIN32)
 include_directories (
-    ${COCOS2D_ROOT}/external/${PLATFORM_FOLDER}-specific/gles/include/OGLES
-    ${COCOS2D_ROOT}/external/${PLATFORM_FOLDER}-specific/icon/include
-    ${COCOS2D_ROOT}/external/${PLATFORM_FOLDER}-specific/zlib/include
-    ${COCOS2D_ROOT}/external/curl/include/${PLATFORM_FOLDER}
+    ${COCOS2D_ROOT}/external-bin/${PLATFORM_FOLDER}-specific/gles/include/OGLES
+    ${COCOS2D_ROOT}/external-bin/${PLATFORM_FOLDER}-specific/icon/include
+    ${COCOS2D_ROOT}/external-bin/${PLATFORM_FOLDER}-specific/zlib/include
+    ${COCOS2D_ROOT}/external-bin/curl/include/${PLATFORM_FOLDER}
   )
   if(NOT MINGW)
   link_directories(
-    ${COCOS2D_ROOT}/external/glfw3/prebuilt/${PLATFORM_FOLDER}
-    ${COCOS2D_ROOT}/external/sqlite3/libraries/${PLATFORM_FOLDER}
-    ${COCOS2D_ROOT}/external/jpeg/prebuilt/${PLATFORM_FOLDER}
-    ${COCOS2D_ROOT}/external/tiff/prebuilt/${PLATFORM_FOLDER}
-    ${COCOS2D_ROOT}/external/png/prebuilt/${PLATFORM_FOLDER}
-    ${COCOS2D_ROOT}/external/freetype2/prebuilt/${PLATFORM_FOLDER}
-    ${COCOS2D_ROOT}/external/curl/prebuilt/${PLATFORM_FOLDER}
-    ${COCOS2D_ROOT}/external/websockets/prebuilt/${PLATFORM_FOLDER}
-    ${COCOS2D_ROOT}/external/webp/prebuilt/${PLATFORM_FOLDER}
-    ${COCOS2D_ROOT}/external/${PLATFORM_FOLDER}-specific/icon/prebuilt
-    ${COCOS2D_ROOT}/external/${PLATFORM_FOLDER}-specific/zlib/prebuilt
-    ${COCOS2D_ROOT}/external/${PLATFORM_FOLDER}-specific/gles/prebuilt
+    ${COCOS2D_ROOT}/external-bin/glfw3/prebuilt/${PLATFORM_FOLDER}
+    ${COCOS2D_ROOT}/external-bin/sqlite3/libraries/${PLATFORM_FOLDER}
+    ${COCOS2D_ROOT}/external-bin/jpeg/prebuilt/${PLATFORM_FOLDER}
+    ${COCOS2D_ROOT}/external-bin/tiff/prebuilt/${PLATFORM_FOLDER}
+    ${COCOS2D_ROOT}/external-bin/png/prebuilt/${PLATFORM_FOLDER}
+    ${COCOS2D_ROOT}/external-bin/freetype2/prebuilt/${PLATFORM_FOLDER}
+    ${COCOS2D_ROOT}/external-bin/curl/prebuilt/${PLATFORM_FOLDER}
+    ${COCOS2D_ROOT}/external-bin/websockets/prebuilt/${PLATFORM_FOLDER}
+    ${COCOS2D_ROOT}/external-bin/webp/prebuilt/${PLATFORM_FOLDER}
+    ${COCOS2D_ROOT}/external-bin/${PLATFORM_FOLDER}-specific/icon/prebuilt
+    ${COCOS2D_ROOT}/external-bin/${PLATFORM_FOLDER}-specific/zlib/prebuilt
+    ${COCOS2D_ROOT}/external-bin/${PLATFORM_FOLDER}-specific/gles/prebuilt
   )
   endif()
 #link_directories(
 #)
 elseif(APPLE)
   include_directories(
-  	${COCOS2D_ROOT}/external/curl/include/${PLATFORM_FOLDER}
+  	${COCOS2D_ROOT}/external-bin/curl/include/${PLATFORM_FOLDER}
   )
 elseif(UNIX AND NOT CMAKE_TOOLCHAIN_FILE) #assumed linux
 include_directories ( 
     /usr/include
     /usr/include/GLFW
     /usr/local/include/GLFW
-    ${COCOS2D_ROOT}/external/${PLATFORM_FOLDER}-specific/fmod/include/${ARCH_DIR}
+    ${COCOS2D_ROOT}/external-bin/${PLATFORM_FOLDER}-specific/fmod/include/${ARCH_DIR}
   )
 link_directories(
     /usr/local/lib
-    ${COCOS2D_ROOT}/external/jpeg/prebuilt/${PLATFORM_FOLDER}/${ARCH_DIR}
-    ${COCOS2D_ROOT}/external/tiff/prebuilt/${PLATFORM_FOLDER}/${ARCH_DIR}
-    ${COCOS2D_ROOT}/external/webp/prebuilt/${PLATFORM_FOLDER}/${ARCH_DIR}
-    ${COCOS2D_ROOT}/external/png/prebuilt/${PLATFORM_FOLDER}/${ARCH_DIR}
-    ${COCOS2D_ROOT}/external/freetype2/prebuilt/${PLATFORM_FOLDER}/${ARCH_DIR}
-    ${COCOS2D_ROOT}/external/websockets/prebuilt/${PLATFORM_FOLDER}/${ARCH_DIR}
-    ${COCOS2D_ROOT}/external/${PLATFORM_FOLDER}-specific/fmod/prebuilt/${ARCH_DIR}
+    ${COCOS2D_ROOT}/external-bin/jpeg/prebuilt/${PLATFORM_FOLDER}/${ARCH_DIR}
+    ${COCOS2D_ROOT}/external-bin/tiff/prebuilt/${PLATFORM_FOLDER}/${ARCH_DIR}
+    ${COCOS2D_ROOT}/external-bin/webp/prebuilt/${PLATFORM_FOLDER}/${ARCH_DIR}
+    ${COCOS2D_ROOT}/external-bin/png/prebuilt/${PLATFORM_FOLDER}/${ARCH_DIR}
+    ${COCOS2D_ROOT}/external-bin/freetype2/prebuilt/${PLATFORM_FOLDER}/${ARCH_DIR}
+    ${COCOS2D_ROOT}/external-bin/websockets/prebuilt/${PLATFORM_FOLDER}/${ARCH_DIR}
+    ${COCOS2D_ROOT}/external-bin/${PLATFORM_FOLDER}-specific/fmod/prebuilt/${ARCH_DIR}
   )
 
 elseif(CMAKE_TOOLCHAIN_FILE) #assumed Android
@@ -161,27 +162,27 @@ elseif(CMAKE_TOOLCHAIN_FILE) #assumed Android
 #  ${COCOS2D_ROOT}/cocos/base
 #  ${COCOS2D_ROOT}/cocos/deprecated
 #  ${COCOS2D_ROOT}/cocos/physics
-#  ${COCOS2D_ROOT}/external/edtaa3func
-#  ${COCOS2D_ROOT}/external/jpeg/include/android
-#  ${COCOS2D_ROOT}/external/png/include/android
-#  ${COCOS2D_ROOT}/external/tiff/include/android
-#  ${COCOS2D_ROOT}/external/webp/include/android
-#  ${COCOS2D_ROOT}/external/curl/include/android
-#  ${COCOS2D_ROOT}/external/sqlite3/include
-#  ${COCOS2D_ROOT}/external/freetype2/include/android
-#  ${COCOS2D_ROOT}/external/freetype2/include/android/freetype2
-#  ${COCOS2D_ROOT}/external/websockets/include/android
+#  ${COCOS2D_ROOT}/external-bin/edtaa3func
+#  ${COCOS2D_ROOT}/external-bin/jpeg/include/android
+#  ${COCOS2D_ROOT}/external-bin/png/include/android
+#  ${COCOS2D_ROOT}/external-bin/tiff/include/android
+#  ${COCOS2D_ROOT}/external-bin/webp/include/android
+#  ${COCOS2D_ROOT}/external-bin/curl/include/android
+#  ${COCOS2D_ROOT}/external-bin/sqlite3/include
+#  ${COCOS2D_ROOT}/external-bin/freetype2/include/android
+#  ${COCOS2D_ROOT}/external-bin/freetype2/include/android/freetype2
+#  ${COCOS2D_ROOT}/external-bin/websockets/include/android
 #  ${COCOS2D_ROOT}/external/spidermonkey/include/android
 #)
 #link_directories(
-#  ${COCOS2D_ROOT}/external/png/prebuilt/android/${ANDROID_ABI}
-#  ${COCOS2D_ROOT}/external/jpeg/prebuilt/android/${ANDROID_ABI}
-#  ${COCOS2D_ROOT}/external/tiff/prebuilt/android/${ANDROID_ABI}
-#  ${COCOS2D_ROOT}/external/webp/prebuilt/android/${ANDROID_ABI}
-#  ${COCOS2D_ROOT}/external/curl/prebuilt/android/${ANDROID_ABI}
-#  ${COCOS2D_ROOT}/external/sqlite3/libraries/android/${ANDROID_ABI}
-#  ${COCOS2D_ROOT}/external/freetype2/prebuilt/android/${ANDROID_ABI}
-#  ${COCOS2D_ROOT}/external/websockets/prebuilt/android/${ANDROID_ABI}
+#  ${COCOS2D_ROOT}/external-bin/png/prebuilt/android/${ANDROID_ABI}
+#  ${COCOS2D_ROOT}/external-bin/jpeg/prebuilt/android/${ANDROID_ABI}
+#  ${COCOS2D_ROOT}/external-bin/tiff/prebuilt/android/${ANDROID_ABI}
+#  ${COCOS2D_ROOT}/external-bin/webp/prebuilt/android/${ANDROID_ABI}
+#  ${COCOS2D_ROOT}/external-bin/curl/prebuilt/android/${ANDROID_ABI}
+#  ${COCOS2D_ROOT}/external-bin/sqlite3/libraries/android/${ANDROID_ABI}
+#  ${COCOS2D_ROOT}/external-bin/freetype2/prebuilt/android/${ANDROID_ABI}
+#  ${COCOS2D_ROOT}/external-bin/websockets/prebuilt/android/${ANDROID_ABI}
 #  ${COCOS2D_ROOT}/external/spidermonkey/prebuilt/android/${ANDROID_ABI}
 #)
 endif()
@@ -191,10 +192,7 @@ WkAddCFlags("-DCOCOS2D_DEBUG=1")
 WkAddCXXFlags("-DCOCOS2D_DEBUG=1")
 
 if(WIN32)
-  WkAddCXXFlags("-D_USRDLL -D_USEGUIDLL -D_USREXDLL -DIGNORE_EXPORT -DCOCOS2DXWIN32_EXPORTS -D_WINDOWS -DWIN32")
-  if(BUILD_EDITOR_COCOSTUDIO)
-    WkAddCXXFlags ("-D_USRSTUDIODLL")
-  endif(BUILD_EDITOR_COCOSTUDIO)
+  WkAddCXXFlags("-DIGNORE_EXPORT -D_WINDOWS -DWIN32")
   if(MSVC)
     WkAddCXXFlags( "-D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS" )
     WkAddCXXFlags( "-wd4251 -wd4244 -wd4334 -wd4005 -wd4820 -wd4710 -wd4514 -wd4056 -wd4996 -wd4099" )
@@ -303,23 +301,54 @@ if ( ${PROJECT_NAME} STREQUAL ${CMAKE_PROJECT_NAME} )
 		if ( ${PROJECT_NAME}_ENABLE_TESTS ) # if the target has been defined ( tests enabled )
 		#also copying dlls to binary directory for the executable to run
 		ADD_CUSTOM_COMMAND( TARGET maintest POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
-					"${COCOS2D_ROOT}/external/win32-specific/gles/prebuilt/glew32.dll"
+					"$<TARGET_FILE:cocos2d>"
 					"$<TARGET_FILE_DIR:maintest>"
 					COMMENT
-					"Copying ${COCOS2D_ROOT}/external/win32-specific/gles/prebuilt/glew32.dll to $<TARGET_FILE_DIR:maintest>"
+					"Copying $<TARGET_FILE:cocos2d> to $<TARGET_FILE_DIR:maintest>"
 					VERBATIM)
 		ADD_CUSTOM_COMMAND( TARGET maintest POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
-					"${COCOS2D_ROOT}/external/win32-specific/zlib/prebuilt/zlib1.dll"
+					"$<TARGET_FILE:cocosui>"
 					"$<TARGET_FILE_DIR:maintest>"
 					COMMENT
-					"Copying ${COCOS2D_ROOT}/external/win32-specific/zlib/prebuilt/zlib1.dll to $<TARGET_FILE_DIR:maintest>"
+					"Copying $<TARGET_FILE:cocosui> to $<TARGET_FILE_DIR:maintest>"
 					VERBATIM)
 		ADD_CUSTOM_COMMAND( TARGET maintest POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
-					"${COCOS2D_ROOT}/external/curl/prebuilt/win32/libcurl.dll"
+					"$<TARGET_FILE:cocostudio>"
 					"$<TARGET_FILE_DIR:maintest>"
 					COMMENT
-					"Copying ${COCOS2D_ROOT}/external/curl/prebuilt/win32/libcurl.dll to $<TARGET_FILE_DIR:maintest>"
+					"Copying $<TARGET_FILE:cocostudio> to $<TARGET_FILE_DIR:maintest>"
 					VERBATIM)
+		ADD_CUSTOM_COMMAND( TARGET maintest POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
+					"${COCOS2D_ROOT}/external-bin/win32-specific/gles/prebuilt/glew32.dll"
+					"$<TARGET_FILE_DIR:maintest>"
+					COMMENT
+					"Copying ${COCOS2D_ROOT}/external-bin/win32-specific/gles/prebuilt/glew32.dll to $<TARGET_FILE_DIR:maintest>"
+					VERBATIM)
+		ADD_CUSTOM_COMMAND( TARGET maintest POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
+					"${COCOS2D_ROOT}/external-bin/win32-specific/zlib/prebuilt/zlib1.dll"
+					"$<TARGET_FILE_DIR:maintest>"
+					COMMENT
+					"Copying ${COCOS2D_ROOT}/external-bin/win32-specific/zlib/prebuilt/zlib1.dll to $<TARGET_FILE_DIR:maintest>"
+					VERBATIM)
+		ADD_CUSTOM_COMMAND( TARGET maintest POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
+					"${COCOS2D_ROOT}/external-bin/curl/prebuilt/win32/libcurl.dll"
+					"$<TARGET_FILE_DIR:maintest>"
+					COMMENT
+					"Copying ${COCOS2D_ROOT}/external-bin/curl/prebuilt/win32/libcurl.dll to $<TARGET_FILE_DIR:maintest>"
+					VERBATIM)
+		ADD_CUSTOM_COMMAND( TARGET maintest POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
+					"${COCOS2D_ROOT}/external-bin/sqlite3/libraries/win32/sqlite3.dll"
+					"$<TARGET_FILE_DIR:maintest>"
+					COMMENT
+					"Copying ${COCOS2D_ROOT}/external-bin/sqlite3/libraries/win32/sqlite3.dll to $<TARGET_FILE_DIR:maintest>"
+					VERBATIM)
+		ADD_CUSTOM_COMMAND( TARGET maintest POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
+					"${COCOS2D_ROOT}/external-bin/websockets/prebuilt/win32/websockets.dll"
+					"$<TARGET_FILE_DIR:maintest>"
+					COMMENT
+					"Copying ${COCOS2D_ROOT}/external-bin/websockets/prebuilt/win32/websockets.dll to $<TARGET_FILE_DIR:maintest>"
+					VERBATIM)
+					
 		endif ( ${PROJECT_NAME}_ENABLE_TESTS )
 	elseif (UNIX AND NOT CMAKE_TOOLCHAIN_FILE) #assumed linux
 		WkTestBuild( maintest linux/main.cpp )
@@ -333,23 +362,53 @@ if ( ${PROJECT_NAME} STREQUAL ${CMAKE_PROJECT_NAME} )
 	if ( ${PROJECT_NAME}_ENABLE_TESTS ) # if the target has been defined ( tests enabled )
 		if(WIN32)
 		#also copying dlls to binary directory for the executable to run
-		ADD_CUSTOM_COMMAND( TARGET maintest POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
-					"${COCOS2D_ROOT}/external/win32-specific/gles/prebuilt/glew32.dll"
-					"$<TARGET_FILE_DIR:maintest>"
+		ADD_CUSTOM_COMMAND( TARGET autotest POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
+					"$<TARGET_FILE:cocos2d>"
+					"$<TARGET_FILE_DIR:autotest>"
 					COMMENT
-					"Copying ${COCOS2D_ROOT}/external/win32-specific/gles/prebuilt/glew32.dll to $<TARGET_FILE_DIR:maintest>"
+					"Copying $<TARGET_FILE:cocos2d> to $<TARGET_FILE_DIR:autotest>"
 					VERBATIM)
-		ADD_CUSTOM_COMMAND( TARGET maintest POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
-					"${COCOS2D_ROOT}/external/win32-specific/zlib/prebuilt/zlib1.dll"
-					"$<TARGET_FILE_DIR:maintest>"
+		ADD_CUSTOM_COMMAND( TARGET autotest POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
+					"$<TARGET_FILE:cocosui>"
+					"$<TARGET_FILE_DIR:autotest>"
 					COMMENT
-					"Copying ${COCOS2D_ROOT}/external/win32-specific/zlib/prebuilt/zlib1.dll to $<TARGET_FILE_DIR:maintest>"
+					"Copying $<TARGET_FILE:cocosui> to $<TARGET_FILE_DIR:autotest>"
 					VERBATIM)
-		ADD_CUSTOM_COMMAND( TARGET maintest POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
-					"${COCOS2D_ROOT}/external/curl/prebuilt/win32/libcurl.dll"
-					"$<TARGET_FILE_DIR:maintest>"
+		ADD_CUSTOM_COMMAND( TARGET autotest POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
+					"$<TARGET_FILE:cocostudio>"
+					"$<TARGET_FILE_DIR:autotest>"
 					COMMENT
-					"Copying ${COCOS2D_ROOT}/external/curl/prebuilt/win32/libcurl.dll to $<TARGET_FILE_DIR:maintest>"
+					"Copying $<TARGET_FILE:cocostudio> to $<TARGET_FILE_DIR:autotest>"
+					VERBATIM)
+		ADD_CUSTOM_COMMAND( TARGET autotest POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
+					"${COCOS2D_ROOT}/external-bin/win32-specific/gles/prebuilt/glew32.dll"
+					"$<TARGET_FILE_DIR:autotest>"
+					COMMENT
+					"Copying ${COCOS2D_ROOT}/external-bin/win32-specific/gles/prebuilt/glew32.dll to $<TARGET_FILE_DIR:autotest>"
+					VERBATIM)
+		ADD_CUSTOM_COMMAND( TARGET autotest POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
+					"${COCOS2D_ROOT}/external-bin/win32-specific/zlib/prebuilt/zlib1.dll"
+					"$<TARGET_FILE_DIR:autotest>"
+					COMMENT
+					"Copying ${COCOS2D_ROOT}/external-bin/win32-specific/zlib/prebuilt/zlib1.dll to $<TARGET_FILE_DIR:autotest>"
+					VERBATIM)
+		ADD_CUSTOM_COMMAND( TARGET autotest POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
+					"${COCOS2D_ROOT}/external-bin/curl/prebuilt/win32/libcurl.dll"
+					"$<TARGET_FILE_DIR:autotest>"
+					COMMENT
+					"Copying ${COCOS2D_ROOT}/external-bin/curl/prebuilt/win32/libcurl.dll to $<TARGET_FILE_DIR:autotest>"
+					VERBATIM)
+		ADD_CUSTOM_COMMAND( TARGET autotest POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
+					"${COCOS2D_ROOT}/external-bin/sqlite3/libraries/win32/sqlite3.dll"
+					"$<TARGET_FILE_DIR:autotest>"
+					COMMENT
+					"Copying ${COCOS2D_ROOT}/external-bin/sqlite3/libraries/win32/sqlite3.dll to $<TARGET_FILE_DIR:autotest>"
+					VERBATIM)
+		ADD_CUSTOM_COMMAND( TARGET autotest POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
+					"${COCOS2D_ROOT}/external-bin/websockets/prebuilt/win32/websockets.dll"
+					"$<TARGET_FILE_DIR:autotest>"
+					COMMENT
+					"Copying ${COCOS2D_ROOT}/external-bin/websockets/prebuilt/win32/websockets.dll to $<TARGET_FILE_DIR:autotest>"
 					VERBATIM)
 		endif(WIN32)
 	endif ( ${PROJECT_NAME}_ENABLE_TESTS )
