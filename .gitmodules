@@ -14,3 +14,7 @@
 	path = depends/entityx
 	url = git://github.com/asmodehn/entityx.git
 	branch = master
+[submodule "depends/unittest-cpp"]
+	path = depends/unittest-cpp
+	url = https://github.com/asmodehn/unittest-cpp.git
+	branch = master
