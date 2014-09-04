@@ -99,7 +99,7 @@ namespace WkCocos
 					//::App42::App42StorageResponse* userdata = static_cast<::App42::App42StorageResponse*>(data);
 
 					CCLOG("\ncode=%d...=%d", userdata->getCode(), userdata->isSuccess);
-					CCLOG("\nResponse Body=%s", userdata->getBody().c_str());
+					//CCLOG("\nResponse Body=%s", userdata->getBody().c_str());
 
 					//if (userdata->isSuccess)
 					//{//if request succeed, we need to extract data from it
@@ -147,7 +147,7 @@ namespace WkCocos
 					//::App42::App42UserResponse* userdata = static_cast<::App42::App42UserResponse*>(data);
 
 					CCLOG("\ncode=%d...=%d", userdata->getCode(), userdata->isSuccess);
-					CCLOG("\nResponse Body=%s", userdata->getBody().c_str());
+					//CCLOG("\nResponse Body=%s", userdata->getBody().c_str());
 
 					if (userdata->isSuccess)
 					{//if request succeed, we need to extract data from it

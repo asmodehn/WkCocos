@@ -102,7 +102,7 @@ namespace WkCocos
 			m_onlinedata->load(m_user, [=](std::string data)
 			{
 				set_all_data_json(data);
-				CCLOG("user data loaded : %s", data.c_str());
+				//CCLOG("user data loaded : %s", data.c_str());
 
 				loaded_cb();
 			});
@@ -165,7 +165,7 @@ namespace WkCocos
 
 			m_onlinedata->save(m_user, get_all_data_json(), [=](std::string data)
 			{
-				CCLOG("user data saved : %s", data.c_str());
+				//CCLOG("user data saved : %s", data.c_str());
 				saved_cb();
 			});
 
@@ -236,10 +236,16 @@ namespace WkCocos
 		doc.AddMember(sAlarms, alarms, allocator);
 
 		//test
-		//std::string playerData = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
-		//std::string jsonLable = "playerData";
-		//for (int i = 0; i < 1; i++)
-		//	doc.AddMember((jsonLable + ToolBox::itoa(i)).c_str(), playerData.c_str(), allocator);
+		rapidjson::Value playerData;
+		playerData.SetArray();
+		//size = 446 bytes
+		const char * fillerText = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
+		//i < 9 causes crash somwhere in heap malloc, so 8*446=3.5 kb can be saved normally
+		//14.4 kb Julien's data file still can not be tested
+		for (int i = 0; i < 8; i++)
+			playerData.PushBack(fillerText, allocator);
+
+		doc.AddMember("playerData", playerData, allocator);
 
 		rapidjson::StringBuffer strbuf;
 		rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);

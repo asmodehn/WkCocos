@@ -70,7 +70,7 @@ namespace WkCocos
 			auto newentity = entity_manager->create();
 			//temp comment
 			//newentity.assign<Comp::DeleteUserData>(userid, "user_data", user_data, callback);
-			newentity.assign<Comp::SaveUserData>(userid, "user_data", user_data, [=](::App42::App42UserResponse* r){
+			newentity.assign<Comp::SaveUserData>(userid, m_collection, user_data, [=](::App42::App42UserResponse* r){
 				if (!r->isSuccess)
 				{
 					event_manager->emit<Events::Error>(r);
@@ -86,13 +86,13 @@ namespace WkCocos
 		void OnlineDataManager::load(std::string userid, std::function<void(std::string)> callback)
 		{
 			auto newentity = entity_manager->create();
-			newentity.assign<Comp::LoadUserData>(userid, "user_data", callback);
+			newentity.assign<Comp::LoadUserData>(userid, m_collection, callback);
 		}
 
 		void OnlineDataManager::loadEnemy(std::string userid)
 		{
 			auto newentity = entity_manager->create();
-			newentity.assign<Comp::LoadEnemyData>(userid, "user_data", event_manager);
+			newentity.assign<Comp::LoadEnemyData>(userid, m_collection, event_manager);
 		}
 
 		void OnlineDataManager::getAllUsers()

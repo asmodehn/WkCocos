@@ -89,6 +89,10 @@ namespace WkCocos
 			entityx::ptr<entityx::SystemManager> system_manager;
 
 			std::function<void()> m_error_callback;
+
+			//total number of collections spoiled
+			const char * m_collection = "user_data5";
+
 		};
 
 
