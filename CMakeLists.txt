@@ -43,11 +43,13 @@ WkDataDir ( "Resources")
 WkDocDir ( "Docs" )
 
 add_subdirectory("depends/entityx")
-
 include_directories( "depends/entityx")
 
+add_subdirectory("depends/unittest-cpp")
+include_directories( "depends/unittest-cpp")
+
 # setting include directory for upper project to include it
-set( WkCocos_INCLUDE_DIRS ${WkCocos_INCLUDE_DIRS} "depends/entityx")
+set( WkCocos_INCLUDE_DIRS ${WkCocos_INCLUDE_DIRS} "depends/entityx" "depends/unittest-cpp")
 
 set(BUILD_CppTests OFF CACHE BOOL "CppTests option OFF by default")
 set(BUILD_EDITOR_COCOSBUILDER OFF CACHE BOOL "EDITOR_COCOSBUILDER option OFF by default")
@@ -231,7 +233,7 @@ endif(USE_CHIPMUNK)
 
 WkDepends ("depends/App42_Cocos2DX_SDK")
 
-set( WkCocos_INCLUDE_DIRS ${WkCocos_INCLUDE_DIRS} ${WkCocos_App42_INCLUDE_DIRS})
+set( WkCocos_INCLUDE_DIRS ${WkCocos_INCLUDE_DIRS} ${WkCocos_App42_INCLUDE_DIRS} )
 
 #The library. reusable for any [Wk]Cocos project.
 WkLibraryBuild(WkCocos "Classes/Lib")
@@ -293,10 +295,12 @@ if ( ${PROJECT_NAME} STREQUAL ${CMAKE_PROJECT_NAME} )
 
 	#Testing on by default.
 	set(WkCocos_ENABLE_TESTS ON CACHE BOOL "Wether or not you want the project to include the tests and enable automatic testing for WkCocos")
+	
+	#Main test
 	if(WIN32)
 		WkTestBuild( maintest win32/main.cpp )
 		WkTestRun( WkCocosApp maintest WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/${${PROJECT_NAME}_TEST_DIR}/${${PROJECT_NAME}_TEST_DATA_DIR} )
-		if ( ${PROJECT_NAME}_ENABLE_TESTS ) # if the target has been defined ( tests enbled )
+		if ( ${PROJECT_NAME}_ENABLE_TESTS ) # if the target has been defined ( tests enabled )
 		#also copying dlls to binary directory for the executable to run
 		ADD_CUSTOM_COMMAND( TARGET maintest POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
 					"${COCOS2D_ROOT}/external/win32-specific/gles/prebuilt/glew32.dll"
@@ -322,4 +326,33 @@ if ( ${PROJECT_NAME} STREQUAL ${CMAKE_PROJECT_NAME} )
 		WkTestRun( WkCocosApp maintest WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/${${PROJECT_NAME}_TEST_DIR}/${${PROJECT_NAME}_TEST_DATA_DIR} )
 	endif()
 
-endif()
+	#Auto tests
+	WkTestBuild( autotest AutoTests/autotest.cpp )
+	target_link_libraries(autotest UnitTest++ )
+	WkTestRun( WkCocosApp autotest WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/${${PROJECT_NAME}_TEST_DIR}/${${PROJECT_NAME}_TEST_DATA_DIR} )
+	if ( ${PROJECT_NAME}_ENABLE_TESTS ) # if the target has been defined ( tests enabled )
+		if(WIN32)
+		#also copying dlls to binary directory for the executable to run
+		ADD_CUSTOM_COMMAND( TARGET maintest POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
+					"${COCOS2D_ROOT}/external/win32-specific/gles/prebuilt/glew32.dll"
+					"$<TARGET_FILE_DIR:maintest>"
+					COMMENT
+					"Copying ${COCOS2D_ROOT}/external/win32-specific/gles/prebuilt/glew32.dll to $<TARGET_FILE_DIR:maintest>"
+					VERBATIM)
+		ADD_CUSTOM_COMMAND( TARGET maintest POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
+					"${COCOS2D_ROOT}/external/win32-specific/zlib/prebuilt/zlib1.dll"
+					"$<TARGET_FILE_DIR:maintest>"
+					COMMENT
+					"Copying ${COCOS2D_ROOT}/external/win32-specific/zlib/prebuilt/zlib1.dll to $<TARGET_FILE_DIR:maintest>"
+					VERBATIM)
+		ADD_CUSTOM_COMMAND( TARGET maintest POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
+					"${COCOS2D_ROOT}/external/curl/prebuilt/win32/libcurl.dll"
+					"$<TARGET_FILE_DIR:maintest>"
+					COMMENT
+					"Copying ${COCOS2D_ROOT}/external/curl/prebuilt/win32/libcurl.dll to $<TARGET_FILE_DIR:maintest>"
+					VERBATIM)
+		endif(WIN32)
+	endif ( ${PROJECT_NAME}_ENABLE_TESTS )
+	
+endif(${PROJECT_NAME} STREQUAL ${CMAKE_PROJECT_NAME})
+

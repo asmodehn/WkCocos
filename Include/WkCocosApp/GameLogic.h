@@ -19,8 +19,8 @@ public:
 	void connectApp42(std::string app_access_key, std::string app_secret_key, std::function<void()> online_init_cb)
 	{
 		m_onlinedatamngr.reset(new WkCocos::OnlineData::OnlineDataManager(app_access_key, app_secret_key));
-		//TMP forcing local save
-		//m_player->setOnlineDataManager(m_onlinedatamngr, online_init_cb);
+		//required for login, even if save is local only.
+		m_player->setOnlineDataManager(m_onlinedatamngr, online_init_cb);
 	}
 
 	void localDataError()
