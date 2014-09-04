@@ -41,6 +41,11 @@ namespace WkCocos
 				{
 					entity.remove<Comp::Alarm>();
 					entity.assign<Comp::Alarm>(alarm_date);
+					// Timer was stopped but recreate in the same frame, we don't want to delete it anymore.
+					if (entity.component<Comp::Stopped>())
+					{
+						entity.remove<Comp::Stopped>();
+					}
 					return true;
 				}
 			}

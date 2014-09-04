@@ -17,7 +17,7 @@ namespace WkCocos
 			/**
 			* Constructor 
 			*/
-			LocalDataManager(/*std::function<void(std::string)> error_CB*/);
+			LocalDataManager();
 
 			/**
 			* Destructor
@@ -27,14 +27,15 @@ namespace WkCocos
 			/**
 			* LoginID
 			*/
-			bool saveLoginID(std::string user, std::string passwd, short version = DEFAULT_SAVE_VERSION);
-			bool loadLoginID(std::function<void(std::string user, std::string passwd)> load_cb, short version = DEFAULT_SAVE_VERSION);
+			bool saveLoginID(std::string user, std::string passwd, std::string key = "", short version = DEFAULT_SAVE_VERSION);
+			bool loadLoginID(std::function<void(std::string user, std::string passwd)> load_cb, std::string key = "", short version = DEFAULT_SAVE_VERSION);
 			
 			/**
 			* PlayerData
 			*/
-			bool savePlayerData(std::string data, short version = DEFAULT_SAVE_VERSION);
-			bool loadPlayerData(std::function<void(std::string data)> load_cb, short version = DEFAULT_SAVE_VERSION);
+			bool saveData(const std::string& saveName ,std::string data, std::string key="", short version = DEFAULT_SAVE_VERSION);
+			bool loadData(const std::string& saveName, std::function<void(std::string data)> load_cb, std::string key = "", short version = DEFAULT_SAVE_VERSION);
+			bool deleteData(const std::string& saveName, std::function<void(std::string data)> delete_cb, short version = DEFAULT_SAVE_VERSION);
 
 			void update(double dt);
 

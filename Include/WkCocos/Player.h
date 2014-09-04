@@ -8,6 +8,7 @@
 #include "WkCocos/Shop/Shop.h"
 #include "WkCocos/Timer/Timer.h"
 #include "WkCocos/Utils/ToolBox.h"
+#include "WkCocos/Save.h"
 
 //using Cocos' Rapidjson for now...
 #include "json/document.h"         // rapidjson's DOM-style API
@@ -98,9 +99,10 @@ namespace WkCocos
 
 
 	protected:
+
 		Player(std::shared_ptr<LocalData::LocalDataManager> localdata, std::shared_ptr<Shop::Inventory> shopInventory);
 
-		bool requestLoadData(std::function<void()> loaded_cb);
+		bool requestLoadData(std::function<void()> loaded_cb, std::string key = "");
 
 		bool requestAllUsers();
 
@@ -108,9 +110,9 @@ namespace WkCocos
 
 		bool requestEnemyData(std::string enemy_data);
 
-		bool requestSaveData(std::function<void()> saved_cb);
-
 		bool requestServerTime();
+
+		bool requestSaveData(std::function<void()> saved_cb, std::string key = "");
 
 		bool newPlayer;
 		std::string m_user;
@@ -130,6 +132,8 @@ namespace WkCocos
 		//they are called by get_all_data_json() and set_all_data_json(std::string data)
 		virtual std::string get_data_json() = 0;
 		virtual void set_data_json(std::string data) = 0;
+
+		Save		m_playerData;
 		
 	private:
 
@@ -143,7 +147,7 @@ namespace WkCocos
 			{
 				user = user_prefix + uuid;
 				//generating password (deterministic way, so we can recover password later)
-				//TODO
+				//TODO : this must be set by the game ( so that reading WkCocos code doesnt give passwords away )
 				passwd = uuid;
 			}
 		}
@@ -157,7 +161,7 @@ namespace WkCocos
 			m_onlinedata->loginNew(m_user, m_passwd, email, [=](std::string body){
 				CCLOG("login done !!!");
 				//loading again to get online value
-				requestLoadData(onlineDataLoaded_callback);
+				m_playerData.requestLoadData(onlineDataLoaded_callback);
 			});
 		}
 

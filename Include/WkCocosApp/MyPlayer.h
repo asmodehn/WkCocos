@@ -2,7 +2,10 @@
 #define __MYPLAYER_H__
 
 #include "WkCocos/Player.h"
+
 #include "WkCocos/Shop/Inventory.h"
+
+#include "WkCocos/StrongBox/StrongBox.h"
 
 /**
 * This is the game player
@@ -32,20 +35,20 @@ public:
 	void set_data_json(std::string data);
 
 	//ingame currency
-	unsigned int m_gold;
+	WkCocos::StrongBox::StrongBox m_gold;
 	//premium currency
-	unsigned int m_gem;
+	WkCocos::StrongBox::StrongBox m_gem;
 
 	//save Data for test
 	void saveData(std::function<void()> saved_cb)
 	{
-		requestSaveData(saved_cb);
+		m_playerData.requestSaveData(saved_cb, "53cr3t");
 	}
 
 	//load Data for test
 	void loadData(std::function<void()> loaded_cb)
 	{
-		requestLoadData(loaded_cb);
+		m_playerData.requestLoadData(loaded_cb, "53cr3t");
 	}
 
 	//load enemy for test

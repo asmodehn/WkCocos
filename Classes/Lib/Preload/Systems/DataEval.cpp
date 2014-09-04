@@ -81,7 +81,7 @@ namespace WkCocos
 					entityx::ptr<Comp::DataLoad> dataload = entity.component<Comp::DataLoad>();
 
 					//we need to wait for the file to be there ( might come with DLC), otherwise cocos loading will fail.
-					if (!dataload->loaded && cocos2d::FileUtils::getInstance()->isFileExist(dataload->getFilepath()))
+					if (dataload && !dataload->loaded && cocos2d::FileUtils::getInstance()->isFileExist(dataload->getFilepath()))
 					{
 						//generate the appropriate loader component
 						chooseLoader(entity, dataload->getFilepath(), events);

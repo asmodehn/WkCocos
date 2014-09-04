@@ -31,11 +31,12 @@ namespace WkCocos
 		{
 		}
 
-		bool LocalDataManager::saveLoginID(std::string user, std::string passwd, short version)
+		bool LocalDataManager::saveLoginID(std::string user, std::string passwd, std::string key, short version)
 		{
 			auto newentity = entity_manager->create();
 			//new File component for each request. The aggregator system will detect duplicates and group them
-			newentity.assign<Comp::File>(cocos2d::FileUtils::getInstance()->getWritablePath() + "LocalID.txt");
+			newentity.assign<Comp::File>(cocos2d::FileUtils::getInstance()->getWritablePath() + "LocalID.txt", key);
+			newentity.assign<Comp::Read>();
 			if (1 == version)
 			{
 				newentity.assign<Comp::LoginID_v1>(user,passwd);
@@ -43,11 +44,12 @@ namespace WkCocos
 			return true;
 		}
 
-		bool LocalDataManager::loadLoginID(std::function<void(std::string user, std::string passwd)> load_cb, short version)
+		bool LocalDataManager::loadLoginID(std::function<void(std::string user, std::string passwd)> load_cb, std::string key, short version)
 		{
 			auto newentity = entity_manager->create();
 			//new File component for each request. The aggregator system will detect duplicates and group them
-			newentity.assign<Comp::File>(cocos2d::FileUtils::getInstance()->getWritablePath() + "LocalID.txt");
+			newentity.assign<Comp::File>(cocos2d::FileUtils::getInstance()->getWritablePath() + "LocalID.txt", key);
+			newentity.assign<Comp::Read>();
 			if (1 == version)
 			{
 				newentity.assign<Comp::LoginID_v1>(load_cb);
@@ -55,11 +57,12 @@ namespace WkCocos
 			return true;
 		}
 		
-		bool LocalDataManager::savePlayerData(std::string data, short version)
+		bool LocalDataManager::saveData(const std::string& saveName, std::string data, std::string key, short version)
 		{
 			auto newentity = entity_manager->create();
 			//new File component for each request. The aggregator system will detect duplicates and group them
-			newentity.assign<Comp::File>(cocos2d::FileUtils::getInstance()->getWritablePath() + "LocalData.txt");
+			newentity.assign<Comp::File>(cocos2d::FileUtils::getInstance()->getWritablePath() + saveName, key);
+			newentity.assign<Comp::Read>();
 			if (1 == version)
 			{
 				newentity.assign<Comp::PlayerData_v1>(data);
@@ -67,15 +70,25 @@ namespace WkCocos
 			return true;
 		}
 
-		bool LocalDataManager::loadPlayerData(std::function<void(std::string data)> load_cb, short version)
+		bool LocalDataManager::loadData(const std::string& saveName, std::function<void(std::string data)> load_cb, std::string key, short version)
 		{
 			auto newentity = entity_manager->create();
 			//new File component for each request. The aggregator system will detect duplicates and group them
-			newentity.assign<Comp::File>(cocos2d::FileUtils::getInstance()->getWritablePath() + "LocalData.txt");
+			newentity.assign<Comp::File>(cocos2d::FileUtils::getInstance()->getWritablePath() + saveName, key);
+			newentity.assign<Comp::Read>();
 			if (1 == version)
 			{
 				newentity.assign<Comp::PlayerData_v1>(load_cb);
 			}
+			return true;
+		}
+
+		bool LocalDataManager::deleteData(const std::string& saveName, std::function<void(std::string data)> delete_cb, short version)
+		{
+			auto newentity = entity_manager->create();
+			//new File component for each request. The aggregator system will detect duplicates and group them
+			newentity.assign<Comp::File>(cocos2d::FileUtils::getInstance()->getWritablePath() + saveName, "", true); //we dont care about the key here
+			newentity.assign<Comp::Read>();
 			return true;
 		}
 

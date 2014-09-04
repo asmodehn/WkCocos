@@ -106,6 +106,7 @@ void PlayersListUI::receive(const WkCocos::OnlineData::Events::PlayersList &pl)
 				//unsigned int listSize = 42; 
 				// leaving lower half screen free for navui
 				unsigned int listSize = 21; 
+
 				if (doc.Size() < listSize)
 					listSize = doc.Size();
 

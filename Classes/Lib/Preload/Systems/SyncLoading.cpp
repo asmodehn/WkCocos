@@ -33,10 +33,11 @@ namespace WkCocos
 				if (loadentity)
 				{
 					entityx::ptr<Comp::LoadSyncFunc> loadfunc = loadentity.component<Comp::LoadSyncFunc>();
-					loadfunc->getLoadfunction();
+					loadfunc->getLoadfunction()();
 					//signal loaded
 					events->emit<Events::Loaded>(loadfunc->getFilepath());
 					//register progress
+					loadentity.remove<Comp::LoadSyncFunc>();
 					loadentity.remove<Comp::ProgressValue>();
 				}
 			}

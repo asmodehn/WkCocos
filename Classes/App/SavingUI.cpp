@@ -72,11 +72,11 @@ void SavingUI::update(float delta)
 {
 	if (m_gemLabel->isVisible())
 	{
-		m_gemLabel->setText(WkCocos::ToolBox::itoa(GameLogic::Instance().getPlayer().m_gem) + " GEM");
+		m_gemLabel->setText(WkCocos::ToolBox::itoa(GameLogic::Instance().getPlayer().m_gem.get<int>()) + " GEM");
 	}
 	if (m_goldLabel->isVisible())
 	{
-		m_goldLabel->setText(WkCocos::ToolBox::itoa(GameLogic::Instance().getPlayer().m_gold) + " GOLD");
+		m_goldLabel->setText(WkCocos::ToolBox::itoa(GameLogic::Instance().getPlayer().m_gold.get<int>()) + " GOLD");
 	}
 
 }
@@ -112,7 +112,7 @@ void SavingUI::goldrandCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::To
 	{
 		CCLOG("GOLD RAND BUTTON CLICKED");
 
-		GameLogic::Instance().getPlayer().m_gold = rand() % 10000;
+		GameLogic::Instance().getPlayer().m_gold.set<int>( rand() % 10000);
 
 	}
 }
@@ -124,7 +124,7 @@ void SavingUI::gemrandCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::Tou
 	{
 		CCLOG("GEM RAND BUTTON CLICKED");
 
-		GameLogic::Instance().getPlayer().m_gem = rand() % 100;
+		GameLogic::Instance().getPlayer().m_gem.set<int>(rand() % 100);
 
 	}
 }

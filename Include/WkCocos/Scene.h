@@ -40,18 +40,36 @@ namespace WkCocos
 
 		template <typename UI = Interface>
 		inline UI* getInterface(const std::string& filepath) { return dynamic_cast<UI*>(m_ui.at(filepath)); }
+		
+		/**
+		* find UI loaded
+		* @param filepath filepath or string id of the UI to fetch
+		* @return nullptr if UI was not loaded
+		*/
+		template <typename UI = Interface>
+		inline UI* findInterface(const std::string& filepath) {
+			auto ui_it = m_ui.find(filepath);
+			if (ui_it == m_ui.end())
+			{
+				return nullptr;
+			}
+			else
+			{
+				return dynamic_cast<UI*>(ui_it->second);
+			}
+		}
 
 		/**
 		* Get the world view
 		* @return the world view
 		*/
-		//inline cocos2d::CameraView* getWorldView() const { return m_worldView; }
+		inline cocos2d::CameraView* getWorldView() const { return m_worldView; }
 
 		/**
 		* Get the ui view
 		* @return the ui view
 		*/
-		//inline cocos2d::CameraView* getUIView() const { return m_uiView; }
+		inline cocos2d::CameraView* getUIView() const { return m_uiView; }
 
 		/**
 		* Override update to trigger update in all UIs
@@ -73,12 +91,12 @@ namespace WkCocos
 		/**
 		* View use for object of the world, such as character
 		*/
-		//cocos2d::CameraView*		m_worldView;
+		cocos2d::CameraView*		m_worldView;
 
 		/**
 		* View use for UI, not supposed to move with the world camera
 		*/
-		//cocos2d::CameraView*		m_uiView;
+		cocos2d::CameraView*		m_uiView;
 	};
 }//namespace WkCocos
 
