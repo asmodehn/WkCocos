@@ -6,9 +6,11 @@
 
 MyPlayer::MyPlayer(std::shared_ptr<WkCocos::LocalData::LocalDataManager> localdatamngr)
 : WkCocos::Player(localdatamngr)
-, m_gem(42,"53cr3t") //encrypted
-, m_gold(424242) // not encrypted
+, m_gem("53cr3t") //encrypted
+, m_gold() // not encrypted
 {
+	m_gem.set(42);
+	m_gold.set(424242);
 }
 
 MyPlayer::~MyPlayer()
