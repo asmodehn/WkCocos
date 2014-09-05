@@ -42,7 +42,7 @@ namespace WkCocos
 					m_playerData.setUserName(m_user);
 
 					//store unique ID
-					m_localdata->saveLoginID(m_user, m_passwd); //TODO : encyrpt this
+					m_localdata->saveLoginID(m_user, m_passwd, "l0g1nS3cr3tK3y" ); //TODO : encyrpt this
 
 					newPlayer = true;
 				}
@@ -70,7 +70,7 @@ namespace WkCocos
 				m_playerData.requestLoadData([](){}); //we assume no callback needed there. we re loading local save.
 			}
 
-		});
+		}, "l0g1nS3cr3tK3y");
 	}
 
 	void Player::setOnlineDataManager(std::shared_ptr<OnlineData::OnlineDataManager> onlinedata, std::function<void()> online_init_cb)
