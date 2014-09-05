@@ -19,7 +19,7 @@ namespace WkCocos
 			Storage::~Storage()
 			{
 				//StorageService::Terminate();
-				//m_service = nullptr;
+				//m_stor_service = nullptr;
 			}
 
 			void Storage::update(entityx::ptr<entityx::EntityManager> entities, entityx::ptr<entityx::EventManager> events, double dt)
@@ -44,13 +44,12 @@ namespace WkCocos
 
 				}
 
-				entityx::ptr<Comp::LoadUserData> lud;
+				/*entityx::ptr<Comp::LoadUserData> lud;
 				for (auto entity : entities->entities_with_components(lud))
 				{
 					if (lud->done)
 					{
 						entity.remove<Comp::LoadUserData>();
-						//if mask at 0 no request in this entity anymore
 						if (entity.component_mask() == 0)
 						{
 							entity.destroy();
@@ -58,15 +57,12 @@ namespace WkCocos
 					}
 					else if (!lud->in_progress)
 					{
-						//::App42::Query* query = ::App42::QueryBuilder::BuildQuery("user_id", lud->m_userid.c_str(), APP42_OP_EQUALS);
-						//m_service->setQuery(DB_NAME, lud->m_collection, query);
-						//delete query;
-						CCLOG("Requesting App42 User data for : %s ", lud->m_userid.c_str());
-						m_stor_service->FindDocumentByKeyValue(DB_NAME, lud->m_collection.c_str(), "user_id", lud->m_userid.c_str(), lud->m_cb);
+						CCLOG("Requesting App42 storage of user : %s ", lud->m_userid.c_str());
+						m_stor_service->FindDocumentByKeyValue(DB_NAME, lud->m_collection.c_str(), "_$owner", lud->m_userid.c_str(), lud->m_cb);
 						lud->in_progress = true;
 					}
 
-				}
+				}*/
 
 				entityx::ptr<Comp::LoadEnemyData> led;
 				for (auto entity : entities->entities_with_components(led))
@@ -74,7 +70,6 @@ namespace WkCocos
 					if (led->done)
 					{
 						entity.remove<Comp::LoadEnemyData>();
-						//if mask at 0 no request in this entity anymore
 						if (entity.component_mask() == 0)
 						{
 							entity.destroy();
@@ -84,6 +79,26 @@ namespace WkCocos
 					{
 						m_stor_service->FindDocumentByKeyValue(DB_NAME, led->m_collection.c_str(), "user_id", led->m_userid.c_str(), led->m_cb);
 						led->in_progress = true;
+					}
+
+				}
+
+				entityx::ptr<Comp::SaveUserData> sud;
+				for (auto entity : entities->entities_with_components(sud))
+				{
+					if (sud->done)
+					{
+						entity.remove<Comp::SaveUserData>();
+						if (entity.component_mask() == 0)
+						{
+							entity.destroy();
+						}
+					}
+					else if (!sud->in_progress)
+					{
+						::App42::App42API::setLoggedInUser(sud->m_userid.c_str());
+						m_stor_service->InsertJsonDocument(DB_NAME, sud->m_collection.c_str(), sud->m_user_data.c_str(), sud->m_cb);
+						sud->in_progress = true;
 					}
 
 				}

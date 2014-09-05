@@ -46,6 +46,12 @@ LOCAL_SRC_FILES := jni.cpp \
                    ../../../../../Classes/Lib/OnlineData/Comp/OnlineData.cpp \
                    ../../../../../Classes/Lib/OnlineData/Systems/Storage.cpp \
                    ../../../../../Classes/Lib/OnlineData/Systems/User.cpp \
+				   ../../../../../Classes/Lib/OnlineData/Systems/Timer.cpp \
+                   ../../../../../Classes/Lib/Shop/Shop.cpp \
+                   ../../../../../Classes/Lib/Shop/Inventory.cpp \
+                   ../../../../../Classes/Lib/Shop/Assets.cpp \
+                   ../../../../../Classes/Lib/Shop/SOOMLA/ShopEventHandler.cpp \
+                   ../../../../../Classes/Lib/Shop/SOOMLA/ShopAssets.cpp \
                    ../../../../../Classes/Lib/Timer/Timer.cpp \
                    ../../../../../Classes/Lib/Timer/Systems/AlarmDestructor.cpp \
                    ../../../../../Classes/Lib/Action/NodeAction.cpp \
@@ -62,7 +68,6 @@ LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../../../../Include
 LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)/../../../../../Include
 
 LOCAL_WHOLE_STATIC_LIBRARIES += entityx_static
-LOCAL_WHOLE_STATIC_LIBRARIES += app42SDK_static
 #This is for cocos2d-x
 LOCAL_WHOLE_STATIC_LIBRARIES += cocos2dx_static
 LOCAL_WHOLE_STATIC_LIBRARIES += cocosdenshion_static
@@ -71,11 +76,13 @@ LOCAL_WHOLE_STATIC_LIBRARIES += cocosdenshion_static
 #LOCAL_WHOLE_STATIC_LIBRARIES += spine_static
 LOCAL_WHOLE_STATIC_LIBRARIES += cocostudio_static
 LOCAL_WHOLE_STATIC_LIBRARIES += cocos_network_static
+#cocos SDKs
+LOCAL_WHOLE_STATIC_LIBRARIES += app42SDK_static
+LOCAL_WHOLE_STATIC_LIBRARIES += cocos2dx_store_static
 
 include $(BUILD_STATIC_LIBRARY)
 
 $(call import-module,entityx)
-$(call import-module,App42_Cocos2DX_SDK)
 #This is for cocos2d-x
 $(call import-module,.)
 $(call import-module,audio/android)
@@ -84,4 +91,7 @@ $(call import-module,audio/android)
 #$(call import-module,editor-support/spine)
 $(call import-module,editor-support/cocostudio)
 $(call import-module,network)
+#cocos SDKs
+$(call import-module,App42_Cocos2DX_SDK)
+$(call import-module,cocos2dx-store/android/jni)
 

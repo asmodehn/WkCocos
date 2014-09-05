@@ -64,6 +64,7 @@ namespace WkCocos
 		}
 		toggle->addEventListener(std::bind(&CocosLogAppender::toggleScroll, this, std::placeholders::_1, std::placeholders::_2));
 
+
 		root->addChild(bg);
 	}
 	

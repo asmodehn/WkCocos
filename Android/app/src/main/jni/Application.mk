@@ -13,5 +13,13 @@ APP_ABI := armeabi-v7a
 APP_STL := gnustl_static
 APP_CPPFLAGS :=  -std=c++11 -fsigned-char -frtti -fexceptions
 
-#cocos flag
-APP_CPPFLAGS += -DCC_ENABLE_CHIPMUNK_INTEGRATION=1 -DCOCOS2D_DEBUG=1
+#cocos flags
+APP_CPPFLAGS += -DCC_ENABLE_CHIPMUNK_INTEGRATION=1
+
+#APP_DEBUG is set by using NDK_DEBUG command line option
+ifeq ($(APP_DEBUG),true)
+    APP_CPPFLAGS += -DCOCOS2D_DEBUG=1
+endif
+
+#soomla flags needs to be enabled in release mode to test real purchases
+APP_CPPFLAGS += -DSOOMLA_DEBUG=1

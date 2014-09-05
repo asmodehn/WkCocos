@@ -1,14 +1,14 @@
 #include "WkCocos/Player.h"
-//including json from cocos
-//#include "json/document.h"         // rapidjson's DOM-style API
-//#include "json/stringbuffer.h"
-//#include "json/writer.h"
+
 namespace WkCocos
 {
 	//constructors
-	Player::Player(std::shared_ptr<LocalData::LocalDataManager> localdata)
+	Player::Player(std::shared_ptr<LocalData::LocalDataManager> localdata, std::shared_ptr<Shop::Inventory> shopInventory)
 		: m_localdata(localdata)
 		, m_playerData("user_data", Save::Mode::OFFLINE)
+		, m_inventory(shopInventory)
+		, player_events(entityx::EventManager::make())
+
 	{
 		//registering player class in cocos update loop
 		cocos2d::Director::getInstance()->getScheduler()->schedule(std::bind(&Player::Update, this, std::placeholders::_1), this, 1.f / 15, false, "player_update");
@@ -71,6 +71,7 @@ namespace WkCocos
 			}
 
 		}, "l0g1nS3cr3tK3y");
+
 	}
 
 	void Player::setOnlineDataManager(std::shared_ptr<OnlineData::OnlineDataManager> onlinedata, std::function<void()> online_init_cb)
@@ -129,7 +130,18 @@ namespace WkCocos
 	{
 		if (m_onlinedata)
 		{
-			m_onlinedata->loadEnemy(enemy_data);
+			m_onlinedata->loadEnemy(enemy_data, m_playerData.getSaveName());
+			return true;
+		}
+		else
+			return false;
+	}
+
+	bool Player::requestServerTime()
+	{
+		if (m_onlinedata)
+		{
+			m_onlinedata->getServerTime();
 			return true;
 		}
 		else
@@ -177,11 +189,36 @@ namespace WkCocos
 		}
 		doc.AddMember(sAlarms, alarms, allocator);
 
+		//test
+		rapidjson::Value playerData;
+		playerData.SetArray();
+		//size = 446 bytes
+		const char * fillerText = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
+		//i < 9 causes crash somwhere in heap malloc, so 8*446=3.5 kb can be saved normally
+		//14.4 kb Julien's data file still can not be tested
+		for (int i = 0; i < 8; i++)
+			playerData.PushBack(fillerText, allocator);
+
+		doc.AddMember("playerData", playerData, allocator);
+
 		rapidjson::StringBuffer strbuf;
 		rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
 		doc.Accept(writer);
 
-		return std::string(strbuf.GetString());
+		std::string data = std::string(strbuf.GetString());
+		
+		//TEST DATA BEGIN
+		std::string data_filename = cocos2d::FileUtils::getInstance()->fullPathForFilename("LocalData.txt");
+		std::ifstream datafile(data_filename);
+		if (datafile)
+		{
+			std::stringstream strbuffer;
+			strbuffer << datafile.rdbuf();
+			data = strbuffer.str();
+		}
+		//TEST DATA END
+
+		return data;
 
 	}
 
@@ -245,7 +282,17 @@ namespace WkCocos
 
 	void Player::receive(const WkCocos::OnlineData::Events::Error& err)
 	{
-		if (err.httpErrorCode == 404 && err.app42ErrorCode == 2002) //Login existing: Authentication failed
+
+		if (err.httpErrorCode == 401 && err.app42ErrorCode == 1401) //Unauthorized access
+		{
+			//Major error : we cannot do anything, just trigger an error event.
+			//IN COCOS THREAD !!!
+			cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, err](){
+				this->player_events->emit<Error>("app42", ToolBox::itoa(err.httpErrorCode), ToolBox::itoa(err.errorMessage));
+			});
+
+		}
+		else if (err.httpErrorCode == 404 && err.app42ErrorCode == 2002) //Login existing: Authentication failed
 		{
 			//Major error : we recreate the user
 			std::string newUser;
@@ -267,6 +314,7 @@ namespace WkCocos
 			//login with new ID ( will create non existing user )
 			loginNewUserID();
 		}
+
 		else if (err.httpErrorCode == 400 && err.app42ErrorCode == 2001) //Creation failed : Username already exist
 		{
 			//we recreate the user
@@ -289,4 +337,5 @@ namespace WkCocos
 			loginNewUserID();
 		}
 	}
-}
+
+} //namespace WkCocos

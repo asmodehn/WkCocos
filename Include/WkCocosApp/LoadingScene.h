@@ -3,12 +3,13 @@
 
 #include "WkCocos/Scene.h"
 
+#include "MyPlayer.h"
 #include "WkCocos/Download/Download.h"
 #include "WkCocos/Preload/Preload.h"
 #include "WkCocos/Download/Events/Error.h"
 #include "WkCocos/Preload/Events/Error.h"
 
-class LoadingScene : public WkCocos::Scene, public entityx::Receiver<WkCocos::Preload::Events::Error>//, public entityx::Receiver<WkCocos::Download::Events::Error>
+class LoadingScene : public WkCocos::Scene, public entityx::Receiver<LoadingScene>
 {
 public:
 		
@@ -40,6 +41,7 @@ public:
 	//expects pct in [0..1]
 	void progress_CB(float pct);
 
+	void receive(const WkCocos::Player::Error &pe);
 	void receive(const WkCocos::Download::Events::Error &de);
 	void receive(const WkCocos::Preload::Events::Error &pe);
 

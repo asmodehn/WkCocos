@@ -8,6 +8,7 @@
 #include "WkCocos/OnlineData/Events/Error.h"
 #include "WkCocos/OnlineData/Events/PlayersList.h"
 #include "WkCocos/OnlineData/Events/EnemyData.h"
+#include "WkCocos/OnlineData/Events/ServerTime.h"
 
 #define DEFAULT_SAVE_VERSION 1
 
@@ -51,7 +52,7 @@ namespace WkCocos
 			/**
 			* Load Enemy Data
 			*/
-			void loadEnemy(std::string userid);
+			void loadEnemy(const std::string& userid, const std::string& saveName);
 
 			/**
 			* Get All Users
@@ -62,6 +63,11 @@ namespace WkCocos
 			* Get Selected Users
 			*/
 			void getUsersWithDocs();
+
+			/**
+			* Get Server Time
+			*/
+			void getServerTime();
 
 			void update(double dt);
 
@@ -83,12 +89,10 @@ namespace WkCocos
 			entityx::ptr<entityx::SystemManager> system_manager;
 
 			std::function<void()> m_error_callback;
-		};
 
+		};
 
 	} // namespace OnlineData
 } // namespace WkCocos
-
-
 
 #endif // __WKCOCOS_ONLINEDATA_ONLINEDATAMANAGER_H__

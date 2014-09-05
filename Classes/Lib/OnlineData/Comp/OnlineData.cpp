@@ -1,6 +1,7 @@
 #include "WkCocos/OnlineData/Comp/OnlineData.h"
 #include "WkCocos/OnlineData/Events/PlayersList.h"
 #include "WkCocos/OnlineData/Events/EnemyData.h"
+#include "WkCocos/OnlineData/Events/ServerTime.h"
 //including json from cocos
 #include "json/document.h"         // rapidjson's DOM-style API
 #include "json/stringbuffer.h"
@@ -85,7 +86,7 @@ namespace WkCocos
 				m_dummy_cb = [=](void* data) {};
 			}
 
-			SaveUserData::SaveUserData(std::string userid, std::string collec, std::string user_data, std::function<void(std::string)> cb)
+			SaveUserData::SaveUserData(std::string userid, std::string collec, std::string user_data, std::function<void(::App42::App42UserResponse*)> cb)
 				: in_progress(false)
 				, done(false)
 				, m_userid(userid)
@@ -94,43 +95,39 @@ namespace WkCocos
 			{
 				m_cb = [=](void* data)
 				{
-					::App42::App42StorageResponse* userdata = static_cast<::App42::App42StorageResponse*>(data);
+					::App42::App42UserResponse* userdata = static_cast<::App42::App42UserResponse*>(data);
+					//::App42::App42StorageResponse* userdata = static_cast<::App42::App42StorageResponse*>(data);
 
 					CCLOG("\ncode=%d...=%d", userdata->getCode(), userdata->isSuccess);
-					CCLOG("\nResponse Body=%s", userdata->getBody().c_str());
+					//CCLOG("\nResponse Body=%s", userdata->getBody().c_str());
 
-					if (userdata->isSuccess)
-					{//if request succeed, we need to extract data from it
-						rapidjson::Document doc;
-						doc.Parse<0>(userdata->getBody().c_str());
-						if (doc.HasParseError())
-						{
+					//if (userdata->isSuccess)
+					//{//if request succeed, we need to extract data from it
+						//rapidjson::Document doc;
+						//doc.Parse<0>(userdata->getBody().c_str());
+						//if (doc.HasParseError())
+						//{
 							//if parse error (also empty string), we ignore existing data.
-							cb("");
-						}
-						else if (doc.HasMember("data")) //TOFIX : data is not first level member of the response...
-						{
+							//cb(userdata);
+						//}
+						//else
+						//{
 							//TMP debug
-							rapidjson::StringBuffer strbuf;
-							rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
-							doc["data"].Accept(writer);
-							cb(strbuf.GetString());
-						}
-						else
-						{
-							cb("");
-						}
-						
-					}
-					else// if request failed, 
-					{
+							//rapidjson::StringBuffer strbuf;
+							//rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
+							//doc.Accept(writer);
+							//cb(strbuf.GetString());
+						//}
+					//}
+					//else// if request failed, 
+					//{
 						CCLOG("\nerrordetails:%s", userdata->errorDetails.c_str());
 						CCLOG("\nerrorMessage:%s", userdata->errorMessage.c_str());
 						CCLOG("\nappErrorCode:%d", userdata->appErrorCode);
 						CCLOG("\nhttpErrorCode:%d", userdata->httpErrorCode);
 
-						cb("");
-					}
+						cb(userdata);
+					//}
 
 					done = true;
 					//userdata is deleted by App42SDK
@@ -147,14 +144,16 @@ namespace WkCocos
 			{
 				m_cb = [=](void* data) {
 					::App42::App42StorageResponse* userdata = static_cast<::App42::App42StorageResponse*>(data);
+					//::App42::App42UserResponse* userdata = static_cast<::App42::App42UserResponse*>(data);
 
 					CCLOG("\ncode=%d...=%d", userdata->getCode(), userdata->isSuccess);
-					CCLOG("\nResponse Body=%s", userdata->getBody().c_str());
+					//CCLOG("\nResponse Body=%s", userdata->getBody().c_str());
 
 					if (userdata->isSuccess)
 					{//if request succeed, we need to extract data from it
 						rapidjson::Document doc;
 						doc.Parse<0>(userdata->getBody().c_str());
+						//doc.Parse<0>(userdata->storages./*here should be something*/);
 						
 						if (doc.HasParseError())
 						{
@@ -166,22 +165,15 @@ namespace WkCocos
 							{
 								rapidjson::Value & temp = doc["app42"];
 								temp = temp["response"];
-								temp = temp["storage"];
+								temp = temp["users"];
+								temp = temp["user"];
 								temp = temp["jsonDoc"];
 								if (temp.Size())
 								{
-									temp = temp[temp.Size() - 1];
-									if (temp.HasMember("data"))
-									{
-										rapidjson::StringBuffer strbuf;
-										rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
-										temp["data"].Accept(writer);
-										cb(strbuf.GetString());
-									}
-									else
-									{
-										cb("");
-									}
+									rapidjson::StringBuffer strbuf;
+									rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
+									temp[temp.Size() - 1].Accept(writer);
+									cb(strbuf.GetString());
 								}
 								else
 								{
@@ -190,25 +182,7 @@ namespace WkCocos
 							}
 							else
 							{
-								if (doc.Size())
-								{
-									rapidjson::Value & temp = doc[doc.Size() - 1];
-									if (temp.HasMember("data"))
-									{
-										rapidjson::StringBuffer strbuf;
-										rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
-										temp["data"].Accept(writer);
-										cb(strbuf.GetString());
-									}
-									else
-									{
-										cb("");
-									}
-								}
-								else
-								{
-									cb("");
-								}
+								cb("");
 							}
 						}
 					}
@@ -376,6 +350,21 @@ namespace WkCocos
 
 					done = true;
 					//userdata is deleted by App42SDK*/
+				};
+			}
+
+			ServerTime::ServerTime(entityx::ptr<entityx::EventManager> event_emitter)
+				: in_progress(false)
+				, done(false)
+			{
+				m_cb = [=](void* data)
+				{
+					::App42::App42TimerResponse* userdata = static_cast<::App42::App42TimerResponse*>(data);
+
+					if (userdata->isSuccess)
+					{
+						event_emitter->emit<Events::ServerTime>(userdata->app42Timer.currentTime);
+					}
 				};
 			}
 

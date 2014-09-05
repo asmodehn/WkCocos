@@ -45,6 +45,7 @@ namespace WkCocos
 					{
 						//QUICK file reading ( similar to C code, but still using C++ streams )
 						ifs.seekg(0, std::ios::end);
+
 						size_t size = static_cast<size_t>(ifs.tellg());
 
 						std::string contents;

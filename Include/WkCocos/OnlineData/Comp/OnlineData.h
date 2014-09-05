@@ -56,7 +56,7 @@ namespace WkCocos
 			
 			struct SaveUserData : entityx::Component<SaveUserData>
 			{
-				SaveUserData(std::string userid, std::string m_collection, std::string user_data, std::function<void(std::string)> cb);
+				SaveUserData(std::string userid, std::string m_collection, std::string user_data, std::function<void(::App42::App42UserResponse*)> cb);
 
 				bool in_progress;
 				bool done;
@@ -106,6 +106,16 @@ namespace WkCocos
 			struct GetUsersWithDocs : entityx::Component<GetUsersWithDocs>
 			{
 				GetUsersWithDocs(entityx::ptr<entityx::EventManager> event_emitter);
+
+				bool in_progress;
+				bool done;
+				std::function<void(void*)> m_cb;
+
+			};
+
+			struct ServerTime : entityx::Component<ServerTime>
+			{
+				ServerTime(entityx::ptr<entityx::EventManager> event_emitter);
 
 				bool in_progress;
 				bool done;

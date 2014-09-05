@@ -2,6 +2,7 @@
 
 #include "WkCocos/OnlineData/Systems/User.h"
 #include "WkCocos/OnlineData/Systems/Storage.h"
+#include "WkCocos/OnlineData/Systems/Timer.h"
 #include "WkCocos/OnlineData/Comp/OnlineData.h"
 
 #include "cocos/cocos2d.h"
@@ -21,6 +22,7 @@ namespace WkCocos
 			::App42::App42API::Initialize(app_access_key, app_secret_key);
 			system_manager->add<Systems::User>();
 			system_manager->add<Systems::Storage>();
+			system_manager->add<Systems::Timer>();
 			system_manager->configure();
 		}
 		
@@ -32,7 +34,6 @@ namespace WkCocos
 		{
 
 			auto newentity = entity_manager->create();
-			//new File component for each request. The aggregator system will detect duplicates and group them
 			newentity.assign<Comp::Create>(userid, password, email, [=](::App42::App42UserResponse* r){
 
 				if (r->isSuccess)
@@ -51,7 +52,6 @@ namespace WkCocos
 		void OnlineDataManager::login(std::string userid, std::string password, std::function<void(std::string)> success_callback)
 		{
 			auto newentity = entity_manager->create();
-			//new File component for each request. The aggregator system will detect duplicates and group them
 			newentity.assign<Comp::Login>(userid, password, [=](::App42::App42UserResponse* r){
 				if (! r->isSuccess)
 				{
@@ -65,12 +65,22 @@ namespace WkCocos
 			});
 		}
 
-		void OnlineDataManager::save(const std::string& userid, const std::string& saveName, std::string user_data, std::function<void(std::string)> callback)
+		void OnlineDataManager::save(const std::string& userid, const std::string& saveName, std::string user_data, std::function<void(std::string)> success_callback)
 		{
 			auto newentity = entity_manager->create();
-			//new File component for each request. The aggregator system will detect duplicates and group them
-			newentity.assign<Comp::DeleteUserData>(userid, saveName, user_data, callback);
-			newentity.assign<Comp::SaveUserData>(userid, saveName, user_data, callback);
+			//temp comment
+			//newentity.assign<Comp::DeleteUserData>(userid, saveName, user_data, success_callback);
+			newentity.assign<Comp::SaveUserData>(userid, saveName, user_data, [=](::App42::App42UserResponse* r){
+				if (!r->isSuccess)
+				{
+					event_manager->emit<Events::Error>(r);
+					//callback is not called if error
+				}
+				else
+				{
+					success_callback(r->getBody());
+				}
+			});
 		}
 
 		void OnlineDataManager::load(const std::string& userid, const std::string& saveName, std::function<void(std::string)> callback)
@@ -80,31 +90,35 @@ namespace WkCocos
 			newentity.assign<Comp::LoadUserData>(userid, saveName, callback);
 		}
 
-		void OnlineDataManager::loadEnemy(std::string userid)
+		void OnlineDataManager::loadEnemy(const std::string& userid, const std::string& saveName)
 		{
 			auto newentity = entity_manager->create();
-			//new File component for each request. The aggregator system will detect duplicates and group them
-			newentity.assign<Comp::LoadEnemyData>(userid, "user_data", event_manager);
+			newentity.assign<Comp::LoadEnemyData>(userid, saveName, event_manager);
 		}
 
 		void OnlineDataManager::getAllUsers()
 		{
 			auto newentity = entity_manager->create();
-			//new File component for each request. The aggregator system will detect duplicates and group them
 			newentity.assign<Comp::GetAllUsers>(event_manager);
 		}
 
 		void OnlineDataManager::getUsersWithDocs()
 		{
 			auto newentity = entity_manager->create();
-			//new File component for each request. The aggregator system will detect duplicates and group them
 			newentity.assign<Comp::GetUsersWithDocs>(event_manager);
+		}
+
+		void OnlineDataManager::getServerTime()
+		{
+			auto newentity = entity_manager->create();
+			newentity.assign<Comp::ServerTime>(event_manager);
 		}
 
 		void OnlineDataManager::update(double dt) {
 			//check for error and report them if needed
 			system_manager->update<Systems::Storage>(dt);
 			system_manager->update<Systems::User>(dt);
+			system_manager->update<Systems::Timer>(dt);
 		}
 
 	} // namespace LocalData

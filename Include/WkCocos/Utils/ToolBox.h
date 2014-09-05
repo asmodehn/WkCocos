@@ -3,6 +3,8 @@
 
 #include "cocos2d.h"
 
+#include <sstream>
+
 namespace WkCocos
 {
 	/**
@@ -22,7 +24,14 @@ namespace WkCocos
 		* @param value Value to transform to text
 		* @return A string representing the value.
 		*/
-		static std::string itoa(int value);
+		template <class T>
+		static std::string itoa(T value)
+		{
+			std::stringstream str;
+			str << value;
+
+			return str.str();
+		}
 
 		/**
 		* small extension on fopen, which creates intermediate directories if needed

@@ -16,10 +16,12 @@ LOCAL_SRC_FILES := main.cpp \
                    ../../../../../Classes/App/ErrorUI.cpp \
                    ../../../../../Classes/App/TestScene.cpp \
                    ../../../../../Classes/App/SavingUI.cpp \
+                   ../../../../../Classes/App/ShopUI.cpp \
                    ../../../../../Classes/App/TimerUI.cpp \
                    ../../../../../Classes/App/PlayersListUI.cpp \
+                   ../../../../../Classes/App/DownloadUI.cpp \
+                   ../../../../../Classes/App/NavUI.cpp \
 
-                   
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../../../../Include
 
 LOCAL_WHOLE_STATIC_LIBRARIES := wkcocos_static
