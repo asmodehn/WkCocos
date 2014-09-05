@@ -45,11 +45,8 @@ WkDocDir ( "Docs" )
 add_subdirectory("depends/entityx")
 include_directories( "depends/entityx")
 
-add_subdirectory("depends/unittest-cpp")
-include_directories( "depends/unittest-cpp")
-
 # setting include directory for upper project to include it
-set( WkCocos_INCLUDE_DIRS ${WkCocos_INCLUDE_DIRS} "depends/entityx" "depends/unittest-cpp")
+set( WkCocos_INCLUDE_DIRS ${WkCocos_INCLUDE_DIRS} "depends/entityx")
 
 set(BUILD_CppTests OFF CACHE BOOL "CppTests option OFF by default")
 set(BUILD_EDITOR_COCOSBUILDER OFF CACHE BOOL "EDITOR_COCOSBUILDER option OFF by default")
@@ -294,11 +291,12 @@ if ( ${PROJECT_NAME} STREQUAL ${CMAKE_PROJECT_NAME} )
 	#Testing on by default.
 	set(WkCocos_ENABLE_TESTS ON CACHE BOOL "Wether or not you want the project to include the tests and enable automatic testing for WkCocos")
 	
-	#Main test
-	if(WIN32)
+	
+	if ( ${PROJECT_NAME}_ENABLE_TESTS ) # if the target has been defined ( tests enabled )
+		#Main test
+		if(WIN32)
 		WkTestBuild( maintest win32/main.cpp )
 		WkTestRun( WkCocosApp maintest WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/${${PROJECT_NAME}_TEST_DIR}/${${PROJECT_NAME}_TEST_DATA_DIR} )
-		if ( ${PROJECT_NAME}_ENABLE_TESTS ) # if the target has been defined ( tests enabled )
 		#also copying dlls to binary directory for the executable to run
 		ADD_CUSTOM_COMMAND( TARGET maintest POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
 					"$<TARGET_FILE:cocos2d>"
@@ -349,17 +347,23 @@ if ( ${PROJECT_NAME} STREQUAL ${CMAKE_PROJECT_NAME} )
 					"Copying ${COCOS2D_ROOT}/external-bin/websockets/prebuilt/win32/websockets.dll to $<TARGET_FILE_DIR:maintest>"
 					VERBATIM)
 					
-		endif ( ${PROJECT_NAME}_ENABLE_TESTS )
-	elseif (UNIX AND NOT CMAKE_TOOLCHAIN_FILE) #assumed linux
-		WkTestBuild( maintest linux/main.cpp )
-		WkTestRun( WkCocosApp maintest WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/${${PROJECT_NAME}_TEST_DIR}/${${PROJECT_NAME}_TEST_DATA_DIR} )
-	endif()
+		elseif (UNIX AND NOT CMAKE_TOOLCHAIN_FILE) #assumed linux
+			WkTestBuild( maintest linux/main.cpp )
+			WkTestRun( WkCocosApp maintest WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/${${PROJECT_NAME}_TEST_DIR}/${${PROJECT_NAME}_TEST_DATA_DIR} )
+		endif()
 
-	#Auto tests
-	WkTestBuild( autotest AutoTests/autotest.cpp )
-	target_link_libraries(autotest UnitTest++ )
-	WkTestRun( WkCocosApp autotest WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/${${PROJECT_NAME}_TEST_DIR}/${${PROJECT_NAME}_TEST_DATA_DIR} )
-	if ( ${PROJECT_NAME}_ENABLE_TESTS ) # if the target has been defined ( tests enabled )
+		#Auto tests
+		
+		add_subdirectory("depends/unittest-cpp")
+		include_directories( "depends/unittest-cpp")
+
+		# setting include directory for upper project to include it
+		set( WkCocos_INCLUDE_DIRS ${WkCocos_INCLUDE_DIRS} "depends/unittest-cpp")
+		
+		WkTestBuild( autotest AutoTests/autotest.cpp )
+		target_link_libraries(autotest UnitTest++ )
+		WkTestRun( WkCocosApp autotest WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/${${PROJECT_NAME}_TEST_DIR}/${${PROJECT_NAME}_TEST_DATA_DIR} )
+
 		if(WIN32)
 		#also copying dlls to binary directory for the executable to run
 		ADD_CUSTOM_COMMAND( TARGET autotest POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
