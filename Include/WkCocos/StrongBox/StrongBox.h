@@ -33,8 +33,8 @@ namespace WkCocos
 		public :
 
 			//exposing our conversion function from bin to string.
-			static void StrongBox::hexString2BinVal(const std::string&, unsigned char *& val, xxtea_long & val_length);
-			static void StrongBox::binVal2HexString(unsigned char * val, xxtea_long val_length, std::string&);
+			static void hexString2BinVal(const std::string&, unsigned char *& val, xxtea_long & val_length);
+			static void binVal2HexString(unsigned char * val, xxtea_long val_length, std::string&);
 
 			/*
 			* Constructor with key argument.
