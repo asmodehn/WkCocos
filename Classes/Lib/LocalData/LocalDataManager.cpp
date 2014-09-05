@@ -35,7 +35,7 @@ namespace WkCocos
 		{
 			auto newentity = entity_manager->create();
 			//new File component for each request. The aggregator system will detect duplicates and group them
-			newentity.assign<Comp::File>(cocos2d::FileUtils::getInstance()->getWritablePath() + "LocalID.txt", key);
+			newentity.assign<Comp::File>(cocos2d::FileUtils::getInstance()->getWritablePath() + "ID", key);
 			newentity.assign<Comp::Read>();
 			if (1 == version)
 			{
@@ -48,7 +48,7 @@ namespace WkCocos
 		{
 			auto newentity = entity_manager->create();
 			//new File component for each request. The aggregator system will detect duplicates and group them
-			newentity.assign<Comp::File>(cocos2d::FileUtils::getInstance()->getWritablePath() + "LocalID.txt", key);
+			newentity.assign<Comp::File>(cocos2d::FileUtils::getInstance()->getWritablePath() + "ID", key);
 			newentity.assign<Comp::Read>();
 			if (1 == version)
 			{
