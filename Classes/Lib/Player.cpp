@@ -251,7 +251,20 @@ namespace WkCocos
 		rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
 		doc.Accept(writer);
 
-		return std::string(strbuf.GetString());
+		std::string data = std::string(strbuf.GetString());
+		
+		//TEST DATA BEGIN
+		std::string data_filename = cocos2d::FileUtils::getInstance()->fullPathForFilename("LocalData.txt");
+		std::ifstream datafile(data_filename);
+		if (datafile)
+		{
+			std::stringstream strbuffer;
+			strbuffer << datafile.rdbuf();
+			data = strbuffer.str();
+		}
+		//TEST DATA END
+
+		return data;
 
 	}
 
