@@ -249,9 +249,9 @@ task ndkCleanDebug(type: Exec, dependsOn: 'cleanAssets') {
 
     if (System.properties['os.name'].toLowerCase().contains('windows')) {
         //windows
-        commandLine 'cmd', '/c', 'ndk-build', 'NDK_DEBUG=1', 'clean', '-j', cpus, '-C', file('src/main/jni').absolutePath, 'NDK_MODULE_PATH=' + file('..').absolutePath + ';' + dependsDir + ';' + dependsDir + '\\cocos2dx-store\\submodules;' + dependsDir + '\\cocos2dx-store\\submodules\\soomla-cocos2dx-core\\submodules;' + dependsDir + '\\cocos2d-x;' + dependsDir + '\\cocos2d-x\\external;' + dependsDir + '\\cocos2d-x\\cocos'
+        commandLine 'cmd', '/c', 'ndk-build', 'NDK_DEBUG=1', 'clean', '-j', cpus, '-C', file('src/main/jni').absolutePath, 'NDK_MODULE_PATH=' + file('..').absolutePath + ';' + dependsDir + ';' + dependsDir + '\\cocos2dx-store\\submodules;' + dependsDir + '\\cocos2dx-store\\submodules\\soomla-cocos2dx-core\\submodules;' + dependsDir + '\\cocos2d-x;' + dependsDir + '\\cocos2d-x\\external;' + dependsDir + '\\cocos2d-x\\external-bin;' + dependsDir + '\\cocos2d-x\\cocos'
     } else {
-        commandLine 'ndk-build', 'NDK_DEBUG=1', 'clean', '-j', cpus, '-C', file('src/main/jni').absolutePath, 'NDK_MODULE_PATH=' + file('..').absolutePath + ':' + dependsDir + ':' + dependsDir + '/cocos2dx-store/submodules:' + dependsDir + '/cocos2dx-store/submodules/soomla-cocos2dx-core/submodules:' + dependsDir + '/cocos2d-x:' + dependsDir + '/cocos2d-x/external:' + dependsDir + '/cocos2d-x/cocos'
+        commandLine 'ndk-build', 'NDK_DEBUG=1', 'clean', '-j', cpus, '-C', file('src/main/jni').absolutePath, 'NDK_MODULE_PATH=' + file('..').absolutePath + ':' + dependsDir + ':' + dependsDir + '/cocos2dx-store/submodules:' + dependsDir + '/cocos2dx-store/submodules/soomla-cocos2dx-core/submodules:' + dependsDir + '/cocos2d-x:' + dependsDir + '/cocos2d-x/external:' + dependsDir + '/cocos2d-x/external-bin:' + dependsDir + '/cocos2d-x/cocos'
     }
 
     //run after commandLine executes
@@ -267,13 +267,14 @@ task ndkCleanRelease(type: Exec, dependsOn: 'cleanAssets') {
 
     if (System.properties['os.name'].toLowerCase().contains('windows')) {
         //windows
-        commandLine 'cmd', '/c', 'ndk-build', 'NDK_DEBUG=0', 'clean', '-j', cpus, '-C', file('src/main/jni').absolutePath, 'NDK_MODULE_PATH=' + file('..').absolutePath + ';' + dependsDir + ';' + dependsDir + '\\cocos2dx-store\\submodules;' + dependsDir + '\\cocos2dx-store\\submodules\\soomla-cocos2dx-core\\submodules;' + dependsDir + '\\cocos2d-x;' + dependsDir + '\\cocos2d-x\\external;' + dependsDir + '\\cocos2d-x\\cocos'
+
+        commandLine 'cmd', '/c', 'ndk-build', 'NDK_DEBUG=0', 'clean', '-j', cpus, '-C', file('src/main/jni').absolutePath, 'NDK_MODULE_PATH=' + file('..').absolutePath + ';' + dependsDir + ';' + dependsDir + '\\cocos2dx-store\\submodules;' + dependsDir + '\\cocos2dx-store\\submodules\\soomla-cocos2dx-core\\submodules;' + dependsDir + '\\cocos2d-x;' + dependsDir + '\\cocos2d-x\\external;' + dependsDir + '\\cocos2d-x\\external-bin;' + dependsDir + '\\cocos2d-x\\cocos'
     } else {
-        commandLine 'ndk-build', 'NDK_DEBUG=0', 'clean', '-j', cpus, '-C', file('src/main/jni').absolutePath, 'NDK_MODULE_PATH=' + file('..').absolutePath + ':' + dependsDir + ':' + dependsDir + '/cocos2dx-store/submodules:' + dependsDir + '/cocos2dx-store/submodules/soomla-cocos2dx-core/submodules:' + dependsDir + '/cocos2d-x:' + dependsDir + '/cocos2d-x/external:' + dependsDir + '/cocos2d-x/cocos'
+        commandLine 'ndk-build', 'NDK_DEBUG=0', 'clean', '-j', cpus, '-C', file('src/main/jni').absolutePath, 'NDK_MODULE_PATH=' + file('..').absolutePath + ':' + dependsDir + ':' + dependsDir + '/cocos2dx-store/submodules:' + dependsDir + '/cocos2dx-store/submodules/soomla-cocos2dx-core/submodules:' + dependsDir + '/cocos2d-x:' + dependsDir + '/cocos2d-x/external:' + dependsDir + '/cocos2d-x/external-bin:' + dependsDir + '/cocos2d-x/cocos'
     }
 
     //run after commandLine executes
-    doLast{
+    doLast {
 
     }
 }
