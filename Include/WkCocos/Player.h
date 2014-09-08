@@ -76,7 +76,7 @@ namespace WkCocos
 		void receive(const WkCocos::OnlineData::Events::Error& err);
 
 	protected:
-		Player(std::shared_ptr<LocalData::LocalDataManager> localdata);
+		Player(std::shared_ptr<LocalData::LocalDataManager> localdata, Save::Mode mode);
 		
 		bool requestLoadData(std::function<void()> loaded_cb, std::string key = "");
 

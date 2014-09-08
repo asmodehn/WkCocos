@@ -6,9 +6,9 @@
 namespace WkCocos
 {
 	//constructors
-	Player::Player(std::shared_ptr<LocalData::LocalDataManager> localdata)
+	Player::Player(std::shared_ptr<LocalData::LocalDataManager> localdata, Save::Mode mode)
 		: m_localdata(localdata)
-		, m_playerData("user_data", Save::Mode::OFFLINE)
+		, m_playerData("user_data", mode)
 	{
 		//registering player class in cocos update loop
 		cocos2d::Director::getInstance()->getScheduler()->schedule(std::bind(&Player::Update, this, std::placeholders::_1), this, 1.f / 15, false, "player_update");
@@ -19,7 +19,6 @@ namespace WkCocos
 		m_playerData.registerLoadingCallback(std::bind(&Player::set_all_data_json, this, std::placeholders::_1));
 		m_playerData.registerSavingCallback(std::bind(&Player::get_all_data_json, this));
 		m_playerData.setLocalDataMgr(m_localdata);
-		m_playerData.setOnlineDataMgr(m_onlinedata);
 
 		//tried to read existing login data.
 		m_localdata->loadLoginID([=](std::string user, std::string passwd){
@@ -76,6 +75,7 @@ namespace WkCocos
 	void Player::setOnlineDataManager(std::shared_ptr<OnlineData::OnlineDataManager> onlinedata, std::function<void()> online_init_cb)
 	{
 		m_onlinedata = onlinedata;
+		m_playerData.setOnlineDataMgr(m_onlinedata);
 		onlineDataLoaded_callback = online_init_cb;
 
 		//subscribing to get error events
