@@ -64,20 +64,10 @@ namespace WkCocos
 			CCLOG("minAppVersion : %s", minAppVersion.c_str());
 			CCLOG("version : %s",version.c_str());
 
-			unsigned long lver = 0;
-			try {
-				 lver = ToolBox::stoul(version);
-				CCLOG("Manifest version %lu for DLC at %s ", lver, dlcUrl.c_str());
-			}
-			catch (std::out_of_range oor)
-			{
-				lver = LONG_MAX;
-			}
-
 			if (dlcEnable)
 			{
 				entityx::Entity entity = entity_manager->create();
-				entity.assign<Comp::DataListDownload>(dlcUrl, lver , minAppVersion);
+				entity.assign<Comp::DataListDownload>(dlcUrl, version , minAppVersion);
 				entity.assign<Comp::ProgressValue>(1);
 			}
 			else
