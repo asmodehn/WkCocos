@@ -3,9 +3,10 @@
 
 #include "WkCocos/Player.h"
 
+#include "WkCocos/StrongBox/StrongBox.h"
+
 #include "WkCocos/Shop/Inventory.h"
 
-#include "WkCocos/StrongBox/StrongBox.h"
 
 /**
 * This is the game player
@@ -42,13 +43,13 @@ public:
 	//save Data for test
 	void saveData(std::function<void()> saved_cb)
 	{
-		m_playerData.requestSaveData(saved_cb, "53cr3t");
+		m_playerData.requestSaveData(saved_cb);
 	}
 
 	//load Data for test
 	void loadData(std::function<void()> loaded_cb)
 	{
-		m_playerData.requestLoadData(loaded_cb, "53cr3t");
+		m_playerData.requestLoadData(loaded_cb);
 	}
 
 	//load enemy for test

@@ -6,9 +6,6 @@
     <mapping directory="$PROJECT_DIR$/../depends/cocos2d-x" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/../depends/cocos2dx-store" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/../depends/cocos2dx-store/submodules/android-store" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/../depends/cocos2dx-store/submodules/android-store/submodules/android-store-amazon" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/../depends/cocos2dx-store/submodules/android-store/submodules/android-store-google-play" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/../depends/cocos2dx-store/submodules/android-store/submodules/soomla-android-core" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/../depends/cocos2dx-store/submodules/soomla-cocos2dx-core" vcs="Git" />
   </component>
 </project>

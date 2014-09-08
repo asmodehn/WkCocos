@@ -87,6 +87,8 @@ namespace WkCocos
 		*/
 		inline void setUserName(const std::string& userName){ m_user = userName; }
 
+		inline std::string getSaveName(){ return m_name; }
+
 	private:
 		/**
 		* Name of the save

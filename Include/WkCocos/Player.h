@@ -110,9 +110,9 @@ namespace WkCocos
 
 		bool requestEnemyData(std::string enemy_data);
 
-		bool requestServerTime();
-
 		bool requestSaveData(std::function<void()> saved_cb, std::string key = "");
+
+		bool requestServerTime();
 
 		bool newPlayer;
 		std::string m_user;

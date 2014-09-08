@@ -32,21 +32,16 @@ namespace WkCocos
 			void move_value(unsigned char *& value, size_t& val_len);
 		public :
 
+			//exposing our conversion function from bin to string.
+			static void hexString2BinVal(const std::string&, unsigned char *& val, xxtea_long & val_length);
+			static void binVal2HexString(unsigned char * val, xxtea_long val_length, std::string&);
+
 			/*
 			* Constructor with key argument.
 			* @param key : encryption key used by the cipher. The key is a 16 bytes(128 bits) string
 			* User should provide their own key and not rely on the default.
 			*/
 			StrongBox(const std::string& key = "");
-
-			/*
-			* Constructor with value and default key.
-			* @param value : value to store in the strongbox.
-			* @param key : encryption key used by the cipher. The key is a 16 bytes(128 bits) string
-			* User should provide their own key and not rely on the default.
-			*/
-			template<typename T>
-			StrongBox(const T & value, const std::string& key = "");
 
 			/*
 			* Copy Constructor
@@ -116,24 +111,14 @@ namespace WkCocos
 ////////TODO : make it portable
 
 		template<typename T>
-		StrongBox::StrongBox(const T & value, const std::string& key)
-			: m_value_len(0)
-			, m_key_len(0)
-		{
-			if (key.length() > 0)
-			{
-				//we truncate/fill the key here, to be safe.
-				char keyc[17];
-				strncpy(keyc, key.c_str(), 16);
-				keyc[16] = '\0';
-				copy_key(reinterpret_cast<unsigned char*>(keyc), 16);
-			}
-			set<T>(value);
-		}
-
-		template<typename T>
 		void StrongBox::set(T value)
 		{
+			//removing existing value
+			if (m_value_len > 0)
+			{
+				free(m_value);
+			}
+
 			xxtea_long data_len = sizeof(value);//POD types only
 			unsigned char* data = reinterpret_cast<unsigned char*>(&value); //seeing value as a pack of bytes
 
@@ -146,8 +131,8 @@ namespace WkCocos
 			}
 			else
 			{
-				m_value = data;
-				m_value_len = data_len;
+				//this will malloc.
+				copy_value(data, data_len);
 			}
 
 		}
@@ -160,13 +145,14 @@ namespace WkCocos
 			if (isEncrypted())
 			{
 				data = xxtea_decrypt(m_value, m_value_len, m_key, m_key_len, &ret_len);
+				//data == 0 means there is a problem
 			}
 			else
 			{
 				data = m_value;
 				ret_len = m_value_len;
 			}
-
+			//copy on return
 			return *(reinterpret_cast<T*>(data));
 		}
 
