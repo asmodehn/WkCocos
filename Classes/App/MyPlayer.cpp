@@ -5,7 +5,7 @@
 #include "json/writer.h"
 
 MyPlayer::MyPlayer(std::shared_ptr<WkCocos::LocalData::LocalDataManager> localdatamngr, std::shared_ptr<WkCocos::Shop::Inventory> shopInventory)
-: WkCocos::Player(localdatamngr, shopInventory)
+: WkCocos::Player(localdatamngr, shopInventory, WkCocos::Save::Mode::OFFLINE)
 , m_gem("53cr3t") // encrypted
 , m_gold() // not encrypted
 {
