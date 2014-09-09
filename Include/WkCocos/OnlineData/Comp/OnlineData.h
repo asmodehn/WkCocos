@@ -43,14 +43,26 @@ namespace WkCocos
 
 			struct DeleteUserData : entityx::Component<DeleteUserData>
 			{
-				DeleteUserData(std::string userid, std::string m_collection, std::string user_data, std::function<void(std::string)> cb);
+				DeleteUserData(std::string userid, std::string collec, std::string docid);
 
 				bool in_progress;
 				bool done;
 				std::string m_userid;
 				std::string m_collection;
-				std::string m_user_data;
+				std::string m_docid;
 				std::function<void(void*)> m_dummy_cb;
+
+			};
+
+			struct FindUserData : entityx::Component<FindUserData>
+			{
+				FindUserData(std::string userid, std::string m_collection, std::function<void(std::string)> delete_cb, std::function<void()> save_cb);
+
+				bool in_progress;
+				bool done;
+				std::string m_userid;
+				std::string m_collection;
+				std::function<void(void*)> m_cb;
 
 			};
 			
@@ -64,7 +76,6 @@ namespace WkCocos
 				std::string m_collection;
 				std::string m_user_data;
 				std::function<void(void*)> m_cb;
-				std::function<void(void*)> m_dummy_cb;
 
 			};
 

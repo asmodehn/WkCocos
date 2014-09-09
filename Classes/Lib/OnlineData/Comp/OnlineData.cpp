@@ -76,14 +76,53 @@ namespace WkCocos
 				};
 			}
 
-			DeleteUserData::DeleteUserData(std::string userid, std::string collec, std::string user_data, std::function<void(std::string)> cb)
+			DeleteUserData::DeleteUserData(std::string userid, std::string collec, std::string docid)
 				: in_progress(false)
 				, done(false)
 				, m_userid(userid)
 				, m_collection(collec)
-				, m_user_data(user_data)
+				, m_docid(docid)
 			{
-				m_dummy_cb = [=](void* data) {};
+				m_dummy_cb = [=](void* data)
+				{
+					done = true; 
+				};
+			}
+
+			FindUserData::FindUserData(std::string userid, std::string collec, std::function<void(std::string)> delete_cb, std::function<void()> save_cb)
+				: in_progress(false)
+				, done(false)
+				, m_userid(userid)
+				, m_collection(collec)
+			{
+				m_cb = [=](void* data)
+				{
+					::App42::App42StorageResponse* userdata = static_cast<::App42::App42StorageResponse*>(data);
+					if (userdata->isSuccess)
+					{
+						for (std::vector<::App42::App42Storage>::iterator it = userdata->storages.begin(); it != userdata->storages.end(); ++it)
+						{
+							if (it->collectionName == collec)
+							for (std::vector<::App42::JSONDocument>::iterator iit = it->jsonDocArray.begin(); iit != it->jsonDocArray.end(); ++iit)
+							{
+								printf("\n DocId=%s", iit->getDocId().c_str());
+								if (iit->getOwner() == userid)
+								{
+									delete_cb(iit->getDocId());
+								}
+							}
+						}
+					}
+					else// if request failed, 
+					{
+						CCLOG("\nerrordetails:%s", userdata->errorDetails.c_str());
+						CCLOG("\nerrorMessage:%s", userdata->errorMessage.c_str());
+						CCLOG("\nappErrorCode:%d", userdata->appErrorCode);
+						CCLOG("\nhttpErrorCode:%d", userdata->httpErrorCode);
+					}
+					save_cb();
+					done = true;
+				};
 			}
 
 			SaveUserData::SaveUserData(std::string userid, std::string collec, std::string user_data, std::function<void(::App42::App42UserResponse*)> cb)
@@ -132,7 +171,6 @@ namespace WkCocos
 					done = true;
 					//userdata is deleted by App42SDK
 				};
-				m_dummy_cb = [=](void* data) {};
 			}
 
 			LoadUserData::LoadUserData(std::string userid, std::string collec, std::function<void(std::string)> cb)

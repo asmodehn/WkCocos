@@ -69,17 +69,25 @@ namespace WkCocos
 		{
 			auto newentity = entity_manager->create();
 			//temp comment
-			//newentity.assign<Comp::DeleteUserData>(userid, saveName, user_data, success_callback);
-			newentity.assign<Comp::SaveUserData>(userid, saveName, user_data, [=](::App42::App42UserResponse* r){
-				if (!r->isSuccess)
+			newentity.assign<Comp::FindUserData>(userid, saveName, [=](std::string doc)
+			{
+				auto delentity = entity_manager->create();
+				delentity.assign < Comp::DeleteUserData >(userid, saveName, doc);
+			}, [=]()
+			{
+				auto saveentity = entity_manager->create();
+				saveentity.assign < Comp::SaveUserData >(userid, saveName, user_data, [=](::App42::App42UserResponse* r)
 				{
-					event_manager->emit<Events::Error>(r);
-					//callback is not called if error
-				}
-				else
-				{
-					success_callback(r->getBody());
-				}
+					if (!r->isSuccess)
+					{
+						event_manager->emit<Events::Error>(r);
+						//callback is not called if error
+					}
+					else
+					{
+						success_callback(r->getBody());
+					}
+				});
 			});
 		}
 

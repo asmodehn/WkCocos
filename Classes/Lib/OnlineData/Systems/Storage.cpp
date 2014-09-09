@@ -30,39 +30,34 @@ namespace WkCocos
 					if (dud->done)
 					{
 						entity.remove<Comp::DeleteUserData>();
-						//if mask at 0 no request in this entity anymore
-						//if (entity.component_mask() == 0)
-						//{
-						//	entity.destroy();
-						//}
 					}
 					else if (!dud->in_progress)
 					{
-						m_stor_service->DeleteDocumentsByKeyValue(DB_NAME, dud->m_collection.c_str(), "user_id", dud->m_userid.c_str(), dud->m_dummy_cb);
+						m_stor_service->DeleteDocumentsById(DB_NAME, dud->m_collection.c_str(), dud->m_docid.c_str(), dud->m_dummy_cb);
 						dud->in_progress = true;
 					}
 
 				}
 
-				/*entityx::ptr<Comp::LoadUserData> lud;
-				for (auto entity : entities->entities_with_components(lud))
+				entityx::ptr<Comp::FindUserData> fud;
+				for (auto entity : entities->entities_with_components(fud))
 				{
-					if (lud->done)
+					if (fud->done)
 					{
-						entity.remove<Comp::LoadUserData>();
+						entity.remove<Comp::FindUserData>();
 						if (entity.component_mask() == 0)
 						{
 							entity.destroy();
 						}
 					}
-					else if (!lud->in_progress)
+					else if (!fud->in_progress)
 					{
-						CCLOG("Requesting App42 storage of user : %s ", lud->m_userid.c_str());
-						m_stor_service->FindDocumentByKeyValue(DB_NAME, lud->m_collection.c_str(), "_$owner", lud->m_userid.c_str(), lud->m_cb);
-						lud->in_progress = true;
+						CCLOG("Requesting App42 search for documents : %s ", fud->m_userid.c_str());
+						m_stor_service->FindAllDocuments(DB_NAME, fud->m_collection.c_str(), fud->m_cb);
+						fud->in_progress = true;
 					}
 
-				}*/
+				}
 
 				entityx::ptr<Comp::LoadEnemyData> led;
 				for (auto entity : entities->entities_with_components(led))
