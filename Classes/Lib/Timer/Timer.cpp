@@ -74,6 +74,7 @@ namespace WkCocos
 
 		void Timer::update(double dt) 
 		{
+			m_app_work_time.m_add(dt);
 			system_manager->update<Systems::TimeUpdater>(dt);
 			system_manager->update<Systems::AlarmRinger>(dt);
 			system_manager->update<Systems::AlarmDestructor>(dt);

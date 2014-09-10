@@ -163,12 +163,14 @@ void TestScene::onExitTransitionDidStart()
 
 void TestScene::update(float delta)
 {
-	if (!m_waiting_for_server_time)
-	{
-		GameLogic::Instance().getPlayer().getServerTime();
-		m_waiting_for_server_time = true;
-	}
-
+	//if (!m_waiting_for_server_time)
+	//{
+	//	GameLogic::Instance().getPlayer().getServerTime();
+	//	m_waiting_for_server_time = true;
+	//}
+	m_time->setText(WkCocos::ToolBox::itoa(GameLogic::Instance().getPlayer().getTimermgr()->getRunTime().tm_hour) + ":" +
+		WkCocos::ToolBox::itoa(GameLogic::Instance().getPlayer().getTimermgr()->getRunTime().tm_min) + ":" +
+		WkCocos::ToolBox::itoa(GameLogic::Instance().getPlayer().getTimermgr()->getRunTime().tm_sec));
 	Scene::update(delta);
 }
 
@@ -246,9 +248,15 @@ void TestScene::receive(const NavUI::Prev &prv)
 void TestScene::receive(const WkCocos::OnlineData::Events::ServerTime &st)
 {
 	m_waiting_for_server_time = false;
+	//tm now = WkCocos::ToolBox::getLocalTime();
 	cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([=]()
 	{
-		m_time->setText(WkCocos::ToolBox::itoa(st.serverTime.tm_hour) + ":" + WkCocos::ToolBox::itoa(st.serverTime.tm_min) + ":" + WkCocos::ToolBox::itoa(st.serverTime.tm_sec));
+		//m_time->setText(WkCocos::ToolBox::itoa(st.serverTime.tm_hour) + ":" +
+		//	WkCocos::ToolBox::itoa(st.serverTime.tm_min) + ":" + 
+		//	WkCocos::ToolBox::itoa(st.serverTime.tm_sec));
+		//m_time->setText(WkCocos::ToolBox::itoa(now.tm_hour - st.serverTime.tm_hour) + ":" + 
+		//	WkCocos::ToolBox::itoa(now.tm_min - st.serverTime.tm_min) + ":" + 
+		//	WkCocos::ToolBox::itoa(now.tm_sec - st.serverTime.tm_sec));
 	});
 }
 
