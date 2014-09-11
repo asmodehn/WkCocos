@@ -49,6 +49,9 @@ namespace WkCocos
 
 			if (m_onlinedata && onlineDataLoaded_callback) //in case online data is set while we re loading loginID
 			{
+				m_onlinedata->getServerTime([=](std::string s_iso8601){
+					m_timer->setRunTime(s_iso8601);
+				});
 				//we need to do login here
 				if (newPlayer)
 				{
@@ -61,9 +64,6 @@ namespace WkCocos
 						CCLOG("login done !!!");
 						//loading again to get online value
 						m_playerData.requestLoadData(onlineDataLoaded_callback);
-						m_onlinedata->getServerTime([=](std::string s_iso8601){
-							m_timer->setRunTime(s_iso8601);
-						});
 					});
 				}
 			}

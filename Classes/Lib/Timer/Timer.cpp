@@ -40,7 +40,7 @@ namespace WkCocos
 				if (id == eid->m_id)
 				{
 					entity.remove<Comp::Alarm>();
-					entity.assign<Comp::Alarm>(alarm_date);
+					entity.assign<Comp::Alarm>(alarm_date, m_app_work_time.m_start_time, m_app_work_time.m_msecs);
 					// Timer was stopped but recreate in the same frame, we don't want to delete it anymore.
 					if (entity.component<Comp::Stopped>())
 					{
@@ -53,7 +53,7 @@ namespace WkCocos
 			//creating new entity with unique id
 			auto entity = entity_manager->create();
 			entity.assign<Comp::ID>(id);
-			entity.assign<Comp::Alarm>(alarm_date);
+			entity.assign<Comp::Alarm>(alarm_date, m_app_work_time.m_start_time, m_app_work_time.m_msecs);
 			return true;
 		}
 		

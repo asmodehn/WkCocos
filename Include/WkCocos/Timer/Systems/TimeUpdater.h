@@ -2,7 +2,7 @@
 #define __WKCOCOS_TIMER_SYSTEMS_TIMEUPDATER_H__
 
 //#include "cocos2d.h"
-#include "WkCocos/Utils/ToolBox.h"
+//#include "WkCocos/Timer/Timer.h"
 #include "entityx/entityx.h"
 
 namespace WkCocos

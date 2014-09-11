@@ -44,7 +44,7 @@ namespace WkCocos
 		*/
 		bool setTimer(std::string id, unsigned long secs)
 		{
-			struct tm timeinfo = ToolBox::getUTCTime();
+			struct tm timeinfo = m_timer->getRunTime();
 			//CCLOG(asctime(&timeinfo));
 			timeinfo.tm_sec += secs;
 			
@@ -95,8 +95,6 @@ namespace WkCocos
 		};
 
 		entityx::ptr<entityx::EventManager> player_events;
-
-
 
 	protected:
 

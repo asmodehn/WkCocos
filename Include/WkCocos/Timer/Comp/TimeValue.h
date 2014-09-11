@@ -22,11 +22,14 @@ namespace WkCocos
 
 			struct Alarm : entityx::Component<Alarm>
 			{
-				Alarm(struct tm end)
+				Alarm(struct tm end, struct tm now, double msecs)
 				: m_end(end)
+				, m_now(now)
+				, m_msecs(msecs)
 				{}
-
 				struct tm m_end;
+				struct tm m_now;
+				double m_msecs;
 			};
 
 			struct Stopped : entityx::Component<Stopped>
