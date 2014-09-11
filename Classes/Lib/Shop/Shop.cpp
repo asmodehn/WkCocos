@@ -11,6 +11,7 @@ namespace WkCocos
 		Shop::Shop(std::string googlePlayLicenseKey, std::string encryptLocalSecretKey, std::unique_ptr<Assets> a_shop_assets)
 			: assets(std::move(a_shop_assets))
 			, handler(new ShopEventHandler())
+			, inventory(new Inventory())
 		{
 			cocos2d::__Dictionary *commonParams = cocos2d::__Dictionary::create();
 			commonParams->setObject(cocos2d::__String::create(encryptLocalSecretKey), "customSecret");
