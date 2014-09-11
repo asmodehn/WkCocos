@@ -112,7 +112,7 @@ namespace WkCocos
 
 		bool requestSaveData(std::function<void()> saved_cb, std::string key = "");
 
-		bool requestServerTime();
+		//bool requestServerTime();
 
 		bool newPlayer;
 		std::string m_user;

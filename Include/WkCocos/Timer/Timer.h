@@ -57,10 +57,13 @@ namespace WkCocos
 
 			struct advanced_time
 			{
-				advanced_time(tm x, double y, bool z) : m_start_time(x), m_msecs(y), m_set(z){};
+				advanced_time()
+				{
+					m_start_time = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+					m_msecs = 0;
+				};
 				struct tm m_start_time;
 				double m_msecs;
-				bool m_set;
 				void m_add(double dt)
 				{
 					m_msecs += dt;
@@ -78,6 +81,18 @@ namespace WkCocos
 				return m_app_work_time.m_start_time;
 			}
 
+			void setRunTime(std::string s_iso8601)
+			{
+				char* pos;
+				m_app_work_time.m_start_time.tm_year = strtoul(s_iso8601.c_str(), &pos, 10) - 1900;
+				m_app_work_time.m_start_time.tm_mon = strtoul(++pos, &pos, 10) - 1;
+				m_app_work_time.m_start_time.tm_mday = strtoul(++pos, &pos, 10);
+				m_app_work_time.m_start_time.tm_hour = strtoul(++pos, &pos, 10);
+				m_app_work_time.m_start_time.tm_min = strtoul(++pos, &pos, 10);
+				m_app_work_time.m_start_time.tm_sec = strtoul(++pos, &pos, 10);
+				m_app_work_time.m_msecs = double(strtoul(++pos, &pos, 10)) / 1000;
+			}
+
 		protected:
 
 			entityx::ptr<entityx::EventManager> event_manager;
@@ -86,7 +101,7 @@ namespace WkCocos
 
 			std::function<void()> m_error_callback;
 
-			advanced_time m_app_work_time = { { 0, 0, 0, 0, 0, 0, 0, 0, 0 }, 0, false };
+			advanced_time m_app_work_time;
 
 		};
 	}// namespace Timer

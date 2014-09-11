@@ -1,7 +1,7 @@
 #include "WkCocos/OnlineData/Comp/OnlineData.h"
 #include "WkCocos/OnlineData/Events/PlayersList.h"
 #include "WkCocos/OnlineData/Events/EnemyData.h"
-#include "WkCocos/OnlineData/Events/ServerTime.h"
+//#include "WkCocos/OnlineData/Events/ServerTime.h"
 //including json from cocos
 #include "json/document.h"         // rapidjson's DOM-style API
 #include "json/stringbuffer.h"
@@ -391,7 +391,7 @@ namespace WkCocos
 				};
 			}
 
-			ServerTime::ServerTime(entityx::ptr<entityx::EventManager> event_emitter)
+			ServerTime::ServerTime(std::function<void(std::string)> callback)
 				: in_progress(false)
 				, done(false)
 			{
@@ -401,7 +401,8 @@ namespace WkCocos
 
 					if (userdata->isSuccess)
 					{
-						event_emitter->emit<Events::ServerTime>(userdata->app42Timer.currentTime);
+						//event_emitter->emit<Events::ServerTime>(userdata->app42Timer.currentTime);
+						callback(userdata->app42Timer.currentTime);
 					}
 				};
 			}
