@@ -18,7 +18,7 @@ public:
 	/**
 	* Constructor
 	*/
-	MyPlayer(std::shared_ptr<WkCocos::LocalData::LocalDataManager> localdatamngr, std::shared_ptr<WkCocos::Shop::Inventory> shopInventory);
+	MyPlayer(std::shared_ptr<WkCocos::LocalData::LocalDataManager> localdatamngr, std::shared_ptr<WkCocos::Shop::Inventory> shopInventory, std::function<void()> pw_gen_cb);
 	/**
 	* Destructor
 	*/

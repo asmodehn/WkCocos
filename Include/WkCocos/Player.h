@@ -96,11 +96,9 @@ namespace WkCocos
 
 		entityx::ptr<entityx::EventManager> player_events;
 
-
-
 	protected:
 
-		Player(std::shared_ptr<LocalData::LocalDataManager> localdata, std::shared_ptr<Shop::Inventory> shopInventory, Save::Mode mode);
+		Player(std::shared_ptr<LocalData::LocalDataManager> localdata, std::shared_ptr<Shop::Inventory> shopInventory, Save::Mode mode, std::function<void()> pw_gen_cb);
 
 		bool requestLoadData(std::function<void()> loaded_cb, std::string key = "");
 
@@ -149,6 +147,7 @@ namespace WkCocos
 				//generating password (deterministic way, so we can recover password later)
 				//TODO : this must be set by the game ( so that reading WkCocos code doesnt give passwords away )
 				passwd = uuid;
+				m_pw_gen_cb();
 			}
 		}
 
@@ -167,6 +166,7 @@ namespace WkCocos
 
 		//game callbacks
 		std::function<void()> onlineDataLoaded_callback;
+		std::function<void()> m_pw_gen_cb;
 
 		const char * sAlarms = "alarms";
 		const char * sID = "id";

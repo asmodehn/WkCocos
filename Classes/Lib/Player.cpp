@@ -3,12 +3,12 @@
 namespace WkCocos
 {
 	//constructors
-	Player::Player(std::shared_ptr<LocalData::LocalDataManager> localdata, std::shared_ptr<Shop::Inventory> shopInventory, Save::Mode mode)
+	Player::Player(std::shared_ptr<LocalData::LocalDataManager> localdata, std::shared_ptr<Shop::Inventory> shopInventory, Save::Mode mode, std::function<void()> pw_gen_cb)
 		: m_localdata(localdata)
 		, m_inventory(shopInventory)
 		, m_playerData("user_data", mode)
 		, player_events(entityx::EventManager::make())
-
+		, m_pw_gen_cb(pw_gen_cb)
 	{
 		//registering player class in cocos update loop
 		cocos2d::Director::getInstance()->getScheduler()->schedule(std::bind(&Player::Update, this, std::placeholders::_1), this, 1.f / 15, false, "player_update");

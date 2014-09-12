@@ -4,8 +4,8 @@
 #include "json/stringbuffer.h"
 #include "json/writer.h"
 
-MyPlayer::MyPlayer(std::shared_ptr<WkCocos::LocalData::LocalDataManager> localdatamngr, std::shared_ptr<WkCocos::Shop::Inventory> shopInventory)
-: WkCocos::Player(localdatamngr, shopInventory, WkCocos::Save::Mode::ONLINE)
+MyPlayer::MyPlayer(std::shared_ptr<WkCocos::LocalData::LocalDataManager> localdatamngr, std::shared_ptr<WkCocos::Shop::Inventory> shopInventory, std::function<void()> pw_gen_cb)
+	: WkCocos::Player(localdatamngr, shopInventory, WkCocos::Save::Mode::ONLINE, pw_gen_cb)
 , m_gem("53cr3t") // encrypted
 , m_gold() // not encrypted
 {
