@@ -96,6 +96,7 @@ namespace WkCocos
 
 		entityx::ptr<entityx::EventManager> player_events;
 
+		inline const std::string& getUser() const { return m_user; }
 
 
 	protected:
