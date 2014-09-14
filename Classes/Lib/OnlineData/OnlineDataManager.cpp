@@ -98,22 +98,10 @@ namespace WkCocos
 			newentity.assign<Comp::LoadUserData>(userid, saveName, callback);
 		}
 
-		void OnlineDataManager::loadEnemy(const std::string& userid, const std::string& saveName)
+		void OnlineDataManager::getUsersWithDocs(const std::string& saveName)
 		{
 			auto newentity = entity_manager->create();
-			newentity.assign<Comp::LoadEnemyData>(userid, saveName, event_manager);
-		}
-
-		void OnlineDataManager::getAllUsers()
-		{
-			auto newentity = entity_manager->create();
-			newentity.assign<Comp::GetAllUsers>(event_manager);
-		}
-
-		void OnlineDataManager::getUsersWithDocs()
-		{
-			auto newentity = entity_manager->create();
-			newentity.assign<Comp::GetUsersWithDocs>(event_manager);
+			newentity.assign<Comp::GetUsersWithDocs>(saveName, event_manager);
 		}
 
 		void OnlineDataManager::getServerTime()

@@ -92,34 +92,13 @@ namespace WkCocos
 
 			};
 
-			struct LoadEnemyData : entityx::Component<LoadEnemyData>
-			{
-				LoadEnemyData(std::string userid, std::string m_collection, entityx::ptr<entityx::EventManager> event_emitter);
-
-				bool in_progress;
-				bool done;
-				std::string m_userid;
-				std::string m_collection;
-				std::function<void(void*)> m_cb;
-
-			};
-
-			struct GetAllUsers : entityx::Component<GetAllUsers>
-			{
-				GetAllUsers(entityx::ptr<entityx::EventManager> event_emitter);
-
-				bool in_progress;
-				bool done;
-				std::function<void(void*)> m_cb;
-
-			};
-
 			struct GetUsersWithDocs : entityx::Component<GetUsersWithDocs>
 			{
-				GetUsersWithDocs(entityx::ptr<entityx::EventManager> event_emitter);
+				GetUsersWithDocs(std::string m_collection, entityx::ptr<entityx::EventManager> event_emitter);
 
 				bool in_progress;
 				bool done;
+				std::string m_collection;
 				std::function<void(void*)> m_cb;
 
 			};

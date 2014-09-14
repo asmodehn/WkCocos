@@ -58,12 +58,6 @@ public:
 		requestEnemyData(enemy_name);
 	}
 	
-	//test for getting every app user
-	void getAllUsers()
-	{
-		requestAllUsers();
-	}
-
 	//test for getting users with at least one saved doc
 	void getUsersWithDocs()
 	{

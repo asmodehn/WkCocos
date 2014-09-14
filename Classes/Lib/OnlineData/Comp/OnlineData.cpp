@@ -1,6 +1,5 @@
 #include "WkCocos/OnlineData/Comp/OnlineData.h"
 #include "WkCocos/OnlineData/Events/PlayersList.h"
-#include "WkCocos/OnlineData/Events/EnemyData.h"
 #include "WkCocos/OnlineData/Events/ServerTime.h"
 //including json from cocos
 #include "json/document.h"         // rapidjson's DOM-style API
@@ -105,7 +104,7 @@ namespace WkCocos
 							if (it->collectionName == collec)
 							for (std::vector<::App42::JSONDocument>::iterator iit = it->jsonDocArray.begin(); iit != it->jsonDocArray.end(); ++iit)
 							{
-								printf("\n DocId=%s", iit->getDocId().c_str());
+								CCLOG("\n Owner=%s", iit->getOwner().c_str());
 								if (iit->getOwner() == userid)
 								{
 									delete_cb(iit->getDocId());
@@ -135,41 +134,17 @@ namespace WkCocos
 				m_cb = [=](void* data)
 				{
 					::App42::App42UserResponse* userdata = static_cast<::App42::App42UserResponse*>(data);
-					//::App42::App42StorageResponse* userdata = static_cast<::App42::App42StorageResponse*>(data);
 
 					CCLOG("\ncode=%d...=%d", userdata->getCode(), userdata->isSuccess);
-					//CCLOG("\nResponse Body=%s", userdata->getBody().c_str());
 
-					//if (userdata->isSuccess)
-					//{//if request succeed, we need to extract data from it
-						//rapidjson::Document doc;
-						//doc.Parse<0>(userdata->getBody().c_str());
-						//if (doc.HasParseError())
-						//{
-							//if parse error (also empty string), we ignore existing data.
-							//cb(userdata);
-						//}
-						//else
-						//{
-							//TMP debug
-							//rapidjson::StringBuffer strbuf;
-							//rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
-							//doc.Accept(writer);
-							//cb(strbuf.GetString());
-						//}
-					//}
-					//else// if request failed, 
-					//{
-						CCLOG("\nerrordetails:%s", userdata->errorDetails.c_str());
-						CCLOG("\nerrorMessage:%s", userdata->errorMessage.c_str());
-						CCLOG("\nappErrorCode:%d", userdata->appErrorCode);
-						CCLOG("\nhttpErrorCode:%d", userdata->httpErrorCode);
+					CCLOG("\nerrordetails:%s", userdata->errorDetails.c_str());
+					CCLOG("\nerrorMessage:%s", userdata->errorMessage.c_str());
+					CCLOG("\nappErrorCode:%d", userdata->appErrorCode);
+					CCLOG("\nhttpErrorCode:%d", userdata->httpErrorCode);
 
-						cb(userdata);
-					//}
+					cb(userdata);
 
 					done = true;
-					//userdata is deleted by App42SDK
 				};
 			}
 
@@ -178,14 +153,12 @@ namespace WkCocos
 				, done(false)
 				, m_userid(userid)
 				, m_collection(collec)
-				//, m_user_data("")
+
 			{
 				m_cb = [=](void* data) {
 					::App42::App42StorageResponse* userdata = static_cast<::App42::App42StorageResponse*>(data);
-					//::App42::App42UserResponse* userdata = static_cast<::App42::App42UserResponse*>(data);
 
 					CCLOG("\ncode=%d...=%d", userdata->getCode(), userdata->isSuccess);
-					//CCLOG("\nResponse Body=%s", userdata->getBody().c_str());
 
 					if (userdata->isSuccess)
 					{//if request succeed, we need to extract data from it
@@ -235,103 +208,53 @@ namespace WkCocos
 					}
 
 					done = true;
-					//userdata is deleted by App42SDK
 				};
 			}
 
-			LoadEnemyData::LoadEnemyData(std::string userid, std::string collec, entityx::ptr<entityx::EventManager> event_emitter)
+			GetUsersWithDocs::GetUsersWithDocs(std::string collec, entityx::ptr<entityx::EventManager> event_emitter)
 				: in_progress(false)
 				, done(false)
-				, m_userid(userid)
 				, m_collection(collec)
 			{
 				m_cb = [=](void* data) {
 					::App42::App42StorageResponse* userdata = static_cast<::App42::App42StorageResponse*>(data);
-
 					if (userdata->isSuccess)
-					{//if request succeed, we need to extract data from it
-						rapidjson::Document doc;
-						doc.Parse<0>(userdata->getBody().c_str());
-
-						if (!doc.HasParseError())
+					{
+						for (std::vector<::App42::App42Storage>::iterator it = userdata->storages.begin(); it != userdata->storages.end(); ++it)
 						{
-							if (doc.HasMember("app42"))
+							if (it->collectionName == collec)
 							{
-								rapidjson::Value & temp = doc["app42"];
-								temp = temp["response"];
-								temp = temp["storage"];
-								temp = temp["jsonDoc"];
-								if (temp.Size())
+								rapidjson::Document doc;
+								rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
+								doc.SetArray();
+								for (std::vector<::App42::JSONDocument>::iterator iit = it->jsonDocArray.begin(); iit != it->jsonDocArray.end(); ++iit)
 								{
-									temp = temp[temp.Size() - 1];
-									if (temp.HasMember("data"))
-									{
-										temp = temp["data"];
-										temp = temp["currency"];
-										event_emitter->emit<Events::EnemyData>(userid, temp["gold"].GetInt(), temp["gem"].GetInt(), true);
-									}
-									else
-										event_emitter->emit<Events::EnemyData>(userid, 0, 0, false);
+									//everything from the following is so horrible just because json is so rapid
+									rapidjson::Value temp;
+									temp.SetObject();
+									rapidjson::Value owner;
+									char ownerbuf[42]; //taken from actual user name length, fake_+uuid, also 42
+									int ownerlen = sprintf(ownerbuf, "%s", iit->getOwner().c_str());
+									owner.SetString(ownerbuf, ownerlen, allocator);
+									memset(ownerbuf, 0, sizeof(ownerbuf));
+									temp.AddMember("owner", owner, allocator);
+									rapidjson::Value jsonDoc;
+									//following limit is taken from App42_Cocos2DX_SDK commit 109c2c9 file HMAC_SHA1.h
+									char jsonDocbuf[32768]; //we just can not have longer doc without crash in other part of app
+									int jsonDoclen = sprintf(jsonDocbuf, "%s", iit->getJsonDoc().c_str());
+									jsonDoc.SetString(jsonDocbuf, jsonDoclen, allocator);
+									memset(jsonDocbuf, 0, sizeof(jsonDocbuf));
+									temp.AddMember("jsonDoc", jsonDoc, allocator);
+									doc.PushBack(temp, allocator);
 								}
-								else
-									event_emitter->emit<Events::EnemyData>(userid, 0, 0, false);
-							}
-							else
-								event_emitter->emit<Events::EnemyData>(userid, 0, 0, false);
-						}
-						else
-							event_emitter->emit<Events::EnemyData>(userid, 0, 0, false);
-
-					}
-					else// if request failed, 
-					{
-						CCLOG("\nerrordetails:%s", userdata->errorDetails.c_str());
-						CCLOG("\nerrorMessage:%s", userdata->errorMessage.c_str());
-						CCLOG("\nappErrorCode:%d", userdata->appErrorCode);
-						CCLOG("\nhttpErrorCode:%d", userdata->httpErrorCode);
-						event_emitter->emit<Events::EnemyData>(userid, 0, 0, false);
-					}
-
-					done = true;
-					//userdata is deleted by App42SDK
-				};
-			}
-
-			GetAllUsers::GetAllUsers(entityx::ptr<entityx::EventManager> event_emitter)
-				: in_progress(false)
-				, done(false)
-
-			{
-				m_cb = [=](void* data) {
-					::App42::App42UserResponse* userdata = static_cast<::App42::App42UserResponse*>(data);
-
-					//CCLOG("\ncode=%d...=%d", userdata->getCode(), userdata->isSuccess);
-					//following line causes crash!
-					//CCLOG("\nResponse Body=%s", userdata->getBody().c_str());
-
-					if (userdata->isSuccess)
-					{
-						rapidjson::Document doc;
-						doc.Parse<0>(userdata->getBody().c_str());
-
-						if (!doc.HasParseError())
-						{
-							if (doc.HasMember("app42"))
-							{
-								rapidjson::Value & temp = doc["app42"];
-								temp = temp["response"];
-								temp = temp["users"];
-
 								rapidjson::StringBuffer strbuf;
 								rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
-								temp["user"].Accept(writer);
-
+								doc.Accept(writer);
 								event_emitter->emit<Events::PlayersList>(strbuf.GetString());
-
 							}
 						}
 					}
-					else 
+					else// if request failed,
 					{
 						CCLOG("\nerrordetails:%s", userdata->errorDetails.c_str());
 						CCLOG("\nerrorMessage:%s", userdata->errorMessage.c_str());
@@ -340,54 +263,6 @@ namespace WkCocos
 					}
 
 					done = true;
-					//userdata is deleted by App42SDK
-				};
-			}
-
-			GetUsersWithDocs::GetUsersWithDocs(entityx::ptr<entityx::EventManager> event_emitter)
-				: in_progress(false)
-				, done(false)
-
-			{
-				m_cb = [=](void* data) {/*
-					::App42::App42UserResponse* userdata = static_cast<::App42::App42UserResponse*>(data);
-
-					//CCLOG("\ncode=%d...=%d", userdata->getCode(), userdata->isSuccess);
-					//following line causes crash!
-					//CCLOG("\nResponse Body=%s", userdata->getBody().c_str());
-
-					if (userdata->isSuccess)
-					{
-						rapidjson::Document doc;
-						doc.Parse<0>(userdata->getBody().c_str());
-
-						if (!doc.HasParseError())
-						{
-							if (doc.HasMember("app42"))
-							{
-								rapidjson::Value & temp = doc["app42"];
-								temp = temp["response"];
-								temp = temp["users"];
-
-								rapidjson::StringBuffer strbuf;
-								rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
-								temp["user"].Accept(writer);
-
-								event_emitter->emit<Events::PlayersList>(strbuf.GetString());
-
-							}
-						}
-					}
-					else
-					{
-						CCLOG("\nerrordetails:%s", userdata->errorDetails.c_str());
-						CCLOG("\nerrorMessage:%s", userdata->errorMessage.c_str());
-						CCLOG("\nappErrorCode:%d", userdata->appErrorCode);
-						CCLOG("\nhttpErrorCode:%d", userdata->httpErrorCode);
-					}
-
-					done = true;
-					//userdata is deleted by App42SDK*/
 				};
 			}
 

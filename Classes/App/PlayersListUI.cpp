@@ -48,9 +48,7 @@ PlayersListUI::PlayersListUI()
 	}
 
 	GameLogic::Instance().getPlayer().getOnlineDatamgr()->getEventManager()->subscribe<WkCocos::OnlineData::Events::PlayersList>(*this);
-	GameLogic::Instance().getPlayer().getOnlineDatamgr()->getEventManager()->subscribe<WkCocos::OnlineData::Events::EnemyData>(*this);
-	GameLogic::Instance().getPlayer().getAllUsers();
-	//GameLogic::Instance().getPlayer().getUsersWithDocs();
+	GameLogic::Instance().getPlayer().getUsersWithDocs();
 }
 
 PlayersListUI::~PlayersListUI()
@@ -62,18 +60,6 @@ PlayersListUI::~PlayersListUI()
 		//delete currentPTB->second;
 	}
 	m_ptb.clear();
-}
-
-void PlayersListUI::receive(const WkCocos::OnlineData::Events::EnemyData &ed)
-{
-	cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([=]()
-	{
-		m_enemyLabel->setText("player " + ed.enemy_name + " has");
-		if (ed.enemy_docs)
-			m_enemyData->setText(WkCocos::ToolBox::itoa(ed.enemy_gems) + " GEMS and " + WkCocos::ToolBox::itoa(ed.enemy_gold) + " GOLD");
-		else
-			m_enemyData->setText("no saved documents");
-	});
 }
 
 void PlayersListUI::refreshCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input)
@@ -88,7 +74,7 @@ void PlayersListUI::refreshCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget
 		}
 		m_ptb.clear();
 
-		GameLogic::Instance().getPlayer().getAllUsers();
+		GameLogic::Instance().getPlayer().getUsersWithDocs();
 	}
 }
 
@@ -112,9 +98,9 @@ void PlayersListUI::receive(const WkCocos::OnlineData::Events::PlayersList &pl)
 
 				for (rapidjson::SizeType i = 0; i < listSize; i++)
 				{
-					rapidjson::Value & userName = doc[i];
+					rapidjson::Value & part = doc[i];
 
-					std::string enemy_name = userName["userName"].GetString();
+					std::string enemy_name = part["owner"].GetString();
 
 					cocos2d::ui::Text* playertextbutton = cocos2d::ui::Text::create("#" + WkCocos::ToolBox::itoa(i) + " " + enemy_name, "Arial", 15);
 					playertextbutton->setPosition(cocos2d::Vec2(-m_widgetSize.width / 2, m_widgetSize.height * (1 - /*2.0*/ 1.0 / (listSize + 1) * (i + 1))));
@@ -124,8 +110,8 @@ void PlayersListUI::receive(const WkCocos::OnlineData::Events::PlayersList &pl)
 					(
 						[=](cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input)
 						{
-							if (input == cocos2d::ui::Widget::TouchEventType::ENDED)
-								GameLogic::Instance().getPlayer().loadEnemy(enemy_name);
+							//if (input == cocos2d::ui::Widget::TouchEventType::ENDED)
+								//get data;
 						}
 					);
 

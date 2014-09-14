@@ -96,15 +96,11 @@ namespace WkCocos
 
 		entityx::ptr<entityx::EventManager> player_events;
 
-
-
 	protected:
 
 		Player(std::shared_ptr<LocalData::LocalDataManager> localdata, std::shared_ptr<Shop::Inventory> shopInventory, Save::Mode mode);
 
 		bool requestLoadData(std::function<void()> loaded_cb, std::string key = "");
-
-		bool requestAllUsers();
 
 		bool requestUsersWithDocs();
 

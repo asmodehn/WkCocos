@@ -28,7 +28,6 @@ public:
 	void refreshCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input);
 
 	void receive(const WkCocos::OnlineData::Events::PlayersList &pl);
-	void receive(const WkCocos::OnlineData::Events::EnemyData &ed);
 
 protected:
 

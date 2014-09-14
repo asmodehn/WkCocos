@@ -59,25 +59,6 @@ namespace WkCocos
 
 				}
 
-				entityx::ptr<Comp::LoadEnemyData> led;
-				for (auto entity : entities->entities_with_components(led))
-				{
-					if (led->done)
-					{
-						entity.remove<Comp::LoadEnemyData>();
-						if (entity.component_mask() == 0)
-						{
-							entity.destroy();
-						}
-					}
-					else if (!led->in_progress)
-					{
-						m_stor_service->FindDocumentByKeyValue(DB_NAME, led->m_collection.c_str(), "user_id", led->m_userid.c_str(), led->m_cb);
-						led->in_progress = true;
-					}
-
-				}
-
 				entityx::ptr<Comp::SaveUserData> sud;
 				for (auto entity : entities->entities_with_components(sud))
 				{
@@ -94,6 +75,26 @@ namespace WkCocos
 						::App42::App42API::setLoggedInUser(sud->m_userid.c_str());
 						m_stor_service->InsertJsonDocument(DB_NAME, sud->m_collection.c_str(), sud->m_user_data.c_str(), sud->m_cb);
 						sud->in_progress = true;
+					}
+
+				}
+
+				entityx::ptr<Comp::GetUsersWithDocs> guwd;
+				for (auto entity : entities->entities_with_components(guwd))
+				{
+					if (guwd->done)
+					{
+						entity.remove<Comp::GetUsersWithDocs>();
+						if (entity.component_mask() == 0)
+						{
+							entity.destroy();
+						}
+					}
+					else if (!guwd->in_progress)
+					{
+						CCLOG("Requesting full list of documents and retrieving their owners");
+						m_stor_service->FindAllDocuments(DB_NAME, guwd->m_collection.c_str(), guwd->m_cb);
+						guwd->in_progress = true;
 					}
 
 				}

@@ -77,7 +77,7 @@ bool TestScene::init()
 	timerroot->setPosition(cocos2d::Vec2(visibleSize.width * 0.75, visibleSize.height * 0.75));
 	//*/
 
-	/*//PlayersListUI
+	///PlayersListUI
 	PlayersListUI* playerslistui = new PlayersListUI();
 	auto playerslistroot = playerslistui->getRoot();
 	playerslistroot->setEnabled(false);
@@ -137,9 +137,9 @@ bool TestScene::init()
 	m_ui[DownloadUI::id] = dlui;
 
 	//activating first UI : 
-	saveroot->setEnabled(true);
-	saveroot->setVisible(true);
-	currentUI = SavingUI::id;
+	playerslistroot->setEnabled(true);
+	playerslistroot->setVisible(true);
+	currentUI = PlayersListUI::id;
 	navui->setTitle(currentUI);
 	
 	m_time = cocos2d::ui::Text::create("", "Arial", 20);

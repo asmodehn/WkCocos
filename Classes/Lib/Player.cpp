@@ -104,33 +104,11 @@ namespace WkCocos
 		}
 	}
 
-	bool Player::requestAllUsers()
-	{
-		if (m_onlinedata)
-		{
-			m_onlinedata->getAllUsers();
-			return true;
-		}
-		else
-			return false;
-	}
-
 	bool Player::requestUsersWithDocs()
 	{
 		if (m_onlinedata)
 		{
-			m_onlinedata->getUsersWithDocs();
-			return true;
-		}
-		else
-			return false;
-	}
-
-	bool Player::requestEnemyData(std::string enemy_data)
-	{
-		if (m_onlinedata)
-		{
-			m_onlinedata->loadEnemy(enemy_data, m_playerData.getSaveName());
+			m_onlinedata->getUsersWithDocs(m_playerData.getSaveName());
 			return true;
 		}
 		else
@@ -189,33 +167,11 @@ namespace WkCocos
 		}
 		doc.AddMember(sAlarms, alarms, allocator);
 
-		//test
-		//rapidjson::Value playerData;
-		//playerData.SetArray();
-		//size = 446 bytes
-		//const char * fillerText = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
-		//i < 9 causes crash somwhere in heap malloc, so 8*446=3.5 kb can be saved normally
-		//14.4 kb Julien's data file still can not be tested
-		//for (int i = 0; i < 8; i++)
-		//	playerData.PushBack(fillerText, allocator);
-		//doc.AddMember("playerData", playerData, allocator);
-
 		rapidjson::StringBuffer strbuf;
 		rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
 		doc.Accept(writer);
 
 		std::string data = std::string(strbuf.GetString());
-		
-		//TEST DATA BEGIN
-		//std::string data_filename = cocos2d::FileUtils::getInstance()->fullPathForFilename("LocalData.txt");
-		//std::ifstream datafile(data_filename);
-		//if (datafile)
-		//{
-		//	std::stringstream strbuffer;
-		//	strbuffer << datafile.rdbuf();
-		//	data = strbuffer.str();
-		//}
-		//TEST DATA END
 
 		return data;
 
