@@ -74,7 +74,6 @@ bool TestScene::init()
 	addChild(timerroot);
 	timerroot->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.67f));
 	m_ui[TimerUI::id] = timerui;
-	timerroot->setPosition(cocos2d::Vec2(visibleSize.width * 0.75, visibleSize.height * 0.75));
 	//*/
 
 	///PlayersListUI

@@ -241,8 +241,8 @@ namespace WkCocos
 									rapidjson::Value jsonDoc;
 									//following limit is taken from App42_Cocos2DX_SDK commit 109c2c9 file HMAC_SHA1.h
 									char jsonDocbuf[32768]; //we just can not have longer doc without crash in other part of app
-									int jsonDoclen = sprintf(jsonDocbuf, "%s", iit->getJsonDoc().c_str());
-									jsonDoc.SetString(jsonDocbuf, jsonDoclen, allocator);
+									int jsonDoclen = sprintf(jsonDocbuf, "%s", iit->getJsonDoc().c_str()); 
+									jsonDoc.SetString(jsonDocbuf, jsonDoclen, allocator); //should be added another way because this way i need to parse it later
 									memset(jsonDocbuf, 0, sizeof(jsonDocbuf));
 									temp.AddMember("jsonDoc", jsonDoc, allocator);
 									doc.PushBack(temp, allocator);

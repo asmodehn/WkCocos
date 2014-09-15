@@ -98,20 +98,26 @@ void PlayersListUI::receive(const WkCocos::OnlineData::Events::PlayersList &pl)
 
 				for (rapidjson::SizeType i = 0; i < listSize; i++)
 				{
-					rapidjson::Value & part = doc[i];
+					rapidjson::Value & temp = doc[i];
 
-					std::string enemy_name = part["owner"].GetString();
+					std::string enemy_name = temp["owner"].GetString();
 
 					cocos2d::ui::Text* playertextbutton = cocos2d::ui::Text::create("#" + WkCocos::ToolBox::itoa(i) + " " + enemy_name, "Arial", 15);
 					playertextbutton->setPosition(cocos2d::Vec2(-m_widgetSize.width / 2, m_widgetSize.height * (1 - /*2.0*/ 1.0 / (listSize + 1) * (i + 1))));
 					playertextbutton->setTouchEnabled(true);
 
+					rapidjson::Document jsonDoc;
+					jsonDoc.Parse<0>(temp["jsonDoc"].GetString());
+					temp = jsonDoc["currency"];
+					std::string gems = WkCocos::ToolBox::itoa(temp["gem"].GetInt());
+					std::string gold = WkCocos::ToolBox::itoa(temp["gold"].GetInt());
+
 					playertextbutton->addTouchEventListener
 					(
 						[=](cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input)
 						{
-							//if (input == cocos2d::ui::Widget::TouchEventType::ENDED)
-								//get data;
+							if (input == cocos2d::ui::Widget::TouchEventType::ENDED)
+								m_enemyData->setText(gems + " GEMS and " + gold + " GOLD");
 						}
 					);
 

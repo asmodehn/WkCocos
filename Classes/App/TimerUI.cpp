@@ -23,7 +23,7 @@ TimerUI::TimerUI()
 
 		m_startButton = cocos2d::ui::Button::create("SkipNormal.png", "SkipSelected.png");
 		m_startButton->addTouchEventListener(CC_CALLBACK_2(TimerUI::startCallback, this));
-		m_startButton->setPosition(cocos2d::Vec2(-widgetSize.width / 4, 0));
+		m_startButton->setPosition(cocos2d::Vec2(-widgetSize.width / 2, 0));
 		m_widget->addChild(m_startButton);
 
 		m_startLabel = cocos2d::ui::Text::create("START", "Arial", 21);
@@ -32,7 +32,7 @@ TimerUI::TimerUI()
 
 		m_stopButton = cocos2d::ui::Button::create("SkipNormal.png", "SkipSelected.png");
 		m_stopButton->addTouchEventListener(CC_CALLBACK_2(TimerUI::stopCallback, this));
-		m_stopButton->setPosition(cocos2d::Vec2(widgetSize.width / 4, 0));
+		m_stopButton->setPosition(cocos2d::Vec2(widgetSize.width / 2, 0));
 		m_widget->addChild(m_stopButton);
 
 		m_stopLabel = cocos2d::ui::Text::create("STOP", "Arial", 21);
