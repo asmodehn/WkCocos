@@ -93,6 +93,14 @@ namespace WkCocos
 				m_app_work_time.m_msecs = double(strtoul(++pos, &pos, 10)) / 1000;
 			}
 
+
+			///Get Current Time
+			static struct tm getLocalTime();
+
+			///Get Current Time
+			static struct tm getUTCTime();
+
+
 		protected:
 
 			entityx::ptr<entityx::EventManager> event_manager;
