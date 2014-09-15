@@ -99,6 +99,51 @@ namespace WkCocos
 
 				}
 
+				entityx::ptr<Comp::GetUsersKeyValue> gukv;
+				for (auto entity : entities->entities_with_components(gukv))
+				{
+					if (gukv->done)
+					{
+						entity.remove<Comp::GetUsersKeyValue>();
+						if (entity.component_mask() == 0)
+						{
+							entity.destroy();
+						}
+					}
+					else if (!gukv->in_progress)
+					{
+						CCLOG("Requesting list of documents with needed value and retrieving their owners");
+						m_stor_service->FindDocumentByKeyValue(DB_NAME, gukv->m_collection.c_str(), gukv->m_key.c_str(), gukv->m_value.c_str(), gukv->m_cb);
+						gukv->in_progress = true;
+					}
+
+				}
+
+				entityx::ptr<Comp::GetUsersFromTo> guft;
+				for (auto entity : entities->entities_with_components(guft))
+				{
+					if (guft->done)
+					{
+						entity.remove<Comp::GetUsersFromTo>();
+						if (entity.component_mask() == 0)
+						{
+							entity.destroy();
+						}
+					}
+					else if (!guft->in_progress)
+					{
+						CCLOG("Requesting list of documents by query and retrieving their owners");
+
+						::App42::Query * queryFrom = ::App42::QueryBuilder::BuildQuery(guft->m_key.c_str(), guft->m_from.c_str(), APP42_OP_GREATER_THAN_EQUALTO);
+						::App42::Query * queryTo = ::App42::QueryBuilder::BuildQuery(guft->m_key.c_str(), guft->m_to.c_str(), APP42_OP_LESS_THAN_EQUALTO);
+						::App42::Query * queryCompound = ::App42::QueryBuilder::CompoundOperator(queryFrom, APP42_OP_AND, queryTo);
+
+						m_stor_service->FindDocumentsByQuery(DB_NAME, guft->m_collection.c_str(), queryCompound, guft->m_cb);
+						guft->in_progress = true;
+					}
+
+				}
+
 			}
 		}//namespace Systems
 	}//namespace OnlineData
