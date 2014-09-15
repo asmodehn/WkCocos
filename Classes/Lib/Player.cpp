@@ -3,7 +3,7 @@
 namespace WkCocos
 {
 	//constructors
-	Player::Player(std::shared_ptr<LocalData::LocalDataManager> localdata, std::shared_ptr<Shop::Inventory> shopInventory, Save::Mode mode, std::function<void()> pw_gen_cb)
+	Player::Player(std::shared_ptr<LocalData::LocalDataManager> localdata, std::shared_ptr<Shop::Inventory> shopInventory, Save::Mode mode, std::function<std::string(std::string userid)> pw_gen_cb)
 		: m_localdata(localdata)
 		, m_inventory(shopInventory)
 		, m_playerData("user_data", mode)
