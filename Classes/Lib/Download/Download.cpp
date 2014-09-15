@@ -51,6 +51,7 @@ namespace WkCocos
 			std::string minAppVersion = cocostudio::DictionaryHelper::getInstance()->getStringValue_json(json, "minAppVersion", "error");
 			std::string version = cocostudio::DictionaryHelper::getInstance()->getStringValue_json(json, "version", "0");
 
+//hack to override localhost DLC URL when we cross build for android
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
 			auto locahost = dlcUrl.find("localhost");
 			if ( std::string::npos != locahost)
