@@ -64,6 +64,16 @@ public:
 		requestUsersWithDocs();
 	}
 
+	void getUsersKeyValue(std::string key, std::string value)
+	{
+		requestUsersKeyValue(key, value);
+	}
+
+	void getUsersFromTo(std::string key, std::string from, std::string to)
+	{
+		requestUsersFromTo(key, from, to);
+	}
+
 	//test for getting server time
 	void getServerTime()
 	{

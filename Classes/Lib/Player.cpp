@@ -115,6 +115,28 @@ namespace WkCocos
 			return false;
 	}
 
+	bool Player::requestUsersKeyValue(std::string key, std::string value)
+	{
+		if (m_onlinedata)
+		{
+			m_onlinedata->getUsersKeyValue(m_playerData.getSaveName(), key, value);
+			return true;
+		}
+		else
+			return false;
+	}
+
+	bool Player::requestUsersFromTo(std::string key, std::string from, std::string to)
+	{
+		if (m_onlinedata)
+		{
+			m_onlinedata->getUsersFromTo(m_playerData.getSaveName(), key, from, to);
+			return true;
+		}
+		else
+			return false;
+	}
+
 	bool Player::requestServerTime()
 	{
 		if (m_onlinedata)

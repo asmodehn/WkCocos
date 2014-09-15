@@ -48,7 +48,9 @@ PlayersListUI::PlayersListUI()
 	}
 
 	GameLogic::Instance().getPlayer().getOnlineDatamgr()->getEventManager()->subscribe<WkCocos::OnlineData::Events::PlayersList>(*this);
-	GameLogic::Instance().getPlayer().getUsersWithDocs();
+	//GameLogic::Instance().getPlayer().getUsersWithDocs();
+	//GameLogic::Instance().getPlayer().getUsersKeyValue("gold", "7035");
+	GameLogic::Instance().getPlayer().getUsersFromTo("gold", "1999", "9999");
 }
 
 PlayersListUI::~PlayersListUI()
