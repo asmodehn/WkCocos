@@ -44,7 +44,7 @@ namespace WkCocos
 		*/
 		bool setTimer(std::string id, unsigned long secs)
 		{
-			struct tm timeinfo = m_timer->getRunTime();
+			struct tm timeinfo = m_timer->getServerUTCTime();
 			//CCLOG(asctime(&timeinfo));
 			timeinfo.tm_sec += secs;
 			

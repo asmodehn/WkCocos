@@ -168,9 +168,9 @@ void TestScene::update(float delta)
 	//	GameLogic::Instance().getPlayer().getServerTime();
 	//	m_waiting_for_server_time = true;
 	//}
-	m_time->setText(WkCocos::ToolBox::itoa(GameLogic::Instance().getPlayer().getTimermgr()->getRunTime().tm_hour) + ":" +
-		WkCocos::ToolBox::itoa(GameLogic::Instance().getPlayer().getTimermgr()->getRunTime().tm_min) + ":" +
-		WkCocos::ToolBox::itoa(GameLogic::Instance().getPlayer().getTimermgr()->getRunTime().tm_sec));
+	m_time->setText(WkCocos::ToolBox::itoa(GameLogic::Instance().getPlayer().getTimermgr()->getServerLocalTime().tm_hour) + ":" +
+		WkCocos::ToolBox::itoa(GameLogic::Instance().getPlayer().getTimermgr()->getServerLocalTime().tm_min) + ":" +
+		WkCocos::ToolBox::itoa(GameLogic::Instance().getPlayer().getTimermgr()->getServerLocalTime().tm_sec));
 	Scene::update(delta);
 }
 
