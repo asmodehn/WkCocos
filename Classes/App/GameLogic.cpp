@@ -30,7 +30,7 @@ GameLogic::GameLogic()
 
 	m_player.reset(new MyPlayer(m_localdatamngr, m_shop->getInventory(), [](std::string userid)  -> std::string
 	{
-		CCLOG(userid.c_str());
+		CCLOG("%s",userid.c_str());
 		return "pass_" + userid;
 	}));
 }
