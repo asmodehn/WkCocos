@@ -40,7 +40,7 @@ namespace WkCocos
 				if (id == eid->m_id)
 				{
 					entity.remove<Comp::Alarm>();
-					entity.assign<Comp::Alarm>(alarm_date);
+					entity.assign<Comp::Alarm>(alarm_date, m_time.m_server_time, m_time.m_msecs);
 					// Timer was stopped but recreate in the same frame, we don't want to delete it anymore.
 					if (entity.component<Comp::Stopped>())
 					{
@@ -53,7 +53,7 @@ namespace WkCocos
 			//creating new entity with unique id
 			auto entity = entity_manager->create();
 			entity.assign<Comp::ID>(id);
-			entity.assign<Comp::Alarm>(alarm_date);
+			entity.assign<Comp::Alarm>(alarm_date, m_time.m_server_time, m_time.m_msecs);
 			return true;
 		}
 		
@@ -74,9 +74,40 @@ namespace WkCocos
 
 		void Timer::update(double dt) 
 		{
+			m_time.m_add(dt);
 			system_manager->update<Systems::TimeUpdater>(dt);
 			system_manager->update<Systems::AlarmRinger>(dt);
 			system_manager->update<Systems::AlarmDestructor>(dt);
+		}
+
+		///Get Current Time
+		struct tm Timer::getDeviceLocalTime()
+		{
+			time_t rawtime;
+			struct tm * timeinfo;
+
+			time(&rawtime);
+			timeinfo = localtime(&rawtime);
+			//CCLOG("Current local time and date: %s", asctime(timeinfo));
+
+			//Copy of POD tm
+			return *timeinfo;
+		}
+
+		///Get Current Time
+		struct tm Timer::getDeviceUTCTime()
+		{
+			time_t rawtime;
+			struct tm * ptm;
+
+			time(&rawtime);
+
+			ptm = gmtime(&rawtime);
+
+			//CCLOG("Current UTC time and date: %s", asctime(ptm));
+
+			//Copy of POD tm
+			return *ptm;
 		}
 
 	} //namespace Timer

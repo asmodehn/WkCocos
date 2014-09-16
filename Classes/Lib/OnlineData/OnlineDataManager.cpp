@@ -116,10 +116,12 @@ namespace WkCocos
 			newentity.assign<Comp::GetUsersWithDocs>(event_manager);
 		}
 
-		void OnlineDataManager::getServerTime()
+		void OnlineDataManager::getServerTime(std::function<void(std::string)> callback)
 		{
 			auto newentity = entity_manager->create();
-			newentity.assign<Comp::ServerTime>(event_manager);
+			newentity.assign<Comp::ServerTime>([=](std::string s_iso8601){
+				callback(s_iso8601);
+			});
 		}
 
 		void OnlineDataManager::update(double dt) {

@@ -44,7 +44,7 @@ namespace WkCocos
 		*/
 		bool setTimer(std::string id, unsigned long secs)
 		{
-			struct tm timeinfo = ToolBox::getUTCTime();
+			struct tm timeinfo = m_timer->getServerUTCTime();
 			//CCLOG(asctime(&timeinfo));
 			timeinfo.tm_sec += secs;
 			
@@ -97,6 +97,7 @@ namespace WkCocos
 		entityx::ptr<entityx::EventManager> player_events;
 
 		inline const std::string& getUser() const { return m_user; }
+		
 	protected:
 
 		Player(std::shared_ptr<LocalData::LocalDataManager> localdata, std::shared_ptr<Shop::Inventory> shopInventory, Save::Mode mode, std::function<std::string(std::string userid)> pw_gen_cb);
@@ -111,7 +112,7 @@ namespace WkCocos
 
 		bool requestSaveData(std::function<void()> saved_cb, std::string key = "");
 
-		bool requestServerTime();
+		//bool requestServerTime();
 
 		bool newPlayer;
 		std::string m_user;

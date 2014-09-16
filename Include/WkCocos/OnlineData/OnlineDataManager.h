@@ -8,7 +8,7 @@
 #include "WkCocos/OnlineData/Events/Error.h"
 #include "WkCocos/OnlineData/Events/PlayersList.h"
 #include "WkCocos/OnlineData/Events/EnemyData.h"
-#include "WkCocos/OnlineData/Events/ServerTime.h"
+//#include "WkCocos/OnlineData/Events/ServerTime.h"
 
 #define DEFAULT_SAVE_VERSION 1
 
@@ -67,7 +67,7 @@ namespace WkCocos
 			/**
 			* Get Server Time
 			*/
-			void getServerTime();
+			void getServerTime(std::function<void(std::string)> callback);
 
 			void update(double dt);
 

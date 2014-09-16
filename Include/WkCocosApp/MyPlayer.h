@@ -71,10 +71,10 @@ public:
 	}
 
 	//test for getting server time
-	void getServerTime()
-	{
-		requestServerTime();
-	}
+	//void getServerTime()
+	//{
+	//	requestServerTime();
+	//}
 
 private:
 

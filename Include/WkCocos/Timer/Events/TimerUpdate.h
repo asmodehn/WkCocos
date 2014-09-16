@@ -11,21 +11,20 @@ namespace WkCocos
 		{
 			struct TimerUpdate : public entityx::Event<TimerUpdate>
 			{
-				TimerUpdate(entityx::Entity e, tm timeLeft, double rawTimeLeft) : timer(e), time_left(timeLeft), raw_time_left(rawTimeLeft)
+				TimerUpdate(entityx::Entity e, double timeLeft) : timer(e), time_left(timeLeft)
 				{
 					auto tempEntity = e.component<Comp::ID>();
 					id = tempEntity->m_id;
 				}
 
-				tm getTimeLeft() const
+				int getTimeLeft() const
 				{
-					return time_left;
+					return (int)time_left;
 				}
 
 				entityx::Entity timer;
 				std::string		id;
-				tm				time_left;
-				double			raw_time_left;
+				double			time_left;
 			};
 
 		}//namespace Events
