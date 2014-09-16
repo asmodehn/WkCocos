@@ -134,18 +134,43 @@ namespace WkCocos
 							}
 							else
 							{
+								//is it possible to update ?
 								bool dlc_update_allowed = false;
+
+								//do we need to update ?
 								bool dlc_update_required = false;
-								unsigned long version = 0;
-								try{
-									version = ToolBox::stoul(cocostudio::DictionaryHelper::getInstance()->getStringValue_json(json, "version", 0));
-									dlc_update_required = (version >= dllist->m_current_version);
-								}
-								catch (std::out_of_range oor)
+
+								std::string version = cocostudio::DictionaryHelper::getInstance()->getStringValue_json(json, "version", "0");
+								if (version == dllist->m_current_version) //if we have the exact same string : developer update or current version hotfix.
 								{
-									version = LONG_MAX;
-									//TODO : improve with version string check.
-									dlc_update_required = (dllist->m_current_version == version);
+									dlc_update_required = true;
+								}
+								else //we need to compare string to find if the online version is more recent
+								{
+									unsigned long lver = 0;
+									try {
+										lver = ToolBox::stoul(version);
+										CCLOG("DLC at %s has Manifest version %lu", url.c_str(), lver);
+									}
+									catch (std::out_of_range oor)
+									{
+										lver = 0; //disabling update if online version is too high ( developer version )
+									}
+
+									unsigned long lcver = 0;
+									try {
+										lcver = ToolBox::stoul(dllist->m_current_version);
+										CCLOG("Local DLC has Manifest version %lu", url.c_str(), lcver);
+									}
+									catch (std::out_of_range oor)
+									{
+										lcver = LONG_MAX; // if local version is too high, update should have been done before
+									}
+
+									if (lver > lcver) //not == to prevent LONG_MAX == LONG_MAX
+									{
+										dlc_update_required = true;
+									}
 								}
 
 								std::string minAppVersion = cocostudio::DictionaryHelper::getInstance()->getStringValue_json(json, "minAppVersion", "error");
@@ -155,12 +180,12 @@ namespace WkCocos
 									std::vector<unsigned long> mav = splitVersion(minAppVersion);
 									std::vector<unsigned long> cmav = splitVersion(dllist->m_current_minAppVersion);
 
-
+									dlc_update_allowed = true;
 									for (unsigned int i = 0; i < cmav.size(); ++i)
 									{
-										if (mav.at(i) <= cmav.at(i))
+										if (mav.at(i) > cmav.at(i))
 										{
-											dlc_update_allowed = true;
+											dlc_update_allowed = false; break;
 										}
 									}
 								}//if we cannot read the minimum app version. we dont download. better safe than sorry.
