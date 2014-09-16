@@ -138,7 +138,7 @@ namespace WkCocos
 		void createNewUserID(std::string& user, std::string& passwd) const
 		{
 			//generate unique ID
-			std::string user_prefix = "fake_";
+			std::string user_prefix = "U_";
 			std::string uuid = WkCocos::UUID::create();
 
 			if (uuid.length() > 0)

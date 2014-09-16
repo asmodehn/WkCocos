@@ -28,10 +28,10 @@ GameLogic::GameLogic()
 
 	m_shop.reset(new WkCocos::Shop::Shop("MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgckSrYT3yMLAYSS/2NVN3jtIdypsOCikdgiTr2mDu8fmwRPa3945vTPVPCOlbL3b77IYgpBf3PMOZcftGL2Jtdyk6AReLjixQzkeyaRLYK4kq9+0JYuD9V/uvqleuCw9NkzZaEOzGBU5IlFYGbXkZm6j/TPytjnJja0kTyXhiJKxzOyCsiUJ4VhLTUk4KL2py+YjPN8/MluOr+Uc/r88Rpd7M2fVH0pdqu35C2xuxLnnbCbu9xvVBPX3l/sb0srDgxdlrRY8JxkNr0mLMdmxnreDRz2aavMuXn2MS7xjB4YgbHLo75tgvTKxD1TbTtocB5VNPIg64a4hXq8rX/z2DwIDAQAB", "53CR3T", std::move(shopAssets)));
 
-	m_player.reset(new MyPlayer(m_localdatamngr, m_shop->getInventory(), [](std::string userid)
+	m_player.reset(new MyPlayer(m_localdatamngr, m_shop->getInventory(), [](std::string userid)  -> std::string
 	{
 		CCLOG(userid.c_str());
-		return "some added password generation callback";
+		return "pass_" + userid;
 	}));
 }
 
