@@ -181,6 +181,10 @@ namespace WkCocos
 									std::vector<unsigned long> cmav = splitVersion(dllist->m_current_minAppVersion);
 
 									dlc_update_allowed = true;
+									while ( mav.size() < cmav.size() )
+									{
+										mav.push_back(0);
+									}
 									for (unsigned int i = 0; i < cmav.size(); ++i)
 									{
 										if (mav.at(i) > cmav.at(i))
