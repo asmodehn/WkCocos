@@ -35,38 +35,46 @@ android {
             minSdkVersion 10
             versionCode = 00
         }
-        icecreamSandwich {
-            flavorDimension "api"
-            minSdkVersion 14
-            versionCode = 10
-        }
+//TMP remove : we dont have need for ICS build
+//        icecreamSandwich {
+//            flavorDimension "api"
+//            minSdkVersion 14
+//            versionCode = 10
+//        }
         //there is space for another API specialization at versionCode 20
-        x86 {
-            flavorDimension "abi"
-            ndk {
-                abiFilter "x86"
-            }
-            // this is the flavor part of the version code.
-            // It must be higher than the arm one for devices supporting
-            // both, as x86 is preferred.
-            versionCode = 3
-        }
-        arm {
-            flavorDimension "abi"
-            ndk {
-                abiFilter "armeabi-v7a"
-            }
-            versionCode = 2
-        }
-        mips {
-            flavorDimension "abi"
-            ndk {
-                abiFilter "mips"
-            }
-            versionCode = 1
-        }
+//TMP remove : we dont have need for x86 only build
+//        x86 {
+//            flavorDimension "abi"
+//            ndk {
+//                abiFilter "x86"
+//            }
+//            // this is the flavor part of the version code.
+//            // It must be higher than the arm one for devices supporting
+//            // both, as x86 is preferred.
+//            versionCode = 3
+//        }
+//TMP remove : we dont have need for ARM only build
+//        arm {
+//            flavorDimension "abi"
+//            ndk {
+//                abiFilter "armeabi-v7a"
+//            }
+//            versionCode = 2
+//        }
+//TMP remove : we dont have need for mips only build
+//        mips {
+//            flavorDimension "abi"
+//            ndk {
+//                abiFilter "mips"
+//            }
+//            versionCode = 1
+//        }
         fat {
             flavorDimension "abi"
+            //supported cocos ABI
+            ndk {
+                abiFilters "armeabi", "armeabi-v7a", "x86"
+            }
             // fat binary, lowest version code to be
             // the last option
             versionCode = 0
