@@ -8,10 +8,12 @@
     </facet>
     <facet type="android" name="Android">
       <configuration>
-        <option name="SELECTED_BUILD_VARIANT" value="gingerbreadArmRelease" />
-        <option name="ASSEMBLE_TASK_NAME" value="assembleGingerbreadArmRelease" />
-        <option name="COMPILE_JAVA_TASK_NAME" value="compileGingerbreadArmReleaseJava" />
-        <option name="SOURCE_GEN_TASK_NAME" value="generateGingerbreadArmReleaseSources" />
+        <option name="SELECTED_BUILD_VARIANT" value="gingerbreadArmDebug" />
+        <option name="ASSEMBLE_TASK_NAME" value="assembleGingerbreadArmDebug" />
+        <option name="COMPILE_JAVA_TASK_NAME" value="compileGingerbreadArmDebugJava" />
+        <option name="ASSEMBLE_TEST_TASK_NAME" value="assembleGingerbreadArmDebugTest" />
+        <option name="SOURCE_GEN_TASK_NAME" value="generateGingerbreadArmDebugSources" />
+        <option name="TEST_SOURCE_GEN_TASK_NAME" value="generateGingerbreadArmDebugTestSources" />
         <option name="ALLOW_USER_CONFIGURATION" value="false" />
         <option name="MANIFEST_FILE_RELATIVE_PATH" value="/src/main/AndroidManifest.xml" />
         <option name="RES_FOLDER_RELATIVE_PATH" value="/src/main/res" />
@@ -20,21 +22,21 @@
     </facet>
   </component>
   <component name="NewModuleRootManager" inherit-compiler-output="false">
-    <output url="file://$MODULE_DIR$/build/intermediates/classes/gingerbreadarm/release" />
+    <output url="file://$MODULE_DIR$/build/intermediates/classes/gingerbreadarm/debug" />
     <exclude-output />
     <content url="file://$MODULE_DIR$">
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/r/gingerbreadarm/release" isTestSource="false" generated="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/aidl/gingerbreadarm/release" isTestSource="false" generated="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/buildConfig/gingerbreadarm/release" isTestSource="false" generated="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/rs/gingerbreadarm/release" isTestSource="false" generated="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/res/rs/gingerbreadarm/release" type="java-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/gingerbreadArmRelease/res" type="java-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/gingerbreadArmRelease/resources" type="java-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/gingerbreadArmRelease/assets" type="java-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/gingerbreadArmRelease/aidl" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/gingerbreadArmRelease/java" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/gingerbreadArmRelease/jni" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/gingerbreadArmRelease/rs" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/r/gingerbreadarm/debug" isTestSource="false" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/aidl/gingerbreadarm/debug" isTestSource="false" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/buildConfig/gingerbreadarm/debug" isTestSource="false" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/rs/gingerbreadarm/debug" isTestSource="false" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/res/rs/gingerbreadarm/debug" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/gingerbreadArmDebug/res" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/gingerbreadArmDebug/resources" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/gingerbreadArmDebug/assets" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/gingerbreadArmDebug/aidl" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/gingerbreadArmDebug/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/gingerbreadArmDebug/jni" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/gingerbreadArmDebug/rs" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/gingerbreadArm/res" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/gingerbreadArm/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/gingerbreadArm/assets" type="java-resource" />
@@ -42,6 +44,11 @@
       <sourceFolder url="file://$MODULE_DIR$/src/gingerbreadArm/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/gingerbreadArm/jni" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/gingerbreadArm/rs" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/r/test/gingerbreadarm/debug" isTestSource="true" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/aidl/test/gingerbreadarm/debug" isTestSource="true" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/buildConfig/test/gingerbreadarm/debug" isTestSource="true" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/rs/test/gingerbreadarm/debug" isTestSource="true" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/res/rs/test/gingerbreadarm/debug" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/gingerbread/res" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/gingerbread/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/gingerbread/assets" type="java-resource" />
@@ -70,13 +77,13 @@
       <sourceFolder url="file://$MODULE_DIR$/src/androidTestArm/java" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/androidTestArm/jni" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/androidTestArm/rs" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/src/release/res" type="java-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/release/resources" type="java-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/release/assets" type="java-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/release/aidl" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/release/java" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/release/jni" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/release/rs" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/debug/res" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/debug/resources" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/debug/assets" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/debug/aidl" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/debug/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/debug/jni" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/debug/rs" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/res" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/assets" type="java-resource" />
