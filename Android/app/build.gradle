@@ -73,7 +73,7 @@ android {
             flavorDimension "abi"
             //supported cocos ABI
             ndk {
-                abiFilters "armeabi", "armeabi-v7a", "x86"
+                abiFilters "armeabi-v7a", "x86"
             }
             // fat binary, lowest version code to be
             // the last option
