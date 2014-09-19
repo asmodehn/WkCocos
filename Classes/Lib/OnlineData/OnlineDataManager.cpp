@@ -40,9 +40,11 @@ namespace WkCocos
 				{
 					login(userid, password, success_callback);
 				}
-				else // if creation failed, 
+				else // if creation failed, emit event ( in cocos thread to allow cocos actions )
 				{
-					event_manager->emit<Events::Error>(r);
+					cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, r](){
+						event_manager->emit<Events::Error>(r);
+					});
 				}
 				
 			});
@@ -55,12 +57,16 @@ namespace WkCocos
 			newentity.assign<Comp::Login>(userid, password, [=](::App42::App42UserResponse* r){
 				if (! r->isSuccess)
 				{
-					event_manager->emit<Events::Error>( r );
-					//callback is not called if error
+					cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, r](){
+						event_manager->emit<Events::Error>(r);
+						//callback is not called if error
+					});
 				}
 				else
 				{
-					success_callback(r->getBody());
+					cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, success_callback, r](){
+						success_callback(r->getBody());
+					});
 				}
 			});
 		}
@@ -80,12 +86,16 @@ namespace WkCocos
 				{
 					if (!r->isSuccess)
 					{
-						event_manager->emit<Events::Error>(r);
-						//callback is not called if error
+						cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, r](){
+							event_manager->emit<Events::Error>(r);
+							//callback is not called if error
+						});
 					}
 					else
 					{
-						success_callback(r->getBody());
+						cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, success_callback, r](){
+							success_callback(r->getBody());
+						});
 					}
 				});
 			});
