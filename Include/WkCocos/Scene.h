@@ -31,7 +31,7 @@ namespace WkCocos
 		* Add UI to manage
 		* @param ui Interface to manage
 		*/
-		void addInterface(Interface* ui);
+		std::string addInterface(Interface* ui);
 
 		/**
 		* Get UI loaded
