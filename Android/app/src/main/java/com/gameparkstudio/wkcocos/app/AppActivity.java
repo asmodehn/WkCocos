@@ -25,7 +25,7 @@ import com.soomla.cocos2dx.store.StoreService;
 
 public class AppActivity extends Cocos2dxActivity {
 
-    NotificationManager NM;
+    NotificationManager WKNM;
 
     @Override
     public Cocos2dxGLSurfaceView onCreateView() {
@@ -45,16 +45,17 @@ public class AppActivity extends Cocos2dxActivity {
     {
         super.onPause();
         ServiceManager.getInstance().onPause();
-        NM=(NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
-        NotificationCompat.Builder mBuilder =
+        WKNM=(NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationCompat.Builder WKBuilder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(android.R.drawable.stat_notify_more) //what are available options to set here?
-                        .setContentTitle("WkCocos notification")
-                        .setContentText("Some notification text");
-        PendingIntent pending=PendingIntent.getActivity(
-                getApplicationContext(), 0, new Intent(), 0);
-        mBuilder.setContentIntent(pending);
-        NM.notify(0, mBuilder.build());
+                        .setContentTitle("WkCocos title")
+                        .setContentText("WkCocos text");
+        Intent WKIntent = new Intent(this, AppActivity.class);
+        PendingIntent WKPI=PendingIntent.getActivity(
+                getApplicationContext(), 0, WKIntent, 0);
+        WKBuilder.setContentIntent(WKPI);
+        WKNM.notify(0, WKBuilder.build());
     }
 
     @Override protected void onResume() { ServiceManager.getInstance().onResume(); super.onResume(); }
