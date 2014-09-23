@@ -15,11 +15,29 @@ else {
 apply plugin: 'android'
 
 android {
+    sourceSets {
+        main {
+            manifest.srcFile 'src/main/AndroidManifest.xml'
+            java.srcDirs = ['src/main/java']
+            resources.srcDirs = ['src/main/java']
+            aidl.srcDirs = ['src/main/java']
+            renderscript.srcDirs = ['src/main/java']
+            res.srcDirs = ['src/main/res']
+            assets.srcDirs = ['assets']
+            jniLibs.srcDirs = ['src/main/libs'] // use the jni .so compiled from the manual ndk-build command
+            jni.srcDirs = [] //disable automatic ndk-build call
+        }
+        test {
+
+        }
+
+    }
+
     compileSdkVersion 19
     buildToolsVersion '19.1.0'
 
     defaultConfig {
-        minSdkVersion 9
+        minSdkVersion 10
         targetSdkVersion 19
         //versionName can go up to "9.999.build"
         versionName "0.1." + buildNumber
@@ -105,24 +123,6 @@ android {
             runProguard false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
-    }
-
-    sourceSets {
-        main {
-            manifest.srcFile 'src/main/AndroidManifest.xml'
-            java.srcDirs = ['src/main/java']
-            resources.srcDirs = ['src/main/java']
-            aidl.srcDirs = ['src/main/java']
-            renderscript.srcDirs = ['src/main/java']
-            res.srcDirs = ['src/main/res']
-            assets.srcDirs = ['assets']
-            jniLibs.srcDirs = ['src/main/libs'] // use the jni .so compiled from the manual ndk-build command
-            jni.srcDirs = [] //disable automatic ndk-build call
-        }
-        test {
-
-        }
-
     }
 
     // make per-variant version code
@@ -289,8 +289,8 @@ task ndkCleanRelease(type: Exec, dependsOn: 'cleanAssets') {
 clean.dependsOn ndkCleanDebug, ndkCleanRelease
 
 dependencies {
-    compile project(':cocos2dx')
     compile project(':wkcocos')
-    compile project(':cocos2dx-android-store')
+    //compile project(':cocos2dx-android-store')
+    //compile project(':cocos2dx')
     compile 'com.android.support:appcompat-v7:19.+'
 }
