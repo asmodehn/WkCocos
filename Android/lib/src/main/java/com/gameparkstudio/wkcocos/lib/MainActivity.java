@@ -6,19 +6,38 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.gameparkstudio.wkcocos.lib.Utils;
+import com.soomla.cocos2dx.common.ServiceManager;
+import com.soomla.cocos2dx.store.StoreService;
 
-public class MainActivity extends Activity {
+import org.cocos2dx.lib.Cocos2dxActivity;
+import org.cocos2dx.lib.Cocos2dxGLSurfaceView;
+
+public class MainActivity extends Cocos2dxActivity {
 
     private final static String TAG = MainActivity.class.getSimpleName();
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public Cocos2dxGLSurfaceView onCreateView() {
 
-        Log.d(TAG, "version=" + Utils.getVersionName() );
+        Cocos2dxGLSurfaceView glSurfaceView = new Cocos2dxGLSurfaceView(this);
 
-        setContentView(R.layout.activity_main);
+        // initialize services
+        final ServiceManager serviceManager = ServiceManager.getInstance();
+        serviceManager.setActivity(this);
+        serviceManager.setGlSurfaceView(glSurfaceView);
+        serviceManager.registerService(StoreService.getInstance());
 
+        return glSurfaceView;
+    }
+
+
+    @Override protected void onPause() {
+        super.onPause();
+        ServiceManager.getInstance().onPause();
+    }
+
+    @Override protected void onResume() {
+        ServiceManager.getInstance().onResume();
+        super.onResume();
     }
 }
