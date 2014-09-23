@@ -49,8 +49,8 @@ PlayersListUI::PlayersListUI()
 
 	GameLogic::Instance().getPlayer().getOnlineDatamgr()->getEventManager()->subscribe<WkCocos::OnlineData::Events::PlayersList>(*this);
 	//GameLogic::Instance().getPlayer().getUsersWithDocs();
-	//GameLogic::Instance().getPlayer().getUsersKeyValue("gold", "7035");
-	GameLogic::Instance().getPlayer().getUsersFromTo("gold", "1999", "9999");
+	//GameLogic::Instance().getPlayer().getUsersKeyValue("gold", 7711);
+	GameLogic::Instance().getPlayer().getUsersFromTo("gold", 1999, 9999);
 }
 
 PlayersListUI::~PlayersListUI()
@@ -110,9 +110,23 @@ void PlayersListUI::receive(const WkCocos::OnlineData::Events::PlayersList &pl)
 
 					rapidjson::Document jsonDoc;
 					jsonDoc.Parse<0>(temp["jsonDoc"].GetString());
-					temp = jsonDoc["currency"];
-					std::string gems = WkCocos::ToolBox::itoa(temp["gem"].GetInt());
-					std::string gold = WkCocos::ToolBox::itoa(temp["gold"].GetInt());
+
+					std::string gems;
+					std::string gold;
+					
+					if (jsonDoc.HasMember("currency"))
+					{
+						temp = jsonDoc["currency"];
+						gems = WkCocos::ToolBox::itoa(temp["gem"].GetInt());
+						gold = WkCocos::ToolBox::itoa(temp["gold"].GetInt());
+					}
+					else
+					{
+						if (jsonDoc.HasMember("gem"))
+							gems = WkCocos::ToolBox::itoa(jsonDoc["gem"].GetInt());
+						if (jsonDoc.HasMember("gold"))
+							gold = WkCocos::ToolBox::itoa(jsonDoc["gold"].GetInt());
+					}
 
 					playertextbutton->addTouchEventListener
 					(

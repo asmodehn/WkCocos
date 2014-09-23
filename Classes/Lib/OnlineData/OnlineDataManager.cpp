@@ -104,13 +104,13 @@ namespace WkCocos
 			newentity.assign<Comp::GetUsersWithDocs>(saveName, event_manager);
 		}
 
-		void OnlineDataManager::getUsersKeyValue(const std::string& saveName, const std::string& key, const std::string& value)
+		void OnlineDataManager::getUsersKeyValue(const std::string& saveName, const std::string& key, int value)
 		{
 			auto newentity = entity_manager->create();
 			newentity.assign<Comp::GetUsersKeyValue>(saveName, key, value, event_manager);
 		}
 
-		void OnlineDataManager::getUsersFromTo(const std::string& saveName, const std::string& key, const std::string& from, const std::string& to)
+		void OnlineDataManager::getUsersFromTo(const std::string& saveName, const std::string& key, int from, int to)
 		{
 			auto newentity = entity_manager->create();
 			newentity.assign<Comp::GetUsersFromTo>(saveName, key, from, to, event_manager);

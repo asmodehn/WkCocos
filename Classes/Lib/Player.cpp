@@ -115,7 +115,7 @@ namespace WkCocos
 			return false;
 	}
 
-	bool Player::requestUsersKeyValue(std::string key, std::string value)
+	bool Player::requestUsersKeyValue(std::string key, int value)
 	{
 		if (m_onlinedata)
 		{
@@ -126,7 +126,7 @@ namespace WkCocos
 			return false;
 	}
 
-	bool Player::requestUsersFromTo(std::string key, std::string from, std::string to)
+	bool Player::requestUsersFromTo(std::string key, int from, int to)
 	{
 		if (m_onlinedata)
 		{

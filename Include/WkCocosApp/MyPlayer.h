@@ -64,12 +64,12 @@ public:
 		requestUsersWithDocs();
 	}
 
-	void getUsersKeyValue(std::string key, std::string value)
+	void getUsersKeyValue(std::string key, int value)
 	{
 		requestUsersKeyValue(key, value);
 	}
 
-	void getUsersFromTo(std::string key, std::string from, std::string to)
+	void getUsersFromTo(std::string key, int from, int to)
 	{
 		requestUsersFromTo(key, from, to);
 	}

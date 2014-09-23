@@ -266,7 +266,7 @@ namespace WkCocos
 				};
 			}
 
-			GetUsersKeyValue::GetUsersKeyValue(std::string collec, std::string key, std::string value, entityx::ptr<entityx::EventManager> event_emitter)
+			GetUsersKeyValue::GetUsersKeyValue(std::string collec, std::string key, int value, entityx::ptr<entityx::EventManager> event_emitter)
 				: in_progress(false)
 				, done(false)
 				, m_collection(collec)
@@ -323,7 +323,7 @@ namespace WkCocos
 				};
 			}
 
-			GetUsersFromTo::GetUsersFromTo(std::string collec, std::string key, std::string from, std::string to, entityx::ptr<entityx::EventManager> event_emitter)
+			GetUsersFromTo::GetUsersFromTo(std::string collec, std::string key, int from, int to, entityx::ptr<entityx::EventManager> event_emitter)
 				: in_progress(false)
 				, done(false)
 				, m_collection(collec)

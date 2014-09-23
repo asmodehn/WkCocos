@@ -104,9 +104,9 @@ namespace WkCocos
 
 		bool requestUsersWithDocs();
 
-		bool requestUsersKeyValue(std::string key, std::string value);
+		bool requestUsersKeyValue(std::string key, int value);
 
-		bool requestUsersFromTo(std::string key, std::string from, std::string to);
+		bool requestUsersFromTo(std::string key, int from, int to);
 
 		bool requestEnemyData(std::string enemy_data);
 
