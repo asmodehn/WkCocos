@@ -28,13 +28,11 @@ std::string MyPlayer::get_data_json()
 	// must pass an allocator when the object may need to allocate memory
 	rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
 
-	//rapidjson::Value currency;
-	//currency.SetObject();
-	//currency.AddMember(sGold, m_gold.get<int>(), allocator);
-	//currency.AddMember(sGem, m_gem.get<int>(), allocator);
-	//doc.AddMember(sCurrency, currency, allocator);
-	doc.AddMember(sGold, m_gold.get<int>(), allocator);
-	doc.AddMember(sGem, m_gem.get<int>(), allocator);
+	rapidjson::Value currency;
+	currency.SetObject();
+	currency.AddMember(sGold, m_gold.get<int>(), allocator);
+	currency.AddMember(sGem, m_gem.get<int>(), allocator);
+	doc.AddMember(sCurrency, currency, allocator);
 
 	//TMP debug
 	rapidjson::StringBuffer strbuf;
@@ -57,7 +55,7 @@ void MyPlayer::set_data_json(std::string data)
 		doc.SetObject();
 	}
 	
-	/*if (doc.HasMember(sCurrency))
+	if (doc.HasMember(sCurrency))
 	{
 		rapidjson::Value& currencyvalue = doc[sCurrency];
 		if (!currencyvalue.IsNull()){
@@ -70,15 +68,5 @@ void MyPlayer::set_data_json(std::string data)
 				m_gem.set<int>(currencyvalue[sGem].GetInt());
 			}
 		}
-	}*/
-
-	if (doc.HasMember(sGold) && doc[sGold].IsInt())
-	{
-		m_gold.set<int>(doc[sGold].GetInt());
 	}
-	if (doc.HasMember(sGem) && doc[sGem].IsInt())
-	{
-		m_gem.set<int>(doc[sGem].GetInt());
-	}
-
 }
