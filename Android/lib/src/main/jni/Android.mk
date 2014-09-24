@@ -11,7 +11,8 @@ LOCAL_SRC_FILES := jni.cpp \
                    ../../../../../Classes/Lib/Utils/libb64.c \
                    ../../../../../Classes/Lib/Utils/sha1.cpp \
                    ../../../../../Classes/Lib/Utils/Crypto.cpp \
-                   ../../../../../Classes/Lib/Utils/UUID.cpp\
+                   ../../../../../Classes/Lib/Utils/UUID.cpp \
+                   ../../../../../Classes/Lib/Utils/jni/Utils.cpp \
                    ../../../../../Classes/Lib/Options.cpp \
                    ../../../../../Classes/Lib/Player.cpp \
                    ../../../../../Classes/Lib/Scene.cpp \
