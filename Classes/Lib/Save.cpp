@@ -38,7 +38,7 @@ namespace WkCocos
 				m_onlinedata->load(m_user, m_name, [=](std::string data)
 				{
 					m_onLoading(data);
-					CCLOG("user data loaded : %s", data.c_str());
+					//CCLOG("user data loaded : %s", data.c_str());
 
 					loaded_cb();
 				});
@@ -96,7 +96,7 @@ namespace WkCocos
 			{
 				m_onlinedata->save(m_user, m_name, m_onSaving(), [=](std::string data)
 				{
-					CCLOG("user data saved : %s", data.c_str());
+					//CCLOG("user data saved : %s", data.c_str());
 					saved_cb();
 				});
 			}

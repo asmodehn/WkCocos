@@ -131,7 +131,7 @@ namespace WkCocos
 
 			struct ServerTime : entityx::Component<ServerTime>
 			{
-				ServerTime(entityx::ptr<entityx::EventManager> event_emitter);
+				ServerTime(std::function<void(std::string)> callback);
 
 				bool in_progress;
 				bool done;

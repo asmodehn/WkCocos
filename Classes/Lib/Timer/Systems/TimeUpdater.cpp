@@ -2,8 +2,6 @@
 #include "WkCocos/Timer/Events/AlarmOff.h"
 #include "WkCocos/Timer/Events/TimerUpdate.h"
 
-#include "WkCocos/Utils/ToolBox.h"
-
 namespace WkCocos
 {
 	namespace Timer
@@ -18,27 +16,20 @@ namespace WkCocos
 				entityx::ptr<Comp::ID> id;
 				entityx::ptr<Comp::Alarm> alarm;
 
-				struct tm now = ToolBox::getUTCTime();
-				time_t nowtime = mktime(&now);
-				bool updateOldTime = false;
-
 				for (auto entity : es->entities_with_components(id, alarm))
 				{
-					time_t start = mktime(&alarm->m_end);
-					// actually returns long long, despite double declaration
-					double delta = difftime(start, nowtime);
-					if (difftime(nowtime, oldtime) > 0)
+					alarm->m_msecs += dt;
+					if (alarm->m_msecs > 1)
 					{
-						updateOldTime = true;
-						tm temptime = { (time_t)delta, 0, 0, 0, 0, 0, 0, 0, 0 };
-						mktime(&temptime);
-						events->emit<Events::TimerUpdate>(entity, temptime, delta);
-					}
-				}
+						alarm->m_msecs -= 1;
+						alarm->m_now.tm_sec += 1;
 
-				if (updateOldTime)
-				{
-					oldtime = nowtime;
+						time_t now = mktime(&alarm->m_now);
+						time_t end = mktime(&alarm->m_end);
+						double delta = difftime(end, now);
+
+						events->emit<Events::TimerUpdate>(entity, delta);
+					}
 				}
 			};
 

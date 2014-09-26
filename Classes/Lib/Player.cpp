@@ -3,12 +3,12 @@
 namespace WkCocos
 {
 	//constructors
-	Player::Player(std::shared_ptr<LocalData::LocalDataManager> localdata, std::shared_ptr<Shop::Inventory> shopInventory, Save::Mode mode)
+	Player::Player(std::shared_ptr<LocalData::LocalDataManager> localdata, std::shared_ptr<Shop::Inventory> shopInventory, Save::Mode mode, std::function<std::string(std::string userid)> pw_gen_cb)
 		: m_localdata(localdata)
 		, m_inventory(shopInventory)
 		, m_playerData("user_data", mode)
 		, player_events(entityx::EventManager::make())
-
+		, m_pw_gen_cb(pw_gen_cb)
 	{
 		//registering player class in cocos update loop
 		cocos2d::Director::getInstance()->getScheduler()->schedule(std::bind(&Player::Update, this, std::placeholders::_1), this, 1.f / 15, false, "player_update");
@@ -49,6 +49,9 @@ namespace WkCocos
 
 			if (m_onlinedata && onlineDataLoaded_callback) //in case online data is set while we re loading loginID
 			{
+				m_onlinedata->getServerTime([=](std::string s_iso8601){
+					m_timer->setTime(s_iso8601);
+				});
 				//we need to do login here
 				if (newPlayer)
 				{
@@ -82,7 +85,7 @@ namespace WkCocos
 		//subscribing to get error events
 		m_onlinedata->getEventManager()->subscribe<WkCocos::OnlineData::Events::Error>(*this);
 
-		if (m_user != "")
+		if (m_user != "") // this seems to be allways empty after save class implementation
 		{
 			if (newPlayer)
 			{
@@ -137,16 +140,16 @@ namespace WkCocos
 			return false;
 	}
 
-	bool Player::requestServerTime()
-	{
-		if (m_onlinedata)
-		{
-			m_onlinedata->getServerTime();
-			return true;
-		}
-		else
-			return false;
-	}
+	//bool Player::requestServerTime()
+	//{
+	//	if (m_onlinedata)
+	//	{
+	//		m_onlinedata->getServerTime();
+	//		return true;
+	//	}
+	//	else
+	//		return false;
+	//}
 
 	std::string Player::get_all_data_json()
 	{

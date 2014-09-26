@@ -1,6 +1,6 @@
 #include "WkCocos/OnlineData/Comp/OnlineData.h"
 #include "WkCocos/OnlineData/Events/PlayersList.h"
-#include "WkCocos/OnlineData/Events/ServerTime.h"
+//#include "WkCocos/OnlineData/Events/ServerTime.h"
 //including json from cocos
 #include "json/document.h"         // rapidjson's DOM-style API
 #include "json/stringbuffer.h"
@@ -114,7 +114,8 @@ namespace WkCocos
 					}
 					else// if request failed, 
 					{
-						CCLOG("\nerrordetails:%s", userdata->errorDetails.c_str());
+						// make log crash with huge log.
+						//CCLOG("\nerrordetails:%s", userdata->errorDetails.c_str());
 						CCLOG("\nerrorMessage:%s", userdata->errorMessage.c_str());
 						CCLOG("\nappErrorCode:%d", userdata->appErrorCode);
 						CCLOG("\nhttpErrorCode:%d", userdata->httpErrorCode);
@@ -381,7 +382,7 @@ namespace WkCocos
 				};
 			}
 
-			ServerTime::ServerTime(entityx::ptr<entityx::EventManager> event_emitter)
+			ServerTime::ServerTime(std::function<void(std::string)> callback)
 				: in_progress(false)
 				, done(false)
 			{
@@ -391,7 +392,8 @@ namespace WkCocos
 
 					if (userdata->isSuccess)
 					{
-						event_emitter->emit<Events::ServerTime>(userdata->app42Timer.currentTime);
+						//event_emitter->emit<Events::ServerTime>(userdata->app42Timer.currentTime);
+						callback(userdata->app42Timer.currentTime);
 					}
 				};
 			}

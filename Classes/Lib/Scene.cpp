@@ -34,17 +34,30 @@ namespace WkCocos
 			m_uiView = cocos2d::CameraView::create();
 			m_uiView->setContentSize(getContentSize());
 
-			addChild(m_worldView);
-			addChild(m_uiView);
+			addChild(m_worldView, -1);
+			addChild(m_uiView, 1);
 			return true;
 		}
 	}
 
-	void Scene::addInterface(Interface* ui)
+	std::string Scene::addInterface(std::string id, Interface* ui)
 	{
-		m_uiView->addChild(ui->getRoot());
+		m_uiView->addChild(ui->m_widget);
 
-		m_ui[ui->getFilepath()] = ui;
+		m_ui[id] = ui;
+
+		return id;
+	}
+
+	Interface* Scene::removeInterface(std::string id)
+	{
+		Interface* ui = m_ui[id];
+
+		m_uiView->removeChild(ui->m_widget);
+
+		m_ui.erase(id);
+
+		return ui;
 	}
 
 	void Scene::update(float delta)

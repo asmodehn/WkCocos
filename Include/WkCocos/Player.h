@@ -44,7 +44,7 @@ namespace WkCocos
 		*/
 		bool setTimer(std::string id, unsigned long secs)
 		{
-			struct tm timeinfo = ToolBox::getUTCTime();
+			struct tm timeinfo = m_timer->getServerUTCTime();
 			//CCLOG(asctime(&timeinfo));
 			timeinfo.tm_sec += secs;
 			
@@ -96,9 +96,11 @@ namespace WkCocos
 
 		entityx::ptr<entityx::EventManager> player_events;
 
+		inline const std::string& getUser() const { return m_user; }
+		
 	protected:
 
-		Player(std::shared_ptr<LocalData::LocalDataManager> localdata, std::shared_ptr<Shop::Inventory> shopInventory, Save::Mode mode);
+		Player(std::shared_ptr<LocalData::LocalDataManager> localdata, std::shared_ptr<Shop::Inventory> shopInventory, Save::Mode mode, std::function<std::string(std::string userid)> pw_gen_cb);
 
 		bool requestLoadData(std::function<void()> loaded_cb, std::string key = "");
 
@@ -112,7 +114,7 @@ namespace WkCocos
 
 		bool requestSaveData(std::function<void()> saved_cb, std::string key = "");
 
-		bool requestServerTime();
+		//bool requestServerTime();
 
 		bool newPlayer;
 		std::string m_user;
@@ -140,7 +142,7 @@ namespace WkCocos
 		void createNewUserID(std::string& user, std::string& passwd) const
 		{
 			//generate unique ID
-			std::string user_prefix = "fake_";
+			std::string user_prefix = "U_";
 			std::string uuid = WkCocos::UUID::create();
 
 			if (uuid.length() > 0)
@@ -148,7 +150,7 @@ namespace WkCocos
 				user = user_prefix + uuid;
 				//generating password (deterministic way, so we can recover password later)
 				//TODO : this must be set by the game ( so that reading WkCocos code doesnt give passwords away )
-				passwd = uuid;
+				passwd = m_pw_gen_cb(user);
 			}
 		}
 
@@ -167,6 +169,7 @@ namespace WkCocos
 
 		//game callbacks
 		std::function<void()> onlineDataLoaded_callback;
+		std::function<std::string(std::string userid)> m_pw_gen_cb;
 
 		const char * sAlarms = "alarms";
 		const char * sID = "id";

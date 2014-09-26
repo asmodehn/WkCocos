@@ -18,7 +18,7 @@ public:
 	/**
 	* Constructor
 	*/
-	MyPlayer(std::shared_ptr<WkCocos::LocalData::LocalDataManager> localdatamngr, std::shared_ptr<WkCocos::Shop::Inventory> shopInventory);
+	MyPlayer(std::shared_ptr<WkCocos::LocalData::LocalDataManager> localdatamngr, std::shared_ptr<WkCocos::Shop::Inventory> shopInventory, std::function<std::string(std::string userid)> pw_gen_cb);
 	/**
 	* Destructor
 	*/
@@ -75,10 +75,10 @@ public:
 	}
 
 	//test for getting server time
-	void getServerTime()
-	{
-		requestServerTime();
-	}
+	//void getServerTime()
+	//{
+	//	requestServerTime();
+	//}
 
 private:
 

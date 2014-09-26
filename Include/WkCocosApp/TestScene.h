@@ -33,7 +33,7 @@ public:
 	void receive(const NavUI::Next &dl);
 	void receive(const NavUI::Prev &dl);
 
-	void receive(const WkCocos::OnlineData::Events::ServerTime &st);
+	//void receive(const WkCocos::OnlineData::Events::ServerTime &st);
 
 protected:
 

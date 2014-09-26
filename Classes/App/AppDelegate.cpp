@@ -3,6 +3,7 @@
 #include "WkCocosApp/TestScene.h"
 #include "WkCocosApp/GameLogic.h"
 
+#include "WkCocos/Utils/jni/Utils.h"
 
 USING_NS_CC;
 
@@ -25,7 +26,7 @@ AppDelegate::AppDelegate()
 
 	WkCocos::LogStream::create();
 
-	m_consoleApp = new WkCocos::CLogAppender();
+	m_consoleApp = new WkCocos::CLogAppender(); //doesnt print in device console.
 	m_fileApp = new WkCocos::FileLogAppender(FileUtils::getInstance()->getWritablePath() + "my.log");
 
 	m_consoleApp->setLevel(WkCocos::loglevel::Core_LogInfo);
@@ -67,7 +68,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     auto director = Director::getInstance();
     auto glview = director->getOpenGLView();
     if(!glview) {
-        glview = GLView::create("My Game");
+		glview = GLViewImpl::create("My Game");
         director->setOpenGLView(glview);
     }
 
@@ -124,4 +125,7 @@ void AppDelegate::applicationWillEnterForeground() {
 
     // if you use SimpleAudioEngine, it must resume here
     // SimpleAudioEngine::getInstance()->resumeBackgroundMusic();
+
+	std::string vstring = WkCocos::Utils::jni::Utils::getVersionName();
+	CCLOG("Version string from app : %s",vstring.c_str());
 }

@@ -4,7 +4,10 @@
 #include "cocos2d.h"
 #include "cocostudio/CocoStudio.h"
 
+#include "WebView/UIWebView.h"
+
 #include <unordered_map>
+#include <unordered_set>
 
 namespace WkCocos
 {
@@ -19,7 +22,7 @@ namespace WkCocos
 		* Loads a UI resource into memory.
 		* @return pointer to the widget in preloaded memory.
 		*/
-		static cocos2d::ui::Widget * load(std::string filepath);
+		static cocos2d::ui::Widget * load(std::string filepath, bool reuse_from_cache = true);
 		static void forget(std::string filepath);
 		
 		/**
@@ -37,11 +40,43 @@ namespace WkCocos
 		/**
 		* Get the root of interface
 		* @return interface root widget
+		* @warning : this method should NOT be used : facade methods in this class should be preferred.
 		*/
 		inline cocos2d::ui::Widget* getRoot()
 		{
 			return m_widget;
 		}
+		
+		/**
+		* set the position of the widget
+		*/
+		inline void setPosition(const cocos2d::Vec2& position)
+		{
+			m_widget->setPosition(position);
+		}
+
+		/**
+		* enabling the widget
+		*/
+		inline void setEnabled(bool enable)
+		{
+			return m_widget->setEnabled(enable);
+		}
+
+		/**
+		* showing the widget ( and a webview if webview is in its children )
+		*/
+		void setVisible(bool visible);
+
+		/**
+		* Adds a child
+		*/
+		virtual void addChild(cocos2d::Node * child);
+
+		/**
+		* Removes a child
+		*/
+		virtual void removeChild(cocos2d::Node * child);
 
 		/**
 		* get widget in hierarchy
@@ -83,6 +118,18 @@ namespace WkCocos
 		*/
 		static std::unordered_map<std::string, cocos2d::ui::Widget *> widget_cache;
 
+		/**
+		* Set of webViews that we need to keep in check to manage visibility
+		*/
+		std::unordered_set<cocos2d::experimental::ui::WebView *> m_webviews;
+
+		/**
+		* Utility method that recursively parse node tree to add webviews to the list
+		*/
+		void addWebView(cocos2d::Node * child);
+		void removeWebView(cocos2d::Node * child);
+
+		friend class Scene;
 	};
 	
 }//namespace dfgame

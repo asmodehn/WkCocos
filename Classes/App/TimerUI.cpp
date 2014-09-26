@@ -55,7 +55,7 @@ TimerUI::~TimerUI()
 
 void TimerUI::receive(const WkCocos::Timer::Events::TimerUpdate &tu)
 {
-	m_countLabel->setText(WkCocos::ToolBox::itoa(tu.getTimeLeft().tm_min) + " min " + WkCocos::ToolBox::itoa(tu.getTimeLeft().tm_sec) + " sec");
+	m_countLabel->setText(WkCocos::ToolBox::itoa(tu.getTimeLeft()) + " sec");
 }
 
 void TimerUI::receive(const WkCocos::Timer::Events::AlarmOff &ao)
@@ -69,7 +69,7 @@ void TimerUI::startCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchE
 	{
 		CCLOG("START BUTTON CLICKED");
 		
-		GameLogic::Instance().getPlayer().setTimer("testing", 60);
+		GameLogic::Instance().getPlayer().setTimer("testing", 65);
 		
 	}
 }
