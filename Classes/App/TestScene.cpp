@@ -6,6 +6,7 @@
 #include "WkCocosApp/DownloadUI.h"
 #include "WkCocosApp/ErrorUI.h"
 #include "WkCocosApp/PlayersListUI.h"
+#include "WkCocosApp/WebUI.h"
 
 #include "WkCocosApp/GameLogic.h"
 
@@ -50,31 +51,24 @@ bool TestScene::init()
 	ui_event_manager->subscribe<NavUI::Next>(*this);
 	ui_event_manager->subscribe<NavUI::Prev>(*this);
 
-	auto navroot = navui->getRoot();
-	navroot->setEnabled(true);
-	navroot->setVisible(true);
-	addChild(navroot);
-	navroot->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.17f));
-	m_ui[NavUI::id] = navui;
+	navui->setEnabled(true);
+	navui->setVisible(true);
+	addInterface(NavUI::id,navui);
+	navui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.17f));
 
 	//Saving UI
 	SavingUI* saveui = new SavingUI();
-	auto saveroot = saveui->getRoot();
-	saveroot->setEnabled(false);
-	saveroot->setVisible(false);
-	addChild(saveroot);
-	saveroot->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.67f));
-	m_ui[SavingUI::id] = saveui;
+	saveui->setEnabled(false);
+	saveui->setVisible(false);
+	addInterface(SavingUI::id,saveui);
+	saveui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.67f));
 
 	//TimerUI
 	TimerUI* timerui = new TimerUI();
-	auto timerroot = timerui->getRoot();
-	timerroot->setEnabled(false);
-	timerroot->setVisible(false);
-	addChild(timerroot);
-	timerroot->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.67f));
-	m_ui[TimerUI::id] = timerui;
-	timerroot->setPosition(cocos2d::Vec2(visibleSize.width * 0.75, visibleSize.height * 0.75));
+	timerui->setEnabled(false);
+	timerui->setVisible(false);
+	addInterface(TimerUI::id,timerui);
+	timerui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.67f));
 	//*/
 
 	/*//PlayersListUI
@@ -122,23 +116,28 @@ bool TestScene::init()
 
 	//ShopUI
 	ShopUI* shopui = new ShopUI();
-	shopui->getRoot()->setEnabled(false);
-	shopui->getRoot()->setVisible(false);
-	addChild(shopui->getRoot());
-	shopui->getRoot()->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.67f));
-	m_ui[ShopUI::id] = shopui;
+	shopui->setEnabled(false);
+	shopui->setVisible(false);
+	addInterface(ShopUI::id,shopui);
+	shopui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.67f));
 
 	//DownloadUI
 	DownloadUI* dlui = new DownloadUI();
-	dlui->getRoot()->setEnabled(false);
-	dlui->getRoot()->setVisible(false);
-	addChild(dlui->getRoot());
-	dlui->getRoot()->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.67f));
-	m_ui[DownloadUI::id] = dlui;
+	dlui->setEnabled(false);
+	dlui->setVisible(false);
+	addInterface(DownloadUI::id,dlui);
+	dlui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.67f));
+
+	//WebUI
+	WebUI* webui = new WebUI();
+	webui->setEnabled(false);
+	webui->setVisible(false);
+	addInterface(WebUI::id,webui);
+	webui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.67f));
 
 	//activating first UI : 
-	saveroot->setEnabled(true);
-	saveroot->setVisible(true);
+	saveui->setEnabled(true);
+	saveui->setVisible(true);
 	currentUI = SavingUI::id;
 	navui->setTitle(currentUI);
 	
@@ -184,9 +183,9 @@ void TestScene::receive(const NavUI::Next &nxt)
 	{
 		cur = m_ui.begin();
 	}
-	auto uiroot = cur->second->getRoot();
-	uiroot->setEnabled(false);
-	uiroot->setVisible(false);
+
+	cur->second->setEnabled(false);
+	cur->second->setVisible(false);
 
 	do
 	{
@@ -196,9 +195,8 @@ void TestScene::receive(const NavUI::Next &nxt)
 		}
 	} while (cur->first == NavUI::id);
 	
-	uiroot = cur->second->getRoot();
-	uiroot->setEnabled(true);
-	uiroot->setVisible(true);
+	cur->second->setEnabled(true);
+	cur->second->setVisible(true);
 	currentUI = cur->first;
 
 	NavUI* nav = getInterface<NavUI>(NavUI::id);
@@ -215,9 +213,8 @@ void TestScene::receive(const NavUI::Prev &prv)
 		cur = m_ui.begin();
 	}
 
-	auto uiroot = cur->second->getRoot();
-	uiroot->setEnabled(false);
-	uiroot->setVisible(false);
+	cur->second->setEnabled(false);
+	cur->second->setVisible(false);
 
 	//reversing iterator
 	auto rcur = std::map<std::string, WkCocos::Interface*>::reverse_iterator(cur);
@@ -234,10 +231,8 @@ void TestScene::receive(const NavUI::Prev &prv)
 			rcur = m_ui.rbegin();
 		}
 	}
-
-	uiroot = rcur->second->getRoot();
-	uiroot->setEnabled(true);
-	uiroot->setVisible(true);
+	rcur->second->setEnabled(true);
+	rcur->second->setVisible(true);
 	currentUI = rcur->first;
 
 	NavUI* nav = getInterface<NavUI>(NavUI::id);
@@ -250,19 +245,16 @@ void TestScene::error_CB(std::string msg)
 
 	//Error UI. created only when we need it.
 	ErrorUI* errorui = new ErrorUI();
-	auto errorroot = errorui->getRoot();
-	addChild(errorroot);
-	m_ui[ErrorUI::id] = errorui;
-	errorroot->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.67f));
+	addInterface(ErrorUI::id,errorui);
+	errorui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.67f));
 
 	errorui->setRefreshCallback([this, errorui](){
 		errorui->deactivate();
 		//removing UI from scene
-		removeChild(errorui->getRoot());
-		m_ui.erase(ErrorUI::id);
+		removeInterface(ErrorUI::id);
 		//displaying navi
-		m_ui[NavUI::id]->getRoot()->setEnabled(true);
-		m_ui[NavUI::id]->getRoot()->setVisible(true);
+		m_ui[NavUI::id]->setEnabled(true);
+		m_ui[NavUI::id]->setVisible(true);
 
 		NavUI* nav = getInterface<NavUI>(NavUI::id);
 		nav->setTitle(NavUI::id);
@@ -271,11 +263,10 @@ void TestScene::error_CB(std::string msg)
 	errorui->setSkipCallback([this, errorui](){
 		errorui->deactivate();
 		//removing UI from scene
-		removeChild(errorui->getRoot());
-		m_ui.erase(ErrorUI::id);
+		removeInterface(ErrorUI::id);
 		//displaying navi
-		m_ui[NavUI::id]->getRoot()->setEnabled(true);
-		m_ui[NavUI::id]->getRoot()->setVisible(true);
+		m_ui[NavUI::id]->setEnabled(true);
+		m_ui[NavUI::id]->setVisible(true);
 
 		NavUI* nav = getInterface<NavUI>(NavUI::id);
 		nav->setTitle(NavUI::id);

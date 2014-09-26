@@ -40,11 +40,24 @@ namespace WkCocos
 		}
 	}
 
-	void Scene::addInterface(Interface* ui)
+	std::string Scene::addInterface(std::string id, Interface* ui)
 	{
-		m_uiView->addChild(ui->getRoot());
+		m_uiView->addChild(ui->m_widget);
 
-		m_ui[ui->getFilepath()] = ui;
+		m_ui[id] = ui;
+
+		return id;
+	}
+
+	Interface* Scene::removeInterface(std::string id)
+	{
+		Interface* ui = m_ui[id];
+
+		m_uiView->removeChild(ui->m_widget);
+
+		m_ui.erase(id);
+
+		return ui;
 	}
 
 	void Scene::update(float delta)
