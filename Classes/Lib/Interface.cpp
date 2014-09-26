@@ -5,10 +5,15 @@ namespace WkCocos
 {
 	std::unordered_map<std::string, cocos2d::ui::Widget *> Interface::widget_cache;
 
-	cocos2d::ui::Widget * Interface::load(std::string filepath)
+	cocos2d::ui::Widget * Interface::load(std::string filepath, bool reuse_from_cache)
 	{
-		auto uicached = widget_cache.find(filepath);
-		if (uicached == widget_cache.end()) //ui not found in cache
+		auto uicached = widget_cache.end();
+		if (reuse_from_cache)
+		{
+			uicached = widget_cache.find(filepath);
+		}
+
+		if ( uicached == widget_cache.end()) //ui not found in cache
 		{
 			cocostudio::GUIReader* reader = cocostudio::GUIReader::getInstance();
 
@@ -68,6 +73,55 @@ namespace WkCocos
 	Interface::~Interface()
 	{
 		forget(m_filepath);
+	}
+	
+	void Interface::setVisible(bool visible)
+	{
+		m_widget->setVisible(visible);
+		for (cocos2d::experimental::ui::WebView* wv : m_webviews)
+		{
+			wv->setVisible(visible);
+		}
+	}
+	
+	void Interface::addChild(cocos2d::Node * child)
+	{
+		addWebView(child);
+		m_widget->addChild(child);
+	}
+
+	void Interface::addWebView(cocos2d::Node * child)
+	{
+		if ("WebView" == child->getDescription())
+		{
+			auto childcast = dynamic_cast<cocos2d::experimental::ui::WebView*>(child);
+			m_webviews.insert(childcast);
+		}
+		//recurse
+		for( cocos2d::Node* node : child->getChildren())
+		{
+			addWebView(node);
+		}
+	}
+
+	void Interface::removeChild(cocos2d::Node * child)
+	{
+		removeWebView(child);
+		m_widget->removeChild(child);
+	}
+	
+	void Interface::removeWebView(cocos2d::Node * child)
+	{
+		if ("WebView" == child->getDescription())
+		{
+			auto childcast = dynamic_cast<cocos2d::experimental::ui::WebView*>(child);
+			m_webviews.erase(childcast);
+		}
+		//recurse
+		for (cocos2d::Node* node : child->getChildren())
+		{
+			removeWebView(node);
+		}
 	}
 
 	void Interface::update(float delta)

@@ -8,7 +8,9 @@ namespace WkCocos
 {
 
 	CocosLogAppender::CocosLogAppender(cocos2d::Node* root, const std::string& fontName, const CheckBoxRes& res)
-		: _model(nullptr)
+		: _log(nullptr)
+		, _model(nullptr)
+		, _logSize(_MAX_LINE)
 	{
 		// make model
 		_model = cocos2d::ui::TextBMFont::create("", fontName);
@@ -78,7 +80,7 @@ namespace WkCocos
 		
 		std::string output = str.str();
 
-		if (_logSize >= _log->getItems().size())
+		if (_log->getItems().size() >= _logSize)
 		{
 			_log->removeItem(0);
 		}

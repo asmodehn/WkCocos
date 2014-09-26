@@ -1,12 +1,5 @@
 package com.gameparkstudio.wkcocos.app;
 
-//import android.content.pm.ApplicationInfo;
-//import android.content.pm.PackageManager;
-//import android.support.v7.app.ActionBarActivity;
-//import android.os.Bundle;
-//import android.view.Menu;
-//import android.view.MenuItem;
-
 import org.cocos2dx.lib.Cocos2dxActivity;
 
 import android.app.NotificationManager;
@@ -15,31 +8,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 
-//import org.cocos2dx.lib.Cocos2dxHandler;
-//import org.cocos2dx.lib.Cocos2dxHelper;
-//import org.cocos2dx.lib.Cocos2dxVideoHelper;
 import org.cocos2dx.lib.Cocos2dxGLSurfaceView;
+import android.util.Log;
 
-import com.soomla.cocos2dx.common.ServiceManager;
-import com.soomla.cocos2dx.store.StoreService;
+import com.gameparkstudio.wkcocos.lib.MainActivity;
+import com.gameparkstudio.wkcocos.lib.Utils;
 
-public class AppActivity extends Cocos2dxActivity {
+public class AppActivity extends MainActivity {
+
+    private final static String TAG = MainActivity.class.getSimpleName();
 
     NotificationManager WKNM;
-
-    @Override
-    public Cocos2dxGLSurfaceView onCreateView() {
-
-        Cocos2dxGLSurfaceView glSurfaceView = new Cocos2dxGLSurfaceView(this);
-
-        // initialize services
-        final ServiceManager serviceManager = ServiceManager.getInstance();
-        serviceManager.setActivity(this);
-        serviceManager.setGlSurfaceView(glSurfaceView);
-        serviceManager.registerService(StoreService.getInstance());
-
-        return glSurfaceView;
-    }
 
     @Override protected void onPause()
     {
@@ -58,6 +37,9 @@ public class AppActivity extends Cocos2dxActivity {
         WKNM.notify(0, WKBuilder.build());
     }
 
-    @Override protected void onResume() { ServiceManager.getInstance().onResume(); super.onResume(); }
 
+    @Override protected void onResume() {
+        //Log.d(TAG, "Resuming app version " + Utils.getVersionName() );
+        super.onResume();
+    }
 }

@@ -6,9 +6,8 @@ NDK_TOOLCHAIN_VERSION := 4.8
 #This is needed to get GLES2 working
 APP_PLATFORM := android-9
 
-#minimal ABI is ARMv7
-APP_ABI := armeabi-v7a
-#x86
+#building for all platforms but our minimal supported ABI is ARMv7A
+APP_ABI := armeabi-v7a x86
 
 APP_STL := gnustl_static
 APP_CPPFLAGS :=  -std=c++11 -fsigned-char -frtti -fexceptions

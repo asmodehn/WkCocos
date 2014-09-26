@@ -50,21 +50,17 @@ bool LoadingScene::init()
 	Size visibleSize = Director::getInstance()->getVisibleSize();
 	//Load UI
 	LoadingUI* loadui = new LoadingUI();
-	auto loadroot = loadui->getRoot();
-	loadroot->setEnabled(true);
-	loadroot->setVisible(true);
-	addChild(loadroot);
-	m_ui[LoadingUI::id] = loadui;
-	loadroot->setPosition(Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.25f));
+	loadui->setEnabled(true);
+	loadui->setVisible(true);
+	addInterface(LoadingUI::id,loadui);
+	loadui->setPosition(Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.25f));
 
 	//Error UI
 	ErrorUI* errorui = new ErrorUI();
-	auto errorroot = errorui->getRoot();
-	addChild(errorroot);
-	errorroot->setEnabled(false);
-	errorroot->setVisible(false);
-	m_ui[ErrorUI::id] = errorui;
-	errorroot->setPosition(Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.75f));
+	addInterface(ErrorUI::id,errorui);
+	errorui->setEnabled(false);
+	errorui->setVisible(false);
+	errorui->setPosition(Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.75f));
 
 	errorui->setRefreshCallback([this, errorui](){
 		

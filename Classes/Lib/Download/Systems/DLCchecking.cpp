@@ -140,12 +140,12 @@ namespace WkCocos
 								//do we need to update ?
 								bool dlc_update_required = false;
 
-								std::string version = cocostudio::DictionaryHelper::getInstance()->getStringValue_json(json, "version", "0");
+								std::string version = cocostudio::DictionaryHelper::getInstance()->getStringValue_json(json, "version", "");
 								if (version == dllist->m_current_version) //if we have the exact same string : developer update or current version hotfix.
 								{
 									dlc_update_required = true;
 								}
-								else //we need to compare string to find if the online version is more recent
+								else if (version.length() > 0 )  //we need to compare string to find if the online version is more recent
 								{
 									unsigned long lver = 0;
 									try {
@@ -181,6 +181,10 @@ namespace WkCocos
 									std::vector<unsigned long> cmav = splitVersion(dllist->m_current_minAppVersion);
 
 									dlc_update_allowed = true;
+									while ( mav.size() < cmav.size() )
+									{
+										mav.push_back(0);
+									}
 									for (unsigned int i = 0; i < cmav.size(); ++i)
 									{
 										if (mav.at(i) > cmav.at(i))
