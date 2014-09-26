@@ -105,7 +105,6 @@ namespace WkCocos
 							if (it->collectionName == collec)
 							for (std::vector<::App42::JSONDocument>::iterator iit = it->jsonDocArray.begin(); iit != it->jsonDocArray.end(); ++iit)
 							{
-								printf("\n DocId=%s", iit->getDocId().c_str());
 								if (iit->getOwner() == userid)
 								{
 									delete_cb(iit->getDocId());
