@@ -34,8 +34,8 @@ namespace WkCocos
 			m_uiView = cocos2d::CameraView::create();
 			m_uiView->setContentSize(getContentSize());
 
-			addChild(m_worldView);
-			addChild(m_uiView);
+			addChild(m_worldView, -1);
+			addChild(m_uiView, 1);
 			return true;
 		}
 	}

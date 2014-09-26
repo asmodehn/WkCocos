@@ -22,7 +22,7 @@ namespace WkCocos
 		* Loads a UI resource into memory.
 		* @return pointer to the widget in preloaded memory.
 		*/
-		static cocos2d::ui::Widget * load(std::string filepath);
+		static cocos2d::ui::Widget * load(std::string filepath, bool reuse_from_cache = true);
 		static void forget(std::string filepath);
 		
 		/**

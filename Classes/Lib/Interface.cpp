@@ -5,10 +5,15 @@ namespace WkCocos
 {
 	std::unordered_map<std::string, cocos2d::ui::Widget *> Interface::widget_cache;
 
-	cocos2d::ui::Widget * Interface::load(std::string filepath)
+	cocos2d::ui::Widget * Interface::load(std::string filepath, bool reuse_from_cache)
 	{
-		auto uicached = widget_cache.find(filepath);
-		if (uicached == widget_cache.end()) //ui not found in cache
+		auto uicached = widget_cache.end();
+		if (reuse_from_cache)
+		{
+			uicached = widget_cache.find(filepath);
+		}
+
+		if ( uicached == widget_cache.end()) //ui not found in cache
 		{
 			cocostudio::GUIReader* reader = cocostudio::GUIReader::getInstance();
 

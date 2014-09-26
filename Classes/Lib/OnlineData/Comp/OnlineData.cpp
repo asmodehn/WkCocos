@@ -115,7 +115,8 @@ namespace WkCocos
 					}
 					else// if request failed, 
 					{
-						CCLOG("\nerrordetails:%s", userdata->errorDetails.c_str());
+						// make log crash with huge log.
+						//CCLOG("\nerrordetails:%s", userdata->errorDetails.c_str());
 						CCLOG("\nerrorMessage:%s", userdata->errorMessage.c_str());
 						CCLOG("\nappErrorCode:%d", userdata->appErrorCode);
 						CCLOG("\nhttpErrorCode:%d", userdata->httpErrorCode);
