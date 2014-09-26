@@ -49,6 +49,11 @@ public:
     */
     static WebView *create();
 
+	/**
+	* Returns the "class name" of widget.
+	*/
+	virtual std::string getDescription() const override;
+
     /**
     * Set javascript interface scheme.
     * @see #onJsCallback

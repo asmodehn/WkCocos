@@ -30,8 +30,8 @@ WebUI::WebUI()
 		webv->setOnDidFinishLoading(std::bind(&WebUI::onWebViewDidFinishLoading, this, std::placeholders::_1, std::placeholders::_2));
 		webv->setOnDidFailLoading(std::bind(&WebUI::onWebViewDidFailLoading, this, std::placeholders::_1, std::placeholders::_2));
 
-		m_widget->addChild(webv);
-
+		//we need to call addhChild from parent class to store webview to be able to manipulate visibility later
+		addChild(webv);
 
 		m_widget->retain(); //we need to retain it in memory ( or cocos will drop it )
 		widget_cache.insert(std::pair<std::string, cocos2d::ui::Widget*>(id, m_widget));

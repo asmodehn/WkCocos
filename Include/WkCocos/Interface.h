@@ -72,13 +72,11 @@ namespace WkCocos
 		* Adds a child
 		*/
 		virtual void addChild(cocos2d::Node * child);
-		virtual void addChild(cocos2d::experimental::ui::WebView * child);
 
 		/**
 		* Removes a child
 		*/
 		virtual void removeChild(cocos2d::Node * child);
-		virtual void removeChild(cocos2d::experimental::ui::WebView * child);
 
 		/**
 		* get widget in hierarchy
@@ -109,7 +107,6 @@ namespace WkCocos
 		* Widget root
 		*/
 		cocos2d::ui::Widget *m_widget;
-		std::unordered_set<cocos2d::experimental::ui::WebView *> m_webviews;
 
 		/**
 		* UI Filepath
@@ -120,6 +117,17 @@ namespace WkCocos
 		* Preloaded memory
 		*/
 		static std::unordered_map<std::string, cocos2d::ui::Widget *> widget_cache;
+
+		/**
+		* Set of webViews that we need to keep in check to manage visibility
+		*/
+		std::unordered_set<cocos2d::experimental::ui::WebView *> m_webviews;
+
+		/**
+		* Utility method that recursively parse node tree to add webviews to the list
+		*/
+		void addWebView(cocos2d::Node * child);
+		void removeWebView(cocos2d::Node * child);
 
 		friend class Scene;
 	};

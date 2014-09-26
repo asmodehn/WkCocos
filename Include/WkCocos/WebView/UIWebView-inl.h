@@ -60,6 +60,11 @@ namespace experimental{
             return nullptr;
         }
         
+		std::string WebView::getDescription() const
+		{
+			return "WebView";
+		}
+
         void WebView::setJavascriptInterfaceScheme(const std::string &scheme)
         {
             _impl->setJavascriptInterfaceScheme(scheme);
