@@ -30,14 +30,25 @@ namespace WkCocos
 		/**
 		* Add UI to manage
 		* @param ui Interface to manage
+		* @return id of the interface
 		*/
-		void addInterface(Interface* ui);
+		inline std::string addInterface(Interface* ui)
+		{
+			addInterface(ui->getFilepath(), ui);
+		}
+		std::string addInterface(std::string id, Interface* ui);
 
+		/**
+		* Remove managed UI
+		* @param ui Interface to manage
+		* @return the interface removed from the list.
+		*/
+		Interface* removeInterface(std::string id);
+		
 		/**
 		* Get UI loaded
 		* @param filepath filepath or string id of the UI to fetch
 		*/
-
 		template <typename UI = Interface>
 		inline UI* getInterface(const std::string& filepath) { return dynamic_cast<UI*>(m_ui.at(filepath)); }
 		

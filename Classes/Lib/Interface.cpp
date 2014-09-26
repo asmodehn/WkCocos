@@ -69,7 +69,37 @@ namespace WkCocos
 	{
 		forget(m_filepath);
 	}
+	
+	void Interface::setVisible(bool visible)
+	{
+		m_widget->setVisible(visible);
+		for (cocos2d::experimental::ui::WebView* wv : m_webviews)
+		{
+			wv->setVisible(visible);
+		}
+	}
+	
+	void Interface::addChild(cocos2d::Node * child)
+	{
+		m_widget->addChild(child);
+	}
 
+	void Interface::addChild(cocos2d::experimental::ui::WebView * child)
+	{
+		addChild(static_cast<cocos2d::Node*>(child));
+		m_webviews.insert(child);
+	}
+
+	void Interface::removeChild(cocos2d::Node * child)
+	{
+		m_widget->removeChild(child);
+	}
+	void Interface::removeChild(cocos2d::experimental::ui::WebView * child)
+	{
+		removeChild(static_cast<cocos2d::Node*>(child));
+		m_webviews.erase(child);
+	}
+	
 	void Interface::update(float delta)
 	{
 		//NOTHING to do here by default.

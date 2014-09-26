@@ -25,17 +25,6 @@ public class Utils {
         return vcode;
     }
 
-    public static void showUrl(String url, WebView wv ,  boolean enable_javascript)
-    {
-        //TODO : get current activity ?
-
-        if ( enable_javascript ) {
-            WebSettings webSettings = wv.getSettings();
-            webSettings.setJavaScriptEnabled(true);
-        }
-        wv.loadUrl(url);
-    }
-
     public static String getLanguage()
     {
         return Locale.getDefault().getLanguage();

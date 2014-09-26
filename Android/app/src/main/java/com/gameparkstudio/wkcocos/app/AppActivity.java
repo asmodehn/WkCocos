@@ -14,7 +14,7 @@ public class AppActivity extends MainActivity {
     }
 
     @Override protected void onResume() {
-        Log.d(TAG, "Resuming app version " + Utils.getVersionName() );
+        //Log.d(TAG, "Resuming app version " + Utils.getVersionName() );
         super.onResume();
     }
 }

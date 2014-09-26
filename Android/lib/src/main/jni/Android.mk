@@ -60,7 +60,9 @@ LOCAL_SRC_FILES := jni.cpp \
                    ../../../../../Classes/Lib/Timer/Systems/AlarmRinger.cpp \
                    ../../../../../Classes/Lib/Timer/Systems/TimeUpdater.cpp \
                    ../../../../../Classes/Lib/StrongBox/StrongBox.cpp \
-                   ../../../../../Classes/Lib/Save.cpp
+                   ../../../../../Classes/Lib/Save.cpp \
+                   ../../../../../Classes/Lib/WebView/UIWebView.cpp \
+                   ../../../../../Classes/Lib/WebView/UIWebViewImpl-android.cpp
 
 #do not include this file, it's already in libcurl
 #                   ../../../../../Classes/Lib/Utils/md5.c \

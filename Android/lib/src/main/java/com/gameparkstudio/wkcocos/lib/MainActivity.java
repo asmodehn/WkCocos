@@ -16,6 +16,17 @@ public class MainActivity extends Cocos2dxActivity {
 
     private final static String TAG = MainActivity.class.getSimpleName();
 
+    private Cocos2dxWebViewHelper mWebViewHelper = null;
+
+    @Override
+    protected void onCreate(final Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if(mWebViewHelper == null){
+            mWebViewHelper = new Cocos2dxWebViewHelper(mFrameLayout);
+        }
+    }
+
     @Override
     public Cocos2dxGLSurfaceView onCreateView() {
 
