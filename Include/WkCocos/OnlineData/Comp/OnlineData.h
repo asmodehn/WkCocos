@@ -93,7 +93,7 @@ namespace WkCocos
 
 			struct GetUsersWithDocs : entityx::Component<GetUsersWithDocs>
 			{
-				GetUsersWithDocs(std::string m_collection, entityx::ptr<entityx::EventManager> event_emitter);
+				GetUsersWithDocs(std::string m_collection, std::function<void(std::string)> cb);
 
 				bool in_progress;
 				bool done;
@@ -104,7 +104,7 @@ namespace WkCocos
 
 			struct GetUsersKeyValue : entityx::Component<GetUsersKeyValue>
 			{
-				GetUsersKeyValue(std::string m_collection, std::string m_key, int m_value, entityx::ptr<entityx::EventManager> event_emitter);
+				GetUsersKeyValue(std::string m_collection, std::string m_key, int m_value, std::function<void(std::string)> cb);
 
 				bool in_progress;
 				bool done;
@@ -117,7 +117,7 @@ namespace WkCocos
 
 			struct GetUsersFromTo : entityx::Component<GetUsersFromTo>
 			{
-				GetUsersFromTo(std::string m_collection, std::string m_key, int m_from, int m_to, entityx::ptr<entityx::EventManager> event_emitter);
+				GetUsersFromTo(std::string m_collection, std::string m_key, int m_from, int m_to, std::function<void(std::string)> cb);
 
 				bool in_progress;
 				bool done;

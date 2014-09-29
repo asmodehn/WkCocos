@@ -111,19 +111,34 @@ namespace WkCocos
 		void OnlineDataManager::getUsersWithDocs(const std::string& saveName)
 		{
 			auto newentity = entity_manager->create();
-			newentity.assign<Comp::GetUsersWithDocs>(saveName, event_manager);
+			newentity.assign<Comp::GetUsersWithDocs>(saveName, [=](std::string data)
+			{
+				cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, data](){
+					event_manager->emit<Events::PlayersList>(data);
+				});
+			});
 		}
 
 		void OnlineDataManager::getUsersKeyValue(const std::string& saveName, const std::string& key, int value)
 		{
 			auto newentity = entity_manager->create();
-			newentity.assign<Comp::GetUsersKeyValue>(saveName, key, value, event_manager);
+			newentity.assign<Comp::GetUsersKeyValue>(saveName, key, value, [=](std::string data)
+			{
+				cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, data](){
+					event_manager->emit<Events::PlayersList>(data);
+				});
+			});
 		}
 
 		void OnlineDataManager::getUsersFromTo(const std::string& saveName, const std::string& key, int from, int to)
 		{
 			auto newentity = entity_manager->create();
-			newentity.assign<Comp::GetUsersFromTo>(saveName, key, from, to, event_manager);
+			newentity.assign<Comp::GetUsersFromTo>(saveName, key, from, to, [=](std::string data)
+			{
+				cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, data](){
+					event_manager->emit<Events::PlayersList>(data);
+				});
+			});
 		}
 
 		void OnlineDataManager::getServerTime(std::function<void(std::string)> callback)

@@ -212,7 +212,7 @@ namespace WkCocos
 				};
 			}
 
-			GetUsersWithDocs::GetUsersWithDocs(std::string collec, entityx::ptr<entityx::EventManager> event_emitter)
+			GetUsersWithDocs::GetUsersWithDocs(std::string collec, std::function<void(std::string)> cb)
 				: in_progress(false)
 				, done(false)
 				, m_collection(collec)
@@ -251,7 +251,8 @@ namespace WkCocos
 								rapidjson::StringBuffer strbuf;
 								rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
 								doc.Accept(writer);
-								event_emitter->emit<Events::PlayersList>(strbuf.GetString());
+								//callback after parsing
+								cb(strbuf.GetString());
 							}
 						}
 					}
@@ -267,7 +268,7 @@ namespace WkCocos
 				};
 			}
 
-			GetUsersKeyValue::GetUsersKeyValue(std::string collec, std::string key, int value, entityx::ptr<entityx::EventManager> event_emitter)
+			GetUsersKeyValue::GetUsersKeyValue(std::string collec, std::string key, int value, std::function<void(std::string)> cb)
 				: in_progress(false)
 				, done(false)
 				, m_collection(collec)
@@ -308,7 +309,8 @@ namespace WkCocos
 								rapidjson::StringBuffer strbuf;
 								rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
 								doc.Accept(writer);
-								event_emitter->emit<Events::PlayersList>(strbuf.GetString());
+								//callback after success
+								cb(strbuf.GetString());
 							}
 						}
 					}
@@ -324,7 +326,7 @@ namespace WkCocos
 				};
 			}
 
-			GetUsersFromTo::GetUsersFromTo(std::string collec, std::string key, int from, int to, entityx::ptr<entityx::EventManager> event_emitter)
+			GetUsersFromTo::GetUsersFromTo(std::string collec, std::string key, int from, int to, std::function<void(std::string)> cb)
 				: in_progress(false)
 				, done(false)
 				, m_collection(collec)
@@ -366,7 +368,8 @@ namespace WkCocos
 								rapidjson::StringBuffer strbuf;
 								rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
 								doc.Accept(writer);
-								event_emitter->emit<Events::PlayersList>(strbuf.GetString());
+								//callback after success
+								cb(strbuf.GetString());
 							}
 						}
 					}
