@@ -24,8 +24,8 @@
  ****************************************************************************/
  
 #include "cocos/base/CCPlatformConfig.h"
-
-#if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
+//blocking Win32 implementation without ATL.
+#if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32 && defined(WIN32_ATL_AVAILABLE)
 
 #include <atlbase.h>
 #include <atlwin.h>
