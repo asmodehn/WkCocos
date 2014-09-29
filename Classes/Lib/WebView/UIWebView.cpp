@@ -30,6 +30,12 @@
 
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
 
+//blocking win32 implementation without ATL
+//TOOD : find a CMake way to detect it and enable if present.
+#ifdef WIN32_ATL_AVAILABLE
+#undef WIN32_ATL_AVAILABLE
+#endif
+
 #include "WkCocos/WebView/UIWebViewImpl-win32.h"
 #include "WkCocos/WebView/UIWebView-inl.h"
 
