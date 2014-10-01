@@ -47,10 +47,10 @@ PlayersListUI::PlayersListUI()
 
 	}
 
-	GameLogic::Instance().getPlayer().getOnlineDatamgr()->getEventManager()->subscribe<WkCocos::OnlineData::Events::PlayersList>(*this);
-	GameLogic::Instance().getPlayer().getOnlineDatamgr()->getEventManager()->subscribe<WkCocos::OnlineData::Events::EnemyData>(*this);
-	GameLogic::Instance().getPlayer().getAllUsers();
-	//GameLogic::Instance().getPlayer().getUsersWithDocs();
+	g_gameLogic->getPlayer().getOnlineDatamgr()->getEventManager()->subscribe<WkCocos::OnlineData::Events::PlayersList>(*this);
+	g_gameLogic->getPlayer().getOnlineDatamgr()->getEventManager()->subscribe<WkCocos::OnlineData::Events::EnemyData>(*this);
+	g_gameLogic->getPlayer().getAllUsers();
+	//g_gameLogic->getPlayer().getUsersWithDocs();
 }
 
 PlayersListUI::~PlayersListUI()
@@ -88,7 +88,7 @@ void PlayersListUI::refreshCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget
 		}
 		m_ptb.clear();
 
-		GameLogic::Instance().getPlayer().getAllUsers();
+		g_gameLogic->getPlayer().getAllUsers();
 	}
 }
 
@@ -125,7 +125,7 @@ void PlayersListUI::receive(const WkCocos::OnlineData::Events::PlayersList &pl)
 						[=](cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input)
 						{
 							if (input == cocos2d::ui::Widget::TouchEventType::ENDED)
-								GameLogic::Instance().getPlayer().loadEnemy(enemy_name);
+								g_gameLogic->getPlayer().loadEnemy(enemy_name);
 						}
 					);
 

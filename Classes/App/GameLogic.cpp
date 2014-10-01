@@ -1,7 +1,7 @@
 #include "WkCocosApp/GameLogic.h"
 #include "WkCocos/Shop/Assets.h"
 
-GameLogic::GameLogic()
+GameLogic::GameLogic(std::string app_access_key, std::string app_secret_key, std::function<void()> online_init_cb)
 : m_localdatamngr(new WkCocos::LocalData::LocalDataManager())
 , m_options(new MyOptions(m_localdatamngr))
 //license number is in clear here as this is not a published app.
@@ -28,13 +28,23 @@ GameLogic::GameLogic()
 
 	m_shop.reset(new WkCocos::Shop::Shop("MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgckSrYT3yMLAYSS/2NVN3jtIdypsOCikdgiTr2mDu8fmwRPa3945vTPVPCOlbL3b77IYgpBf3PMOZcftGL2Jtdyk6AReLjixQzkeyaRLYK4kq9+0JYuD9V/uvqleuCw9NkzZaEOzGBU5IlFYGbXkZm6j/TPytjnJja0kTyXhiJKxzOyCsiUJ4VhLTUk4KL2py+YjPN8/MluOr+Uc/r88Rpd7M2fVH0pdqu35C2xuxLnnbCbu9xvVBPX3l/sb0srDgxdlrRY8JxkNr0mLMdmxnreDRz2aavMuXn2MS7xjB4YgbHLo75tgvTKxD1TbTtocB5VNPIg64a4hXq8rX/z2DwIDAQAB", "53CR3T", std::move(shopAssets)));
 
-	m_player.reset(new MyPlayer(m_localdatamngr, m_shop->getInventory(), [](std::string userid)  -> std::string
+	m_onlinedatamngr.reset(new WkCocos::OnlineData::OnlineDataManager(app_access_key, app_secret_key));
+
+	m_player.reset(new MyPlayer(m_localdatamngr, [](std::string userid)  -> std::string
 	{
 		CCLOG("%s",userid.c_str());
 		return "pass_" + userid;
-	}));
+	},
+	m_onlinedatamngr, 
+	online_init_cb)
+	);
+
+	m_player->setupInventory(m_shop->getInventory());
 }
 
 GameLogic::~GameLogic()
 {}
+
+//global instance
+std::shared_ptr<GameLogic> g_gameLogic;
 

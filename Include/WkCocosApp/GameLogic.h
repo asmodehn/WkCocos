@@ -10,20 +10,11 @@
 
 //#include "cocos2d.h"
 
+//TODO : This used ot be a singleton. but it is not needed, it can be just a global variable.
+// => We should review design in order to include GameLogic as a Helper in Lib ( providing easy access to all managers. )
 class GameLogic{
 public:
-	static GameLogic& Instance() {
-		static GameLogic S;
-		return S;
-	}
 	
-	void connectApp42(std::string app_access_key, std::string app_secret_key, std::function<void()> online_init_cb)
-	{
-		m_onlinedatamngr.reset(new WkCocos::OnlineData::OnlineDataManager(app_access_key, app_secret_key));
-		//required for login, even if save is local only.
-		m_player->setOnlineDataManager(m_onlinedatamngr, online_init_cb);
-	}
-
 	void localDataError()
 	{
 		CCLOG("LOCAL DATA ERROR");
@@ -44,9 +35,18 @@ public:
 		return *(m_shop.get());
 	}
 
+	WkCocos::LocalData::LocalDataManager& getLocalDataManager()
+	{
+		return *(m_localdatamngr.get());
+	}
 
-private:
-	GameLogic();
+	WkCocos::OnlineData::OnlineDataManager& getOnlineDataManager()
+	{
+		return *(m_onlinedatamngr.get());
+	}
+
+public:
+	GameLogic(std::string app_access_key, std::string app_secret_key, std::function<void()> online_init_cb);
 	~GameLogic();
 	
 	//overall game features ( shared between concepts )
@@ -60,5 +60,8 @@ private:
 	std::unique_ptr<MyOptions> m_options;
 
 };
+
+//global instance
+extern std::shared_ptr<GameLogic> g_gameLogic;
 
 #endif

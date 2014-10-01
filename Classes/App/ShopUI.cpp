@@ -26,8 +26,8 @@ ShopUI::ShopUI()
 	cocos2d::Vec2 origin = cocos2d::Director::getInstance()->getVisibleOrigin();
 
 	//building test UI based on ShopAssets content.
-	std::vector<WkCocos::Shop::Assets::VirtualCurrency> curncy = GameLogic::Instance().getShop().getAssets()->getCurrencies();
-	std::vector<WkCocos::Shop::Assets::VirtualCurrencyPack> curncyPacks = GameLogic::Instance().getShop().getAssets()->getCurrencyPacks();
+	std::vector<WkCocos::Shop::Assets::VirtualCurrency> curncy = g_gameLogic->getShop().getAssets()->getCurrencies();
+	std::vector<WkCocos::Shop::Assets::VirtualCurrencyPack> curncyPacks = g_gameLogic->getShop().getAssets()->getCurrencyPacks();
 	
 	for (auto c = curncy.begin(); c != curncy.end(); ++c)
 	{
@@ -105,8 +105,8 @@ ShopUI::ShopUI()
 	}
 
 	//ENTITYX WAY
-	GameLogic::Instance().getShop().getEventManager()->subscribe<WkCocos::Shop::Shop::CurrencyBalanceChanged>(*this);
-	GameLogic::Instance().getShop().getEventManager()->subscribe<WkCocos::Shop::Shop::MarketItemsRefreshed>(*this);
+	g_gameLogic->getShop().getEventManager()->subscribe<WkCocos::Shop::Shop::CurrencyBalanceChanged>(*this);
+	g_gameLogic->getShop().getEventManager()->subscribe<WkCocos::Shop::Shop::MarketItemsRefreshed>(*this);
 
 }
 
@@ -124,7 +124,7 @@ void ShopUI::buyCallback( WkCocos::Shop::Assets::VirtualCurrencyPack vcp, cocos2
 		CCLOG("BUY ITEM %s BUTTON CLICKED", vcp.productID.c_str());
 
 		//test buy
-		GameLogic::Instance().getPlayer().getInventory()->buy(vcp.itemid);
+		g_gameLogic->getPlayer().getInventory()->buy(vcp.itemid);
 	}
 }
 
@@ -136,7 +136,7 @@ void ShopUI::refreshCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::Touch
 		CCLOG("REFRESH BUTTON CLICKED");
 
 		//test refresh
-		GameLogic::Instance().getPlayer().getInventory()->refresh();
+		g_gameLogic->getPlayer().getInventory()->refresh();
 	}
 }
 
@@ -153,8 +153,8 @@ void ShopUI::receive(const WkCocos::Shop::Shop::MarketItemsRefreshed& mir)
 	CCLOG("ShopUI::receive (MarketItemsRefreshed)");
 
 	//REbuilding test UI based on ShopAssets content.
-	std::vector<WkCocos::Shop::Assets::VirtualCurrency> curncy = GameLogic::Instance().getShop().getAssets()->getCurrencies();
-	std::vector<WkCocos::Shop::Assets::VirtualCurrencyPack> curncyPacks = GameLogic::Instance().getShop().getAssets()->getCurrencyPacks();
+	std::vector<WkCocos::Shop::Assets::VirtualCurrency> curncy = g_gameLogic->getShop().getAssets()->getCurrencies();
+	std::vector<WkCocos::Shop::Assets::VirtualCurrencyPack> curncyPacks = g_gameLogic->getShop().getAssets()->getCurrencyPacks();
 	cocos2d::Size widgetSize = m_widget->getContentSize();
 
 	for (auto c = curncy.begin(); c != curncy.end(); ++c)

@@ -89,7 +89,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 	//LOG_INFO << "Next Line" << std::endl;
 
 	//Creating gamelogic and setting player.
-	GameLogic::Instance().connectApp42("73a0a556fbecbb4a8dd28728a06d7796f207d017cb6b74e8c9e45973ad487c14", "f7976c94667424a528a4723eb3e4791c24ecf9b36ec770c251b9e039faa04517", [loadscene]()
+	g_gameLogic.reset( new GameLogic("73a0a556fbecbb4a8dd28728a06d7796f207d017cb6b74e8c9e45973ad487c14", "f7976c94667424a528a4723eb3e4791c24ecf9b36ec770c251b9e039faa04517", [loadscene]()
 	{
 		//We launch loading scene with DLC only after login
 		loadscene->scheduleDLCCheck();
@@ -101,7 +101,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 			director->replaceScene(cocos2d::TransitionFade::create(1.0f, TestScene::create()));
 		});
 
-	});
+	}));
 
 	//TODO : improve the flow with a splash screen while login happens
 
