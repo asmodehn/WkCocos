@@ -7,6 +7,7 @@
 #include "WkCocosApp/ErrorUI.h"
 #include "WkCocosApp/PlayersListUI.h"
 #include "WkCocosApp/WebUI.h"
+#include "WkCocosApp/LogUI.h"
 
 #include "WkCocosApp/GameLogic.h"
 
@@ -134,6 +135,13 @@ bool TestScene::init()
 	webui->setVisible(false);
 	addInterface(WebUI::id,webui);
 	webui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.67f));
+
+	//LogUI
+	LogUI* logui = new LogUI();
+	logui->setEnabled(false);
+	logui->setVisible(false);
+	addInterface(LogUI::id, logui);
+	logui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.67f));
 
 	//activating first UI : 
 	saveui->setEnabled(true);

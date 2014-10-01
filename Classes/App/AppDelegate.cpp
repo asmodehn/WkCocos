@@ -62,6 +62,14 @@ AppDelegate::~AppDelegate()
 	WkCocos::LogStream::destroy();
 }
 
+ void AppDelegate::initGLContextAttrs()
+{
+	//set OpenGL context attributions,now can only set six attributions:
+	//red,green,blue,alpha,depth,stencil
+	GLContextAttrs glContextAttrs = { 8, 8, 8, 8, 24, 8 };
+	GLView::setGLContextAttrs(glContextAttrs);
+}
+
 bool AppDelegate::applicationDidFinishLaunching() {
 
     // initialize director
@@ -80,13 +88,6 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
     // create a scene. it's an autorelease object
 	LoadingScene* loadscene = LoadingScene::create();
-
-	// Test for cocos log appender
-	//WkCocos::CocosLogAppender::CheckBoxRes resource;
-	//m_cocosApp = new WkCocos::CocosLogAppender(loadscene, "fonts/Text.fnt", resource);
-	//WkCocos::LogStream::get()->addAppender(m_cocosApp);
-	//LOG_INFO << "Add " << "cocos " << "appender" << std::endl;
-	//LOG_INFO << "Next Line" << std::endl;
 
 	//Creating gamelogic and setting player.
 	g_gameLogic.reset( new GameLogic("73a0a556fbecbb4a8dd28728a06d7796f207d017cb6b74e8c9e45973ad487c14", "f7976c94667424a528a4723eb3e4791c24ecf9b36ec770c251b9e039faa04517", [loadscene]()

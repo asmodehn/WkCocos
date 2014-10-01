@@ -38,9 +38,9 @@ namespace WkCocos
 				m_onlinedata->load(m_user, m_name, [=](std::string data)
 				{
 					m_onLoading(data);
-					//CCLOG("user data loaded : %s", data.c_str());
+					CCLOG("user data loaded : %s", data.c_str());
 
-					loaded_cb();
+					if (loaded_cb) loaded_cb();
 				});
 			}
 			else
@@ -57,7 +57,7 @@ namespace WkCocos
 				m_localdata->loadData(m_name, [=](std::string data){
 					m_onLoading(data);
 
-					loaded_cb();
+					if (loaded_cb) loaded_cb();
 				}, key);
 			}
 			else
