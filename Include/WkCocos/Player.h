@@ -166,12 +166,12 @@ namespace WkCocos
 			m_onlinedata->loginNew(m_user, m_passwd, email, [=](std::string body){
 				CCLOG("login done !!!");
 				//loading again to get online value
-				m_playerData.requestLoadData(onlineDataLoaded_callback);
+				m_playerData.requestLoadData(m_onlineDataLoaded_callback);
 			});
 		}
 
 		//game callbacks
-		std::function<void()> onlineDataLoaded_callback;
+		std::function<void()> m_onlineDataLoaded_callback;
 		std::function<std::string(std::string userid)> m_pw_gen_cb;
 
 		const char * sAlarms = "alarms";

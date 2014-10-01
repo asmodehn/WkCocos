@@ -54,6 +54,7 @@ namespace WkCocos
 		, m_playerData("user_data", Save::Mode::ONLINE)
 		, player_events(entityx::EventManager::make())
 		, m_pw_gen_cb(pw_gen_cb)
+		, m_onlineDataLoaded_callback(online_init_cb)
 	{
 		//registering player class in cocos update loop
 		cocos2d::Director::getInstance()->getScheduler()->schedule(std::bind(&Player::Update, this, std::placeholders::_1), this, 1.f / 15, false, "player_update");
@@ -94,7 +95,7 @@ namespace WkCocos
 			}
 			//in any case we have here m_user != ""
 
-			if (m_onlinedata && online_init_cb) //in case online data is set while we re loading loginID
+			if (m_onlinedata && m_onlineDataLoaded_callback) //in case online data is set while we re loading loginID
 			{
 				//we need to do login here
 				if (newPlayer)
@@ -107,7 +108,7 @@ namespace WkCocos
 					m_onlinedata->login(m_user, m_passwd, [=](std::string body){
 						CCLOG("login done !!!");
 						//loading again to get online value
-						m_playerData.requestLoadData(online_init_cb);
+						m_playerData.requestLoadData(m_onlineDataLoaded_callback);
 					});
 				}
 			}
