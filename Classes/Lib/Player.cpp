@@ -320,7 +320,7 @@ namespace WkCocos
 				m_passwd = newPasswd;
 
 				//store unique ID
-				m_localdata->saveLoginID(m_user, m_passwd);
+				m_localdata->saveLoginID(m_user, m_passwd, "l0g1nS3cr3tK3y");
 			}
 
 			//login with new ID ( will create non existing user )
@@ -342,7 +342,7 @@ namespace WkCocos
 				m_passwd = newPasswd;
 
 				//store unique ID
-				m_localdata->saveLoginID(m_user, m_passwd);
+				m_localdata->saveLoginID(m_user, m_passwd, "l0g1nS3cr3tK3y");
 			}
 
 			//login with new ID ( will create non existing user )
