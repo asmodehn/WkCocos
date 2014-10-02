@@ -123,7 +123,7 @@ namespace WkCocos
 
 	void Player::setupInventory(std::shared_ptr<WkCocos::Shop::Inventory> shopInventory)
 	{
-		m_inventory.reset(shopInventory.get());
+		m_inventory = shopInventory;
 	}
 
 	bool Player::requestAllUsers()
