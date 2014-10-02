@@ -67,6 +67,8 @@ namespace WkCocos
 		m_playerData.setLocalDataMgr(m_localdata);
 		m_playerData.setOnlineDataMgr(m_onlinedata);
 
+		m_onlinedata->getEventManager()->subscribe<WkCocos::OnlineData::Events::Error>(*this);
+
 		//tried to read existing login data.
 		m_localdata->loadLoginID([=](std::string user, std::string passwd){
 			if (user != "" && passwd != "")
