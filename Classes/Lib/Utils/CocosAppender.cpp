@@ -25,7 +25,7 @@ namespace WkCocos
 		bg->setTouchEnabled(false);
 		bg->setSize(cocos2d::Size(1920, 1080));
 		bg->setBackGroundColorType(cocos2d::ui::Layout::BackGroundColorType::SOLID);
-		//bg->setBackGroundColor(cocos2d::Color3B(20, 20, 20));
+		bg->setBackGroundColor(cocos2d::Color3B(20, 20, 20));
 		bg->setBackGroundColorOpacity(70);
 		bg->setLocalZOrder(9999);
 		bg->addChild(_log);
@@ -38,7 +38,7 @@ namespace WkCocos
 		_log->setSize(cocos2d::Size(1920, 900));
 		_log->setSizePercent(cocos2d::Vec2(1.f, 0.9f));
 		_log->setBackGroundColorType(cocos2d::ui::Layout::BackGroundColorType::SOLID);
-		//_log->setBackGroundColor(cocos2d::Color3B(20, 20, 20));
+		_log->setBackGroundColor(cocos2d::Color3B(20, 20, 20));
 		_log->setBackGroundColorOpacity(70);
 
 		// check
