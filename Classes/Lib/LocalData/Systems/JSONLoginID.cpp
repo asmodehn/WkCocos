@@ -25,37 +25,37 @@ namespace WkCocos
 					{
 						rapidjson::Document doc;
 						doc.Parse<0>(file->getContents().c_str());
-						if (doc.HasParseError()) {
-							CCLOG("GetParseError %s\n", doc.GetParseError());
-							//callback empty on invalid json
-							if (loginid->m_load_cb)
-							{
-								loginid->m_load_cb("", "");
-							}
-						}
-						else if (loginid->m_load_cb)//if we want to load data
+						
+						if (loginid->m_load_cb)//if we want to load data
 						{
-							rapidjson::Value& loginvalue = doc[loginid->m_name.c_str()];
-							if (!loginvalue.IsNull()){
-								if (loginvalue.HasMember("user"))
-								{
-									loginid->m_user = loginvalue["user"].GetString();
-								}
-								if (loginvalue.HasMember("passwd"))
-								{
-									loginid->m_passwd = loginvalue["passwd"].GetString();
-								}
+							if (doc.HasParseError()) {
+								CCLOG("GetParseError %s\n", doc.GetParseError());
+								loginid->m_load_cb("","");
 							}
-							loginid->m_load_cb(loginid->m_user, loginid->m_passwd);
+							else
+							{
+								rapidjson::Value& loginvalue = doc[loginid->m_name.c_str()];
+								if (!loginvalue.IsNull()){
+									if (loginvalue.HasMember("user"))
+									{
+										loginid->m_user = loginvalue["user"].GetString();
+									}
+									if (loginvalue.HasMember("passwd"))
+									{
+										loginid->m_passwd = loginvalue["passwd"].GetString();
+									}
+								}
+								loginid->m_load_cb(loginid->m_user, loginid->m_passwd);
+							}
 						}
 						else //write request
 						{
 							// must pass an allocator when the object may need to allocate memory
 							rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
 
-							//if we already have a login value in the file, we need to replace it
-							if (doc.HasMember(loginid->m_name.c_str()))
+							if (!doc.HasParseError() && doc.HasMember(loginid->m_name.c_str()))
 							{
+								//if we already have a login value in the file, we need to replace it
 								rapidjson::Value& vholder = doc[loginid->m_name.c_str()];
 								if (vholder.HasMember("user"))
 								{
@@ -66,22 +66,28 @@ namespace WkCocos
 									vholder["passwd"] = loginid->m_passwd.c_str();
 								}
 							}
-							else //new login id
+							else
 							{
+								if (doc.HasParseError())
+								{
+									//CCLOG("GetParseError %s\n", doc.GetParseError());
+									//no big deal we replace everything.
+									doc.SetObject();
+								}
 								rapidjson::Value vholder;
 								vholder.SetObject();
 								vholder.AddMember("user", loginid->m_user.c_str(), allocator);
 								vholder.AddMember("passwd", loginid->m_passwd.c_str(), allocator);
 								doc.AddMember(loginid->m_name.c_str(), vholder, allocator);
 							}
-
+							
 							//TMP debug
 							rapidjson::StringBuffer strbuf;
 							rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
 							doc.Accept(writer);
 
-						file->setContents(strbuf.GetString());
-						//CCLOG("new contents :  %s", file->getContents().c_str());
+							file->setContents(strbuf.GetString());
+							//CCLOG("new contents :  %s", file->getContents().c_str());
 						}
 
 						//we finished working with this component.

@@ -47,10 +47,10 @@ PlayersListUI::PlayersListUI()
 
 	}
 
-	GameLogic::Instance().getPlayer().getOnlineDatamgr()->getEventManager()->subscribe<WkCocos::OnlineData::Events::PlayersList>(*this);
-	//GameLogic::Instance().getPlayer().getUsersWithDocs();
-	//GameLogic::Instance().getPlayer().getUsersKeyValue("gold", 7711);
-	GameLogic::Instance().getPlayer().getUsersFromTo("currency.gold", 1999, 9999);
+	g_gameLogic->getPlayer().getOnlineDatamgr()->getEventManager()->subscribe<WkCocos::OnlineData::Events::PlayersList>(*this);
+	//g_gameLogic->getPlayer().getUsersWithDocs();
+	//g_gameLogic->getPlayer().getUsersKeyValue("gold", 7711);
+	g_gameLogic->getPlayer().getUsersFromTo("currency.gold", 1999, 9999);
 }
 
 PlayersListUI::~PlayersListUI()
@@ -76,7 +76,7 @@ void PlayersListUI::refreshCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget
 		}
 		m_ptb.clear();
 
-		GameLogic::Instance().getPlayer().getUsersWithDocs();
+		g_gameLogic->getPlayer().getUsersWithDocs();
 	}
 }
 
@@ -125,7 +125,6 @@ void PlayersListUI::receive(const WkCocos::OnlineData::Events::PlayersList &pl)
 					);
 
 					m_ptb[enemy_name] = playertextbutton;
-
 					m_widget->addChild(playertextbutton);
 				}
 			}

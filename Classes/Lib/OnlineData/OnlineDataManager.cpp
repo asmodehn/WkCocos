@@ -105,7 +105,11 @@ namespace WkCocos
 		{
 			auto newentity = entity_manager->create();
 			//new File component for each request. The aggregator system will detect duplicates and group them
-			newentity.assign<Comp::LoadUserData>(userid, saveName, callback);
+			newentity.assign<Comp::LoadUserData>(userid, saveName, [=](std::string str){
+				cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, callback, str](){
+					callback(str);
+				});
+			});
 		}
 
 		void OnlineDataManager::getUsersWithDocs(const std::string& saveName)
@@ -145,7 +149,9 @@ namespace WkCocos
 		{
 			auto newentity = entity_manager->create();
 			newentity.assign<Comp::ServerTime>([=](std::string s_iso8601){
-				callback(s_iso8601);
+				cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, callback, s_iso8601](){
+					callback(s_iso8601);
+				});
 			});
 		}
 

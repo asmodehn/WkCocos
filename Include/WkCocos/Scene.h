@@ -34,7 +34,7 @@ namespace WkCocos
 		*/
 		inline std::string addInterface(Interface* ui)
 		{
-			addInterface(ui->getFilepath(), ui);
+			return addInterface(ui->getFilepath(), ui);
 		}
 		std::string addInterface(std::string id, Interface* ui);
 

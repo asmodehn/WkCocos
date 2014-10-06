@@ -198,7 +198,7 @@ namespace WkCocos
 				{
 					unsigned short buffer = 0;
 					size_t buffer_size = sizeof(buffer);//should be 2
-					int offset = 0;
+					size_t offset = 0;
 					while (offset < val_length) {
 						ss.clear();
 						ss << std::hex << hex.substr(offset*buffer_size, buffer_size);
