@@ -104,20 +104,22 @@ namespace WkCocos
 
 			struct GetUsersKeyValue : entityx::Component<GetUsersKeyValue>
 			{
-				GetUsersKeyValue(std::string m_collection, std::string m_key, int m_value, std::function<void(std::string)> cb);
+				GetUsersKeyValue(std::string collection, std::string key, int value, int quantity, int offset, std::function<void(std::string)> cb);
 
 				bool in_progress;
 				bool done;
 				std::string m_collection;
 				std::string m_key;
 				int m_value;
+				int m_quantity;
+				int m_offset;
 				std::function<void(void*)> m_cb;
 
 			};
 
 			struct GetUsersFromTo : entityx::Component<GetUsersFromTo>
 			{
-				GetUsersFromTo(std::string m_collection, std::string m_key, int m_from, int m_to, std::function<void(std::string)> cb);
+				GetUsersFromTo(std::string collection, std::string key, int from, int to, int quantity, int offset, std::function<void(std::string)> cb);
 
 				bool in_progress;
 				bool done;
@@ -125,6 +127,8 @@ namespace WkCocos
 				std::string m_key;
 				int m_from;
 				int m_to;
+				int m_quantity;
+				int m_offset;
 				std::function<void(void*)> m_cb;
 
 			};

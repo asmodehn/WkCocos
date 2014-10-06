@@ -64,14 +64,14 @@ public:
 		requestUsersWithDocs();
 	}
 
-	void getUsersKeyValue(std::string key, int value)
+	void getUsersKeyValue(std::string key, int value, int quantity, int offset)
 	{
-		requestUsersKeyValue(key, value);
+		requestUsersKeyValue(key, value, quantity, offset);
 	}
 
-	void getUsersFromTo(std::string key, int from, int to)
+	void getUsersFromTo(std::string key, int from, int to, int quantity, int offset)
 	{
-		requestUsersFromTo(key, from, to);
+		requestUsersFromTo(key, from, to, quantity, offset);
 	}
 
 	//test for getting server time

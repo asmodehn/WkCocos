@@ -116,7 +116,7 @@ namespace WkCocos
 
 						::App42::Query * query = ::App42::QueryBuilder::BuildQuery(gukv->m_key.c_str(), gukv->m_value, APP42_OP_EQUALS);
 
-						m_stor_service->FindDocumentsByQuery(DB_NAME, gukv->m_collection.c_str(), query, gukv->m_cb);
+						m_stor_service->FindDocumentsByQueryWithPaging(DB_NAME, gukv->m_collection.c_str(), query, gukv->m_quantity, gukv->m_offset, gukv->m_cb);
 						gukv->in_progress = true;
 					}
 
@@ -141,7 +141,7 @@ namespace WkCocos
 						::App42::Query * queryTo = ::App42::QueryBuilder::BuildQuery(guft->m_key.c_str(), guft->m_to, APP42_OP_LESS_THAN_EQUALTO);
 						::App42::Query * queryCompound = ::App42::QueryBuilder::CompoundOperator(queryFrom, APP42_OP_AND, queryTo);
 
-						m_stor_service->FindDocumentsByQuery(DB_NAME, guft->m_collection.c_str(), queryCompound, guft->m_cb);
+						m_stor_service->FindDocumentsByQueryWithPaging(DB_NAME, guft->m_collection.c_str(), queryCompound, guft->m_quantity, guft->m_offset, guft->m_cb);
 						guft->in_progress = true;
 					}
 

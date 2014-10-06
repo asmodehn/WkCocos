@@ -267,12 +267,14 @@ namespace WkCocos
 				};
 			}
 
-			GetUsersKeyValue::GetUsersKeyValue(std::string collec, std::string key, int value, std::function<void(std::string)> cb)
+			GetUsersKeyValue::GetUsersKeyValue(std::string collec, std::string key, int value, int quantity, int offset, std::function<void(std::string)> cb)
 				: in_progress(false)
 				, done(false)
 				, m_collection(collec)
 				, m_key(key)
 				, m_value(value)
+				, m_quantity(quantity)
+				, m_offset(offset)
 			{
 				m_cb = [=](void* data) {
 					::App42::App42StorageResponse* userdata = static_cast<::App42::App42StorageResponse*>(data);
@@ -325,13 +327,15 @@ namespace WkCocos
 				};
 			}
 
-			GetUsersFromTo::GetUsersFromTo(std::string collec, std::string key, int from, int to, std::function<void(std::string)> cb)
+			GetUsersFromTo::GetUsersFromTo(std::string collec, std::string key, int from, int to, int quantity, int offset, std::function<void(std::string)> cb)
 				: in_progress(false)
 				, done(false)
 				, m_collection(collec)
 				, m_key(key)
 				, m_from(from)
 				, m_to(to)
+				, m_quantity(quantity)
+				, m_offset(offset)
 			{
 				m_cb = [=](void* data) {
 					::App42::App42StorageResponse* userdata = static_cast<::App42::App42StorageResponse*>(data);
@@ -404,4 +408,3 @@ namespace WkCocos
 
 	}//namespace OnlineData
 } //namespace WkCocos
-

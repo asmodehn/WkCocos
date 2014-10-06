@@ -139,22 +139,22 @@ namespace WkCocos
 			return false;
 	}
 
-	bool Player::requestUsersKeyValue(std::string key, int value)
+	bool Player::requestUsersKeyValue(std::string key, int value, int quantity, int offset)
 	{
 		if (m_onlinedata)
 		{
-			m_onlinedata->getUsersKeyValue(m_playerData.getSaveName(), key, value);
+			m_onlinedata->getUsersKeyValue(m_playerData.getSaveName(), key, value, quantity, offset);
 			return true;
 		}
 		else
 			return false;
 	}
 
-	bool Player::requestUsersFromTo(std::string key, int from, int to)
+	bool Player::requestUsersFromTo(std::string key, int from, int to, int quantity, int offset)
 	{
 		if (m_onlinedata)
 		{
-			m_onlinedata->getUsersFromTo(m_playerData.getSaveName(), key, from, to);
+			m_onlinedata->getUsersFromTo(m_playerData.getSaveName(), key, from, to, quantity, offset);
 			return true;
 		}
 		else

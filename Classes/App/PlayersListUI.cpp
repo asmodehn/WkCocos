@@ -30,7 +30,7 @@ PlayersListUI::PlayersListUI()
 		m_refreshButton->setPosition(cocos2d::Vec2(m_widgetSize.width / 2, m_widgetSize.height / 3 * 2));
 		m_widget->addChild(m_refreshButton);
 
-		m_refreshLabel = cocos2d::ui::Text::create("reload players list", "Arial", 21);
+		m_refreshLabel = cocos2d::ui::Text::create("next page", "Arial", 21);
 		m_refreshLabel->setPosition(m_refreshButton->getPosition() + cocos2d::Vec2(0, m_refreshButton->getContentSize().height));
 		m_widget->addChild(m_refreshLabel);
 	
@@ -49,8 +49,8 @@ PlayersListUI::PlayersListUI()
 
 	g_gameLogic->getPlayer().getOnlineDatamgr()->getEventManager()->subscribe<WkCocos::OnlineData::Events::PlayersList>(*this);
 	//g_gameLogic->getPlayer().getUsersWithDocs();
-	//g_gameLogic->getPlayer().getUsersKeyValue("gold", 7711);
-	g_gameLogic->getPlayer().getUsersFromTo("currency.gold", 1999, 9999);
+	//g_gameLogic->getPlayer().getUsersKeyValue("gold", 7711, 2, 0);
+	g_gameLogic->getPlayer().getUsersFromTo("currency.gold", 1, 999999, quantity, offset);
 }
 
 PlayersListUI::~PlayersListUI()
@@ -68,15 +68,15 @@ void PlayersListUI::refreshCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget
 {	
 	if (input == cocos2d::ui::Widget::TouchEventType::ENDED)
 	{	
-		std::map<std::string, cocos2d::ui::Text*>::iterator currentPTB = m_ptb.begin();
-		for (; currentPTB != m_ptb.end(); ++currentPTB)
+		std::map<std::string, cocos2d::ui::Text*>::iterator currentPTB;
+		for (currentPTB = m_ptb.begin(); currentPTB != m_ptb.end(); ++currentPTB)
 		{
 			m_widget->removeChild(currentPTB->second);
 			//delete currentPTB->second;
 		}
 		m_ptb.clear();
-
-		g_gameLogic->getPlayer().getUsersWithDocs();
+		offset += quantity;
+		g_gameLogic->getPlayer().getUsersFromTo("currency.gold", 1, 999999, quantity, offset);
 	}
 }
 

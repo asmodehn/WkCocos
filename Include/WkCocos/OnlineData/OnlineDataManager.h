@@ -52,8 +52,8 @@ namespace WkCocos
 			* Get Selected Users
 			*/
 			void getUsersWithDocs(const std::string& saveName);
-			void getUsersKeyValue(const std::string& saveName, const std::string& key, int value);
-			void getUsersFromTo(const std::string& saveName, const std::string& key, int from, const int to);
+			void getUsersKeyValue(const std::string& saveName, const std::string& key, int value, int quantity, int offset);
+			void getUsersFromTo(const std::string& saveName, const std::string& key, int from, const int to, int quantity, int offset);
 
 			/**
 			* Get Server Time

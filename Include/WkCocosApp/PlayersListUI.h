@@ -39,6 +39,9 @@ protected:
 
 	std::map<std::string, cocos2d::ui::Text*> m_ptb;
 
+	int quantity = 2;
+	int offset = 0;
+
 };
 
 #endif // __PLAYERSLISTUI_H__
