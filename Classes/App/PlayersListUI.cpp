@@ -67,7 +67,7 @@ PlayersListUI::~PlayersListUI()
 void PlayersListUI::refreshCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input)
 {	
 	if (input == cocos2d::ui::Widget::TouchEventType::ENDED)
-	{	
+	{	//this has bug if app42 respone has more than one record from one user
 		std::map<std::string, cocos2d::ui::Text*>::iterator currentPTB;
 		for (currentPTB = m_ptb.begin(); currentPTB != m_ptb.end(); ++currentPTB)
 		{
