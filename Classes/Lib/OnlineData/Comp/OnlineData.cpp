@@ -156,15 +156,14 @@ namespace WkCocos
 
 			{
 				m_cb = [=](void* data) {
-					::App42::App42StorageResponse* userdata = static_cast<::App42::App42StorageResponse*>(data);
+					::App42::App42UserResponse* userdata = static_cast<::App42::App42UserResponse*>(data);
 
 					CCLOG("\ncode=%d...=%d", userdata->getCode(), userdata->isSuccess);
 
 					if (userdata->isSuccess)
-					{//if request succeed, we need to extract data from it
+					{
 						rapidjson::Document doc;
-						doc.Parse<0>(userdata->getBody().c_str());
-						//doc.Parse<0>(userdata->storages./*here should be something*/);
+						doc.Parse<0>(userdata->users.front().jsonDocArray.back().getJsonDoc().c_str());
 						
 						if (doc.HasParseError())
 						{
@@ -172,29 +171,10 @@ namespace WkCocos
 						}
 						else
 						{
-							if (doc.HasMember("app42"))
-							{
-								rapidjson::Value & temp = doc["app42"];
-								temp = temp["response"];
-								temp = temp["users"];
-								temp = temp["user"];
-								temp = temp["jsonDoc"];
-								if (temp.Size())
-								{
-									rapidjson::StringBuffer strbuf;
-									rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
-									temp[temp.Size() - 1].Accept(writer);
-									cb(strbuf.GetString());
-								}
-								else
-								{
-									cb("");
-								}
-							}
-							else
-							{
-								cb("");
-							}
+							rapidjson::StringBuffer strbuf;
+							rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
+							doc.Accept(writer);
+							cb(strbuf.GetString());
 						}
 					}
 					else// if request failed, 
