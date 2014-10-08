@@ -75,42 +75,49 @@ namespace WkCocos
 				};
 			}
 
-			DeleteUserData::DeleteUserData(std::string userid, std::string collec, std::string docid)
+			UpdateUserData::UpdateUserData(std::string userid, std::string collec, std::string docid, std::string user_data, std::function<void(::App42::App42StorageResponse*)> cb)
 				: in_progress(false)
 				, done(false)
 				, m_userid(userid)
 				, m_collection(collec)
 				, m_docid(docid)
+				, m_user_data(user_data)
 			{
-				m_dummy_cb = [=](void* data)
+				m_cb = [=](void* data)
 				{
+					::App42::App42StorageResponse* userdata = static_cast<::App42::App42StorageResponse*>(data);
+
+					CCLOG("\ncode=%d...=%d", userdata->getCode(), userdata->isSuccess);
+
+					CCLOG("\nerrordetails:%s", userdata->errorDetails.c_str());
+					CCLOG("\nerrorMessage:%s", userdata->errorMessage.c_str());
+					CCLOG("\nappErrorCode:%d", userdata->appErrorCode);
+					CCLOG("\nhttpErrorCode:%d", userdata->httpErrorCode);
+
+					cb(userdata);
+
 					done = true; 
 				};
 			}
 
-			FindUserData::FindUserData(std::string userid, std::string collec, std::function<void(std::string)> delete_cb, std::function<void()> save_cb)
+			FindUserData::FindUserData(std::string userid, std::string collec, std::function<void(std::string)> update_cb, std::function<void()> insert_cb)
 				: in_progress(false)
 				, done(false)
 				, m_userid(userid)
 				, m_collection(collec)
 			{
-				m_cb = [=](void* data)
-				{
-					::App42::App42StorageResponse* userdata = static_cast<::App42::App42StorageResponse*>(data);
+				m_cb = [=](void* data) {
+					::App42::App42UserResponse* userdata = static_cast<::App42::App42UserResponse*>(data);
+
+					CCLOG("\ncode=%d...=%d", userdata->getCode(), userdata->isSuccess);
+
 					if (userdata->isSuccess)
 					{
-						for (std::vector<::App42::App42Storage>::iterator it = userdata->storages.begin(); it != userdata->storages.end(); ++it)
-						{
-							if (it->collectionName == collec)
-							for (std::vector<::App42::JSONDocument>::iterator iit = it->jsonDocArray.begin(); iit != it->jsonDocArray.end(); ++iit)
-							{
-								CCLOG("\n Owner=%s", iit->getOwner().c_str());
-								if (iit->getOwner() == userid)
-								{
-									delete_cb(iit->getDocId());
-								}
-							}
-						}
+						std::vector<::App42::JSONDocument> jsonDocArray = userdata->users.front().jsonDocArray;
+						if (jsonDocArray.size())
+							update_cb(jsonDocArray.back().getDocId());
+						else
+							insert_cb();
 					}
 					else// if request failed, 
 					{
@@ -118,13 +125,15 @@ namespace WkCocos
 						CCLOG("\nerrorMessage:%s", userdata->errorMessage.c_str());
 						CCLOG("\nappErrorCode:%d", userdata->appErrorCode);
 						CCLOG("\nhttpErrorCode:%d", userdata->httpErrorCode);
+
+						insert_cb();
 					}
-					save_cb();
+
 					done = true;
 				};
 			}
 
-			SaveUserData::SaveUserData(std::string userid, std::string collec, std::string user_data, std::function<void(::App42::App42UserResponse*)> cb)
+			InsertUserData::InsertUserData(std::string userid, std::string collec, std::string user_data, std::function<void(::App42::App42StorageResponse*)> cb)
 				: in_progress(false)
 				, done(false)
 				, m_userid(userid)
@@ -133,7 +142,7 @@ namespace WkCocos
 			{
 				m_cb = [=](void* data)
 				{
-					::App42::App42UserResponse* userdata = static_cast<::App42::App42UserResponse*>(data);
+					::App42::App42StorageResponse* userdata = static_cast<::App42::App42StorageResponse*>(data);
 
 					CCLOG("\ncode=%d...=%d", userdata->getCode(), userdata->isSuccess);
 
@@ -153,7 +162,6 @@ namespace WkCocos
 				, done(false)
 				, m_userid(userid)
 				, m_collection(collec)
-
 			{
 				m_cb = [=](void* data) {
 					::App42::App42UserResponse* userdata = static_cast<::App42::App42UserResponse*>(data);

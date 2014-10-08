@@ -12,7 +12,7 @@ namespace WkCocos
 		{
 			struct Error : public entityx::Event<Error>
 			{
-				Error(::App42::App42UserResponse* r)
+				Error(::App42::App42Response* r)
 				: httpErrorCode(r->httpErrorCode)
 				, app42ErrorCode(r->appErrorCode)
 				, errorMessage(r->errorMessage)

@@ -75,14 +75,29 @@ namespace WkCocos
 		{
 			auto newentity = entity_manager->create();
 			//temp comment
-			newentity.assign<Comp::FindUserData>(userid, saveName, [=](std::string doc)
+			newentity.assign<Comp::FindUserData>(userid, saveName, [=](std::string docid)
 			{
-				auto delentity = entity_manager->create();
-				delentity.assign < Comp::DeleteUserData >(userid, saveName, doc);
+				auto updateentity = entity_manager->create();
+				updateentity.assign < Comp::UpdateUserData >(userid, saveName, docid, user_data, [=](::App42::App42StorageResponse* r)
+				{
+					if (!r->isSuccess)
+					{
+						cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, r](){
+							event_manager->emit<Events::Error>(r);
+							//callback is not called if error
+						});
+					}
+					else
+					{
+						cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, success_callback, r](){
+							success_callback(r->getBody());
+						});
+					}
+				});
 			}, [=]()
 			{
-				auto saveentity = entity_manager->create();
-				saveentity.assign < Comp::SaveUserData >(userid, saveName, user_data, [=](::App42::App42UserResponse* r)
+				auto insertentity = entity_manager->create();
+				insertentity.assign < Comp::InsertUserData >(userid, saveName, user_data, [=](::App42::App42StorageResponse* r)
 				{
 					if (!r->isSuccess)
 					{

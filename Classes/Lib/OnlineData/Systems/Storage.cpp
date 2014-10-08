@@ -24,57 +24,37 @@ namespace WkCocos
 
 			void Storage::update(entityx::ptr<entityx::EntityManager> entities, entityx::ptr<entityx::EventManager> events, double dt)
 			{
-				entityx::ptr<Comp::DeleteUserData> dud;
-				for (auto entity : entities->entities_with_components(dud))
+				entityx::ptr<Comp::UpdateUserData> uud;
+				for (auto entity : entities->entities_with_components(uud))
 				{
-					if (dud->done)
+					if (uud->done)
 					{
-						entity.remove<Comp::DeleteUserData>();
+						entity.remove<Comp::UpdateUserData>();
 					}
-					else if (!dud->in_progress)
+					else if (!uud->in_progress)
 					{
-						m_stor_service->DeleteDocumentsById(DB_NAME, dud->m_collection.c_str(), dud->m_docid.c_str(), dud->m_dummy_cb);
-						dud->in_progress = true;
+						m_stor_service->UpdateDocumentByDocId(DB_NAME, uud->m_collection.c_str(), uud->m_docid.c_str(), uud->m_user_data.c_str(), uud->m_cb);
+						uud->in_progress = true;
 					}
 
 				}
 
-				entityx::ptr<Comp::FindUserData> fud;
-				for (auto entity : entities->entities_with_components(fud))
+				entityx::ptr<Comp::InsertUserData> iud;
+				for (auto entity : entities->entities_with_components(iud))
 				{
-					if (fud->done)
+					if (iud->done)
 					{
-						entity.remove<Comp::FindUserData>();
+						entity.remove<Comp::InsertUserData>();
 						if (entity.component_mask() == 0)
 						{
 							entity.destroy();
 						}
 					}
-					else if (!fud->in_progress)
+					else if (!iud->in_progress)
 					{
-						CCLOG("Requesting App42 search for documents : %s ", fud->m_userid.c_str());
-						m_stor_service->FindAllDocuments(DB_NAME, fud->m_collection.c_str(), fud->m_cb);
-						fud->in_progress = true;
-					}
-
-				}
-
-				entityx::ptr<Comp::SaveUserData> sud;
-				for (auto entity : entities->entities_with_components(sud))
-				{
-					if (sud->done)
-					{
-						entity.remove<Comp::SaveUserData>();
-						if (entity.component_mask() == 0)
-						{
-							entity.destroy();
-						}
-					}
-					else if (!sud->in_progress)
-					{
-						::App42::App42API::setLoggedInUser(sud->m_userid.c_str());
-						m_stor_service->InsertJsonDocument(DB_NAME, sud->m_collection.c_str(), sud->m_user_data.c_str(), sud->m_cb);
-						sud->in_progress = true;
+						::App42::App42API::setLoggedInUser(iud->m_userid.c_str());
+						m_stor_service->InsertJsonDocument(DB_NAME, iud->m_collection.c_str(), iud->m_user_data.c_str(), iud->m_cb);
+						iud->in_progress = true;
 					}
 
 				}
