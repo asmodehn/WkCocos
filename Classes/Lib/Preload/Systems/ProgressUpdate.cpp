@@ -18,9 +18,9 @@ namespace WkCocos
 			void ProgressUpdate::update(entityx::ptr<entityx::EntityManager> es, entityx::ptr<entityx::EventManager> events, double dt) 
 			{
 				unsigned int new_curProgVal = 0;
-				for (auto entity : es->entities_with_components<Comp::ProgressValue>()) 
+				entityx::ptr<Comp::ProgressValue> pv;
+				for (auto entity : es->entities_with_components(pv)) 
 				{
-					entityx::ptr<Comp::ProgressValue> pv = entity.component<Comp::ProgressValue>();
 					new_curProgVal += pv->progval;
 				}
 

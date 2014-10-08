@@ -21,6 +21,28 @@ namespace WkCocos
 				bool loaded;
 			};
 
+			struct DataDepends : entityx::Component<DataDepends> {
+				DataDepends(const std::vector<std::string>& depends_filepath) : m_depends_filepath(depends_filepath), depends_loaded(false) {}
+
+				inline const std::vector<std::string>& getDependsFilepath() const
+				{
+					return m_depends_filepath;
+				}
+
+				inline bool allLoaded()
+				{
+					for ( auto dpd : depends_loaded )
+					{
+						if (!dpd) return false; 
+						break;
+					}
+					return true;
+				}
+
+				std::vector<std::string> m_depends_filepath;
+				std::vector<bool> depends_loaded;
+			};
+
 		}//namespace Comp
 	}//namespace Preload
 }//namespace WkCocos

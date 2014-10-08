@@ -76,19 +76,35 @@ namespace WkCocos
 
 			void DataEval::update(entityx::ptr<entityx::EntityManager> es, entityx::ptr<entityx::EventManager> events, double dt)
 			{
-				for (auto entity : es->entities_with_components<Comp::DataLoad>())
+				entityx::ptr<Comp::DataLoad> dataload;
+				entityx::ptr<Comp::DataDepends> datadpds;
+				for (auto entity : es->entities_with_components(dataload, datadpds))
 				{
-					entityx::ptr<Comp::DataLoad> dataload = entity.component<Comp::DataLoad>();
-
-					//we need to wait for the file to be there ( might come with DLC), otherwise cocos loading will fail.
+					//we need to wait for the file to be there ( might come with DLC ), otherwise cocos loading will fail.
 					if (dataload && !dataload->loaded && cocos2d::FileUtils::getInstance()->isFileExist(dataload->getFilepath()))
 					{
-						//generate the appropriate loader component
-						chooseLoader(entity, dataload->getFilepath(), events);
+						//we also need to wait for all it s dependencies to be there, otherwise cocos loading will fail.
+						if (datadpds && datadpds->allLoaded())
+						{
+							bool allexists = true;
+							for (auto dpdfp : datadpds->getDependsFilepath())
+							{
+								if (!cocos2d::FileUtils::getInstance()->isFileExist(dpdfp))
+								{
+									allexists = false;
+									break;
+								}
+							}
 
-						//mark the entity as loaded
-						dataload->loaded = true;
-						
+							if (allexists)
+							{
+								//generate the appropriate loader component
+								chooseLoader(entity, dataload->getFilepath(), events);
+
+								//mark the entity as loaded
+								dataload->loaded = true;
+							}
+						}
 					}
 
 				}
