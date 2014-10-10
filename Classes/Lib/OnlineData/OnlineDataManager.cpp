@@ -10,6 +10,10 @@
 
 #include "WkCocos/OnlineData/Events/Error.h"
 
+#include "json/document.h"         // rapidjson's DOM-style API
+#include "json/stringbuffer.h"
+#include "json/writer.h"
+
 namespace WkCocos
 {
 	namespace OnlineData
@@ -71,14 +75,13 @@ namespace WkCocos
 			});
 		}
 
-		void OnlineDataManager::save(const std::string& userid, const std::string& saveName, std::string user_data, std::function<void(std::string)> success_callback)
+		void OnlineDataManager::save(const std::string& userid, const std::string& saveName, std::map<std::string, std::string> user_data, std::function<void(std::string)> success_callback)
 		{
-			auto newentity = entity_manager->create();
-			//temp comment
-			newentity.assign<Comp::FindUserData>(userid, saveName, [=](std::string docid)
+			//this code is not good! app42 can think we spam it with requests!
+			if (system != "")
 			{
-				auto updateentity = entity_manager->create();
-				updateentity.assign < Comp::UpdateUserData >(userid, saveName, docid, user_data, [=](::App42::App42StorageResponse* r)
+				auto systemupdateentity = entity_manager->create();
+				systemupdateentity.assign < Comp::UpdateUserData >(userid, saveName, system, user_data["system"], [=](::App42::App42StorageResponse* r)
 				{
 					if (!r->isSuccess)
 					{
@@ -94,10 +97,11 @@ namespace WkCocos
 						});
 					}
 				});
-			}, [=]()
+			}
+			else
 			{
-				auto insertentity = entity_manager->create();
-				insertentity.assign < Comp::InsertUserData >(userid, saveName, user_data, [=](::App42::App42StorageResponse* r)
+				auto systeminsertentity = entity_manager->create();
+				systeminsertentity.assign < Comp::InsertUserData >(userid, saveName, user_data["system"], [=](::App42::App42StorageResponse* r)
 				{
 					if (!r->isSuccess)
 					{
@@ -113,17 +117,89 @@ namespace WkCocos
 						});
 					}
 				});
-			});
+			}
+
+			if (search != "")
+			{
+				auto searchupdateentity = entity_manager->create();
+				searchupdateentity.assign < Comp::UpdateUserData >(userid, saveName, search, user_data["search"], [=](::App42::App42StorageResponse* r)
+				{
+					if (!r->isSuccess)
+					{
+						cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, r](){
+							event_manager->emit<Events::Error>(r);
+							//callback is not called if error
+						});
+					}
+					else
+					{
+						cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, success_callback, r](){
+							success_callback(r->getBody());
+						});
+					}
+				});
+			}
+			else
+			{
+				auto searchinsertentity = entity_manager->create();
+				searchinsertentity.assign < Comp::InsertUserData >(userid, saveName, user_data["search"], [=](::App42::App42StorageResponse* r)
+				{
+					if (!r->isSuccess)
+					{
+						cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, r](){
+							event_manager->emit<Events::Error>(r);
+							//callback is not called if error
+						});
+					}
+					else
+					{
+						cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, success_callback, r](){
+							success_callback(r->getBody());
+						});
+					}
+				});
+			}
 		}
 
-		void OnlineDataManager::load(const std::string& userid, const std::string& saveName, std::function<void(std::string)> callback)
+		void OnlineDataManager::load(const std::string& userid, const std::string& saveName, std::function<void(std::map<std::string, std::string>)> callback)
 		{
 			auto newentity = entity_manager->create();
 			//new File component for each request. The aggregator system will detect duplicates and group them
-			newentity.assign<Comp::LoadUserData>(userid, saveName, [=](std::string str){
-				cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, callback, str](){
-					callback(str);
-				});
+			newentity.assign<Comp::LoadUserData>(userid, saveName, [=](::App42::App42UserResponse* r)
+			{
+				if (r->isSuccess)
+				{
+					std::map<std::string, std::string> docs;
+					std::vector<::App42::JSONDocument> jsonDocArray = r->users.front().jsonDocArray;
+					for (std::vector<::App42::JSONDocument>::iterator it = jsonDocArray.begin(); it != jsonDocArray.end(); ++it)
+					{
+						rapidjson::Document doc;
+						rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
+						auto jsonDoc = it->getJsonDoc();
+						doc.Parse<0>(jsonDoc.c_str());
+						if (doc.HasMember("system"))
+						{
+							system = it->getDocId();
+							docs["system"] = jsonDoc;
+						}
+						if (doc.HasMember("search"))
+						{
+							search = it->getDocId();
+							docs["search"] = jsonDoc;
+						}
+					}
+					cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, callback, docs]()
+					{
+						callback(docs);
+					});
+				}
+				else// if request failed, 
+				{
+					cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, r](){
+						event_manager->emit<Events::Error>(r);
+						//callback is not called if error
+					});
+				}
 			});
 		}
 

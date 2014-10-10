@@ -132,8 +132,8 @@ namespace WkCocos
 		std::shared_ptr<WkCocos::Shop::Inventory> m_inventory;
 
 		//this implements timer save and other data that we manage in this class.
-		virtual std::string get_all_data_json();
-		virtual void set_all_data_json(std::string data);
+		virtual std::map<std::string, std::string> get_all_data_json();
+		virtual void set_all_data_json(std::map<std::string, std::string> data);
 
 		//these are meant to be used by the app for managing extra game data.
 		//they are called by get_all_data_json() and set_all_data_json(std::string data)

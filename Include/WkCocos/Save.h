@@ -60,12 +60,12 @@ namespace WkCocos
 		/**
 		* Register callback filling the save string
 		*/
-		inline void registerSavingCallback(std::function<std::string()> onSaving) { m_onSaving = onSaving; }
+		inline void registerSavingCallback(std::function<std::map<std::string, std::string>()> onSaving) { m_onSaving = onSaving; }
 
 		/**
 		* Register callback emptying the save string
 		*/
-		inline void registerLoadingCallback(std::function<void(std::string)> onLoading) { m_onLoading = onLoading; }
+		inline void registerLoadingCallback(std::function<void(std::map<std::string, std::string>)> onLoading) { m_onLoading = onLoading; }
 
 		/**
 		* Test if a mode is active
@@ -118,12 +118,12 @@ namespace WkCocos
 		/**
 		* Callback function to fill up save
 		*/
-		std::function<std::string()>		m_onSaving;
+		std::function<std::map<std::string, std::string>()>		m_onSaving;
 
 		/**
 		* Callback function to empty save
 		*/
-		std::function<void(std::string)>	m_onLoading;
+		std::function<void(std::map<std::string, std::string>)>	m_onLoading;
 	};
 
 }// namespace WkCocos

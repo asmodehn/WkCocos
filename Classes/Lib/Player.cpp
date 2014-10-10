@@ -164,22 +164,34 @@ namespace WkCocos
 			return false;
 	}
 	
-	std::string Player::get_all_data_json()
+	std::map<std::string, std::string> Player::get_all_data_json()
 	{
-		rapidjson::Document doc;
+		rapidjson::Document search;
 		// must pass an allocator when the object may need to allocate memory
-		rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
+		rapidjson::Document::AllocatorType& search_allocator = search.GetAllocator();
 
 		//calling get_data_json to retrieve extra game data
 		std::string extra_data_json = get_data_json();
 
-		doc.Parse<0>(extra_data_json.c_str());
-		if (doc.HasParseError())
+		search.Parse<0>(extra_data_json.c_str());
+		if (search.HasParseError())
 		{
 			//if parse error (also empty string), we ignore existing data.
-			doc.SetObject();
+			search.SetObject();
 		}
+		search.AddMember("search", true, search_allocator);
 
+		std::map<std::string, std::string> data;
+
+		rapidjson::StringBuffer search_strbuf;
+		rapidjson::Writer<rapidjson::StringBuffer> searchwriter(search_strbuf);
+		search.Accept(searchwriter);
+		//this line runs
+		data["search"] = std::string(search_strbuf.GetString());
+		//this line does not
+		rapidjson::Document system;
+		rapidjson::Document::AllocatorType& system_allocator = system.GetAllocator();
+		system.SetObject();
 		rapidjson::Value alarms;
 		alarms.SetArray();
 
@@ -189,46 +201,47 @@ namespace WkCocos
 		{
 			rapidjson::Value time;
 			time.SetObject();
-			time.AddMember(sID, id->m_id.c_str(), allocator);
+			time.AddMember(sID, id->m_id.c_str(), system_allocator);
 
-			time.AddMember(sSec, alarm->m_end.tm_sec, allocator);
-			time.AddMember(sMin, alarm->m_end.tm_min, allocator);
-			time.AddMember(sHour, alarm->m_end.tm_hour, allocator);
-			time.AddMember(sMday, alarm->m_end.tm_mday, allocator);
-			time.AddMember(sMon, alarm->m_end.tm_mon, allocator);
-			time.AddMember(sYear, alarm->m_end.tm_year, allocator);
-			time.AddMember(sWday, alarm->m_end.tm_wday, allocator);
-			time.AddMember(sYday, alarm->m_end.tm_yday, allocator);
-			time.AddMember(sIsdst, alarm->m_end.tm_isdst, allocator);
+			time.AddMember(sSec, alarm->m_end.tm_sec, system_allocator);
+			time.AddMember(sMin, alarm->m_end.tm_min, system_allocator);
+			time.AddMember(sHour, alarm->m_end.tm_hour, system_allocator);
+			time.AddMember(sMday, alarm->m_end.tm_mday, system_allocator);
+			time.AddMember(sMon, alarm->m_end.tm_mon, system_allocator);
+			time.AddMember(sYear, alarm->m_end.tm_year, system_allocator);
+			time.AddMember(sWday, alarm->m_end.tm_wday, system_allocator);
+			time.AddMember(sYday, alarm->m_end.tm_yday, system_allocator);
+			time.AddMember(sIsdst, alarm->m_end.tm_isdst, system_allocator);
 
-			alarms.PushBack(time, allocator);
+			alarms.PushBack(time, system_allocator);
 		}
-		doc.AddMember(sAlarms, alarms, allocator);
+		system.AddMember(sAlarms, alarms, system_allocator);
+		system.AddMember("system", true, system_allocator);
 
-		rapidjson::StringBuffer strbuf;
-		rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
-		doc.Accept(writer);
+		rapidjson::StringBuffer system_strbuf;
+		rapidjson::Writer<rapidjson::StringBuffer> systemwriter(system_strbuf);
+		system.Accept(systemwriter);
 
-		std::string data = std::string(strbuf.GetString());
+		data["system"] = std::string(system_strbuf.GetString());
 
 		return data;
 
 	}
 
-	void Player::set_all_data_json(std::string data)
+	void Player::set_all_data_json(std::map<std::string, std::string> data)
 	{
-		rapidjson::Document doc;
-		doc.Parse<0>(data.c_str());
-		if (doc.HasParseError())
+		rapidjson::Document system;
+		system.Parse<0>(data["system"].c_str());
+		if (system.HasParseError())
 		{
 			//if parse error (also empty string), we ignore existing data.
-			doc.SetObject();
+			system.SetObject();
 		}
-
-		if (doc.HasMember(sAlarms))
+		if (system.HasMember(sAlarms))
 		{
-			rapidjson::Value& alarmsarray = doc[sAlarms];
-			if (alarmsarray.Size()){
+			rapidjson::Value& alarmsarray = system[sAlarms];
+			if (alarmsarray.Size())
+			{
 				for (rapidjson::SizeType i = 0; i < alarmsarray.Size(); i++)
 				{
 					rapidjson::Value& time = alarmsarray[i];
@@ -247,12 +260,19 @@ namespace WkCocos
 					m_timer->setAlarm(time[sID].GetString(), temptm);
 				}
 			}
-			doc.RemoveMember(sAlarms);
+			//system.RemoveMember(sAlarms);
 		}
 
+		rapidjson::Document search;
+		search.Parse<0>(data["search"].c_str());
+		if (search.HasParseError())
+		{
+			//if parse error (also empty string), we ignore existing data.
+			search.SetObject();
+		}
 		rapidjson::StringBuffer strbuf;
 		rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
-		doc.Accept(writer);
+		search.Accept(writer);
 
 		return set_data_json(strbuf.GetString());
 	}

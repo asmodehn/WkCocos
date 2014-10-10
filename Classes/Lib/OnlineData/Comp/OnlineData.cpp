@@ -157,7 +157,7 @@ namespace WkCocos
 				};
 			}
 
-			LoadUserData::LoadUserData(std::string userid, std::string collec, std::function<void(std::string)> cb)
+			LoadUserData::LoadUserData(std::string userid, std::string collec, std::function<void(::App42::App42UserResponse*)> cb)
 				: in_progress(false)
 				, done(false)
 				, m_userid(userid)
@@ -165,35 +165,9 @@ namespace WkCocos
 			{
 				m_cb = [=](void* data) {
 					::App42::App42UserResponse* userdata = static_cast<::App42::App42UserResponse*>(data);
-
 					CCLOG("\ncode=%d...=%d", userdata->getCode(), userdata->isSuccess);
 
-					if (userdata->isSuccess)
-					{
-						rapidjson::Document doc;
-						doc.Parse<0>(userdata->users.front().jsonDocArray.back().getJsonDoc().c_str());
-						
-						if (doc.HasParseError())
-						{
-							cb(""); // if parse error (also empty string), we ignore existing data.
-						}
-						else
-						{
-							rapidjson::StringBuffer strbuf;
-							rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
-							doc.Accept(writer);
-							cb(strbuf.GetString());
-						}
-					}
-					else// if request failed, 
-					{
-						CCLOG("\nerrordetails:%s", userdata->errorDetails.c_str());
-						CCLOG("\nerrorMessage:%s", userdata->errorMessage.c_str());
-						CCLOG("\nappErrorCode:%d", userdata->appErrorCode);
-						CCLOG("\nhttpErrorCode:%d", userdata->httpErrorCode);
-
-						cb("");
-					}
+					cb(userdata);
 
 					done = true;
 				};

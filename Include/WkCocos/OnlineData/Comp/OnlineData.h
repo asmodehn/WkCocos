@@ -82,7 +82,7 @@ namespace WkCocos
 
 			struct LoadUserData : entityx::Component<LoadUserData>
 			{
-				LoadUserData(std::string userid, std::string m_collection, std::function<void(std::string)> cb);
+				LoadUserData(std::string userid, std::string m_collection, std::function<void(::App42::App42UserResponse*)> cb);
 
 				bool in_progress;
 				bool done;

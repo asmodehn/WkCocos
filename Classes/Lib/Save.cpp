@@ -35,10 +35,10 @@ namespace WkCocos
 		{
 			if (m_onlinedata)
 			{
-				m_onlinedata->load(m_user, m_name, [=](std::string data)
+				m_onlinedata->load(m_user, m_name, [=](std::map<std::string, std::string> data)
 				{
 					m_onLoading(data);
-					CCLOG("user data loaded : %s", data.c_str());
+					//CCLOG("user data loaded : %s", data.c_str());
 
 					if (loaded_cb) loaded_cb();
 				});
@@ -54,11 +54,12 @@ namespace WkCocos
 		{
 			if (m_localdata)
 			{
-				m_localdata->loadData(m_name, [=](std::string data){
-					m_onLoading(data);
+				LOG_WARNING << "Offline load temporary disabled due to multiply docs unfinished implementation!" << std::endl;
+				//m_localdata->loadData(m_name, [=](std::string data){
+				//	m_onLoading(data);
 
-					if (loaded_cb) loaded_cb();
-				}, key);
+				//	if (loaded_cb) loaded_cb();
+				//}, key);
 			}
 			else
 			{
@@ -111,7 +112,8 @@ namespace WkCocos
 		{
 			if (m_localdata)
 			{
-				m_localdata->saveData(m_name, m_onSaving(), key);
+				LOG_WARNING << "Offline save temporary disabled due to multiply docs unfinished implementation!" << std::endl;
+				//m_localdata->saveData(m_name, m_onSaving(), key);
 				saved_cb();
 			}
 			else
