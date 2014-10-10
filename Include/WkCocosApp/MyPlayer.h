@@ -58,16 +58,20 @@ public:
 		requestEnemyData(enemy_name);
 	}
 	
-	//test for getting every app user
-	void getAllUsers()
-	{
-		requestAllUsers();
-	}
-
 	//test for getting users with at least one saved doc
 	void getUsersWithDocs()
 	{
 		requestUsersWithDocs();
+	}
+
+	void getUsersKeyValue(std::string key, int value, int quantity, int offset)
+	{
+		requestUsersKeyValue(key, value, quantity, offset);
+	}
+
+	void getUsersFromTo(std::string key, int from, int to, int quantity, int offset)
+	{
+		requestUsersFromTo(key, from, to, quantity, offset);
 	}
 
 	//test for getting server time

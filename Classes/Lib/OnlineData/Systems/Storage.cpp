@@ -24,76 +24,105 @@ namespace WkCocos
 
 			void Storage::update(entityx::ptr<entityx::EntityManager> entities, entityx::ptr<entityx::EventManager> events, double dt)
 			{
-				entityx::ptr<Comp::DeleteUserData> dud;
-				for (auto entity : entities->entities_with_components(dud))
+				entityx::ptr<Comp::UpdateUserData> uud;
+				for (auto entity : entities->entities_with_components(uud))
 				{
-					if (dud->done)
+					if (uud->done)
 					{
-						entity.remove<Comp::DeleteUserData>();
+						entity.remove<Comp::UpdateUserData>();
 					}
-					else if (!dud->in_progress)
+					else if (!uud->in_progress)
 					{
-						m_stor_service->DeleteDocumentsById(DB_NAME, dud->m_collection.c_str(), dud->m_docid.c_str(), dud->m_dummy_cb);
-						dud->in_progress = true;
+						m_stor_service->UpdateDocumentByDocId(DB_NAME, uud->m_collection.c_str(), uud->m_docid.c_str(), uud->m_user_data.c_str(), uud->m_cb);
+						uud->in_progress = true;
 					}
 
 				}
 
-				entityx::ptr<Comp::FindUserData> fud;
-				for (auto entity : entities->entities_with_components(fud))
+				entityx::ptr<Comp::InsertUserData> iud;
+				for (auto entity : entities->entities_with_components(iud))
 				{
-					if (fud->done)
+					if (iud->done)
 					{
-						entity.remove<Comp::FindUserData>();
+						entity.remove<Comp::InsertUserData>();
 						if (entity.component_mask() == 0)
 						{
 							entity.destroy();
 						}
 					}
-					else if (!fud->in_progress)
+					else if (!iud->in_progress)
 					{
-						CCLOG("Requesting App42 search for documents : %s ", fud->m_userid.c_str());
-						m_stor_service->FindAllDocuments(DB_NAME, fud->m_collection.c_str(), fud->m_cb);
-						fud->in_progress = true;
+						::App42::App42API::setLoggedInUser(iud->m_userid.c_str());
+						m_stor_service->InsertJsonDocument(DB_NAME, iud->m_collection.c_str(), iud->m_user_data.c_str(), iud->m_cb);
+						iud->in_progress = true;
 					}
 
 				}
 
-				entityx::ptr<Comp::LoadEnemyData> led;
-				for (auto entity : entities->entities_with_components(led))
+				entityx::ptr<Comp::GetUsersWithDocs> guwd;
+				for (auto entity : entities->entities_with_components(guwd))
 				{
-					if (led->done)
+					if (guwd->done)
 					{
-						entity.remove<Comp::LoadEnemyData>();
+						entity.remove<Comp::GetUsersWithDocs>();
 						if (entity.component_mask() == 0)
 						{
 							entity.destroy();
 						}
 					}
-					else if (!led->in_progress)
+					else if (!guwd->in_progress)
 					{
-						m_stor_service->FindDocumentByKeyValue(DB_NAME, led->m_collection.c_str(), "user_id", led->m_userid.c_str(), led->m_cb);
-						led->in_progress = true;
+						CCLOG("Requesting full list of documents and retrieving their owners");
+						m_stor_service->FindAllDocuments(DB_NAME, guwd->m_collection.c_str(), guwd->m_cb);
+						guwd->in_progress = true;
 					}
 
 				}
 
-				entityx::ptr<Comp::SaveUserData> sud;
-				for (auto entity : entities->entities_with_components(sud))
+				entityx::ptr<Comp::GetUsersKeyValue> gukv;
+				for (auto entity : entities->entities_with_components(gukv))
 				{
-					if (sud->done)
+					if (gukv->done)
 					{
-						entity.remove<Comp::SaveUserData>();
+						entity.remove<Comp::GetUsersKeyValue>();
 						if (entity.component_mask() == 0)
 						{
 							entity.destroy();
 						}
 					}
-					else if (!sud->in_progress)
+					else if (!gukv->in_progress)
 					{
-						::App42::App42API::setLoggedInUser(sud->m_userid.c_str());
-						m_stor_service->InsertJsonDocument(DB_NAME, sud->m_collection.c_str(), sud->m_user_data.c_str(), sud->m_cb);
-						sud->in_progress = true;
+						CCLOG("Requesting list of documents with needed value and retrieving their owners");
+
+						::App42::Query * query = ::App42::QueryBuilder::BuildQuery(gukv->m_key.c_str(), gukv->m_value, APP42_OP_EQUALS);
+
+						m_stor_service->FindDocumentsByQueryWithPaging(DB_NAME, gukv->m_collection.c_str(), query, gukv->m_quantity, gukv->m_offset, gukv->m_cb);
+						gukv->in_progress = true;
+					}
+
+				}
+
+				entityx::ptr<Comp::GetUsersFromTo> guft;
+				for (auto entity : entities->entities_with_components(guft))
+				{
+					if (guft->done)
+					{
+						entity.remove<Comp::GetUsersFromTo>();
+						if (entity.component_mask() == 0)
+						{
+							entity.destroy();
+						}
+					}
+					else if (!guft->in_progress)
+					{
+						CCLOG("Requesting list of documents by query and retrieving their owners");
+
+						::App42::Query * queryFrom = ::App42::QueryBuilder::BuildQuery(guft->m_key.c_str(), guft->m_from, APP42_OP_GREATER_THAN_EQUALTO);
+						::App42::Query * queryTo = ::App42::QueryBuilder::BuildQuery(guft->m_key.c_str(), guft->m_to, APP42_OP_LESS_THAN_EQUALTO);
+						::App42::Query * queryCompound = ::App42::QueryBuilder::CompoundOperator(queryFrom, APP42_OP_AND, queryTo);
+
+						m_stor_service->FindDocumentsByQueryWithPaging(DB_NAME, guft->m_collection.c_str(), queryCompound, guft->m_quantity, guft->m_offset, guft->m_cb);
+						guft->in_progress = true;
 					}
 
 				}

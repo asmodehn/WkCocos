@@ -39,7 +39,7 @@ namespace WkCocos
 			newentity.assign<Comp::Read>();
 			if (1 == version)
 			{
-				newentity.assign<Comp::LoginID_v1>(user,passwd);
+				newentity.assign<Comp::LoginID_v1>(user, passwd);
 			}
 			return true;
 		}

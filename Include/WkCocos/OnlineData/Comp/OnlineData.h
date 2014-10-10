@@ -41,22 +41,23 @@ namespace WkCocos
 
 			};
 
-			struct DeleteUserData : entityx::Component<DeleteUserData>
+			struct UpdateUserData : entityx::Component<UpdateUserData>
 			{
-				DeleteUserData(std::string userid, std::string collec, std::string docid);
+				UpdateUserData(std::string userid, std::string collec, std::string docid, std::string user_data, std::function<void(::App42::App42StorageResponse*)> cb);
 
 				bool in_progress;
 				bool done;
 				std::string m_userid;
 				std::string m_collection;
 				std::string m_docid;
-				std::function<void(void*)> m_dummy_cb;
+				std::string m_user_data;
+				std::function<void(void*)> m_cb;
 
 			};
 
 			struct FindUserData : entityx::Component<FindUserData>
 			{
-				FindUserData(std::string userid, std::string m_collection, std::function<void(std::string)> delete_cb, std::function<void()> save_cb);
+				FindUserData(std::string userid, std::string m_collection, std::function<void(std::string)> update_cb, std::function<void()> insert_cb);
 
 				bool in_progress;
 				bool done;
@@ -66,9 +67,9 @@ namespace WkCocos
 
 			};
 			
-			struct SaveUserData : entityx::Component<SaveUserData>
+			struct InsertUserData : entityx::Component<InsertUserData>
 			{
-				SaveUserData(std::string userid, std::string m_collection, std::string user_data, std::function<void(::App42::App42UserResponse*)> cb);
+				InsertUserData(std::string userid, std::string m_collection, std::string user_data, std::function<void(::App42::App42StorageResponse*)> cb);
 
 				bool in_progress;
 				bool done;
@@ -87,39 +88,48 @@ namespace WkCocos
 				bool done;
 				std::string m_userid;
 				std::string m_collection;
-				//std::string m_user_data;
-				std::function<void(void*)> m_cb;
-
-			};
-
-			struct LoadEnemyData : entityx::Component<LoadEnemyData>
-			{
-				LoadEnemyData(std::string userid, std::string m_collection, std::function<void(std::string name, int gold, int gems, bool docs)> cb);
-
-				bool in_progress;
-				bool done;
-				std::string m_userid;
-				std::string m_collection;
-				std::function<void(void*)> m_cb;
-
-			};
-
-			struct GetAllUsers : entityx::Component<GetAllUsers>
-			{
-				GetAllUsers(std::function<void(std::string)> cb);
-
-				bool in_progress;
-				bool done;
 				std::function<void(void*)> m_cb;
 
 			};
 
 			struct GetUsersWithDocs : entityx::Component<GetUsersWithDocs>
 			{
-				GetUsersWithDocs(std::function<void(std::string)> cb);
+				GetUsersWithDocs(std::string m_collection, std::function<void(std::string)> cb);
 
 				bool in_progress;
 				bool done;
+				std::string m_collection;
+				std::function<void(void*)> m_cb;
+
+			};
+
+			struct GetUsersKeyValue : entityx::Component<GetUsersKeyValue>
+			{
+				GetUsersKeyValue(std::string collection, std::string key, int value, int quantity, int offset, std::function<void(std::string)> cb);
+
+				bool in_progress;
+				bool done;
+				std::string m_collection;
+				std::string m_key;
+				int m_value;
+				int m_quantity;
+				int m_offset;
+				std::function<void(void*)> m_cb;
+
+			};
+
+			struct GetUsersFromTo : entityx::Component<GetUsersFromTo>
+			{
+				GetUsersFromTo(std::string collection, std::string key, int from, int to, int quantity, int offset, std::function<void(std::string)> cb);
+
+				bool in_progress;
+				bool done;
+				std::string m_collection;
+				std::string m_key;
+				int m_from;
+				int m_to;
+				int m_quantity;
+				int m_offset;
 				std::function<void(void*)> m_cb;
 
 			};

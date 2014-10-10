@@ -30,7 +30,7 @@ PlayersListUI::PlayersListUI()
 		m_refreshButton->setPosition(cocos2d::Vec2(m_widgetSize.width / 2, m_widgetSize.height / 3 * 2));
 		m_widget->addChild(m_refreshButton);
 
-		m_refreshLabel = cocos2d::ui::Text::create("reload players list", "Arial", 21);
+		m_refreshLabel = cocos2d::ui::Text::create("next page", "Arial", 21);
 		m_refreshLabel->setPosition(m_refreshButton->getPosition() + cocos2d::Vec2(0, m_refreshButton->getContentSize().height));
 		m_widget->addChild(m_refreshLabel);
 	
@@ -48,9 +48,9 @@ PlayersListUI::PlayersListUI()
 	}
 
 	g_gameLogic->getPlayer().getOnlineDatamgr()->getEventManager()->subscribe<WkCocos::OnlineData::Events::PlayersList>(*this);
-	g_gameLogic->getPlayer().getOnlineDatamgr()->getEventManager()->subscribe<WkCocos::OnlineData::Events::EnemyData>(*this);
-	g_gameLogic->getPlayer().getAllUsers();
 	//g_gameLogic->getPlayer().getUsersWithDocs();
+	//g_gameLogic->getPlayer().getUsersKeyValue("gold", 7711, 2, 0);
+	g_gameLogic->getPlayer().getUsersFromTo("currency.gold", 1, 999999, quantity, offset);
 }
 
 PlayersListUI::~PlayersListUI()
@@ -64,31 +64,19 @@ PlayersListUI::~PlayersListUI()
 	m_ptb.clear();
 }
 
-void PlayersListUI::receive(const WkCocos::OnlineData::Events::EnemyData &ed)
-{
-	cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([=]()
-	{
-		m_enemyLabel->setText("player " + ed.enemy_name + " has");
-		if (ed.enemy_docs)
-			m_enemyData->setText(WkCocos::ToolBox::itoa(ed.enemy_gems) + " GEMS and " + WkCocos::ToolBox::itoa(ed.enemy_gold) + " GOLD");
-		else
-			m_enemyData->setText("no saved documents");
-	});
-}
-
 void PlayersListUI::refreshCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input)
 {	
 	if (input == cocos2d::ui::Widget::TouchEventType::ENDED)
-	{	
-		std::map<std::string, cocos2d::ui::Text*>::iterator currentPTB = m_ptb.begin();
-		for (; currentPTB != m_ptb.end(); ++currentPTB)
+	{	//this has bug if app42 respone has more than one record from one user
+		std::map<std::string, cocos2d::ui::Text*>::iterator currentPTB;
+		for (currentPTB = m_ptb.begin(); currentPTB != m_ptb.end(); ++currentPTB)
 		{
 			m_widget->removeChild(currentPTB->second);
 			//delete currentPTB->second;
 		}
 		m_ptb.clear();
-
-		g_gameLogic->getPlayer().getAllUsers();
+		offset += quantity;
+		g_gameLogic->getPlayer().getUsersFromTo("currency.gold", 1, 999999, quantity, offset);
 	}
 }
 
@@ -112,25 +100,31 @@ void PlayersListUI::receive(const WkCocos::OnlineData::Events::PlayersList &pl)
 
 				for (rapidjson::SizeType i = 0; i < listSize; i++)
 				{
-					rapidjson::Value & userName = doc[i];
+					rapidjson::Value & temp = doc[i];
 
-					std::string enemy_name = userName["userName"].GetString();
+					std::string enemy_name = temp["owner"].GetString();
 
 					cocos2d::ui::Text* playertextbutton = cocos2d::ui::Text::create("#" + WkCocos::ToolBox::itoa(i) + " " + enemy_name, "Arial", 15);
 					playertextbutton->setPosition(cocos2d::Vec2(-m_widgetSize.width / 2, m_widgetSize.height * (1 - /*2.0*/ 1.0 / (listSize + 1) * (i + 1))));
 					playertextbutton->setTouchEnabled(true);
+
+					rapidjson::Document jsonDoc;
+					jsonDoc.Parse<0>(temp["jsonDoc"].GetString());
+
+					temp = jsonDoc["currency"];
+					std::string gems = WkCocos::ToolBox::itoa(temp["gem"].GetInt());
+					std::string gold = WkCocos::ToolBox::itoa(temp["gold"].GetInt());
 
 					playertextbutton->addTouchEventListener
 					(
 						[=](cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input)
 						{
 							if (input == cocos2d::ui::Widget::TouchEventType::ENDED)
-								g_gameLogic->getPlayer().loadEnemy(enemy_name);
+								m_enemyData->setText(gems + " GEMS and " + gold + " GOLD");
 						}
 					);
 
 					m_ptb[enemy_name] = playertextbutton;
-
 					m_widget->addChild(playertextbutton);
 				}
 			}
