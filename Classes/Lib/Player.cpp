@@ -131,16 +131,16 @@ namespace WkCocos
 		m_inventory = shopInventory;
 	}
 
-	bool Player::requestUsersWithDocs()
-	{
-		if (m_onlinedata)
-		{
-			m_onlinedata->getUsersWithDocs(m_playerData.getSaveName());
-			return true;
-		}
-		else
-			return false;
-	}
+	//bool Player::requestUsersWithDocs()
+	//{
+	//	if (m_onlinedata)
+	//	{
+	//		m_onlinedata->getUsersWithDocs(m_playerData.getSaveName());
+	//		return true;
+	//	}
+	//	else
+	//		return false;
+	//}
 
 	bool Player::requestUsersKeyValue(std::string key, int value, int quantity, int offset)
 	{

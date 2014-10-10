@@ -111,7 +111,7 @@ namespace WkCocos
 
 		//bool requestLoadData(std::function<void()> loaded_cb, std::string key = "");
 
-		bool requestUsersWithDocs();
+		//bool requestUsersWithDocs();
 
 		bool requestUsersKeyValue(std::string key, int value, int quantity, int offset);
 

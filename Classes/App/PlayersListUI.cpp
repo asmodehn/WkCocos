@@ -105,7 +105,7 @@ void PlayersListUI::receive(const WkCocos::OnlineData::Events::PlayersList &pl)
 					std::string enemy_name = temp["owner"].GetString();
 
 					cocos2d::ui::Text* playertextbutton = cocos2d::ui::Text::create("#" + WkCocos::ToolBox::itoa(i) + " " + enemy_name, "Arial", 15);
-					playertextbutton->setPosition(cocos2d::Vec2(-m_widgetSize.width / 2, m_widgetSize.height * (1 - /*2.0*/ 1.0 / (listSize + 1) * (i + 1))));
+					playertextbutton->setPosition(cocos2d::Vec2(-m_widgetSize.width / 2, m_widgetSize.height * (1 - /*2.0*/ 1.0f / (listSize + 1) * (i + 1))));
 					playertextbutton->setTouchEnabled(true);
 
 					rapidjson::Document jsonDoc;

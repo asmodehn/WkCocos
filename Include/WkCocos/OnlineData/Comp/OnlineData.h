@@ -55,17 +55,17 @@ namespace WkCocos
 
 			};
 
-			struct FindUserData : entityx::Component<FindUserData>
-			{
-				FindUserData(std::string userid, std::string m_collection, std::function<void(std::string)> update_cb, std::function<void()> insert_cb);
+			//struct FindUserData : entityx::Component<FindUserData>
+			//{
+			//	FindUserData(std::string userid, std::string m_collection, std::function<void(std::string)> update_cb, std::function<void()> insert_cb);
 
-				bool in_progress;
-				bool done;
-				std::string m_userid;
-				std::string m_collection;
-				std::function<void(void*)> m_cb;
+			//	bool in_progress;
+			//	bool done;
+			//	std::string m_userid;
+			//	std::string m_collection;
+			//	std::function<void(void*)> m_cb;
 
-			};
+			//};
 			
 			struct InsertUserData : entityx::Component<InsertUserData>
 			{
@@ -92,16 +92,16 @@ namespace WkCocos
 
 			};
 
-			struct GetUsersWithDocs : entityx::Component<GetUsersWithDocs>
-			{
-				GetUsersWithDocs(std::string m_collection, std::function<void(std::string)> cb);
+			//struct GetUsersWithDocs : entityx::Component<GetUsersWithDocs>
+			//{
+			//	GetUsersWithDocs(std::string m_collection, std::function<void(std::string)> cb);
 
-				bool in_progress;
-				bool done;
-				std::string m_collection;
-				std::function<void(void*)> m_cb;
+			//	bool in_progress;
+			//	bool done;
+			//	std::string m_collection;
+			//	std::function<void(void*)> m_cb;
 
-			};
+			//};
 
 			struct GetUsersKeyValue : entityx::Component<GetUsersKeyValue>
 			{

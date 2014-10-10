@@ -77,7 +77,7 @@ bool TestScene::init()
 	playerslistui->setEnabled(false);
 	playerslistui->setVisible(false);
 	addInterface(PlayersListUI::id,playerslistui);
-	playerslistui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5, visibleSize.height * 0.5));
+	playerslistui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.5f));
 	//*/
 
 	/*/Error UI
