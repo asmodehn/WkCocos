@@ -94,7 +94,7 @@ namespace WkCocos
 
 			struct LoadEnemyData : entityx::Component<LoadEnemyData>
 			{
-				LoadEnemyData(std::string userid, std::string m_collection, entityx::ptr<entityx::EventManager> event_emitter);
+				LoadEnemyData(std::string userid, std::string m_collection, std::function<void(std::string name, int gold, int gems, bool docs)> cb);
 
 				bool in_progress;
 				bool done;
@@ -106,7 +106,7 @@ namespace WkCocos
 
 			struct GetAllUsers : entityx::Component<GetAllUsers>
 			{
-				GetAllUsers(entityx::ptr<entityx::EventManager> event_emitter);
+				GetAllUsers(std::function<void(std::string)> cb);
 
 				bool in_progress;
 				bool done;
@@ -116,7 +116,7 @@ namespace WkCocos
 
 			struct GetUsersWithDocs : entityx::Component<GetUsersWithDocs>
 			{
-				GetUsersWithDocs(entityx::ptr<entityx::EventManager> event_emitter);
+				GetUsersWithDocs(std::function<void(std::string)> cb);
 
 				bool in_progress;
 				bool done;

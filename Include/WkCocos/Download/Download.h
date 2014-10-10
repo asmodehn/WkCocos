@@ -18,7 +18,7 @@ namespace WkCocos
 					std::function<void(float)> progress_callback
 					);
 
-				//the assetsManager must be added to a scene to have its update called
+				//TODO: This should return true if DLC will be done, or false if the manifest disables DLC.
 				void addDataDownload(const std::string json_manifest_filename);
 
 				virtual ~Download();

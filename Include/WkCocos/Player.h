@@ -32,11 +32,10 @@ namespace WkCocos
 		void Update(float deltatime);
 		
 		/**
-		* Player by default maintain a local save.
-		* After online data manager is set, the local save is not used anymore and the online save takes priority.
+		* Settingup the Inventory of the player
 		*/
-		void setOnlineDataManager(std::shared_ptr<OnlineData::OnlineDataManager> onlinedata, std::function<void()> online_init_cb);
-		
+		void setupInventory(std::shared_ptr<Shop::Inventory> shopInventory);
+
 		/**
 		* Setup Timer
 		* @param id identifier of the timer
@@ -99,8 +98,16 @@ namespace WkCocos
 		inline const std::string& getUser() const { return m_user; }
 		
 	protected:
+		
+		/**
+		* constructor for a local player. This will manage local saved data only
+		*/
+		Player(std::shared_ptr<LocalData::LocalDataManager> localdata, std::function<std::string(std::string userid)> pw_gen_cb);
 
-		Player(std::shared_ptr<LocalData::LocalDataManager> localdata, std::shared_ptr<Shop::Inventory> shopInventory, Save::Mode mode, std::function<std::string(std::string userid)> pw_gen_cb);
+		/**
+		* constructor for an online player. this will manage local saved data and online saved data( these are handled as two separate dataset by WkCocos)
+		*/
+		Player(std::shared_ptr<LocalData::LocalDataManager> localdata, std::function<std::string(std::string userid)> pw_gen_cb, std::shared_ptr<OnlineData::OnlineDataManager> onlinedata, std::function<void()> online_init_cb);
 
 		bool requestLoadData(std::function<void()> loaded_cb, std::string key = "");
 
@@ -111,9 +118,7 @@ namespace WkCocos
 		bool requestEnemyData(std::string enemy_data);
 
 		bool requestSaveData(std::function<void()> saved_cb, std::string key = "");
-
-		//bool requestServerTime();
-
+		
 		bool newPlayer;
 		std::string m_user;
 		std::string m_passwd;
@@ -161,12 +166,12 @@ namespace WkCocos
 			m_onlinedata->loginNew(m_user, m_passwd, email, [=](std::string body){
 				CCLOG("login done !!!");
 				//loading again to get online value
-				m_playerData.requestLoadData(onlineDataLoaded_callback);
+				m_playerData.requestLoadData(m_onlineDataLoaded_callback);
 			});
 		}
 
 		//game callbacks
-		std::function<void()> onlineDataLoaded_callback;
+		std::function<void()> m_onlineDataLoaded_callback;
 		std::function<std::string(std::string userid)> m_pw_gen_cb;
 
 		const char * sAlarms = "alarms";

@@ -22,6 +22,7 @@ LOCAL_SRC_FILES := main.cpp \
                    ../../../../../Classes/App/DownloadUI.cpp \
                    ../../../../../Classes/App/NavUI.cpp \
                    ../../../../../Classes/App/WebUI.cpp \
+                   ../../../../../Classes/App/LogUI.cpp \
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../../../../Include
 

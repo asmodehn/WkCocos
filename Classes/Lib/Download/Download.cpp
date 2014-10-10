@@ -35,8 +35,6 @@ namespace WkCocos
 
 		void Download::addDataDownload(const std::string json_manifest_filename)
 		{
-			cocos2d::Data manifest_data = cocos2d::FileUtils::getInstance()->getDataFromFile(json_manifest_filename);
-				
 			rapidjson::Document json;
 
 			std::string manifestStr = cocos2d::FileUtils::getInstance()->getStringFromFile(json_manifest_filename);

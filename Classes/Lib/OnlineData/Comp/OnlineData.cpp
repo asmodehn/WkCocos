@@ -240,7 +240,7 @@ namespace WkCocos
 				};
 			}
 
-			LoadEnemyData::LoadEnemyData(std::string userid, std::string collec, entityx::ptr<entityx::EventManager> event_emitter)
+			LoadEnemyData::LoadEnemyData(std::string userid, std::string collec, std::function<void(std::string name, int gold, int gems, bool docs)> cb)
 				: in_progress(false)
 				, done(false)
 				, m_userid(userid)
@@ -269,19 +269,19 @@ namespace WkCocos
 									{
 										temp = temp["data"];
 										temp = temp["currency"];
-										event_emitter->emit<Events::EnemyData>(userid, temp["gold"].GetInt(), temp["gem"].GetInt(), true);
+										cb(userid, temp["gold"].GetInt(), temp["gem"].GetInt(), true);
 									}
 									else
-										event_emitter->emit<Events::EnemyData>(userid, 0, 0, false);
+										cb(userid, 0, 0, false);
 								}
 								else
-									event_emitter->emit<Events::EnemyData>(userid, 0, 0, false);
+									cb(userid, 0, 0, false);
 							}
 							else
-								event_emitter->emit<Events::EnemyData>(userid, 0, 0, false);
+								cb(userid, 0, 0, false);
 						}
 						else
-							event_emitter->emit<Events::EnemyData>(userid, 0, 0, false);
+							cb(userid, 0, 0, false);
 
 					}
 					else// if request failed, 
@@ -290,7 +290,7 @@ namespace WkCocos
 						CCLOG("\nerrorMessage:%s", userdata->errorMessage.c_str());
 						CCLOG("\nappErrorCode:%d", userdata->appErrorCode);
 						CCLOG("\nhttpErrorCode:%d", userdata->httpErrorCode);
-						event_emitter->emit<Events::EnemyData>(userid, 0, 0, false);
+						cb(userid, 0, 0, false);
 					}
 
 					done = true;
@@ -298,7 +298,7 @@ namespace WkCocos
 				};
 			}
 
-			GetAllUsers::GetAllUsers(entityx::ptr<entityx::EventManager> event_emitter)
+			GetAllUsers::GetAllUsers(std::function<void(std::string)> cb)
 				: in_progress(false)
 				, done(false)
 
@@ -327,7 +327,7 @@ namespace WkCocos
 								rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
 								temp["user"].Accept(writer);
 
-								event_emitter->emit<Events::PlayersList>(strbuf.GetString());
+								cb(strbuf.GetString());
 
 							}
 						}
@@ -345,7 +345,7 @@ namespace WkCocos
 				};
 			}
 
-			GetUsersWithDocs::GetUsersWithDocs(entityx::ptr<entityx::EventManager> event_emitter)
+			GetUsersWithDocs::GetUsersWithDocs(std::function<void(std::string)> cb)
 				: in_progress(false)
 				, done(false)
 
@@ -374,7 +374,7 @@ namespace WkCocos
 								rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
 								temp["user"].Accept(writer);
 
-								event_emitter->emit<Events::PlayersList>(strbuf.GetString());
+								cb(strbuf.GetString());
 
 							}
 						}

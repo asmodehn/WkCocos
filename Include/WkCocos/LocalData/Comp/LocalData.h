@@ -48,24 +48,29 @@ namespace WkCocos
 
 						size_t size = static_cast<size_t>(ifs.tellg());
 
-						std::string contents;
-						contents.resize(size);
-
-						ifs.seekg(0);
-						//this doesnt change size of string ( therefore the previous "resize()" call )
-						ifs.read(&contents[0], size);//WARNING this is supposed to work with C++11 only ( continous string in memory )
-						
-						if (m_sbox.isEncrypted())
-						{
-							//directly store in strongbox
-							m_sbox.set_encryptedHex(contents);
-						}
+						if (0 == size) return false; // error happened : file is not supposed to be empty
 						else
 						{
-							m_sbox.set<std::string>(contents);
-						}
 
-						return true;
+							std::string contents;
+							contents.resize(size);
+
+							ifs.seekg(0);
+							//this doesnt change size of string ( therefore the previous "resize()" call )
+							ifs.read(&contents[0], size);//WARNING this is supposed to work with C++11 only ( continous string in memory )
+
+							if (m_sbox.isEncrypted())
+							{
+								//directly store in strongbox
+								m_sbox.set_encryptedHex(contents);
+							}
+							else
+							{
+								m_sbox.set<std::string>(contents);
+							}
+
+							return true;
+						}
 					}
 					else
 					{

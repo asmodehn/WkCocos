@@ -105,32 +105,50 @@ namespace WkCocos
 		{
 			auto newentity = entity_manager->create();
 			//new File component for each request. The aggregator system will detect duplicates and group them
-			newentity.assign<Comp::LoadUserData>(userid, saveName, callback);
+			newentity.assign<Comp::LoadUserData>(userid, saveName, [=](std::string str){
+				cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, callback, str](){
+					callback(str);
+				});
+			});
 		}
 
 		void OnlineDataManager::loadEnemy(const std::string& userid, const std::string& saveName)
 		{
 			auto newentity = entity_manager->create();
-			newentity.assign<Comp::LoadEnemyData>(userid, saveName, event_manager);
+			newentity.assign<Comp::LoadEnemyData>(userid, saveName, [=](std::string name, int gold, int gems, bool docs){
+				cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, name, gold, gems, docs](){
+					event_manager->emit<Events::EnemyData>(name,gold,gems,docs);
+				});
+			});
 		}
 
 		void OnlineDataManager::getAllUsers()
 		{
 			auto newentity = entity_manager->create();
-			newentity.assign<Comp::GetAllUsers>(event_manager);
+			newentity.assign<Comp::GetAllUsers>([=](std::string str){
+				cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, str](){
+					event_manager->emit<Events::PlayersList>(str);
+				});
+			});
 		}
 
 		void OnlineDataManager::getUsersWithDocs()
 		{
 			auto newentity = entity_manager->create();
-			newentity.assign<Comp::GetUsersWithDocs>(event_manager);
+			newentity.assign<Comp::GetUsersWithDocs>([=](std::string str){
+				cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, str](){
+					event_manager->emit<Events::PlayersList>(str);
+				});
+			});
 		}
 
 		void OnlineDataManager::getServerTime(std::function<void(std::string)> callback)
 		{
 			auto newentity = entity_manager->create();
 			newentity.assign<Comp::ServerTime>([=](std::string s_iso8601){
-				callback(s_iso8601);
+				cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, callback, s_iso8601](){
+					callback(s_iso8601);
+				});
 			});
 		}
 

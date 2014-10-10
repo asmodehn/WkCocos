@@ -35,14 +35,13 @@ namespace WkCocos
 			//curl_global_cleanup();
 		}
 
-		bool Preload::addDataLoad(const std::vector<std::string> &  filepath)
+		bool Preload::addDataLoad(const std::string &  filepath, const std::vector<std::string> & depends_filepath)
 		{
-			for (auto path : filepath)
-			{
-				entityx::Entity entity = entity_manager->create();
-				entity.assign<Comp::DataLoad>(path);
-				entity.assign<Comp::ProgressValue>(1);
-			}
+			entityx::Entity entity = entity_manager->create();
+			entity.assign<Comp::DataLoad>(filepath);
+			entity.assign<Comp::DataDepends>(depends_filepath);
+			entity.assign<Comp::ProgressValue>(1);
+			
 			return true;
 		}
 

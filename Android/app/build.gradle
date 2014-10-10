@@ -290,7 +290,5 @@ clean.dependsOn ndkCleanDebug, ndkCleanRelease
 
 dependencies {
     compile project(':wkcocos')
-    //compile project(':cocos2dx-android-store')
-    //compile project(':cocos2dx')
     compile 'com.android.support:appcompat-v7:19.+'
 }
