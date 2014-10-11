@@ -203,17 +203,6 @@ namespace WkCocos
 			});
 		}
 
-		//void OnlineDataManager::getUsersWithDocs(const std::string& saveName)
-		//{
-		//	auto newentity = entity_manager->create();
-		//	newentity.assign<Comp::GetUsersWithDocs>(saveName, [=](std::string data)
-		//	{
-		//		cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, data](){
-		//			event_manager->emit<Events::PlayersList>(data);
-		//		});
-		//	});
-		//}
-
 		void OnlineDataManager::getUsersKeyValue(const std::string& saveName, const std::string& key, int value, int quantity, int offset)
 		{
 			auto newentity = entity_manager->create();

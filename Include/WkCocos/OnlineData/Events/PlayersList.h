@@ -2,7 +2,6 @@
 #define __DFGAME_ONLINEDATA_EVENTS_PLAYERSLIST_H__
 
 #include "entityx/entityx.h"
-//#include "WkCocos/OnlineData/Comp/OnlineData.h"
 
 namespace WkCocos
 {

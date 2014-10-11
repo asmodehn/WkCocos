@@ -46,9 +46,7 @@ PlayersListUI::PlayersListUI()
 		widget_cache.insert(std::pair<std::string, cocos2d::ui::Widget*>(id, m_widget));
 
 	}
-
 	g_gameLogic->getPlayer().getOnlineDatamgr()->getEventManager()->subscribe<WkCocos::OnlineData::Events::PlayersList>(*this);
-	//g_gameLogic->getPlayer().getUsersWithDocs();
 	//g_gameLogic->getPlayer().getUsersKeyValue("gold", 7711, 2, 0);
 	g_gameLogic->getPlayer().getUsersFromTo("currency.gold", 1, 999999, quantity, offset);
 }

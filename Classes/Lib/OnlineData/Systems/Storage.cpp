@@ -59,26 +59,6 @@ namespace WkCocos
 
 				}
 
-				/*entityx::ptr<Comp::GetUsersWithDocs> guwd;
-				for (auto entity : entities->entities_with_components(guwd))
-				{
-					if (guwd->done)
-					{
-						entity.remove<Comp::GetUsersWithDocs>();
-						if (entity.component_mask() == 0)
-						{
-							entity.destroy();
-						}
-					}
-					else if (!guwd->in_progress)
-					{
-						CCLOG("Requesting full list of documents and retrieving their owners");
-						m_stor_service->FindAllDocuments(DB_NAME, guwd->m_collection.c_str(), guwd->m_cb);
-						guwd->in_progress = true;
-					}
-
-				}*/
-
 				entityx::ptr<Comp::GetUsersKeyValue> gukv;
 				for (auto entity : entities->entities_with_components(gukv))
 				{

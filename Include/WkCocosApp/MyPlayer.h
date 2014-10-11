@@ -58,12 +58,6 @@ public:
 		requestEnemyData(enemy_name);
 	}
 	
-	//test for getting users with at least one saved doc
-	//void getUsersWithDocs()
-	//{
-	//	requestUsersWithDocs();
-	//}
-
 	void getUsersKeyValue(std::string key, int value, int quantity, int offset)
 	{
 		requestUsersKeyValue(key, value, quantity, offset);
