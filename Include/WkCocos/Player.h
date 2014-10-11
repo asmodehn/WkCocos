@@ -117,7 +117,7 @@ namespace WkCocos
 
 		bool requestUsersFromTo(std::string key, int from, int to, int quantity, int offset);
 
-		bool requestEnemyData(std::string enemy_data);
+		//bool requestEnemyData(std::string enemy_data);
 
 		bool requestSaveData(std::function<void()> saved_cb, std::string key = "");
 		

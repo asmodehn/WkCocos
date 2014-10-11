@@ -8,6 +8,8 @@ namespace WkCocos
 		: m_name(saveName)
 		, m_onLoading(nullptr)
 		, m_onSaving(nullptr)
+		, m_saveInProgress(false)
+		, m_loadInProgress(false)
 	{
 		m_saveModes[static_cast<int>(mode)] = 1;
 	}
@@ -33,19 +35,26 @@ namespace WkCocos
 
 		if (isMode(Mode::ONLINE)) //no encryption online
 		{
-			if (m_onlinedata)
+			if (m_onlinedata&& !m_loadInProgress)
 			{
+				m_loadInProgress = true;
 				m_onlinedata->load(m_user, m_name, [=](std::string data)
 				{
 					m_onLoading(data);
 					CCLOG("user data loaded : %s", data.c_str());
 
 					if (loaded_cb) loaded_cb();
+					m_loadInProgress = false;
 				});
 			}
-			else
+			else if ( !m_onlinedata)
 			{
 				LOG_WARNING << "Online load requested but no online manager!" << std::endl;
+				loaded = false;
+			}
+			else if (m_loadInProgress)
+			{
+				LOG_WARNING << "Load already in progress. request ignored" << std::endl;
 				loaded = false;
 			}
 		}
@@ -88,22 +97,29 @@ namespace WkCocos
 		std::string save = std::string(strbuf.GetString());
 
 		m_localdata->savePlayerData(save);*/
-		bool loaded = true;
+		bool saved = true;
 
 		if (isMode(Mode::ONLINE)) //no encryption online
 		{
-			if (m_onlinedata)
+			if (m_onlinedata && ! m_saveInProgress)
 			{
+				m_saveInProgress = true;
 				m_onlinedata->save(m_user, m_name, m_onSaving(), [=](std::string data)
 				{
 					//CCLOG("user data saved : %s", data.c_str());
 					saved_cb();
+					m_saveInProgress = false;
 				});
 			}
-			else
+			else if (! m_onlinedata)
 			{
 				LOG_WARNING << "Online save requested but no online manager!" << std::endl;
-				loaded = false;
+				saved = false;
+			}
+			else if (m_saveInProgress)
+			{
+				LOG_WARNING << "Save already in progress. request ignored." << std::endl;
+				saved = false;
 			}
 		}
 
@@ -117,11 +133,11 @@ namespace WkCocos
 			else
 			{
 				LOG_WARNING << "Offline save requested but no offline manager!" << std::endl;
-				loaded = false;
+				saved = false;
 			}
 		}
 
-		return loaded;
+		return saved;
 		
 	}
 
@@ -130,6 +146,7 @@ namespace WkCocos
 		bool deleteSave = true;
 		if (isMode(Mode::ONLINE))
 		{
+			//TODO
 			LOG_WARNING << "Online save deletion not supported!" << std::endl;
 		}
 		if (isMode(Mode::OFFLINE))

@@ -171,18 +171,28 @@ namespace WkCocos
 					if (userdata->isSuccess)
 					{
 						rapidjson::Document doc;
-						doc.Parse<0>(userdata->users.front().jsonDocArray.back().getJsonDoc().c_str());
-						
-						if (doc.HasParseError())
+						auto jsonarray = userdata->users.front();
+						if (jsonarray.jsonDocArray.size() == 0)
 						{
-							cb(""); // if parse error (also empty string), we ignore existing data.
+							cb(""); // no data.
 						}
 						else
 						{
-							rapidjson::StringBuffer strbuf;
-							rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
-							doc.Accept(writer);
-							cb(strbuf.GetString());
+							auto lastjsondoc = jsonarray.jsonDocArray.back();
+							auto strjson = lastjsondoc.getJsonDoc();
+							doc.Parse<0>(strjson.c_str());
+
+							if (doc.HasParseError())
+							{
+								cb(""); // if parse error (also empty string), we ignore existing data.
+							}
+							else
+							{
+								rapidjson::StringBuffer strbuf;
+								rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
+								doc.Accept(writer);
+								cb(strbuf.GetString());
+							}
 						}
 					}
 					else// if request failed, 

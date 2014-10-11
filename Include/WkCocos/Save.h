@@ -116,6 +116,16 @@ namespace WkCocos
 		std::shared_ptr<OnlineData::OnlineDataManager> m_onlinedata;
 
 		/**
+		* flag to specify if the save has already been requested
+		*/
+		bool m_saveInProgress;
+
+		/**
+		* flag to specify if the load has already been requested
+		*/
+		bool m_loadInProgress;
+
+		/**
 		* Callback function to fill up save
 		*/
 		std::function<std::string()>		m_onSaving;
