@@ -39,9 +39,9 @@ protected:
 
 	std::map<std::string, cocos2d::ui::Text*> m_ptb;
 
-	int quantity = 2;
-	int offset = 0;
-
+	int m_quantity = 2; // please not more than listSize in receive method
+	int m_offset = 0;
+	int m_pages = 0;
 };
 
 #endif // __PLAYERSLISTUI_H__

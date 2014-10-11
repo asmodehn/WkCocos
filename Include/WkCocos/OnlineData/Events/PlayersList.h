@@ -9,12 +9,11 @@ namespace WkCocos
 	{
 		namespace Events
 		{
-			struct PlayersList : public entityx::Event<PlayersList>
+			struct PlayersList : public entityx::Event < PlayersList >
 			{
-				PlayersList(std::string playerslist) : eventMessage(playerslist) { }
-
-				std::string eventMessage;
-
+				PlayersList(std::map<std::string, std::string> playersList, int recordCount) : eventMessage(playersList), recordCount(recordCount) { }
+				std::map<std::string, std::string> eventMessage;
+				int recordCount;
 			};
 
 		}//namespace Event

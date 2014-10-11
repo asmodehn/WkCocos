@@ -140,7 +140,7 @@ namespace WkCocos
 				};
 			}
 
-			GetUsersKeyValue::GetUsersKeyValue(std::string collection, std::string key, int value, int quantity, int offset, std::function<void(std::string)> cb)
+			GetUsersKeyValue::GetUsersKeyValue(std::string collection, std::string key, int value, int quantity, int offset, std::function<void(std::map<std::string, std::string>, int)> cb)
 				: in_progress(false)
 				, done(false)
 				, m_collection(collection)
@@ -151,56 +151,30 @@ namespace WkCocos
 			{
 				m_cb = [=](void* data) {
 					::App42::App42StorageResponse* userdata = static_cast<::App42::App42StorageResponse*>(data);
+					std::map<std::string, std::string> doc;
 					if (userdata->isSuccess)
 					{
-						for (std::vector<::App42::App42Storage>::iterator it = userdata->storages.begin(); it != userdata->storages.end(); ++it)
+						auto firstStorage = userdata->storages.begin();
+						auto jsonDocArray = firstStorage->jsonDocArray;
+						for (std::vector<::App42::JSONDocument>::iterator it = jsonDocArray.begin(); it != jsonDocArray.end(); ++it)
 						{
-							if (it->collectionName == collection)
-							{
-								rapidjson::Document doc;
-								rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
-								doc.SetArray();
-								for (std::vector<::App42::JSONDocument>::iterator iit = it->jsonDocArray.begin(); iit != it->jsonDocArray.end(); ++iit)
-								{
-									//everything from the following is so horrible just because json is so rapid
-									rapidjson::Value temp;
-									temp.SetObject();
-									rapidjson::Value owner;
-									char ownerbuf[42]; //taken from actual user name length, fake_+uuid, also 42
-									int ownerlen = sprintf(ownerbuf, "%s", iit->getOwner().c_str());
-									owner.SetString(ownerbuf, ownerlen, allocator);
-									memset(ownerbuf, 0, sizeof(ownerbuf));
-									temp.AddMember("owner", owner, allocator);
-									rapidjson::Value jsonDoc;
-									//following limit is taken from App42_Cocos2DX_SDK commit 109c2c9 file HMAC_SHA1.h
-									char jsonDocbuf[32768]; //we just can not have longer doc without crash in other part of app
-									int jsonDoclen = sprintf(jsonDocbuf, "%s", iit->getJsonDoc().c_str());
-									jsonDoc.SetString(jsonDocbuf, jsonDoclen, allocator); //should be added another way because this way i need to parse it later
-									memset(jsonDocbuf, 0, sizeof(jsonDocbuf));
-									temp.AddMember("jsonDoc", jsonDoc, allocator);
-									doc.PushBack(temp, allocator);
-								}
-								rapidjson::StringBuffer strbuf;
-								rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
-								doc.Accept(writer);
-								//callback after success
-								cb(strbuf.GetString());
-							}
+							doc[it->getOwner()] = it->getJsonDoc();
 						}
+						cb(doc, (int)firstStorage->recordCount);
 					}
-					else// if request failed,
+					else
 					{
 						CCLOG("\nerrordetails:%s", userdata->errorDetails.c_str());
 						CCLOG("\nerrorMessage:%s", userdata->errorMessage.c_str());
 						CCLOG("\nappErrorCode:%d", userdata->appErrorCode);
 						CCLOG("\nhttpErrorCode:%d", userdata->httpErrorCode);
+						cb(doc, 0);
 					}
-
 					done = true;
 				};
 			}
 
-			GetUsersFromTo::GetUsersFromTo(std::string collection, std::string key, int from, int to, int quantity, int offset, std::function<void(std::string)> cb)
+			GetUsersFromTo::GetUsersFromTo(std::string collection, std::string key, int from, int to, int quantity, int offset, std::function<void(std::map<std::string, std::string>, int)> cb)
 				: in_progress(false)
 				, done(false)
 				, m_collection(collection)
@@ -212,51 +186,25 @@ namespace WkCocos
 			{
 				m_cb = [=](void* data) {
 					::App42::App42StorageResponse* userdata = static_cast<::App42::App42StorageResponse*>(data);
+					std::map<std::string, std::string> doc;
 					if (userdata->isSuccess)
-					{
-						for (std::vector<::App42::App42Storage>::iterator it = userdata->storages.begin(); it != userdata->storages.end(); ++it)
+					{	
+						auto firstStorage = userdata->storages.begin();
+						auto jsonDocArray = firstStorage->jsonDocArray;
+						for (std::vector<::App42::JSONDocument>::iterator it = jsonDocArray.begin(); it != jsonDocArray.end(); ++it)
 						{
-							if (it->collectionName == collection)
-							{
-								rapidjson::Document doc;
-								rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
-								doc.SetArray();
-								for (std::vector<::App42::JSONDocument>::iterator iit = it->jsonDocArray.begin(); iit != it->jsonDocArray.end(); ++iit)
-								{
-									//everything from the following is so horrible just because json is so rapid
-									rapidjson::Value temp;
-									temp.SetObject();
-									rapidjson::Value owner;
-									char ownerbuf[42]; //taken from actual user name length, fake_+uuid, also 42
-									int ownerlen = sprintf(ownerbuf, "%s", iit->getOwner().c_str());
-									owner.SetString(ownerbuf, ownerlen, allocator);
-									memset(ownerbuf, 0, sizeof(ownerbuf));
-									temp.AddMember("owner", owner, allocator);
-									rapidjson::Value jsonDoc;
-									//following limit is taken from App42_Cocos2DX_SDK commit 109c2c9 file HMAC_SHA1.h
-									char jsonDocbuf[32768]; //we just can not have longer doc without crash in other part of app
-									int jsonDoclen = sprintf(jsonDocbuf, "%s", iit->getJsonDoc().c_str());
-									jsonDoc.SetString(jsonDocbuf, jsonDoclen, allocator); //should be added another way because this way i need to parse it later
-									memset(jsonDocbuf, 0, sizeof(jsonDocbuf));
-									temp.AddMember("jsonDoc", jsonDoc, allocator);
-									doc.PushBack(temp, allocator);
-								}
-								rapidjson::StringBuffer strbuf;
-								rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
-								doc.Accept(writer);
-								//callback after success
-								cb(strbuf.GetString());
-							}
+							doc[it->getOwner()] = it->getJsonDoc();
 						}
+						cb(doc, (int)firstStorage->recordCount);
 					}
-					else// if request failed,
+					else
 					{
 						CCLOG("\nerrordetails:%s", userdata->errorDetails.c_str());
 						CCLOG("\nerrorMessage:%s", userdata->errorMessage.c_str());
 						CCLOG("\nappErrorCode:%d", userdata->appErrorCode);
 						CCLOG("\nhttpErrorCode:%d", userdata->httpErrorCode);
+						cb(doc, 0);
 					}
-
 					done = true;
 				};
 			}
