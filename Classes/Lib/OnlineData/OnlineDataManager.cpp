@@ -32,13 +32,14 @@ namespace WkCocos
 
 		void OnlineDataManager::loginNew(std::string userid, std::string password, std::string email, std::function<void(std::string)> success_callback)
 		{
-
 			auto newentity = entity_manager->create();
 			newentity.assign<Comp::Create>(userid, password, email, [=](::App42::App42UserResponse* r){
 
 				if (r->isSuccess)
 				{
-					login(userid, password, success_callback);
+					cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, userid, password, success_callback](){
+						login(userid, password, success_callback);
+					});
 				}
 				else // if creation failed, emit event ( in cocos thread to allow cocos actions )
 				{
@@ -77,41 +78,47 @@ namespace WkCocos
 			//temp comment
 			newentity.assign<Comp::FindUserData>(userid, saveName, [=](std::string docid)
 			{
-				auto updateentity = entity_manager->create();
-				updateentity.assign < Comp::UpdateUserData >(userid, saveName, docid, user_data, [=](::App42::App42StorageResponse* r)
-				{
-					if (!r->isSuccess)
+				//scheduling in next update loop to avoid race condition on entities
+				cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, userid, saveName, docid, user_data, success_callback](){
+					auto updateentity = entity_manager->create();
+					updateentity.assign < Comp::UpdateUserData >(userid, saveName, docid, user_data, [=](::App42::App42StorageResponse* r)
 					{
-						cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, r](){
-							event_manager->emit<Events::Error>(r);
-							//callback is not called if error
-						});
-					}
-					else
-					{
-						cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, success_callback, r](){
-							success_callback(r->getBody());
-						});
-					}
+						if (!r->isSuccess)
+						{
+							cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, r](){
+								event_manager->emit<Events::Error>(r);
+								//callback is not called if error
+							});
+						}
+						else
+						{
+							cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, success_callback, r](){
+								success_callback(r->getBody());
+							});
+						}
+					});
 				});
 			}, [=]()
 			{
-				auto insertentity = entity_manager->create();
-				insertentity.assign < Comp::InsertUserData >(userid, saveName, user_data, [=](::App42::App42StorageResponse* r)
-				{
-					if (!r->isSuccess)
+				//scheduling in next update loop to avoid race condition on entities
+				cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, userid, saveName, user_data, success_callback](){
+					auto insertentity = entity_manager->create();
+					insertentity.assign < Comp::InsertUserData >(userid, saveName, user_data, [=](::App42::App42StorageResponse* r)
 					{
-						cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, r](){
-							event_manager->emit<Events::Error>(r);
-							//callback is not called if error
-						});
-					}
-					else
-					{
-						cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, success_callback, r](){
-							success_callback(r->getBody());
-						});
-					}
+						if (!r->isSuccess)
+						{
+							cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, r](){
+								event_manager->emit<Events::Error>(r);
+								//callback is not called if error
+							});
+						}
+						else
+						{
+							cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, success_callback, r](){
+								success_callback(r->getBody());
+							});
+						}
+					});
 				});
 			});
 		}
