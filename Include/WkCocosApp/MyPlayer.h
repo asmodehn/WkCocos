@@ -55,7 +55,7 @@ public:
 	//load enemy for test
 	void loadEnemy(std::string enemy_name)
 	{
-		requestEnemyData(enemy_name);
+		//requestEnemyData(enemy_name);
 	}
 	
 	//test for getting users with at least one saved doc
