@@ -119,7 +119,7 @@ void PlayersListUI::receive(const WkCocos::OnlineData::Events::PlayersList &pl)
 				m_widget->addChild(playertextbutton);
 			}
 		}
-		m_pages = round((float)listSize / (float)m_quantity);
+		m_pages = (int)round((float)listSize / (float)m_quantity);
 		m_refreshLabel->setText("page " + WkCocos::ToolBox::itoa(m_offset / m_quantity + 1) + "/" + WkCocos::ToolBox::itoa(m_pages));
 	});
 }

@@ -9,7 +9,7 @@ namespace WkCocos
 		, m_onLoading(nullptr)
 		, m_onSaving(nullptr)
 	{
-		m_saveModes[static_cast<int>(mode)] = 1;
+		m_saveModes[static_cast<int>(mode)] = 0;
 	}
 	
 	Save::~Save()
@@ -17,18 +17,6 @@ namespace WkCocos
 
 	bool Save::requestLoadData(std::function<void()> loaded_cb, std::string key)
 	{
-		/*	m_localdata->loadPlayerData([=](std::string data)
-		{
-		rapidjson::Document doc;
-		doc.Parse<0>(data.c_str());
-		if (doc.HasParseError())
-		{
-		//if parse error (also empty string), we ignore existing data.
-		doc.SetObject();
-		}
-		set_data_json(doc);
-		});*/
-
 		bool loaded = true;
 
 		if (isMode(Mode::ONLINE)) //no encryption online
@@ -55,11 +43,11 @@ namespace WkCocos
 			if (m_localdata)
 			{
 				LOG_WARNING << "Offline load temporary disabled due to multiply docs unfinished implementation!" << std::endl;
-				//m_localdata->loadData(m_name, [=](std::string data){
-				//	m_onLoading(data);
+				m_localdata->loadData(m_name, [=](std::map<std::string, std::string> data){
+					m_onLoading(data);
 
-				//	if (loaded_cb) loaded_cb();
-				//}, key);
+					if (loaded_cb) loaded_cb();
+				}, key);
 			}
 			else
 			{
@@ -73,22 +61,6 @@ namespace WkCocos
 
 	bool Save::requestSaveData(std::function<void()> saved_cb, std::string key)
 	{
-		/*	// create document
-		rapidjson::Document doc;
-		doc.SetObject();
-		// must pass an allocator when the object may need to allocate memory
-		rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
-
-		get_data_json(doc, allocator);
-
-		// Get the save string
-		rapidjson::StringBuffer strbuf;
-		rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
-		doc.Accept(writer);
-
-		std::string save = std::string(strbuf.GetString());
-
-		m_localdata->savePlayerData(save);*/
 		bool loaded = true;
 
 		if (isMode(Mode::ONLINE)) //no encryption online
@@ -113,7 +85,7 @@ namespace WkCocos
 			if (m_localdata)
 			{
 				LOG_WARNING << "Offline save temporary disabled due to multiply docs unfinished implementation!" << std::endl;
-				//m_localdata->saveData(m_name, m_onSaving(), key);
+				m_localdata->saveData(m_name, m_onSaving(), key);
 				saved_cb();
 			}
 			else
