@@ -65,7 +65,7 @@ namespace WkCocos
 					CURLcode res;
 					curl_easy_setopt(_curl, CURLOPT_URL, url.c_str());
 #ifdef _DEBUG
-					curl_easy_setopt(_curl, CURLOPT_VERBOSE, 1L);
+					//curl_easy_setopt(_curl, CURLOPT_VERBOSE, 1L);
 #endif
 					curl_easy_setopt(_curl, CURLOPT_WRITEFUNCTION, write_data);
 					curl_easy_setopt(_curl, CURLOPT_WRITEDATA, &m_dirlist);
@@ -139,6 +139,7 @@ namespace WkCocos
 						}
 
 						entity.remove<Comp::DataListDownload>();
+						//this entity has now the list of data folders found on this URL.
 						entity.assign<Comp::DataVerCheck>(dllist->m_url, dllist->m_current_version, dllist->m_current_minAppVersion, m_version_vec);
 
 						CCLOG("DLClisting after versions retrieval");
