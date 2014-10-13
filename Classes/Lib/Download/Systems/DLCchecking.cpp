@@ -220,9 +220,9 @@ namespace WkCocos
 											dlc_update_allowed = true;
 
 											//check if update is still required
-											if ( cur_version4 < version4 )
+											if ( cur_version4 < version4 && version4 != ULONG_MAX ) //dev verison must never update normal version
 											{
-												dlc_update_allowed = true;
+												dlc_update_required = true;
 											}
 
 										}
