@@ -28,13 +28,15 @@ namespace WkCocos
 						}
 						if (0 != rename(tmpfile->getPath().c_str(), finalFileName.c_str()))
 						{
-							CCLOG("error renaming %s to %s", tmpfile->getPath().c_str(), finalFileName.c_str());
+							std::string errmsg = "error renaming " + tmpfile->getPath() + " to  " + finalFileName;
+							CCLOG(errmsg.c_str());
+							events->emit<Events::Error>(entity, errmsg);
 						}
 						CCLOG("succeed downloading %s", localfile->getPath().c_str());
 												
 						events->emit<Events::Downloaded>(localfile->getPath());
 						
-						//we remove the remotefile to validate the success of the download
+						//we remove the remotefile to mark the end of the download
 						entity.remove<Comp::RemoteFile>();
 
 						//NOTE :
@@ -44,6 +46,16 @@ namespace WkCocos
 
 						//we delete the entity to register progress
 						entity.destroy();
+					}
+					else // download is not fine.
+					{
+						std::string errmsg = "error downloading " + localfile->getPath();
+						CCLOG(errmsg.c_str());
+						events->emit<Events::Error>(entity,errmsg);
+
+						//we remove the remotefile to mark the end of the download
+						entity.remove<Comp::RemoteFile>();
+
 					}
 					
 				}
