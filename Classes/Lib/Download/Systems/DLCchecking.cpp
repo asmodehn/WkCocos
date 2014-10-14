@@ -54,6 +54,12 @@ namespace WkCocos
 
 			std::vector<unsigned long> DLCchecking::splitVersion(std::string vstr)
 			{
+				if (vstr.at(0) == 'v')
+				{
+					//removing first 'v'
+					vstr = vstr.substr(1);
+				}
+
 				std::vector<unsigned long> sv;
 				std::string delimiters = ".";
 				size_t current;
@@ -79,7 +85,7 @@ namespace WkCocos
 
 			std::string DLCchecking::joinVersion(std::vector<unsigned long> version)
 			{
-				std::string vstr = "";
+				std::string vstr = "v";
 				for (unsigned long num : version)
 				{
 					vstr += std::to_string(num) + ".";
