@@ -88,7 +88,7 @@ namespace WkCocos
 				std::string vstr = "v";
 				for (unsigned long num : version)
 				{
-					vstr += std::to_string(num) + ".";
+					vstr += WkCocos::ToolBox::to_string(num) + ".";
 				}
 				vstr.pop_back(); // removing trialing '.'
 				return vstr;
