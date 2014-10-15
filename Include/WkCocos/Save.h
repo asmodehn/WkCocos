@@ -87,7 +87,8 @@ namespace WkCocos
 		*/
 		inline void setUserName(const std::string& userName){ m_user = userName; }
 
-		inline std::string getSaveName(){ return m_name; }
+		inline std::string getSaveName() const { return m_name; }
+		inline void setSaveName(const std::string& name){ m_name = name; }
 
 	private:
 		/**
