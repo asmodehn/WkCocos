@@ -3,16 +3,14 @@
 namespace WkCocos
 {
 	//constructors
-	Player::Player(std::shared_ptr<LocalData::LocalDataManager> localdata, std::function<std::string(std::string userid)> pw_gen_cb)
-		: m_localdata(localdata)
+	Player::Player(std::shared_ptr<WkCocos::Timer::Timer> timer,std::shared_ptr<LocalData::LocalDataManager> localdata, std::function<std::string(std::string userid)> pw_gen_cb)
+		: m_timer(timer)
+		, m_localdata(localdata)
+		, m_inventory(std::make_shared<WkCocos::Shop::Inventory>())
 		, m_playerData("user_data", Save::Mode::OFFLINE)
 		, player_events(entityx::EventManager::make())
 		, m_pw_gen_cb(pw_gen_cb)
-	{//registering player class in cocos update loop
-		cocos2d::Director::getInstance()->getScheduler()->schedule(std::bind(&Player::Update, this, std::placeholders::_1), this, 1.f / 15, false, "player_update");
-
-		m_timer.reset(new WkCocos::Timer::Timer());
-
+	{
 		// Init Save
 		m_playerData.registerLoadingCallback(std::bind(&Player::set_all_data_json, this, std::placeholders::_1));
 		m_playerData.registerSavingCallback(std::bind(&Player::get_all_data_json, this));
@@ -48,19 +46,16 @@ namespace WkCocos
 		});
 	}
 
-	Player::Player(std::shared_ptr<LocalData::LocalDataManager> localdata, std::function<std::string(std::string userid)> pw_gen_cb, std::shared_ptr<OnlineData::OnlineDataManager> onlinedata, std::function<void()> online_init_cb)
-		: m_localdata(localdata)
+	Player::Player(std::shared_ptr<WkCocos::Timer::Timer> timer, std::shared_ptr<LocalData::LocalDataManager> localdata, std::function<std::string(std::string userid)> pw_gen_cb, std::shared_ptr<OnlineData::OnlineDataManager> onlinedata, std::function<void()> online_init_cb)
+		: m_timer(timer)
+		, m_localdata(localdata)
 		, m_onlinedata(onlinedata)
+		, m_inventory(std::make_shared<WkCocos::Shop::Inventory>())
 		, m_playerData("user_data", Save::Mode::ONLINE)
 		, player_events(entityx::EventManager::make())
 		, m_pw_gen_cb(pw_gen_cb)
 		, m_onlineDataLoaded_callback(online_init_cb)
 	{
-		//registering player class in cocos update loop
-		cocos2d::Director::getInstance()->getScheduler()->schedule(std::bind(&Player::Update, this, std::placeholders::_1), this, 1.f / 15, false, "player_update");
-
-		m_timer.reset(new WkCocos::Timer::Timer());
-
 		// Init Save
 		m_playerData.registerLoadingCallback(std::bind(&Player::set_all_data_json, this, std::placeholders::_1));
 		m_playerData.registerSavingCallback(std::bind(&Player::get_all_data_json, this));
@@ -124,11 +119,6 @@ namespace WkCocos
 
 		}, "l0g1nS3cr3tK3y");
 
-	}
-
-	void Player::setupInventory(std::shared_ptr<WkCocos::Shop::Inventory> shopInventory)
-	{
-		m_inventory = shopInventory;
 	}
 
 	bool Player::requestUsersWithDocs()
@@ -255,22 +245,6 @@ namespace WkCocos
 		doc.Accept(writer);
 
 		return set_data_json(strbuf.GetString());
-	}
-
-	void Player::Update(float deltatime)
-	{
-		if (m_timer)
-		{
-			m_timer->update(deltatime);
-		}
-		if (m_localdata)
-		{
-			m_localdata->update(deltatime);
-		}
-		if (m_onlinedata)
-		{
-			m_onlinedata->update(deltatime);
-		}
 	}
 
 	void Player::receive(const WkCocos::OnlineData::Events::Error& err)
