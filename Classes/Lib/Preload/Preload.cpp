@@ -103,6 +103,7 @@ namespace WkCocos
 			{
 				if (data->getFilepath() == shortpath)
 				{
+					CCLOG("downloaded event received for %s. Forcing reload it into cocos2d-x", shortpath.c_str());
 					data->loaded = false;
 					data->force = true;
 					entity.assign<Comp::ProgressValue>(1);
