@@ -54,32 +54,38 @@ namespace WkCocos
 
 			std::vector<unsigned long> DLCchecking::splitVersion(std::string vstr)
 			{
-				if (vstr.at(0) == 'v')
-				{
-					//removing first 'v'
-					vstr = vstr.substr(1);
-				}
-
 				std::vector<unsigned long> sv;
-				std::string delimiters = ".";
-				size_t current;
-				size_t next = -1;
-				do
+
+				if (vstr.length() > 0)
 				{
-					current = next + 1;
-					next = vstr.find_first_of(delimiters, current);
-					//std::cout << vstr.substr(current, next - current) << std::endl;
-					unsigned long tmp = 0;
-					try
+					if (vstr.at(0) == 'v')
 					{
-						tmp = ToolBox::stoul(vstr.substr(current, next - current));
+						//removing first 'v'
+						vstr = vstr.substr(1);
 					}
-					catch (std::out_of_range oor)
+
+					std::string delimiters = ".";
+					size_t current;
+					size_t next = -1;
+					do
 					{
-						tmp = ULONG_MAX;
-					}
-					sv.push_back(tmp);
-				} while (next != std::string::npos);
+						current = next + 1;
+						next = vstr.find_first_of(delimiters, current);
+						//in case we do not find any delimiter
+						size_t endsub = (std::string::npos == next) ? next : next - current;
+						//std::cout << vstr.substr(current, next - current) << std::endl;
+						unsigned long tmp = 0;
+						try
+						{
+							tmp = ToolBox::stoul(vstr.substr(current, endsub));
+						}
+						catch (std::out_of_range oor)
+						{
+							tmp = ULONG_MAX;
+						}
+						sv.push_back(tmp);
+					} while (next != std::string::npos);
+				}
 				return sv;
 			}
 
