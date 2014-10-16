@@ -4,8 +4,17 @@
 #include "json/stringbuffer.h"
 #include "json/writer.h"
 
-MyPlayer::MyPlayer(std::shared_ptr<WkCocos::LocalData::LocalDataManager> localdatamngr, std::function<std::string(std::string userid)> pw_gen_cb, std::shared_ptr<WkCocos::OnlineData::OnlineDataManager> onlinedatamgr, std::function<void()> online_init_cb)
-	: WkCocos::Player(localdatamngr, pw_gen_cb, onlinedatamgr, online_init_cb)
+MyPlayer::MyPlayer(std::shared_ptr<WkCocos::LocalData::LocalDataManager> localdatamngr, std::function<std::string(std::string userid)> pw_gen_cb, std::function<void()> data_load_cb)
+	: WkCocos::Player(localdatamngr, pw_gen_cb, data_load_cb)
+	, m_gem("53cr3t") // encrypted
+	, m_gold() // not encrypted
+{
+	m_gem.set(42);
+	m_gold.set(424242);
+}
+
+MyPlayer::MyPlayer(std::shared_ptr<WkCocos::LocalData::LocalDataManager> localdatamngr, std::function<std::string(std::string userid)> pw_gen_cb, std::shared_ptr<WkCocos::OnlineData::OnlineDataManager> onlinedatamgr, std::function<void()> data_load_cb)
+	: WkCocos::Player(localdatamngr, pw_gen_cb, onlinedatamgr, data_load_cb)
 , m_gem("53cr3t") // encrypted
 , m_gold() // not encrypted
 {

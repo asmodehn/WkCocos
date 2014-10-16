@@ -3,11 +3,12 @@
 namespace WkCocos
 {
 	//constructors
-	Player::Player(std::shared_ptr<LocalData::LocalDataManager> localdata, std::function<std::string(std::string userid)> pw_gen_cb)
+	Player::Player(std::shared_ptr<LocalData::LocalDataManager> localdata, std::function<std::string(std::string userid)> pw_gen_cb, std::function<void()> data_load_cb)
 		: m_localdata(localdata)
 		, m_playerData("user_data", Save::Mode::OFFLINE)
 		, player_events(entityx::EventManager::make())
 		, m_pw_gen_cb(pw_gen_cb)
+		, m_DataLoaded_callback(data_load_cb)
 	{//registering player class in cocos update loop
 		cocos2d::Director::getInstance()->getScheduler()->schedule(std::bind(&Player::Update, this, std::placeholders::_1), this, 1.f / 15, false, "player_update");
 
@@ -44,8 +45,9 @@ namespace WkCocos
 					newPlayer = true;
 				}
 			}
+			m_playerData.requestLoadData(m_DataLoaded_callback);
 			//in any case we have here m_user != "" after asynchronous callback is done.
-		});
+		}, "l0g1nS3cr3tK3y");
 	}
 
 	Player::Player(std::shared_ptr<LocalData::LocalDataManager> localdata, std::function<std::string(std::string userid)> pw_gen_cb, std::shared_ptr<OnlineData::OnlineDataManager> onlinedata, std::function<void()> online_init_cb)
@@ -54,7 +56,7 @@ namespace WkCocos
 		, m_playerData("user_data", Save::Mode::ONLINE)
 		, player_events(entityx::EventManager::make())
 		, m_pw_gen_cb(pw_gen_cb)
-		, m_onlineDataLoaded_callback(online_init_cb)
+		, m_DataLoaded_callback(online_init_cb)
 	{
 		//registering player class in cocos update loop
 		cocos2d::Director::getInstance()->getScheduler()->schedule(std::bind(&Player::Update, this, std::placeholders::_1), this, 1.f / 15, false, "player_update");
@@ -97,7 +99,7 @@ namespace WkCocos
 			}
 			//in any case we have here m_user != ""
 
-			if (m_onlinedata && m_onlineDataLoaded_callback) //in case online data is set while we re loading loginID
+			if (m_onlinedata && m_DataLoaded_callback) //in case online data is set while we re loading loginID
 			{
 				m_onlinedata->getServerTime([=](std::string s_iso8601){
 					m_timer->setTime(s_iso8601);
@@ -113,13 +115,13 @@ namespace WkCocos
 					m_onlinedata->login(m_user, m_passwd, [=](std::string body){
 						CCLOG("login done !!!");
 						//loading again to get online value
-						m_playerData.requestLoadData(m_onlineDataLoaded_callback);
+						m_playerData.requestLoadData(m_DataLoaded_callback);
 					});
 				}
 			}
 			else
 			{
-				m_playerData.requestLoadData(std::function<void()>()); //we assume no callback needed there. we re loading local save.
+				m_playerData.requestLoadData(m_DataLoaded_callback); //here was wrong assumption.
 			}
 
 		}, "l0g1nS3cr3tK3y");

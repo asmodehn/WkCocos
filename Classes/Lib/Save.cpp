@@ -9,7 +9,7 @@ namespace WkCocos
 		, m_onLoading(nullptr)
 		, m_onSaving(nullptr)
 	{
-		m_saveModes[static_cast<int>(mode)] = 0;
+		m_saveModes[static_cast<int>(mode)] = 1;
 	}
 	
 	Save::~Save()

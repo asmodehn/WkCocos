@@ -65,19 +65,19 @@ bool TestScene::init()
 	saveui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.67f));
 
 	//TimerUI
-	TimerUI* timerui = new TimerUI();
-	timerui->setEnabled(false);
-	timerui->setVisible(false);
-	addInterface(TimerUI::id,timerui);
-	timerui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.67f));
+	//TimerUI* timerui = new TimerUI();
+	//timerui->setEnabled(false);
+	//timerui->setVisible(false);
+	//addInterface(TimerUI::id,timerui);
+	//timerui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.67f));
 	//*/
 
 	///PlayersListUI
-	PlayersListUI* playerslistui = new PlayersListUI();
-	playerslistui->setEnabled(false);
-	playerslistui->setVisible(false);
-	addInterface(PlayersListUI::id,playerslistui);
-	playerslistui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.5f));
+	//PlayersListUI* playerslistui = new PlayersListUI();
+	//playerslistui->setEnabled(false);
+	//playerslistui->setVisible(false);
+	//addInterface(PlayersListUI::id,playerslistui);
+	//playerslistui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.5f));
 	//*/
 
 	/*/Error UI
@@ -114,32 +114,32 @@ bool TestScene::init()
 	//*/
 
 	//ShopUI
-	ShopUI* shopui = new ShopUI();
+	/*ShopUI* shopui = new ShopUI();
 	shopui->setEnabled(false);
 	shopui->setVisible(false);
 	addInterface(ShopUI::id,shopui);
-	shopui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.67f));
+	shopui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.67f));*/
 
 	//DownloadUI
-	DownloadUI* dlui = new DownloadUI();
+	/*DownloadUI* dlui = new DownloadUI();
 	dlui->setEnabled(false);
 	dlui->setVisible(false);
 	addInterface(DownloadUI::id,dlui);
-	dlui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.67f));
+	dlui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.67f));*/
 
 	//WebUI
-	WebUI* webui = new WebUI();
-	webui->setEnabled(false);
-	webui->setVisible(false);
-	addInterface(WebUI::id,webui);
-	webui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.67f));
+	//WebUI* webui = new WebUI();
+	//webui->setEnabled(false);
+	//webui->setVisible(false);
+	//addInterface(WebUI::id,webui);
+	//webui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.67f));
 
 	//LogUI
-	LogUI* logui = new LogUI();
+	/*LogUI* logui = new LogUI();
 	logui->setEnabled(false);
 	logui->setVisible(false);
 	addInterface(LogUI::id, logui);
-	logui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.67f));
+	logui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.67f));*/
 
 	//activating first UI : 
 	saveui->setEnabled(true);

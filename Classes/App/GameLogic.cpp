@@ -34,10 +34,10 @@ GameLogic::GameLogic(std::string app_access_key, std::string app_secret_key, std
 	{
 		CCLOG("%s",userid.c_str());
 		return "pass_" + userid;
-	},
-	m_onlinedatamngr, 
-	online_init_cb)
-	);
+	}
+	//, m_onlinedatamngr
+	, online_init_cb
+	));
 
 	m_player->setupInventory(m_shop->getInventory());
 }

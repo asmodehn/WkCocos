@@ -102,12 +102,12 @@ namespace WkCocos
 		/**
 		* constructor for a local player. This will manage local saved data only
 		*/
-		Player(std::shared_ptr<LocalData::LocalDataManager> localdata, std::function<std::string(std::string userid)> pw_gen_cb);
+		Player(std::shared_ptr<LocalData::LocalDataManager> localdata, std::function<std::string(std::string userid)> pw_gen_cb, std::function<void()> data_load_cb);
 
 		/**
 		* constructor for an online player. this will manage local saved data and online saved data( these are handled as two separate dataset by WkCocos)
 		*/
-		Player(std::shared_ptr<LocalData::LocalDataManager> localdata, std::function<std::string(std::string userid)> pw_gen_cb, std::shared_ptr<OnlineData::OnlineDataManager> onlinedata, std::function<void()> online_init_cb);
+		Player(std::shared_ptr<LocalData::LocalDataManager> localdata, std::function<std::string(std::string userid)> pw_gen_cb, std::shared_ptr<OnlineData::OnlineDataManager> onlinedata, std::function<void()> data_load_cb);
 
 		bool requestUsersKeyValue(std::string key, int value, int quantity, int offset);
 
@@ -162,12 +162,12 @@ namespace WkCocos
 			m_onlinedata->loginNew(m_user, m_passwd, email, [=](std::string body){
 				CCLOG("login done !!!");
 				//loading again to get online value
-				m_playerData.requestLoadData(m_onlineDataLoaded_callback);
+				m_playerData.requestLoadData(m_DataLoaded_callback);
 			});
 		}
 
 		//game callbacks
-		std::function<void()> m_onlineDataLoaded_callback;
+		std::function<void()> m_DataLoaded_callback;
 		std::function<std::string(std::string userid)> m_pw_gen_cb;
 
 		const char * sAlarms = "alarms";
