@@ -95,7 +95,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 		//We launch loading scene with DLC only after login
 		loadscene->scheduleDLCCheck();
 
-		loadscene->addLoad({ "HelloWorld.png" });
+		loadscene->addLoad("HelloWorld.png");
 
 		loadscene->setLoadDoneCallback([](){
 			auto director = cocos2d::Director::getInstance();
