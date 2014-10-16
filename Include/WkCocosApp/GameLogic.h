@@ -46,7 +46,7 @@ public:
 	}
 
 public:
-	GameLogic(std::string app_access_key, std::string app_secret_key, std::function<void()> online_init_cb);
+	GameLogic(std::string app_access_key, std::string app_secret_key, std::function<void()> data_load_cb);
 	~GameLogic();
 	
 	//overall game features ( shared between concepts )

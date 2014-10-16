@@ -50,13 +50,13 @@ namespace WkCocos
 		}, "l0g1nS3cr3tK3y");
 	}
 
-	Player::Player(std::shared_ptr<LocalData::LocalDataManager> localdata, std::function<std::string(std::string userid)> pw_gen_cb, std::shared_ptr<OnlineData::OnlineDataManager> onlinedata, std::function<void()> online_init_cb)
+	Player::Player(std::shared_ptr<LocalData::LocalDataManager> localdata, std::function<std::string(std::string userid)> pw_gen_cb, std::shared_ptr<OnlineData::OnlineDataManager> onlinedata, std::function<void()> data_load_cb)
 		: m_localdata(localdata)
 		, m_onlinedata(onlinedata)
 		, m_playerData("user_data", Save::Mode::ONLINE)
 		, player_events(entityx::EventManager::make())
 		, m_pw_gen_cb(pw_gen_cb)
-		, m_DataLoaded_callback(online_init_cb)
+		, m_DataLoaded_callback(data_load_cb)
 	{
 		//registering player class in cocos update loop
 		cocos2d::Director::getInstance()->getScheduler()->schedule(std::bind(&Player::Update, this, std::placeholders::_1), this, 1.f / 15, false, "player_update");
