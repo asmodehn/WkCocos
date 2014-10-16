@@ -14,13 +14,7 @@ namespace WkCocos
 	class Options
 	{
 	public:
-
-		/**
-		* Update loop, called by cocos after Activate has been called
-		*/
-		void Update(float deltatime);
 		
-	protected:
 		Options(std::shared_ptr<LocalData::LocalDataManager> localdata);
 		
 		std::shared_ptr<LocalData::LocalDataManager> m_localdata;
