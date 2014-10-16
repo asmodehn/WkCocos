@@ -35,7 +35,7 @@ GameLogic::GameLogic(std::string app_access_key, std::string app_secret_key, std
 		CCLOG("%s",userid.c_str());
 		return "pass_" + userid;
 	}
-	//, m_onlinedatamngr
+	, m_onlinedatamngr
 	, data_load_cb
 	));
 
