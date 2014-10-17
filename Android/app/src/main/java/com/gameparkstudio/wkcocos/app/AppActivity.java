@@ -30,7 +30,7 @@ public class AppActivity extends MainActivity {
         super.onPause();
         //TODO : JNI binding to remove this from here and make it doable in C++ app
         //TODO : FIX "when" doesnt seem to work ?
-        PushNotificationsManager.getInstance().Schedule(42, "Title Wkcocos", "UsefulMessage", R.drawable.ic_launcher);
+        //PushNotificationsManager.getInstance().schedule(42, "Title Wkcocos", "UsefulMessage", R.drawable.ic_launcher);
     }
 
     @Override protected void onResume() {

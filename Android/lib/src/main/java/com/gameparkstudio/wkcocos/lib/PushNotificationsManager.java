@@ -56,8 +56,9 @@ protected boolean mDebugEnabled = true;
         return false;
     }
 
-    public Boolean Schedule(long when, String title, String message, int icon )
+    public Boolean schedule(long when, String title, String message, int icon )
     {
+        debugLog("Calling schedule with when =" + when + " title = " + title + " message = " + message + " icon = " + icon);
         NotificationManager WKNM=(NotificationManager)appContext.getSystemService(Context.NOTIFICATION_SERVICE);
         NotificationCompat.Builder WKBuilder =
                 new NotificationCompat.Builder(appContext)
