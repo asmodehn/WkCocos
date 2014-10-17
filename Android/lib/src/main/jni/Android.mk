@@ -17,8 +17,6 @@ LOCAL_SRC_FILES := jni.cpp \
                    ../../../../../Classes/Lib/Player.cpp \
                    ../../../../../Classes/Lib/Scene.cpp \
                    ../../../../../Classes/Lib/Interface.cpp \
-                   ../../../../../Classes/Lib/App42/Setup.cpp \
-                   ../../../../../Classes/Lib/App42/Login.cpp \
                    ../../../../../Classes/Lib/Download/Download.cpp \
                    ../../../../../Classes/Lib/Preload/Preload.cpp \
                    ../../../../../Classes/Lib/Utils/CocosAppender.cpp \
