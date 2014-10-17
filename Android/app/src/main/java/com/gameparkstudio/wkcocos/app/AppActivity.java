@@ -23,6 +23,7 @@ public class AppActivity extends MainActivity {
 
         //TODO : can we do that in MainActivity in lib ??
         PushNotificationsManager.getInstance().setActivity(AppActivity.class);
+        PushNotificationsManager.getInstance().setIcon(R.drawable.ic_launcher);
     }
 
     @Override protected void onPause()
@@ -30,7 +31,7 @@ public class AppActivity extends MainActivity {
         super.onPause();
         //TODO : JNI binding to remove this from here and make it doable in C++ app
         //TODO : FIX "when" doesnt seem to work ?
-        //PushNotificationsManager.getInstance().schedule(42, "Title Wkcocos", "UsefulMessage", R.drawable.ic_launcher);
+        //PushNotificationsManager.getInstance().schedule(42, "Title Wkcocos", "UsefulMessage");
     }
 
     @Override protected void onResume() {

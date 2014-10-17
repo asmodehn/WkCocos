@@ -28,6 +28,7 @@ protected boolean mDebugEnabled = true;
 
 	private Context appContext;
     private Class<?> appPNClickActivity;
+    private int appIcon;
 
 	private PushNotificationsManager()
 	{
@@ -47,7 +48,7 @@ protected boolean mDebugEnabled = true;
 	}
 /*** ***/
 
-    public Boolean setActivity(Class pnClickActivity)
+    public boolean setActivity(Class pnClickActivity)
     {
         if ( Activity.class.isAssignableFrom(pnClickActivity)) {
             appPNClickActivity = pnClickActivity;
@@ -56,13 +57,19 @@ protected boolean mDebugEnabled = true;
         return false;
     }
 
-    public Boolean schedule(long when, String title, String message, int icon )
+    public void setIcon(int drawable)
     {
-        debugLog("Calling schedule with when =" + when + " title = " + title + " message = " + message + " icon = " + icon);
+        appIcon = drawable;
+    }
+
+    public boolean schedule(long when, String title, String message)
+    {
+        debugLog("Calling schedule with when =" + when + " title = " + title + " message = " + message );
+
         NotificationManager WKNM=(NotificationManager)appContext.getSystemService(Context.NOTIFICATION_SERVICE);
         NotificationCompat.Builder WKBuilder =
                 new NotificationCompat.Builder(appContext)
-                        .setSmallIcon(icon)
+                        .setSmallIcon(appIcon)
                         .setContentTitle(title)
                         .setContentText(message)
                         .setWhen(when);

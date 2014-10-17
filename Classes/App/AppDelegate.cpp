@@ -120,7 +120,7 @@ void AppDelegate::applicationDidEnterBackground() {
     // if you use SimpleAudioEngine, it must be pause
     // SimpleAudioEngine::getInstance()->pauseBackgroundMusic();
 
-	WkCocos::PushNotifications::PushNotifications::schedule(42, "Title WkCocos C++", "Useful Message", 1);
+	WkCocos::PushNotifications::PushNotifications::schedule(42, "Title WkCocos C++", "Useful Message");
 }
 
 // this function will be called when the app is active again
