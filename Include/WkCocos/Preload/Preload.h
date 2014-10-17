@@ -22,8 +22,9 @@ namespace WkCocos
 					);
 
 				//scheduel the load in memory of a data.
+				// passing it sdependencies prevent to load it if a dependency is missing.
 				//DataLoad Event is sent when the load finishes.
-				bool addDataLoad(const std::vector<std::string> & filepath);
+				bool addDataLoad(const std::string &  filepath, const std::vector<std::string> & depends_filepath);
 				
 				virtual ~Preload();
 

@@ -18,7 +18,12 @@ public:
 	/**
 	* Constructor
 	*/
-	MyPlayer(std::shared_ptr<WkCocos::LocalData::LocalDataManager> localdatamngr, std::shared_ptr<WkCocos::Shop::Inventory> shopInventory, std::function<std::string(std::string userid)> pw_gen_cb);
+	MyPlayer(std::shared_ptr<WkCocos::Timer::Timer> gameclock
+		, std::shared_ptr<WkCocos::LocalData::LocalDataManager> localdatamngr
+		, std::function<std::string(std::string userid)> pw_gen_cb
+		, std::shared_ptr<WkCocos::OnlineData::OnlineDataManager> onlinedatamgr
+		, std::function<void()> online_init_cb
+	);
 	/**
 	* Destructor
 	*/
@@ -55,19 +60,23 @@ public:
 	//load enemy for test
 	void loadEnemy(std::string enemy_name)
 	{
-		requestEnemyData(enemy_name);
+		//requestEnemyData(enemy_name);
 	}
 	
-	//test for getting every app user
-	void getAllUsers()
-	{
-		requestAllUsers();
-	}
-
 	//test for getting users with at least one saved doc
 	void getUsersWithDocs()
 	{
 		requestUsersWithDocs();
+	}
+
+	void getUsersKeyValue(std::string key, int value, int quantity, int offset)
+	{
+		requestUsersKeyValue(key, value, quantity, offset);
+	}
+
+	void getUsersFromTo(std::string key, int from, int to, int quantity, int offset)
+	{
+		requestUsersFromTo(key, from, to, quantity, offset);
 	}
 
 	//test for getting server time

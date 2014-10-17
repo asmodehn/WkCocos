@@ -110,10 +110,10 @@ void LoadingScene::onExitTransitionDidStart()
 
 }
 
-void LoadingScene::addLoad(std::vector<std::string> respath)
+void LoadingScene::addLoad(const std::string& respath, std::vector<std::string> depends_respath)
 {
 	if (m_preloadManager)
-		m_preloadManager->addDataLoad(respath);
+		m_preloadManager->addDataLoad(respath, depends_respath);
 }
 
 void LoadingScene::setLoadDoneCallback(std::function<void()> cb)

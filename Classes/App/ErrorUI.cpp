@@ -37,23 +37,6 @@ ErrorUI::ErrorUI() : Interface()
 		widget_cache.insert(std::pair<std::string, cocos2d::ui::Widget*>(id, m_widget));
 
 	}
-	GameLogic::Instance().getPlayer().getLocalDatamgr()->getEventManager()->subscribe<WkCocos::LocalData::Events::Error>(*this);
-	GameLogic::Instance().getPlayer().player_events->subscribe<WkCocos::Player::Error>(*this);
-}
-
-void ErrorUI::receive(const WkCocos::Player::Error &PL)
-{
-	std::string errmsg = PL.m_component + " : " + PL.m_code + " - " + PL.m_message;
-	m_label->setText(errmsg);
-	m_widget->setVisible(true);
-	m_widget->setEnabled(true);
-}
-
-void ErrorUI::receive(const WkCocos::LocalData::Events::Error &LD)
-{
-	m_label->setText(LD.msg);
-	m_widget->setVisible(true);
-	m_widget->setEnabled(true);
 }
 
 void ErrorUI::activate(std::string msg)

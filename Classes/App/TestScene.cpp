@@ -7,6 +7,7 @@
 #include "WkCocosApp/ErrorUI.h"
 #include "WkCocosApp/PlayersListUI.h"
 #include "WkCocosApp/WebUI.h"
+#include "WkCocosApp/LogUI.h"
 
 #include "WkCocosApp/GameLogic.h"
 
@@ -71,14 +72,12 @@ bool TestScene::init()
 	timerui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.67f));
 	//*/
 
-	/*//PlayersListUI
+	///PlayersListUI
 	PlayersListUI* playerslistui = new PlayersListUI();
-	auto playerslistroot = playerslistui->getRoot();
-	playerslistroot->setEnabled(false);
-	playerslistroot->setVisible(false);
-	addChild(playerslistroot);
-	m_ui[PlayersListUI::id] = playerslistui;
-	playerslistroot->setPosition(cocos2d::Vec2(visibleSize.width * 0.5, visibleSize.height * 0.5));
+	playerslistui->setEnabled(false);
+	playerslistui->setVisible(false);
+	addInterface(PlayersListUI::id,playerslistui);
+	playerslistui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5, visibleSize.height * 0.5));
 	//*/
 
 	/*/Error UI
@@ -135,6 +134,13 @@ bool TestScene::init()
 	addInterface(WebUI::id,webui);
 	webui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.67f));
 
+	//LogUI
+	LogUI* logui = new LogUI();
+	logui->setEnabled(false);
+	logui->setVisible(false);
+	addInterface(LogUI::id, logui);
+	logui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.67f));
+
 	//activating first UI : 
 	saveui->setEnabled(true);
 	saveui->setVisible(true);
@@ -145,7 +151,10 @@ bool TestScene::init()
 	m_time->setPosition(cocos2d::Vec2(sprite->getPositionX(), closeItem->getPositionY()));
 	addChild(m_time);
 
-	//GameLogic::Instance().getPlayer().getOnlineDatamgr()->getEventManager()->subscribe<WkCocos::OnlineData::Events::ServerTime>(*this);
+	g_gameLogic->getLocalDataManager().getEventManager()->subscribe<WkCocos::LocalData::Events::Error>(*this);
+	g_gameLogic->getPlayer().player_events->subscribe<WkCocos::Player::Error>(*this);
+
+	//g_gameLogic->getPlayer().getOnlineDatamgr()->getEventManager()->subscribe<WkCocos::OnlineData::Events::ServerTime>(*this);
 	return true;
 }
 
@@ -164,12 +173,12 @@ void TestScene::update(float delta)
 {
 	//if (!m_waiting_for_server_time)
 	//{
-	//	GameLogic::Instance().getPlayer().getServerTime();
+	//	g_gameLogic->getPlayer().getServerTime();
 	//	m_waiting_for_server_time = true;
 	//}
-	m_time->setText(WkCocos::ToolBox::itoa(GameLogic::Instance().getPlayer().getTimermgr()->getServerLocalTime().tm_hour) + ":" +
-		WkCocos::ToolBox::itoa(GameLogic::Instance().getPlayer().getTimermgr()->getServerLocalTime().tm_min) + ":" +
-		WkCocos::ToolBox::itoa(GameLogic::Instance().getPlayer().getTimermgr()->getServerLocalTime().tm_sec));
+	m_time->setText(WkCocos::ToolBox::itoa(g_gameLogic->getPlayer().getTimermgr()->getServerLocalTime().tm_hour) + ":" +
+		WkCocos::ToolBox::itoa(g_gameLogic->getPlayer().getTimermgr()->getServerLocalTime().tm_min) + ":" +
+		WkCocos::ToolBox::itoa(g_gameLogic->getPlayer().getTimermgr()->getServerLocalTime().tm_sec));
 	Scene::update(delta);
 }
 
@@ -238,6 +247,24 @@ void TestScene::receive(const NavUI::Prev &prv)
 	NavUI* nav = getInterface<NavUI>(NavUI::id);
 	nav->setTitle(currentUI);
 }
+
+void TestScene::receive(const WkCocos::Player::Error &PL)
+{
+	std::string errmsg = PL.m_component + " : " + PL.m_code + " - " + PL.m_message;
+	auto errui = getInterface<ErrorUI>(ErrorUI::id);
+	errui->activate(errmsg);
+	errui->setVisible(true);
+	errui->setEnabled(true);
+}
+
+void TestScene::receive(const WkCocos::LocalData::Events::Error &LD)
+{
+	auto errui = getInterface<ErrorUI>(ErrorUI::id);
+	errui->activate(LD.msg);
+	errui->setVisible(true);
+	errui->setEnabled(true);
+}
+
 
 void TestScene::error_CB(std::string msg)
 {

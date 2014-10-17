@@ -28,7 +28,6 @@ public:
 	void refreshCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input);
 
 	void receive(const WkCocos::OnlineData::Events::PlayersList &pl);
-	void receive(const WkCocos::OnlineData::Events::EnemyData &ed);
 
 protected:
 
@@ -39,6 +38,9 @@ protected:
 	cocos2d::Size m_widgetSize;
 
 	std::map<std::string, cocos2d::ui::Text*> m_ptb;
+
+	int quantity = 2;
+	int offset = 0;
 
 };
 

@@ -23,7 +23,7 @@ TimerUI::TimerUI()
 
 		m_startButton = cocos2d::ui::Button::create("SkipNormal.png", "SkipSelected.png");
 		m_startButton->addTouchEventListener(CC_CALLBACK_2(TimerUI::startCallback, this));
-		m_startButton->setPosition(cocos2d::Vec2(-widgetSize.width / 4, 0));
+		m_startButton->setPosition(cocos2d::Vec2(-widgetSize.width / 2, 0));
 		m_widget->addChild(m_startButton);
 
 		m_startLabel = cocos2d::ui::Text::create("START", "Arial", 21);
@@ -32,7 +32,7 @@ TimerUI::TimerUI()
 
 		m_stopButton = cocos2d::ui::Button::create("SkipNormal.png", "SkipSelected.png");
 		m_stopButton->addTouchEventListener(CC_CALLBACK_2(TimerUI::stopCallback, this));
-		m_stopButton->setPosition(cocos2d::Vec2(widgetSize.width / 4, 0));
+		m_stopButton->setPosition(cocos2d::Vec2(widgetSize.width / 2, 0));
 		m_widget->addChild(m_stopButton);
 
 		m_stopLabel = cocos2d::ui::Text::create("STOP", "Arial", 21);
@@ -46,8 +46,8 @@ TimerUI::TimerUI()
 		widget_cache.insert(std::pair<std::string, cocos2d::ui::Widget*>(id, m_widget));
 
 	}
-	GameLogic::Instance().getPlayer().getTimermgr()->getEventManager()->subscribe<WkCocos::Timer::Events::TimerUpdate>(*this);
-	GameLogic::Instance().getPlayer().getTimermgr()->getEventManager()->subscribe<WkCocos::Timer::Events::AlarmOff>(*this);
+	g_gameLogic->getPlayer().getTimermgr()->getEventManager()->subscribe<WkCocos::Timer::Events::TimerUpdate>(*this);
+	g_gameLogic->getPlayer().getTimermgr()->getEventManager()->subscribe<WkCocos::Timer::Events::AlarmOff>(*this);
 }
 
 TimerUI::~TimerUI()
@@ -69,7 +69,7 @@ void TimerUI::startCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchE
 	{
 		CCLOG("START BUTTON CLICKED");
 		
-		GameLogic::Instance().getPlayer().setTimer("testing", 65);
+		g_gameLogic->getPlayer().setTimer("testing", 65);
 		
 	}
 }
@@ -81,7 +81,7 @@ void TimerUI::stopCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEv
 	{
 		CCLOG("STOP BUTTON CLICKED");
 
-		GameLogic::Instance().getPlayer().stopTimer("testing");
+		g_gameLogic->getPlayer().stopTimer("testing");
 	}
 }
 

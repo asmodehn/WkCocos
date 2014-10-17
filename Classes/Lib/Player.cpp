@@ -3,22 +3,66 @@
 namespace WkCocos
 {
 	//constructors
-	Player::Player(std::shared_ptr<LocalData::LocalDataManager> localdata, std::shared_ptr<Shop::Inventory> shopInventory, Save::Mode mode, std::function<std::string(std::string userid)> pw_gen_cb)
-		: m_localdata(localdata)
-		, m_inventory(shopInventory)
-		, m_playerData("user_data", mode)
+	Player::Player(std::shared_ptr<WkCocos::Timer::Timer> timer,std::shared_ptr<LocalData::LocalDataManager> localdata, std::function<std::string(std::string userid)> pw_gen_cb)
+		: m_timer(timer)
+		, m_localdata(localdata)
+		, m_inventory(std::make_shared<WkCocos::Shop::Inventory>())
+		, m_playerData("user_data", Save::Mode::OFFLINE)
 		, player_events(entityx::EventManager::make())
 		, m_pw_gen_cb(pw_gen_cb)
 	{
-		//registering player class in cocos update loop
-		cocos2d::Director::getInstance()->getScheduler()->schedule(std::bind(&Player::Update, this, std::placeholders::_1), this, 1.f / 15, false, "player_update");
-
-		m_timer.reset(new WkCocos::Timer::Timer());
-
 		// Init Save
 		m_playerData.registerLoadingCallback(std::bind(&Player::set_all_data_json, this, std::placeholders::_1));
 		m_playerData.registerSavingCallback(std::bind(&Player::get_all_data_json, this));
 		m_playerData.setLocalDataMgr(m_localdata);
+
+		//tried to read existing login data.
+		m_localdata->loadLoginID([=](std::string user, std::string passwd){
+			if (user != "" && passwd != "")
+			{
+				m_user = user;
+				m_passwd = passwd;
+				m_playerData.setUserName(m_user);
+
+				newPlayer = false;
+			}
+			else
+			{
+				createNewUserID(user, passwd);
+
+				if (user.length() > 0 && passwd.length() > 0)
+				{
+					m_user = user;
+					m_passwd = passwd;
+					m_playerData.setUserName(m_user);
+
+					//store unique ID
+					m_localdata->saveLoginID(m_user, m_passwd, "l0g1nS3cr3tK3y"); //TODO : encyrpt this
+
+					newPlayer = true;
+				}
+			}
+			//in any case we have here m_user != "" after asynchronous callback is done.
+		});
+	}
+
+	Player::Player(std::shared_ptr<WkCocos::Timer::Timer> timer, std::shared_ptr<LocalData::LocalDataManager> localdata, std::function<std::string(std::string userid)> pw_gen_cb, std::shared_ptr<OnlineData::OnlineDataManager> onlinedata, std::function<void()> online_init_cb)
+		: m_timer(timer)
+		, m_localdata(localdata)
+		, m_onlinedata(onlinedata)
+		, m_inventory(std::make_shared<WkCocos::Shop::Inventory>())
+		, m_playerData("user_data", Save::Mode::ONLINE)
+		, player_events(entityx::EventManager::make())
+		, m_pw_gen_cb(pw_gen_cb)
+		, m_onlineDataLoaded_callback(online_init_cb)
+	{
+		// Init Save
+		m_playerData.registerLoadingCallback(std::bind(&Player::set_all_data_json, this, std::placeholders::_1));
+		m_playerData.registerSavingCallback(std::bind(&Player::get_all_data_json, this));
+		m_playerData.setLocalDataMgr(m_localdata);
+		m_playerData.setOnlineDataMgr(m_onlinedata);
+
+		m_onlinedata->getEventManager()->subscribe<WkCocos::OnlineData::Events::Error>(*this);
 
 		//tried to read existing login data.
 		m_localdata->loadLoginID([=](std::string user, std::string passwd){
@@ -46,8 +90,9 @@ namespace WkCocos
 					newPlayer = true;
 				}
 			}
+			//in any case we have here m_user != ""
 
-			if (m_onlinedata && onlineDataLoaded_callback) //in case online data is set while we re loading loginID
+			if (m_onlinedata && m_onlineDataLoaded_callback) //in case online data is set while we re loading loginID
 			{
 				m_onlinedata->getServerTime([=](std::string s_iso8601){
 					m_timer->setTime(s_iso8601);
@@ -63,94 +108,52 @@ namespace WkCocos
 					m_onlinedata->login(m_user, m_passwd, [=](std::string body){
 						CCLOG("login done !!!");
 						//loading again to get online value
-						m_playerData.requestLoadData(onlineDataLoaded_callback);
+						m_playerData.requestLoadData(m_onlineDataLoaded_callback);
 					});
 				}
 			}
 			else
 			{
-				m_playerData.requestLoadData([](){}); //we assume no callback needed there. we re loading local save.
+				m_playerData.requestLoadData(std::function<void()>()); //we assume no callback needed there. we re loading local save.
 			}
 
 		}, "l0g1nS3cr3tK3y");
 
 	}
 
-	void Player::setOnlineDataManager(std::shared_ptr<OnlineData::OnlineDataManager> onlinedata, std::function<void()> online_init_cb)
-	{
-		m_onlinedata = onlinedata;
-		m_playerData.setOnlineDataMgr(m_onlinedata);
-		onlineDataLoaded_callback = online_init_cb;
-
-		//subscribing to get error events
-		m_onlinedata->getEventManager()->subscribe<WkCocos::OnlineData::Events::Error>(*this);
-
-		if (m_user != "") // this seems to be allways empty after save class implementation
-		{
-			if (newPlayer)
-			{
-				loginNewUserID();
-			}
-			else
-			{
-				//autologin
-				m_onlinedata->login(m_user, m_passwd, [=](std::string body){
-					CCLOG("login done !!!");
-					//loading again to get online value
-					m_playerData.requestLoadData(onlineDataLoaded_callback);
-				});
-			}
-		}
-		else //save not loaded yet
-		{
-			//nothing to do. it will be called again after save has been loaded
-		}
-	}
-
-	bool Player::requestAllUsers()
-	{
-		if (m_onlinedata)
-		{
-			m_onlinedata->getAllUsers();
-			return true;
-		}
-		else
-			return false;
-	}
-
 	bool Player::requestUsersWithDocs()
 	{
 		if (m_onlinedata)
 		{
-			m_onlinedata->getUsersWithDocs();
+			m_onlinedata->getUsersWithDocs(m_playerData.getSaveName());
 			return true;
 		}
 		else
 			return false;
 	}
 
-	bool Player::requestEnemyData(std::string enemy_data)
+	bool Player::requestUsersKeyValue(std::string key, int value, int quantity, int offset)
 	{
 		if (m_onlinedata)
 		{
-			m_onlinedata->loadEnemy(enemy_data, m_playerData.getSaveName());
+			m_onlinedata->getUsersKeyValue(m_playerData.getSaveName(), key, value, quantity, offset);
 			return true;
 		}
 		else
 			return false;
 	}
 
-	//bool Player::requestServerTime()
-	//{
-	//	if (m_onlinedata)
-	//	{
-	//		m_onlinedata->getServerTime();
-	//		return true;
-	//	}
-	//	else
-	//		return false;
-	//}
-
+	bool Player::requestUsersFromTo(std::string key, int from, int to, int quantity, int offset)
+	{
+		if (m_onlinedata)
+		{
+			m_onlinedata->getUsersFromTo(m_playerData.getSaveName(), key, from, to, quantity, offset);
+			return true;
+		}
+		else
+			return false;
+	}
+	
 	std::string Player::get_all_data_json()
 	{
 		rapidjson::Document doc;
@@ -192,33 +195,11 @@ namespace WkCocos
 		}
 		doc.AddMember(sAlarms, alarms, allocator);
 
-		//test
-		//rapidjson::Value playerData;
-		//playerData.SetArray();
-		//size = 446 bytes
-		//const char * fillerText = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
-		//i < 9 causes crash somwhere in heap malloc, so 8*446=3.5 kb can be saved normally
-		//14.4 kb Julien's data file still can not be tested
-		//for (int i = 0; i < 8; i++)
-		//	playerData.PushBack(fillerText, allocator);
-		//doc.AddMember("playerData", playerData, allocator);
-
 		rapidjson::StringBuffer strbuf;
 		rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
 		doc.Accept(writer);
 
 		std::string data = std::string(strbuf.GetString());
-		
-		//TEST DATA BEGIN
-		//std::string data_filename = cocos2d::FileUtils::getInstance()->fullPathForFilename("LocalData.txt");
-		//std::ifstream datafile(data_filename);
-		//if (datafile)
-		//{
-		//	std::stringstream strbuffer;
-		//	strbuffer << datafile.rdbuf();
-		//	data = strbuffer.str();
-		//}
-		//TEST DATA END
 
 		return data;
 
@@ -266,22 +247,6 @@ namespace WkCocos
 		return set_data_json(strbuf.GetString());
 	}
 
-	void Player::Update(float deltatime)
-	{
-		if (m_timer)
-		{
-			m_timer->update(deltatime);
-		}
-		if (m_localdata)
-		{
-			m_localdata->update(deltatime);
-		}
-		if (m_onlinedata)
-		{
-			m_onlinedata->update(deltatime);
-		}
-	}
-
 	void Player::receive(const WkCocos::OnlineData::Events::Error& err)
 	{
 
@@ -310,7 +275,7 @@ namespace WkCocos
 				m_passwd = newPasswd;
 
 				//store unique ID
-				m_localdata->saveLoginID(m_user, m_passwd);
+				m_localdata->saveLoginID(m_user, m_passwd, "l0g1nS3cr3tK3y");
 			}
 
 			//login with new ID ( will create non existing user )
@@ -332,7 +297,7 @@ namespace WkCocos
 				m_passwd = newPasswd;
 
 				//store unique ID
-				m_localdata->saveLoginID(m_user, m_passwd);
+				m_localdata->saveLoginID(m_user, m_passwd, "l0g1nS3cr3tK3y");
 			}
 
 			//login with new ID ( will create non existing user )

@@ -26,7 +26,7 @@ public:
 
 	virtual void onExitTransitionDidStart() override;
 
-	void addLoad(std::vector<std::string> respath);
+	void addLoad(const std::string& respath, std::vector<std::string> depends_respath = {});
 
 	void setLoadDoneCallback(std::function<void()> cb);
 

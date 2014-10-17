@@ -30,7 +30,7 @@ public class MainActivity extends Cocos2dxActivity {
     @Override
     public Cocos2dxGLSurfaceView onCreateView() {
 
-        Cocos2dxGLSurfaceView glSurfaceView = new Cocos2dxGLSurfaceView(this);
+        Cocos2dxGLSurfaceView glSurfaceView = super.onCreateView();
 
         // initialize services
         final ServiceManager serviceManager = ServiceManager.getInstance();

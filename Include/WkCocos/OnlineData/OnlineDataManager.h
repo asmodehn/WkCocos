@@ -7,7 +7,6 @@
 
 #include "WkCocos/OnlineData/Events/Error.h"
 #include "WkCocos/OnlineData/Events/PlayersList.h"
-#include "WkCocos/OnlineData/Events/EnemyData.h"
 //#include "WkCocos/OnlineData/Events/ServerTime.h"
 
 #define DEFAULT_SAVE_VERSION 1
@@ -50,19 +49,11 @@ namespace WkCocos
 			void load(const std::string& userid, const std::string& saveName, std::function<void(std::string)> callback);
 
 			/**
-			* Load Enemy Data
-			*/
-			void loadEnemy(const std::string& userid, const std::string& saveName);
-
-			/**
-			* Get All Users
-			*/
-			void getAllUsers();
-
-			/**
 			* Get Selected Users
 			*/
-			void getUsersWithDocs();
+			void getUsersWithDocs(const std::string& saveName);
+			void getUsersKeyValue(const std::string& saveName, const std::string& key, int value, int quantity, int offset);
+			void getUsersFromTo(const std::string& saveName, const std::string& key, int from, const int to, int quantity, int offset);
 
 			/**
 			* Get Server Time

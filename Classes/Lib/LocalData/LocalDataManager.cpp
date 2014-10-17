@@ -39,7 +39,7 @@ namespace WkCocos
 			newentity.assign<Comp::Read>();
 			if (1 == version)
 			{
-				newentity.assign<Comp::LoginID_v1>(user,passwd);
+				newentity.assign<Comp::LoginID_v1>(user, passwd);
 			}
 			return true;
 		}
@@ -52,7 +52,12 @@ namespace WkCocos
 			newentity.assign<Comp::Read>();
 			if (1 == version)
 			{
-				newentity.assign<Comp::LoginID_v1>(load_cb);
+				newentity.assign<Comp::LoginID_v1>([=](std::string user, std::string passwd){
+					//doing this in cocos thread to not mess up the current update pass
+					cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([=](){
+						load_cb(user, passwd);
+					});
+				});
 			}
 			return true;
 		}
@@ -78,7 +83,12 @@ namespace WkCocos
 			newentity.assign<Comp::Read>();
 			if (1 == version)
 			{
-				newentity.assign<Comp::PlayerData_v1>(load_cb);
+				newentity.assign<Comp::PlayerData_v1>([=](std::string data){
+					//doing this in cocos thread to not mess up the current update pass
+					cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([=](){
+						load_cb(data);
+					});
+				});
 			}
 			return true;
 		}
