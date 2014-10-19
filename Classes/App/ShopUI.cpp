@@ -21,7 +21,7 @@ ShopUI::ShopUI()
 	m_widget = cocos2d::ui::Layout::create();
 
 	cocos2d::Size visibleSize = cocos2d::Director::getInstance()->getVisibleSize();
-	m_widget->setContentSize(cocos2d::Size(visibleSize.width, visibleSize.height * 0.67f));
+	m_widget->setContentSize(cocos2d::Size(visibleSize.width, visibleSize.height - 80)); //upper + lower lines of buttons
 	cocos2d::Size widgetSize = m_widget->getContentSize();
 	cocos2d::Vec2 origin = cocos2d::Director::getInstance()->getVisibleOrigin();
 
@@ -43,7 +43,7 @@ ShopUI::ShopUI()
 			return;
 		}
 
-		cocos2d::ui::Text* curtxtui = cocos2d::ui::Text::create(WkCocos::ToolBox::itoa(gemBalance) + c->name, "Arial", 21);
+		cocos2d::ui::Text* curtxtui = cocos2d::ui::Text::create(WkCocos::ToolBox::itoa(gemBalance) + c->name, "Thonburi", 21);
 		curtxtui->setPosition(cocos2d::Vec2(
 			widgetSize.width / (curncyPacksfiltered.size() + 2) - widgetSize.width/2,
 			widgetSize.height * ((curncy.end() - c) + 1) / (curncy.size() + 2) - widgetSize.height/2 )
@@ -67,14 +67,14 @@ ShopUI::ShopUI()
 			m_widget->addChild(butt);
 
 			//creating label
-			cocos2d::ui::Text* curptxtui = cocos2d::ui::Text::create(p->name, "Arial", 21);
+			cocos2d::ui::Text* curptxtui = cocos2d::ui::Text::create(p->name, "Thonburi", 21);
 			curptxtui->setPosition(cocos2d::Vec2(butt->getPosition() + cocos2d::Vec2(0, butt->getContentSize().height))
 			);
 			m_curPackLabel.push_back(curptxtui);
 			m_widget->addChild(curptxtui);
 
 			//creating price text
-			cocos2d::ui::Text* curppriceui = cocos2d::ui::Text::create(WkCocos::ToolBox::itoa(p->marketPrice), "Arial", 21);
+			cocos2d::ui::Text* curppriceui = cocos2d::ui::Text::create(WkCocos::ToolBox::itoa(p->marketPrice), "Thonburi", 21);
 			curppriceui->setPosition(cocos2d::Vec2(butt->getPosition() - cocos2d::Vec2(0, butt->getContentSize().height))
 				);
 			m_curPriceLabel.push_back(curppriceui);
@@ -93,7 +93,7 @@ ShopUI::ShopUI()
 		(widgetSize.height - m_refreshButton->getContentSize().height) / (curncy.size() + 2) - widgetSize.height/2
 		));
 	m_widget->addChild(m_refreshButton);
-	m_refreshLabel = cocos2d::ui::Text::create("REFRESH", "Arial", 21);
+	m_refreshLabel = cocos2d::ui::Text::create("REFRESH", "Thonburi", 21);
 	m_refreshLabel->setPosition(m_refreshButton->getPosition() + cocos2d::Vec2(0, m_refreshButton->getContentSize().height));
 	m_widget->addChild(m_refreshLabel);
 
@@ -208,7 +208,7 @@ void ShopUI::receive(const WkCocos::Shop::Shop::MarketItemsRefreshed& mir)
 				else
 				{
 					//creating label
-					cocos2d::ui::Text* curptxtui = cocos2d::ui::Text::create(p->name, "Arial", 21);
+					cocos2d::ui::Text* curptxtui = cocos2d::ui::Text::create(p->name, "Thonburi", 21);
 					curptxtui->setPosition(cocos2d::Vec2(position + cocos2d::Vec2(0, contentSize.height))
 						);
 					m_curPackLabel.insert(make_pair(p->itemid, curptxtui));
@@ -225,7 +225,7 @@ void ShopUI::receive(const WkCocos::Shop::Shop::MarketItemsRefreshed& mir)
 				{
 					//creating price text
 					CCLOG("Creating pack price at : %s", p->marketPrice.c_str());
-					cocos2d::ui::Text* curppriceui = cocos2d::ui::Text::create(p->marketPrice, "Arial", 21);
+					cocos2d::ui::Text* curppriceui = cocos2d::ui::Text::create(p->marketPrice, "Thonburi", 21);
 					curppriceui->setPosition(cocos2d::Vec2(position - cocos2d::Vec2(0, contentSize.height))
 						);
 					m_curPriceLabel.insert(make_pair(p->itemid,curppriceui));

@@ -22,23 +22,23 @@ PlayersListUI::PlayersListUI()
 	{
 
 		cocos2d::Size visibleSize = cocos2d::Director::getInstance()->getVisibleSize();
-		m_widget->setContentSize(cocos2d::Size(visibleSize.width / 2, visibleSize.height / 2));
+		m_widget->setContentSize(cocos2d::Size(visibleSize.width, visibleSize.height - 80)); //upper + lower lines of buttons
 		m_widgetSize = m_widget->getContentSize();
 
 		m_refreshButton = cocos2d::ui::Button::create("SkipNormal.png", "SkipSelected.png");
 		m_refreshButton->addTouchEventListener(CC_CALLBACK_2(PlayersListUI::refreshCallback, this));
-		m_refreshButton->setPosition(cocos2d::Vec2(m_widgetSize.width / 2, m_widgetSize.height / 3 * 2));
+		m_refreshButton->setPosition(cocos2d::Vec2(m_widgetSize.width / 4, m_widgetSize.height / 5));
 		m_widget->addChild(m_refreshButton);
 
-		m_refreshLabel = cocos2d::ui::Text::create("page", "Arial", 21);
+		m_refreshLabel = cocos2d::ui::Text::create("page", "Thonburi", 21);
 		m_refreshLabel->setPosition(m_refreshButton->getPosition() + cocos2d::Vec2(0, m_refreshButton->getContentSize().height));
 		m_widget->addChild(m_refreshLabel);
 	
-		m_enemyData = cocos2d::ui::Text::create("... GEMS and ... GOLD", "Arial", 21);
-		m_enemyData->setPosition(cocos2d::Vec2(m_widgetSize.width / 2, m_widgetSize.height / 3));
+		m_enemyData = cocos2d::ui::Text::create("... GEMS and ... GOLD", "Thonburi", 21);
+		m_enemyData->setPosition(cocos2d::Vec2(m_widgetSize.width / 4, -m_widgetSize.height / 5));
 		m_widget->addChild(m_enemyData);
 
-		m_enemyLabel = cocos2d::ui::Text::create("player ... has", "Arial", 15);
+		m_enemyLabel = cocos2d::ui::Text::create("player ... has", "Thonburi", 15);
 		m_enemyLabel->setPosition(m_enemyData->getPosition() + cocos2d::Vec2(0, m_enemyData->getContentSize().height));
 		m_widget->addChild(m_enemyLabel);
 
@@ -76,7 +76,7 @@ void PlayersListUI::refreshCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget
 		}
 		m_ptb.clear();
 		m_offset += m_quantity;
-		if (m_pages < (m_offset / m_quantity + 1))
+		if (m_pages == m_offset / m_quantity)
 			m_offset = 0;
 		g_gameLogic->getPlayer().getUsersFromTo("currency.gold", 1, 999999, m_quantity, m_offset);
 	}
@@ -94,8 +94,8 @@ void PlayersListUI::receive(const WkCocos::OnlineData::Events::PlayersList &pl)
 			for (std::map<std::string, std::string>::iterator record = tempList.begin(); record != tempList.end(); ++record)
 			{
 				auto enemyName = record->first;
-				cocos2d::ui::Text* playertextbutton = cocos2d::ui::Text::create(enemyName, "Arial", 15);
-				playertextbutton->setPosition(cocos2d::Vec2(-m_widgetSize.width / 2, m_widgetSize.height * (1 - 1.0f / (m_quantity + 1) * ++i)));
+				cocos2d::ui::Text* playertextbutton = cocos2d::ui::Text::create("#" + WkCocos::ToolBox::itoa(i) + " " + enemyName, "Thonburi", 15);
+				playertextbutton->setPosition(cocos2d::Vec2(-m_widgetSize.width / 4, m_widgetSize.height / 2 - 22 * (m_quantity / 2 + i++))); 
 				playertextbutton->setTouchEnabled(true);
 
 				rapidjson::Document jsonDoc;

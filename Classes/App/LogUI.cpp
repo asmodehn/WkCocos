@@ -20,7 +20,7 @@ LogUI::LogUI()
 	{
 
 		cocos2d::Size visibleSize = cocos2d::Director::getInstance()->getVisibleSize();
-		m_widget->setContentSize(cocos2d::Size(visibleSize.width / 2, visibleSize.height / 2));
+		m_widget->setContentSize(cocos2d::Size(visibleSize.width, visibleSize.height - 80)); //upper + lower lines of buttons
 		cocos2d::Size widgetSize = m_widget->getContentSize();
 
 		// Test for cocos log appender

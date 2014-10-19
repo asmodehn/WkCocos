@@ -5,7 +5,7 @@
 
 #include "entityx/entityx.h"
 
-#include "WkCocosApp/NavUI.h"
+#include "ui/CocosGUI.h"
 
 #include "WkCocos/OnlineData/OnlineDataManager.h"
 #include "WkCocos/LocalData/LocalDataManager.h"
@@ -32,8 +32,8 @@ public:
 
 	void menuCloseCallback(cocos2d::Ref* pSender);
 
-	void receive(const NavUI::Next &dl);
-	void receive(const NavUI::Prev &dl);
+	void prevCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input);
+	void nextCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input);
 
 	void receive(const WkCocos::LocalData::Events::Error &LD);
 	void receive(const WkCocos::Player::Error &PL);
@@ -42,15 +42,16 @@ protected:
 
 	TestScene();
 
-	//Event Manager passed to the UIs so they can emit and subscribe to events
-	entityx::ptr<entityx::EventManager> ui_event_manager;
-
 	std::string currentUI;
 
 	cocos2d::ui::Text* m_time;
 
-	bool m_waiting_for_server_time = false;
-};
+	cocos2d::ui::Button* m_nextButton;
+	cocos2d::ui::Button* m_prevButton;
+	cocos2d::ui::Text* m_nextLabel;
+	cocos2d::ui::Text* m_prevLabel;
+	cocos2d::ui::Text* m_titleLabel;
 
+};
 
 #endif // __SAVING_SCENE_H__
