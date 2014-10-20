@@ -17,7 +17,7 @@ namespace WkCocos
 				void update(entityx::ptr<entityx::EntityManager> es, entityx::ptr<entityx::EventManager> events, double dt) override;
 			
 			protected:
-				void chooseLoader(entityx::Entity entity, std::string datafile, entityx::ptr<entityx::EventManager> events);
+				void chooseLoader(entityx::Entity entity, std::string datafile, bool force, entityx::ptr<entityx::EventManager> events);
 			};
 
 		}//namespace Systems

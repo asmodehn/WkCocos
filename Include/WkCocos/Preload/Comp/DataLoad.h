@@ -10,7 +10,7 @@ namespace WkCocos
 		namespace Comp
 		{
 			struct DataLoad : entityx::Component<DataLoad> {
-				DataLoad(std::string filepath) : m_filepath(filepath), loaded(false) {}
+				DataLoad(std::string filepath) : m_filepath(filepath), force(false), loaded(false) {}
 
 				inline std::string getFilepath() const
 				{
@@ -19,6 +19,7 @@ namespace WkCocos
 				std::string m_filepath;
 
 				bool loaded;
+				bool force; // to force the loading ( need to be set manually when needed )
 			};
 
 			struct DataDepends : entityx::Component<DataDepends> {
