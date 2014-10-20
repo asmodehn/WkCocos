@@ -121,6 +121,11 @@ namespace WkCocos
 
 	}
 
+	bool Player::reload(std::function<void()> loaded_cb)
+	{
+		return m_playerData.requestLoadData(loaded_cb);
+	}
+
 	bool Player::requestUsersWithDocs()
 	{
 		if (m_onlinedata)

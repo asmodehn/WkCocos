@@ -104,17 +104,16 @@ namespace WkCocos
 		*/
 		Player(std::shared_ptr<WkCocos::Timer::Timer> timer, std::shared_ptr<LocalData::LocalDataManager> localdata, std::function<std::string(std::string userid)> pw_gen_cb, std::shared_ptr<OnlineData::OnlineDataManager> onlinedata, std::function<void()> online_init_cb);
 
-		bool requestLoadData(std::function<void()> loaded_cb, std::string key = "");
+		/**
+		* reload player data.
+		*/
+		bool reload(std::function<void()> loaded_cb);
 
 		bool requestUsersWithDocs();
 
 		bool requestUsersKeyValue(std::string key, int value, int quantity, int offset);
 
 		bool requestUsersFromTo(std::string key, int from, int to, int quantity, int offset);
-
-		//bool requestEnemyData(std::string enemy_data);
-
-		bool requestSaveData(std::function<void()> saved_cb, std::string key = "");
 		
 		bool newPlayer;
 		std::string m_user;
