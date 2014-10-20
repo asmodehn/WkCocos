@@ -235,6 +235,17 @@ namespace WkCocos
 			});
 		}
 
+		void OnlineDataManager::getAllDocsPaging(const std::string& saveName, int quantity, int offset)
+		{
+			auto newentity = entity_manager->create();
+			newentity.assign<Comp::AllDocsPaging>(saveName, quantity, offset, [=](std::vector<std::map<std::string, std::string>> data)
+			{
+				cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, data](){
+					event_manager->emit<Events::DocsList>(data);
+				});
+			});
+		}
+
 		void OnlineDataManager::update(double dt) {
 			//check for error and report them if needed
 			system_manager->update<Systems::Storage>(dt);

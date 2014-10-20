@@ -7,6 +7,7 @@
 
 #include "WkCocos/OnlineData/Events/Error.h"
 #include "WkCocos/OnlineData/Events/PlayersList.h"
+#include "WkCocos/OnlineData/Events/DocsList.h"
 
 #define DEFAULT_SAVE_VERSION 1
 
@@ -57,6 +58,8 @@ namespace WkCocos
 			* Get Server Time
 			*/
 			void getServerTime(std::function<void(std::string)> callback);
+
+			void getAllDocsPaging(const std::string& saveName, int quantity, int offset);
 
 			void update(double dt);
 

@@ -121,6 +121,19 @@ namespace WkCocos
 
 			};
 
+			struct AllDocsPaging : entityx::Component<AllDocsPaging>
+			{
+				AllDocsPaging(std::string collection, int quantity, int offset, std::function<void(std::vector<std::map<std::string, std::string>>)> cb);
+
+				bool in_progress;
+				bool done;
+				std::string m_collection;
+				int m_quantity;
+				int m_offset;
+				std::function<void(void*)> m_cb;
+
+			};
+
 		}//namespace Comp
 	}//namespace OnlineData
 }//namespace WkCocos

@@ -133,7 +133,7 @@ namespace WkCocos
 		m_inventory = shopInventory;
 	}
 
-	bool Player::requestUsersKeyValue(std::string key, int value, int quantity, int offset)
+	bool Player::getUsersKeyValue(std::string key, int value, int quantity, int offset)
 	{
 		if (m_onlinedata)
 		{
@@ -144,11 +144,22 @@ namespace WkCocos
 			return false;
 	}
 
-	bool Player::requestUsersFromTo(std::string key, int from, int to, int quantity, int offset)
+	bool Player::getUsersFromTo(std::string key, int from, int to, int quantity, int offset)
 	{
 		if (m_onlinedata)
 		{
 			m_onlinedata->getUsersFromTo(m_playerData.getSaveName(), key, from, to, quantity, offset);
+			return true;
+		}
+		else
+			return false;
+	}
+
+	bool Player::getAllDocsPaging(int quantity, int offset)
+	{
+		if (m_onlinedata)
+		{
+			m_onlinedata->getAllDocsPaging(m_playerData.getSaveName(), quantity, offset);
 			return true;
 		}
 		else

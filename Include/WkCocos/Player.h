@@ -96,6 +96,12 @@ namespace WkCocos
 		entityx::ptr<entityx::EventManager> player_events;
 
 		inline const std::string& getUser() const { return m_user; }
+
+		bool getUsersKeyValue(std::string key, int value, int quantity, int offset);
+
+		bool getUsersFromTo(std::string key, int from, int to, int quantity, int offset);
+
+		bool getAllDocsPaging(int quantity, int offset);
 		
 	protected:
 		
@@ -109,12 +115,6 @@ namespace WkCocos
 		*/
 		Player(std::shared_ptr<LocalData::LocalDataManager> localdata, std::function<std::string(std::string userid)> pw_gen_cb, std::shared_ptr<OnlineData::OnlineDataManager> onlinedata, std::function<void()> data_load_cb);
 
-		bool requestUsersKeyValue(std::string key, int value, int quantity, int offset);
-
-		bool requestUsersFromTo(std::string key, int from, int to, int quantity, int offset);
-
-		bool requestEnemyData(std::string enemy_data);
-		
 		bool newPlayer;
 		std::string m_user;
 		std::string m_passwd;

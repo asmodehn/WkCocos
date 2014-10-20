@@ -225,6 +225,44 @@ namespace WkCocos
 				};
 			}
 
+			AllDocsPaging::AllDocsPaging(std::string collection, int quantity, int offset, std::function<void(std::vector<std::map<std::string, std::string>>)> cb)
+				: in_progress(false)
+				, done(false)
+				, m_collection(collection)
+				, m_quantity(quantity)
+				, m_offset(offset)
+			{
+				m_cb = [=](void* data) {
+					::App42::App42StorageResponse* userdata = static_cast<::App42::App42StorageResponse*>(data);
+					std::vector<std::map<std::string, std::string>> table;
+					if (userdata->isSuccess)
+					{
+						std::map<std::string, std::string> line;
+						auto jsonDocArray = userdata->storages.begin()->jsonDocArray;
+						for (std::vector<::App42::JSONDocument>::iterator it = jsonDocArray.begin(); it != jsonDocArray.end(); ++it)
+						{
+							line["Document_ID"] = it->getDocId();
+							line["JSON_Document"] = it->getJsonDoc();
+							line["Owner"] = it->getOwner();
+							line["Created_On"] = it->getCreatedAt();
+							line["Updated_On"] = it->getUpdatedAt();
+							table.push_back(line);
+						}
+
+						cb(table);
+					}
+					else
+					{
+						CCLOG("\nerrordetails:%s", userdata->errorDetails.c_str());
+						CCLOG("\nerrorMessage:%s", userdata->errorMessage.c_str());
+						CCLOG("\nappErrorCode:%d", userdata->appErrorCode);
+						CCLOG("\nhttpErrorCode:%d", userdata->httpErrorCode);
+						cb(table);
+					}
+					done = true;
+				};
+			}
+
 		}
 
 	}//namespace OnlineData

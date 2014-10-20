@@ -111,6 +111,27 @@ namespace WkCocos
 
 				}
 
+				entityx::ptr<Comp::AllDocsPaging> adp;
+				for (auto entity : entities->entities_with_components(adp))
+				{
+					if (adp->done)
+					{
+						entity.remove<Comp::AllDocsPaging>();
+						if (entity.component_mask() == 0)
+						{
+							entity.destroy();
+						}
+					}
+					else if (!adp->in_progress)
+					{
+						CCLOG("Requesting list of documents page by page");
+
+						m_stor_service->FindAllDocuments(DB_NAME, adp->m_collection.c_str(), adp->m_quantity, adp->m_offset, adp->m_cb);
+						adp->in_progress = true;
+					}
+
+				}
+
 			}
 		}//namespace Systems
 	}//namespace OnlineData

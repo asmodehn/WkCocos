@@ -24,7 +24,6 @@ public:
 	* Destructor
 	*/
 	virtual ~MyPlayer();
-	
 
 	/**
 	* data accessor as json string
@@ -52,28 +51,6 @@ public:
 	{
 		m_playerData.requestLoadData(loaded_cb);
 	}
-
-	//load enemy for test
-	void loadEnemy(std::string enemy_name)
-	{
-		requestEnemyData(enemy_name);
-	}
-	
-	void getUsersKeyValue(std::string key, int value, int quantity, int offset)
-	{
-		requestUsersKeyValue(key, value, quantity, offset);
-	}
-
-	void getUsersFromTo(std::string key, int from, int to, int quantity, int offset)
-	{
-		requestUsersFromTo(key, from, to, quantity, offset);
-	}
-
-	//test for getting server time
-	//void getServerTime()
-	//{
-	//	requestServerTime();
-	//}
 
 private:
 
