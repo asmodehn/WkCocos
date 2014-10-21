@@ -107,7 +107,7 @@ namespace WkCocos
 				m_onlinedata->save(m_user, m_name, m_onSaving(), [=](std::string data)
 				{
 					//CCLOG("user data saved : %s", data.c_str());
-					saved_cb();
+					if (saved_cb) saved_cb();
 					m_saveInProgress = false;
 				});
 			}
@@ -128,7 +128,7 @@ namespace WkCocos
 			if (m_localdata)
 			{
 				m_localdata->saveData(m_name, m_onSaving(), key);
-				saved_cb();
+				if (saved_cb) saved_cb();
 			}
 			else
 			{
