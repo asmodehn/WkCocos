@@ -34,7 +34,7 @@ public class PushNotificationsManager{
         PendingIntent WKPI = PendingIntent.getBroadcast(MainActivity.getContext(), 0, WKIntent, 0);
 
         AlarmManager alarmManager = (AlarmManager)MainActivity.getContext().getSystemService(MainActivity.getContext().ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC, when + time, WKPI);
+        alarmManager.set(AlarmManager.RTC, when * 1000 + time, WKPI);
 
         return true;
     }
