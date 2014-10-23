@@ -88,7 +88,7 @@ namespace WkCocos
 					}
 					else if (!lud->in_progress)
 					{
-						CCLOG("Requesting App42 storage of user : %s ", lud->m_userid.c_str());
+						CCLOG("Requesting App42 stored data in collection %s for user : %s ", lud->m_collection.c_str(), lud->m_userid.c_str());
 						::App42::App42API::setLoggedInUser(lud->m_userid.c_str());
 						::App42::App42API::setDbName(DB_NAME);
 						m_user_service->setQuery(lud->m_collection.c_str(), NULL); //This will tell

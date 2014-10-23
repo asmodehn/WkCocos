@@ -97,9 +97,12 @@ namespace WkCocos
 
 		struct LoggedIn : public Event < LoggedIn >
 		{
-			LoggedIn(ActorID id)
+			LoggedIn(ActorID id, std::string username)
 				: Event(id)
+				, m_username(username)
 			{}
+
+			std::string m_username;
 		};
 
 		struct Loaded : public Event < Loaded >
@@ -182,7 +185,7 @@ namespace WkCocos
 		std::shared_ptr<WkCocos::Shop::Inventory> m_inventory;
 
 		//map of saves indexed based on name.
-		std::map<std::string,Save> m_save;
+		std::map<std::string,Save*> m_save;
 
 	private:
 

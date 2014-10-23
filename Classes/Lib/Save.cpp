@@ -10,7 +10,8 @@ namespace WkCocos
 		, m_rawData("")
 		, m_onLoading(nullptr)
 		, m_onSaving(nullptr)
-		, m_loaded(false)
+		, m_loaded(0)
+		, m_saved(0)
 	{
 		m_saveModes[static_cast<int>(mode)] = 1;
 	}
@@ -31,7 +32,14 @@ namespace WkCocos
 				m_onlinedata->load(m_user, m_name, [=](std::string docId, std::vector<std::string> data)
 				{
 					m_docId = docId;
-					m_rawData = data.back();
+					if (!data.empty())
+					{
+						m_rawData = data.back();
+					}
+					else
+					{
+						m_rawData = "";
+					}
 
 					--m_loaded;
 					event_manager->emit<Loaded>(getId(),m_name, m_rawData);

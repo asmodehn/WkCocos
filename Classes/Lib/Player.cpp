@@ -6,25 +6,28 @@ namespace WkCocos
 	Player::Player(std::shared_ptr<LocalData::LocalDataManager> localdata, std::function<std::string(std::string userid)> pw_gen_cb)
 		: m_localdata(localdata)
 		, m_pw_gen_cb(pw_gen_cb)
+		, m_loggingin(0)
 	{//registering player class in cocos update loop
 		cocos2d::Director::getInstance()->getScheduler()->schedule(std::bind(&Player::Update, this, std::placeholders::_1), this, 1.f / 15, false, "player_update");
 
 		m_timer.reset(new WkCocos::Timer::Timer());
 
 		// Saves
-		Save m_moreData(moreSaveName, Save::Mode::OFFLINE);
-		Save m_timerData(timerSaveName, Save::Mode::OFFLINE);
-		m_moreData.setLocalDataMgr(m_localdata);
-		m_timerData.setLocalDataMgr(m_localdata);
+		Save* m_moreData = new Save(moreSaveName, Save::Mode::OFFLINE);
+		Save* m_timerData = new Save(timerSaveName, Save::Mode::OFFLINE);
+		m_moreData->setLocalDataMgr(m_localdata);
+		m_timerData->setLocalDataMgr(m_localdata);
 		m_save.insert(make_pair(moreSaveName, m_moreData));
 		m_save.insert(make_pair(timerSaveName, m_timerData));
-		
+		Save::getEventManager()->subscribe<Save::Loaded>(*this);
+		Save::getEventManager()->subscribe<Save::Saved>(*this);
 	}
 
 	Player::Player(std::shared_ptr<LocalData::LocalDataManager> localdata, std::function<std::string(std::string userid)> pw_gen_cb, std::shared_ptr<OnlineData::OnlineDataManager> onlinedata)
 		: m_localdata(localdata)
 		, m_onlinedata(onlinedata)
 		, m_pw_gen_cb(pw_gen_cb)
+		, m_loggingin(0)
 	{
 		//registering player class in cocos update loop
 		cocos2d::Director::getInstance()->getScheduler()->schedule(std::bind(&Player::Update, this, std::placeholders::_1), this, 1.f / 15, false, "player_update");
@@ -32,14 +35,16 @@ namespace WkCocos
 		m_timer.reset(new WkCocos::Timer::Timer());
 
 		// Saves
-		Save m_moreData(moreSaveName, Save::Mode::ONLINE);
-		Save m_timerData(timerSaveName, Save::Mode::ONLINE);
-		m_moreData.setLocalDataMgr(m_localdata);
-		m_moreData.setOnlineDataMgr(m_onlinedata);
-		m_timerData.setLocalDataMgr(m_localdata);
-		m_timerData.setOnlineDataMgr(m_onlinedata);
+		Save* m_moreData = new Save(moreSaveName, Save::Mode::ONLINE);
+		Save* m_timerData = new Save(timerSaveName, Save::Mode::ONLINE);
+		m_moreData->setLocalDataMgr(m_localdata);
+		m_moreData->setOnlineDataMgr(m_onlinedata);
+		m_timerData->setLocalDataMgr(m_localdata);
+		m_timerData->setOnlineDataMgr(m_onlinedata);
 		m_save.insert(make_pair(moreSaveName, m_moreData));
 		m_save.insert(make_pair(timerSaveName, m_timerData));
+		Save::getEventManager()->subscribe<Save::Loaded>(*this);
+		Save::getEventManager()->subscribe<Save::Saved>(*this);
 
 		m_onlinedata->getEventManager()->subscribe<WkCocos::OnlineData::Events::Error>(*this);
 
@@ -62,7 +67,7 @@ namespace WkCocos
 				m_passwd = passwd;
 				for (auto save : m_save)
 				{
-					save.second.setUserName(m_user);
+					save.second->setUserName(m_user);
 				}
 
 				newPlayer = false;
@@ -77,7 +82,7 @@ namespace WkCocos
 					m_passwd = passwd;
 					for (auto save : m_save)
 					{
-						save.second.setUserName(m_user);
+						save.second->setUserName(m_user);
 					}
 
 					//store unique ID
@@ -121,7 +126,7 @@ namespace WkCocos
 		bool all_saved(true);
 		for (auto save : m_save)
 		{
-			if (!save.second.isSaved())
+			if (!save.second->isSaved())
 			{
 				all_saved = false;
 				break;
@@ -141,19 +146,19 @@ namespace WkCocos
 		if (m_save.end() != saveit)
 		{
 			auto save = saveit->second;
-			if (timerSaveName == save.getName())
+			if (timerSaveName == save->getName())
 			{
 				rapidjson::Document doc;
 
 				//all string are supposed to contain similar data.
 				//we only care about last one ( most recent ? )
-				if (save.getData().empty())
+				if (save->getData().empty())
 				{
 					doc.SetObject();
 				}
 				else
 				{
-					doc.Parse<0>(save.getData().c_str());
+					doc.Parse<0>(save->getData().c_str());
 					if (doc.HasParseError())
 					{
 						//if parse error (also empty string), we ignore existing data.
@@ -187,37 +192,38 @@ namespace WkCocos
 				}
 
 			}
-			else if (moreSaveName == save.getName())
+			else if (moreSaveName == save->getName())
 			{
 				//TODO : fill in with more useful data
 			}
-		}
 
 		//checking if all saves are loaded
 		bool all_loaded(true);
-		for ( auto save : m_save)
-		{
-			if (!save.second.isLoaded())
+			for ( auto save : m_save)
 			{
-				all_loaded = false;
-				break;
+				if (!save.second->isLoaded())
+				{
+					all_loaded = false;
+					break;
+				}
 			}
-		}
 
-		//if all saves loaded, we can trigger loaded event.
-		if (all_loaded)
-		{
-			std::map<std::string, std::string> data;
-			for (auto save : m_save)
+			//if all saves loaded, we can trigger loaded event.
+			if (all_loaded)
 			{
-				data.insert(make_pair(save.first, save.second.getData()));
+				std::map<std::string, std::string> data;
+				for (auto save : m_save)
+				{
+					data.insert(make_pair(save.first, save.second->getData()));
+				}
+				event_manager->emit<Loaded>(getId());
+				if (0 == --m_loggingin)
+				{
+					//if all login requests have replied we are logged in.
+					event_manager->emit<LoggedIn>(getId(), m_user);
+				}
 			}
-			event_manager->emit<Loaded>(getId());
-			if (0 == --m_loggingin)
-			{
-				//if all login requests have replied we are logged in.
-				event_manager->emit<LoggedIn>(getId());
-			}
+
 		}
 	}
 
@@ -302,7 +308,9 @@ namespace WkCocos
 				}
 				doc.AddMember(sAlarms, alarms, allocator);
 				doc.Accept(writer);
-				save.second.requestSaveData(strbuf.GetString());
+
+				save.second->getEventManager()->subscribe<Save::Saved>(*this);
+				save.second->requestSaveData(strbuf.GetString());
 			}
 			else if (moreSaveName == save.first)
 			{
@@ -311,7 +319,7 @@ namespace WkCocos
 
 			//save json string
 			doc.Accept(writer);
-			save.second.requestSaveData(strbuf.GetString());
+			save.second->requestSaveData(strbuf.GetString());
 
 		}
 	}
@@ -323,7 +331,7 @@ namespace WkCocos
 	{
 		for (auto save : m_save)
 		{
-			save.second.requestLoadData();
+			save.second->requestLoadData();
 		}
 	}
 

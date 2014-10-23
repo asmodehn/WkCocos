@@ -127,21 +127,28 @@ namespace WkCocos
 				{
 					std::vector<std::string> docs;
 					std::vector<::App42::JSONDocument> jsonDocArray = r->users.front().jsonDocArray;
+					std::string docId  ="";
 
-					//id of last doc is the one we want to use ( others are discarded )
-					std::string docId = jsonDocArray.back().getDocId();
-
-					for (std::vector<::App42::JSONDocument>::iterator it = jsonDocArray.begin(); it != jsonDocArray.end(); ++it)
+					if (!jsonDocArray.empty())
 					{
-						rapidjson::Document doc;
-						rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
-						auto jsonDoc = it->getJsonDoc();
-						docs.push_back(jsonDoc.c_str());
+						//id of last doc is the one we want to use ( others are discarded )
+						docId = jsonDocArray.back().getDocId();
+
+						for (std::vector<::App42::JSONDocument>::iterator it = jsonDocArray.begin(); it != jsonDocArray.end(); ++it)
+						{
+							rapidjson::Document doc;
+							rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
+							auto jsonDoc = it->getJsonDoc();
+							docs.push_back(jsonDoc.c_str());
+						}
 					}
+
+					//callback called even if data not present
 					cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, callback, docId, docs]()
 					{
 						callback(docId, docs);
 					});
+
 				}
 				else// if request failed, 
 				{
