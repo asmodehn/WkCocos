@@ -50,6 +50,12 @@ WkDocDir ( "Docs" )
 add_subdirectory("depends/entityx")
 include_directories( "depends/entityx")
 
+add_subdirectory("depends/unittest-cpp")
+include_directories( "depends/unittest-cpp")
+
+# setting include directory for upper project to include it
+set( WkCocos_INCLUDE_DIRS ${WkCocos_INCLUDE_DIRS} "depends/unittest-cpp")
+
 # setting include directory for upper project to include it
 set( WkCocos_INCLUDE_DIRS ${WkCocos_INCLUDE_DIRS} "depends/entityx")
 
@@ -367,9 +373,6 @@ if ( ${PROJECT_NAME} STREQUAL ${CMAKE_PROJECT_NAME} )
 
 		#Auto tests
 		
-		add_subdirectory("depends/unittest-cpp")
-		include_directories( "depends/unittest-cpp")
-
 		# setting include directory for upper project to include it
 		set( WkCocos_INCLUDE_DIRS ${WkCocos_INCLUDE_DIRS} "depends/unittest-cpp")
 		
