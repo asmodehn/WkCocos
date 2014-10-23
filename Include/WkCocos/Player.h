@@ -9,6 +9,7 @@
 #include "WkCocos/Timer/Timer.h"
 #include "WkCocos/Utils/ToolBox.h"
 #include "WkCocos/Save.h"
+#include "WkCocos/Actor.h"
 
 //using Cocos' Rapidjson for now...
 #include "json/document.h"         // rapidjson's DOM-style API
@@ -22,7 +23,7 @@ namespace WkCocos
 	/**
 	* Hold the player information.
 	*/
-	class Player : public entityx::Receiver<Player>
+	class Player : public Actor, public entityx::Receiver<Player>
 	{
 	public:
 
@@ -80,10 +81,11 @@ namespace WkCocos
 
 		void receive(const WkCocos::OnlineData::Events::Error& err);
 
-		struct Error : public entityx::Event<Error>
+		struct Error : public Event<Error>
 		{
-			Error(std::string component, std::string code, std::string message)
-			: m_component(component)
+			Error(ActorID id, std::string component, std::string code, std::string message)
+				: Event(id)
+			, m_component(component)
 			, m_code(code)
 			, m_message(message)
 			{}
@@ -93,8 +95,28 @@ namespace WkCocos
 			std::string m_message;
 		};
 
-		entityx::ptr<entityx::EventManager> player_events;
+		struct LoggedIn : public Event < LoggedIn >
+		{
+			LoggedIn(ActorID id)
+				: Event(id)
+			{}
+		};
 
+		struct Loaded : public Event < Loaded >
+		{
+			Loaded(ActorID id)
+				: Event(id)
+			{}
+		};
+
+		struct Saved : public Event < Saved >
+		{
+			Saved(ActorID id)
+				: Event(id)
+			{}
+		};
+
+		
 		inline const std::string& getUser() const { return m_user; }
 
 		bool getUsersKeyValue(std::string key, int value, int quantity, int offset);
@@ -102,19 +124,53 @@ namespace WkCocos
 		bool getUsersFromTo(std::string key, int from, int to, int quantity, int offset);
 
 		bool getAllDocsPaging(int quantity, int offset);
-		
-	protected:
-		
+				
 		/**
 		* constructor for a local player. This will manage local saved data only
 		*/
-		Player(std::shared_ptr<LocalData::LocalDataManager> localdata, std::function<std::string(std::string userid)> pw_gen_cb, std::function<void()> data_load_cb);
+		Player(std::shared_ptr<LocalData::LocalDataManager> localdata, std::function<std::string(std::string userid)> pw_gen_cb);
 
 		/**
 		* constructor for an online player. this will manage local saved data and online saved data( these are handled as two separate dataset by WkCocos)
 		*/
-		Player(std::shared_ptr<LocalData::LocalDataManager> localdata, std::function<std::string(std::string userid)> pw_gen_cb, std::shared_ptr<OnlineData::OnlineDataManager> onlinedata, std::function<void()> data_load_cb);
+		Player(std::shared_ptr<LocalData::LocalDataManager> localdata, std::function<std::string(std::string userid)> pw_gen_cb, std::shared_ptr<OnlineData::OnlineDataManager> onlinedata);
 
+		/**
+		* destructor
+		*/
+		~Player();
+
+		/**
+		* request a Login
+		*/
+		void autologin();
+
+		bool isLoggedIn()
+		{
+			return 0 == m_loggingin;
+		}
+
+		/**
+		* request a Save
+		*/
+		void saveData();
+
+		/**
+		* request a Load
+		*/
+		void loadData();
+
+		/**
+		* Receive data loaded
+		*/
+		void receive(const WkCocos::Save::Loaded& constructed_evt);
+
+		/**
+		* Receive data saved
+		*/
+		void receive(const WkCocos::Save::Saved& saved_evt);
+
+	protected:
 		bool newPlayer;
 		std::string m_user;
 		std::string m_passwd;
@@ -125,17 +181,9 @@ namespace WkCocos
 		
 		std::shared_ptr<WkCocos::Shop::Inventory> m_inventory;
 
-		//this implements timer save and other data that we manage in this class.
-		virtual std::map<std::string, std::string> get_all_data_json();
-		virtual void set_all_data_json(std::map<std::string, std::string> data);
+		//map of saves indexed based on name.
+		std::map<std::string,Save> m_save;
 
-		//these are meant to be used by the app for managing extra game data.
-		//they are called by get_all_data_json() and set_all_data_json(std::string data)
-		virtual std::string get_data_json() = 0;
-		virtual void set_data_json(std::string data) = 0;
-
-		Save		m_playerData;
-		
 	private:
 
 		void createNewUserID(std::string& user, std::string& passwd) const
@@ -161,13 +209,11 @@ namespace WkCocos
 			//autologin. create user and login
 			m_onlinedata->loginNew(m_user, m_passwd, email, [=](std::string body){
 				CCLOG("login done !!!");
-				//loading again to get online value
-				m_playerData.requestLoadData(m_DataLoaded_callback);
+				loadData();
 			});
 		}
 
-		//game callbacks
-		std::function<void()> m_DataLoaded_callback;
+		//synchronous callbacks
 		std::function<std::string(std::string userid)> m_pw_gen_cb;
 
 		const char * sAlarms = "alarms";
@@ -182,6 +228,12 @@ namespace WkCocos
 		const char * sWday = "wday";
 		const char * sYday = "yday";
 		const char * sIsdst = "isdst";
+
+		const std::string timerSaveName = "timer";
+		const std::string moreSaveName = "more";
+
+		//requests for logging in
+		unsigned short m_loggingin;
 	};
 } //namespace WkCocos
 

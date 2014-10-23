@@ -87,8 +87,7 @@ void SavingUI::saveCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchE
 	{
 		CCLOG("SAVE BUTTON CLICKED");
 
-		g_gameLogic->getPlayer().saveData([](){
-		});
+		g_gameLogic->getPlayer().saveData();
 
 	}
 }
@@ -100,8 +99,7 @@ void SavingUI::loadCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchE
 	{
 		CCLOG("LOAD BUTTON CLICKED");
 
-		g_gameLogic->getPlayer().loadData([](){
-		});
+		g_gameLogic->getPlayer().loadData();
 
 	}
 }

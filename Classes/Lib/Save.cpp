@@ -4,18 +4,22 @@
 
 namespace WkCocos
 {
-	Save::Save(const std::string& saveName, Mode mode)
+	Save::Save(const std::string& saveName, Mode mode, std::string key)
 		: m_name(saveName)
+		, m_key(key)
+		, m_rawData("")
 		, m_onLoading(nullptr)
 		, m_onSaving(nullptr)
+		, m_loaded(false)
 	{
 		m_saveModes[static_cast<int>(mode)] = 1;
 	}
 	
 	Save::~Save()
-	{}
+	{
+	}
 
-	bool Save::requestLoadData(std::function<void()> loaded_cb, std::string key)
+	bool Save::requestLoadData()
 	{
 		bool loaded = true;
 
@@ -23,13 +27,16 @@ namespace WkCocos
 		{
 			if (m_onlinedata)
 			{
-				m_onlinedata->load(m_user, m_name, [=](std::map<std::string, std::string> data)
+				++m_loaded;
+				m_onlinedata->load(m_user, m_name, [=](std::string docId, std::vector<std::string> data)
 				{
-					m_onLoading(data);
-					//CCLOG("user data loaded : %s", data.c_str());
+					m_docId = docId;
+					m_rawData = data.back();
 
-					if (loaded_cb) loaded_cb();
-				});
+					--m_loaded;
+					event_manager->emit<Loaded>(getId(),m_name, m_rawData);
+					//CCLOG("user data loaded : %s", data.c_str());
+				},m_key);
 			}
 			else
 			{
@@ -42,12 +49,14 @@ namespace WkCocos
 		{
 			if (m_localdata)
 			{
-				LOG_WARNING << "Offline load temporary disabled due to multiply docs unfinished implementation!" << std::endl;
-				m_localdata->loadData(m_name, [=](std::map<std::string, std::string> data){
+				++m_loaded;
+				m_localdata->loadData(m_name, [=](std::vector<std::string> data){
+					m_rawData = data.back(); // we only care about last doc ( most recent ? )
+					//deprecated
 					m_onLoading(data);
-
-					if (loaded_cb) loaded_cb();
-				}, key);
+					--m_loaded;
+					event_manager->emit<Loaded>(getId(),m_name, m_rawData);
+				}, m_key);
 			}
 			else
 			{
@@ -59,24 +68,28 @@ namespace WkCocos
 		return loaded;
 	}
 
-	bool Save::requestSaveData(std::function<void()> saved_cb, std::string key)
+	bool Save::requestSaveData(std::string data)
 	{
-		bool loaded = true;
+		bool saved = true;
+		m_rawData = data;
 
 		if (isMode(Mode::ONLINE)) //no encryption online
 		{
 			if (m_onlinedata)
 			{
-				m_onlinedata->save(m_user, m_name, m_onSaving(), [=](std::string data)
+				++m_saved;
+				m_onlinedata->save(m_user, m_name, m_docId, m_rawData, [=](std::string data)
 				{
+					//we do not modify local data to not lose more recent changes.
+					--m_saved;
 					//CCLOG("user data saved : %s", data.c_str());
-					saved_cb();
-				});
+					event_manager->emit<Saved>(getId(), m_name, data);
+				},m_key);
 			}
 			else
 			{
 				LOG_WARNING << "Online save requested but no online manager!" << std::endl;
-				loaded = false;
+				saved = false;
 			}
 		}
 
@@ -84,22 +97,23 @@ namespace WkCocos
 		{
 			if (m_localdata)
 			{
-				LOG_WARNING << "Offline save temporary disabled due to multiply docs unfinished implementation!" << std::endl;
-				m_localdata->saveData(m_name, m_onSaving(), key);
-				saved_cb();
+				++m_saved;
+				m_localdata->saveData(m_name, m_rawData, m_key);
+				event_manager->emit<Saved>(getId(), m_name, m_rawData);
+				--m_saved;
 			}
 			else
 			{
 				LOG_WARNING << "Offline save requested but no offline manager!" << std::endl;
-				loaded = false;
+				saved = false;
 			}
 		}
 
-		return loaded;
+		return saved;
 		
 	}
 
-	bool Save::requestDeleteData(std::function<void()> delete_cb)
+	bool Save::requestDeleteData()
 	{
 		bool deleteSave = true;
 		if (isMode(Mode::ONLINE))
@@ -110,7 +124,10 @@ namespace WkCocos
 		{
 			if (m_localdata)
 			{
-				m_localdata->deleteData(m_name, [](std::string){});
+				m_localdata->deleteData(m_name, [=](std::string data){
+					//ignoring data...
+					event_manager->emit<Deleted>(getId());
+				});
 			}
 			else
 			{

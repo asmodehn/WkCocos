@@ -75,12 +75,12 @@ namespace WkCocos
 				};
 			}
 
-			UpdateUserData::UpdateUserData(std::string userid, std::string collection, std::string docid, std::string user_data, std::function<void(::App42::App42StorageResponse*)> cb)
+			UpdateUserData::UpdateUserData(std::string userid, std::string collection, std::string docId, std::string user_data, std::function<void(::App42::App42StorageResponse*)> cb)
 				: in_progress(false)
 				, done(false)
 				, m_userid(userid)
 				, m_collection(collection)
-				, m_docid(docid)
+				, m_docid(docId)
 				, m_user_data(user_data)
 			{
 				m_cb = [=](void* data)

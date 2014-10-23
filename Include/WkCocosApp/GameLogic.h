@@ -1,6 +1,8 @@
 #ifndef  _APP_GAMELOGIC_H_
 #define  _APP_GAMELOGIC_H_
 
+#include "entityx/entityx.h"
+
 #include "WkCocos/LocalData/LocalDataManager.h"
 #include "WkCocos/OnlineData/OnlineDataManager.h"
 #include "WkCocos/Shop/Shop.h"
@@ -12,9 +14,17 @@
 
 //TODO : This used ot be a singleton. but it is not needed, it can be just a global variable.
 // => We should review design in order to include GameLogic as a Helper in Lib ( providing easy access to all managers. )
-class GameLogic{
+class GameLogic : public entityx::Receiver<GameLogic>
+{
 public:
-	
+
+	struct Player_LoggedIn : entityx::Event < Player_LoggedIn >
+	{
+
+	};
+
+	entityx::EventManager logic_events;
+
 	void localDataError()
 	{
 		CCLOG("LOCAL DATA ERROR");
@@ -46,18 +56,22 @@ public:
 	}
 
 public:
-	GameLogic(std::string app_access_key, std::string app_secret_key, std::function<void()> data_load_cb);
+	GameLogic(std::string app_access_key, std::string app_secret_key);
 	~GameLogic();
 	
 	//overall game features ( shared between concepts )
 	std::shared_ptr<WkCocos::LocalData::LocalDataManager> m_localdatamngr;
 	std::shared_ptr<WkCocos::OnlineData::OnlineDataManager> m_onlinedatamngr;
 	
-
 	//overall game concepts
 	std::unique_ptr<MyPlayer> m_player;
 	std::unique_ptr<WkCocos::Shop::Shop> m_shop;
 	std::unique_ptr<MyOptions> m_options;
+
+	void receive(const MyPlayer::LoggedIn& player_loggedin)
+	{
+		logic_events.emit<Player_LoggedIn>();
+	}
 
 };
 

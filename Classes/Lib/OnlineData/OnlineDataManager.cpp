@@ -75,93 +75,49 @@ namespace WkCocos
 			});
 		}
 
-		void OnlineDataManager::save(const std::string& userid, const std::string& saveName, std::map<std::string, std::string> user_data, std::function<void(std::string)> success_callback)
+		void OnlineDataManager::save(const std::string& userid, const std::string& saveName, std::string docId, std::string user_data, std::function<void(std::string)> success_callback, std::string key)
 		{
-			//this code is not good! app42 can think we spam it with requests!
-			if (system != "")
+			auto systemupdateentity = entity_manager->create();
+			systemupdateentity.assign < Comp::UpdateUserData >(userid, saveName, docId, user_data, [=](::App42::App42StorageResponse* r)
 			{
-				auto systemupdateentity = entity_manager->create();
-				systemupdateentity.assign < Comp::UpdateUserData >(userid, saveName, system, user_data["system"], [=](::App42::App42StorageResponse* r)
+				if (!r->isSuccess)
 				{
-					if (!r->isSuccess)
-					{
-						cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, r](){
-							event_manager->emit<Events::Error>(r);
-							//callback is not called if error
-						});
-					}
-					else
-					{
-						cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, success_callback, r](){
-							success_callback(r->getBody());
-						});
-					}
-				});
-			}
-			else
-			{
-				auto systeminsertentity = entity_manager->create();
-				systeminsertentity.assign < Comp::InsertUserData >(userid, saveName, user_data["system"], [=](::App42::App42StorageResponse* r)
+					cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, r](){
+						event_manager->emit<Events::Error>(r);
+						//callback is not called if error
+					});
+				}
+				else
 				{
-					if (!r->isSuccess)
-					{
-						cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, r](){
-							event_manager->emit<Events::Error>(r);
-							//callback is not called if error
-						});
-					}
-					else
-					{
-						cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, success_callback, r](){
-							success_callback(r->getBody());
-						});
-					}
-				});
-			}
-
-			if (search != "")
-			{
-				auto searchupdateentity = entity_manager->create();
-				searchupdateentity.assign < Comp::UpdateUserData >(userid, saveName, search, user_data["search"], [=](::App42::App42StorageResponse* r)
-				{
-					if (!r->isSuccess)
-					{
-						cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, r](){
-							event_manager->emit<Events::Error>(r);
-							//callback is not called if error
-						});
-					}
-					else
-					{
-						cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, success_callback, r](){
-							success_callback(r->getBody());
-						});
-					}
-				});
-			}
-			else
-			{
-				auto searchinsertentity = entity_manager->create();
-				searchinsertentity.assign < Comp::InsertUserData >(userid, saveName, user_data["search"], [=](::App42::App42StorageResponse* r)
-				{
-					if (!r->isSuccess)
-					{
-						cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, r](){
-							event_manager->emit<Events::Error>(r);
-							//callback is not called if error
-						});
-					}
-					else
-					{
-						cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, success_callback, r](){
-							success_callback(r->getBody());
-						});
-					}
-				});
-			}
+					cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, success_callback, r](){
+						success_callback(r->getBody());
+					});
+				}
+			});
 		}
 
-		void OnlineDataManager::load(const std::string& userid, const std::string& saveName, std::function<void(std::map<std::string, std::string>)> callback)
+		void OnlineDataManager::saveNew(const std::string& userid, const std::string& saveName, std::string user_data, std::function<void(std::string)> success_callback, std::string key)
+		{
+			auto systeminsertentity = entity_manager->create();
+			systeminsertentity.assign < Comp::InsertUserData >(userid, saveName, user_data, [=](::App42::App42StorageResponse* r)
+			{
+				if (!r->isSuccess)
+				{
+					cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, r](){
+						event_manager->emit<Events::Error>(r);
+						//callback is not called if error
+					});
+				}
+				else
+				{
+					cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, success_callback, r](){
+						success_callback(r->getBody());
+					});
+				}
+			});
+		}
+		
+		void OnlineDataManager::load(const std::string& userid, const std::string& saveName, std::function<void(std::string, std::vector<std::string>)> callback, std::string key)
 		{
 			auto newentity = entity_manager->create();
 			//new File component for each request. The aggregator system will detect duplicates and group them
@@ -169,28 +125,22 @@ namespace WkCocos
 			{
 				if (r->isSuccess)
 				{
-					std::map<std::string, std::string> docs;
+					std::vector<std::string> docs;
 					std::vector<::App42::JSONDocument> jsonDocArray = r->users.front().jsonDocArray;
+
+					//id of last doc is the one we want to use ( others are discarded )
+					std::string docId = jsonDocArray.back().getDocId();
+
 					for (std::vector<::App42::JSONDocument>::iterator it = jsonDocArray.begin(); it != jsonDocArray.end(); ++it)
 					{
 						rapidjson::Document doc;
 						rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
 						auto jsonDoc = it->getJsonDoc();
-						doc.Parse<0>(jsonDoc.c_str());
-						if (doc.HasMember("system"))
-						{
-							system = it->getDocId();
-							docs["system"] = jsonDoc;
-						}
-						if (doc.HasMember("search"))
-						{
-							search = it->getDocId();
-							docs["search"] = jsonDoc;
-						}
+						docs.push_back(jsonDoc.c_str());
 					}
-					cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, callback, docs]()
+					cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, callback, docId, docs]()
 					{
-						callback(docs);
+						callback(docId, docs);
 					});
 				}
 				else// if request failed, 

@@ -1,7 +1,7 @@
 #include "WkCocosApp/GameLogic.h"
 #include "WkCocos/Shop/Assets.h"
 
-GameLogic::GameLogic(std::string app_access_key, std::string app_secret_key, std::function<void()> data_load_cb)
+GameLogic::GameLogic(std::string app_access_key, std::string app_secret_key)
 : m_localdatamngr(new WkCocos::LocalData::LocalDataManager())
 , m_options(new MyOptions(m_localdatamngr))
 //license number is in clear here as this is not a published app.
@@ -36,8 +36,10 @@ GameLogic::GameLogic(std::string app_access_key, std::string app_secret_key, std
 		return "pass_" + userid;
 	}
 	, m_onlinedatamngr
-	, data_load_cb
 	));
+
+	m_player->getEventManager()->subscribe<MyPlayer::LoggedIn>(*this);
+	m_player->login();
 
 	m_player->setupInventory(m_shop->getInventory());
 }

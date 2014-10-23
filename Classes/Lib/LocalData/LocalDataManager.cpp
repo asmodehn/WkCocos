@@ -62,53 +62,33 @@ namespace WkCocos
 			return true;
 		}
 		
-		bool LocalDataManager::saveData(const std::string& saveName, std::map<std::string, std::string> data, std::string key, short version)
+		bool LocalDataManager::saveData(const std::string& saveName, std::string data, std::string key, short version)
 		{
 			auto systementity = entity_manager->create();
-			systementity.assign<Comp::File>(cocos2d::FileUtils::getInstance()->getWritablePath() + "system", key);
+			systementity.assign<Comp::File>(cocos2d::FileUtils::getInstance()->getWritablePath() + saveName, key);
 			systementity.assign<Comp::Read>();
 			if (1 == version)
 			{
-				systementity.assign<Comp::PlayerData_v1>(data["system"]);
-			}
-
-			auto searchentity = entity_manager->create();
-			searchentity.assign<Comp::File>(cocos2d::FileUtils::getInstance()->getWritablePath() + "search", key);
-			searchentity.assign<Comp::Read>();
-			if (1 == version)
-			{
-				searchentity.assign<Comp::PlayerData_v1>(data["search"]);
+				systementity.assign<Comp::PlayerData_v1>(data);
 			}
 
 			return true;
 		}
 
-		bool LocalDataManager::loadData(const std::string& saveName, std::function<void(std::map<std::string, std::string>)> load_cb, std::string key, short version)
+		bool LocalDataManager::loadData(const std::string& saveName, std::function<void(std::vector<std::string>)> load_cb, std::string key, short version)
 		{
 			auto systementity = entity_manager->create();
 			//new File component for each request. The aggregator system will detect duplicates and group them
-			systementity.assign<Comp::File>(cocos2d::FileUtils::getInstance()->getWritablePath() + "system", key);
+			systementity.assign<Comp::File>(cocos2d::FileUtils::getInstance()->getWritablePath() + saveName, key);
 			systementity.assign<Comp::Read>();
 			if (1 == version)
 			{
-				systementity.assign<Comp::PlayerData_v1>([=](std::string systemdata){
+				systementity.assign<Comp::PlayerData_v1>([=](std::string data){
 					//doing this in cocos thread to not mess up the current update pass
-					auto searchentity = entity_manager->create();
-					searchentity.assign<Comp::File>(cocos2d::FileUtils::getInstance()->getWritablePath() + "search", key);
-					searchentity.assign<Comp::Read>();
-					if (1 == version)
+					cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([=]()
 					{
-						searchentity.assign<Comp::PlayerData_v1>([=](std::string searchdata)
-						{
-							std::map<std::string, std::string> data;
-							data["system"] = systemdata;
-							data["search"] = searchdata;
-							cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([=]()
-							{
-								load_cb(data);
-							});
-						});
-					}
+						load_cb({ data });
+					});
 				});
 			}
 			return true;

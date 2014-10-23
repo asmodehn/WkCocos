@@ -145,7 +145,7 @@ bool TestScene::init()
 	addChild(m_time, 1);
 
 	g_gameLogic->getLocalDataManager().getEventManager()->subscribe<WkCocos::LocalData::Events::Error>(*this);
-	g_gameLogic->getPlayer().player_events->subscribe<WkCocos::Player::Error>(*this);
+	g_gameLogic->getPlayer().getEventManager()->subscribe<WkCocos::Player::Error>(*this);
 
 	return true;
 }

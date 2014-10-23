@@ -11,45 +11,110 @@
 /**
 * This is the game player
 */
-class MyPlayer : public WkCocos::Player
+class MyPlayer : public WkCocos::Actor, public entityx::Receiver<MyPlayer>
 {
+	//delegate
+	WkCocos::Player m_player;
+
 public:
+	
+	std::shared_ptr<entityx::EventManager> getEventManager()
+	{
+		return m_player.getEventManager();
+	}
 
 	/**
 	* Constructor
 	*/
-	MyPlayer(std::shared_ptr<WkCocos::LocalData::LocalDataManager> localdatamngr, std::function<std::string(std::string userid)> pw_gen_cb, std::function<void()> data_load_cb);
-	MyPlayer(std::shared_ptr<WkCocos::LocalData::LocalDataManager> localdatamngr, std::function<std::string(std::string userid)> pw_gen_cb, std::shared_ptr<WkCocos::OnlineData::OnlineDataManager> onlinedatamgr, std::function<void()> data_load_cb);
+	MyPlayer(std::shared_ptr<WkCocos::LocalData::LocalDataManager> localdatamngr, std::function<std::string(std::string userid)> pw_gen_cb);
+	MyPlayer(std::shared_ptr<WkCocos::LocalData::LocalDataManager> localdatamngr, std::function<std::string(std::string userid)> pw_gen_cb, std::shared_ptr<WkCocos::OnlineData::OnlineDataManager> onlinedatamgr);
 	/**
 	* Destructor
 	*/
 	virtual ~MyPlayer();
 
 	/**
-	* data accessor as json string
+	* event receivers
 	*/
-	std::string get_data_json();
-
-	/**
-	* data setter from json string
-	*/
-	void set_data_json(std::string data);
+	void receive(const WkCocos::Player::LoggedIn& constructed);
+	void receive(const WkCocos::Save::Loaded& loaded);
+	void receive(const WkCocos::Save::Saved& saved);
 
 	//ingame currency
 	WkCocos::StrongBox::StrongBox m_gold;
 	//premium currency
 	WkCocos::StrongBox::StrongBox m_gem;
 
+	//login for test
+	void login();
+
 	//save Data for test
-	void saveData(std::function<void()> saved_cb)
-	{
-		m_playerData.requestSaveData(saved_cb);
-	}
+	void saveData();
 
 	//load Data for test
-	void loadData(std::function<void()> loaded_cb)
+	void loadData();
+
+
+	struct LoggedIn : public WkCocos::Event < LoggedIn >
 	{
-		m_playerData.requestLoadData(loaded_cb);
+		LoggedIn(WkCocos::ActorID id)
+			: WkCocos::Event< LoggedIn >(id)
+		{}
+	};
+
+	struct Loaded : public WkCocos::Event < Loaded >
+	{
+		Loaded(WkCocos::ActorID id)
+			: WkCocos::Event< Loaded >(id)
+		{}
+	};
+
+	struct Saved : public WkCocos::Event < Saved >
+	{
+		Saved(WkCocos::ActorID id)
+			: WkCocos::Event< Saved >(id)
+		{}
+	};
+
+
+	WkCocos::Shop::Inventory* getInventory()
+	{
+		return m_player.getInventory();
+	}
+
+	void setupInventory(std::shared_ptr<WkCocos::Shop::Inventory> invent)
+	{
+		m_player.setupInventory(invent);
+	}
+
+	bool getAllDocsPaging(int quantity, int offset)
+	{
+		return m_player.getAllDocsPaging(quantity, offset);
+	}
+
+	bool getUsersFromTo(std::string key, int from, int to, int quantity, int offset )
+	{
+		return m_player.getUsersFromTo(key, from, to, quantity, offset);
+	}
+
+	std::shared_ptr<WkCocos::OnlineData::OnlineDataManager> getOnlineDatamgr()
+	{
+		return m_player.getOnlineDatamgr();
+	}
+
+	std::shared_ptr<WkCocos::Timer::Timer> getTimermgr()
+	{
+		return m_player.getTimermgr();
+	}
+
+	bool setTimer(std::string id, unsigned long secs )
+	{
+		return m_player.setTimer(id, secs);
+	}
+
+	void stopTimer(std::string id)
+	{
+		m_player.stopTimer(id);
 	}
 
 private:
@@ -57,6 +122,10 @@ private:
 	const char * sCurrency = "currency";
 	const char * sGem = "gem";
 	const char * sGold = "gold";
+
+	WkCocos::Save m_save;
 	
+	bool m_loggingIn;
+
 };
 #endif // __MYPLAYER_H__

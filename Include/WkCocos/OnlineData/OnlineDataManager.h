@@ -41,12 +41,17 @@ namespace WkCocos
 			/**
 			* Save User Data
 			*/
-			void save(const std::string& userid, const std::string& saveName, std::map<std::string, std::string> user_data, std::function<void(std::string)> callback);
+			void save(const std::string& userid, const std::string& saveName, std::string docId, std::string data, std::function<void(std::string)> callback, std::string key = "");
+
+			/**
+			* Save New User Data
+			*/
+			void saveNew(const std::string& userid, const std::string& saveName, std::string data, std::function<void(std::string)> success_callback, std::string key = "");
 
 			/**
 			* Load User Data
 			*/
-			void load(const std::string& userid, const std::string& saveName, std::function<void(std::map<std::string, std::string>)> callback);
+			void load(const std::string& userid, const std::string& saveName, std::function<void(std::string,std::vector<std::string>)> callback, std::string key = "");
 
 			/**
 			* Get Selected Users
@@ -81,9 +86,6 @@ namespace WkCocos
 			entityx::ptr<entityx::SystemManager> system_manager;
 
 			std::function<void()> m_error_callback;
-
-			std::string search = "";
-			std::string system = "";
 
 		};
 
