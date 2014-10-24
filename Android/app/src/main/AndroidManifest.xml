@@ -35,10 +35,10 @@
         <activity android:name="com.soomla.store.billing.google.GooglePlayIabService$IabActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" />
 
-        <service android:name="com.gameparkstudio.wkcocos.lib.MainAlarmService"
+        <service android:name="com.gameparkstudio.wkcocos.lib.MainService"
             android:enabled="true" />
 
-        <receiver android:name="com.gameparkstudio.wkcocos.lib.MainReceiver" />
+        <receiver android:name="com.gameparkstudio.wkcocos.lib.MainBroadcastReceiver" />
 
         <meta-data android:name="billing.service" android:value="google.GooglePlayIabService" />
 

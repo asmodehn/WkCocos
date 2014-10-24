@@ -7,7 +7,7 @@ import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 import android.app.PendingIntent;
 
-public class MainAlarmService extends Service {
+public class MainService extends Service {
 
     @Override
     public IBinder onBind(Intent arg0) {
@@ -21,9 +21,8 @@ public class MainAlarmService extends Service {
 
     @SuppressWarnings("static-access")
     @Override
-    public void onStart(Intent intent, int startId)
-    {
-        super.onStart(intent, startId);
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        super.onStartCommand(intent, flags, startId);
 
         NotificationManager WKNM = (NotificationManager)this.getApplicationContext().getSystemService(this.getApplicationContext().NOTIFICATION_SERVICE);
         NotificationCompat.Builder WKBuilder =
@@ -32,10 +31,12 @@ public class MainAlarmService extends Service {
                         .setContentTitle(PushNotificationsManager.getInstance().WKTitle)
                         .setContentText(PushNotificationsManager.getInstance().WKMessage);
 
-        Intent WKIntent = new Intent(this.getApplicationContext(), MainActivity.class);
-        PendingIntent WKPI=PendingIntent.getActivity(this.getApplicationContext(), 0, WKIntent, 0);
+        Intent WKIntent = new Intent(this.getApplicationContext(), PushNotificationsManager.getInstance().appPNClickActivity);
+        PendingIntent WKPI = PendingIntent.getActivity(this.getApplicationContext(), 0, WKIntent, 0);
         WKBuilder.setContentIntent(WKPI);
         WKNM.notify(0, WKBuilder.build());
+        
+        return START_STICKY;
     }
 
     @Override

@@ -4,13 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.BroadcastReceiver;
 
-public class MainReceiver extends BroadcastReceiver {
+public class MainBroadcastReceiver extends BroadcastReceiver {
 
-    public void onReceive(Context context, Intent intent)
-    {
-        Intent WK = new Intent(context, MainAlarmService.class);
+    public void onReceive(Context context, Intent intent) {
+        Intent WK = new Intent(context, MainService.class);
         context.startService(WK);
-
     }
-
 }
