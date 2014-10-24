@@ -8,13 +8,13 @@
         android:smallScreens="true"
         android:normalScreens="true"
         android:largeScreens="true"
-        android:xlargeScreens="true"/>
+        android:xlargeScreens="true" />
 
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:name="com.soomla.SoomlaApp">
+        android:name="com.soomla.SoomlaApp" >
 
         <!-- Tell NativeActivity the name of our .so -->
          <meta-data android:name="android.app.lib_name"
@@ -33,7 +33,12 @@
         </activity>
 
         <activity android:name="com.soomla.store.billing.google.GooglePlayIabService$IabActivity"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"/>
+            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" />
+
+        <service android:name="com.gameparkstudio.wkcocos.lib.MainAlarmService"
+            android:enabled="true" />
+
+        <receiver android:name="com.gameparkstudio.wkcocos.lib.MainReceiver" />
 
         <meta-data android:name="billing.service" android:value="google.GooglePlayIabService" />
 
@@ -43,7 +48,5 @@
     <!-- <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> /-->
     <uses-permission android:name="com.android.vending.BILLING" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-
-    <receiver android:process=":remote" android:name="MainReceiver" />
 
 </manifest>

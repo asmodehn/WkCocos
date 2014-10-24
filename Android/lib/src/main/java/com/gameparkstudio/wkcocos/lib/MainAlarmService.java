@@ -17,6 +17,13 @@ public class MainAlarmService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+    }
+
+    @SuppressWarnings("static-access")
+    @Override
+    public void onStart(Intent intent, int startId)
+    {
+        super.onStart(intent, startId);
 
         NotificationManager WKNM = (NotificationManager)this.getApplicationContext().getSystemService(this.getApplicationContext().NOTIFICATION_SERVICE);
         NotificationCompat.Builder WKBuilder =
@@ -29,6 +36,12 @@ public class MainAlarmService extends Service {
         PendingIntent WKPI=PendingIntent.getActivity(this.getApplicationContext(), 0, WKIntent, 0);
         WKBuilder.setContentIntent(WKPI);
         WKNM.notify(0, WKBuilder.build());
+    }
+
+    @Override
+    public void onDestroy()
+    {
+        super.onDestroy();
     }
 
 }
