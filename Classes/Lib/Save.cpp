@@ -14,6 +14,9 @@ namespace WkCocos
 		, m_saved(0)
 	{
 		m_saveModes[static_cast<int>(mode)] = 1;
+
+		//making sure logstream exists.
+		WkCocos::LogStream::create();
 	}
 	
 	Save::~Save()

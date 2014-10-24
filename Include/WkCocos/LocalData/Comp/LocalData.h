@@ -174,6 +174,12 @@ namespace WkCocos
 
 			};
 
+			struct Write : entityx::Component<Write>
+			{
+				Write(){}
+
+			};
+
 
 		}//namespace Comp
 	}//namespace LocalData

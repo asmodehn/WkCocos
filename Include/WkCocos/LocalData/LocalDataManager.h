@@ -2,6 +2,7 @@
 #define __WKCOCOS_LOCALDATA_LOCALDATAMANAGER_H__
 
 #include "entityx/entityx.h"
+#include "WkCocos/Actor.h"
 #include "WkCocos/LocalData/Events/Error.h"
 //#include "json/document.h"
 
@@ -11,7 +12,7 @@ namespace WkCocos
 {
 	namespace LocalData
 	{
-		class LocalDataManager
+		class LocalDataManager : public WkCocos::Actor
 		{
 		public:
 			/**
@@ -24,6 +25,28 @@ namespace WkCocos
 			*/
 			~LocalDataManager();
 			
+			//TODO : Actor behavior
+			struct LoginIdSaved : public Event < LoginIdSaved >
+			{
+
+			};
+
+			struct LoginIdLoaded : public Event < LoginIdLoaded >
+			{
+
+			};
+
+			struct DataSaved : public Event < DataSaved >
+			{
+
+			};
+
+			struct DataLoaded : public Event < DataLoaded >
+			{
+
+			};
+
+
 			/**
 			* LoginID
 			*/
