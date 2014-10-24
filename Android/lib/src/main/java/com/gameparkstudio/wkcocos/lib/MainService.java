@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 import android.app.PendingIntent;
 
+import static com.gameparkstudio.wkcocos.lib.PushNotificationsManager.*;
+
 public class MainService extends Service {
 
     @Override
@@ -24,18 +26,22 @@ public class MainService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
 
-        NotificationManager WKNM = (NotificationManager)this.getApplicationContext().getSystemService(this.getApplicationContext().NOTIFICATION_SERVICE);
-        NotificationCompat.Builder WKBuilder =
-                new NotificationCompat.Builder(this.getApplicationContext())
-                        .setSmallIcon(R.drawable.ic_launcher)
-                        .setContentTitle(PushNotificationsManager.getInstance().WKTitle)
-                        .setContentText(PushNotificationsManager.getInstance().WKMessage);
+        NotificationCompat.Builder WKBuilder;
+        WKBuilder = new NotificationCompat.Builder(this)
+                .setSmallIcon(R.drawable.ic_launcher)
+                .setContentTitle(getInstance().WKTitle)
+                .setContentText(getInstance().WKMessage);
 
-        Intent WKIntent = new Intent(this.getApplicationContext(), PushNotificationsManager.getInstance().appPNClickActivity);
-        PendingIntent WKPI = PendingIntent.getActivity(this.getApplicationContext(), 0, WKIntent, 0);
+        Intent WKIntent = new Intent(MainActivity.getContext(), getInstance().appPNClickActivity);
+
+        PendingIntent WKPI;
+        WKPI = PendingIntent.getActivity(this, 0, WKIntent, 0);
+
         WKBuilder.setContentIntent(WKPI);
+
+        NotificationManager WKNM = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
         WKNM.notify(0, WKBuilder.build());
-        
+
         return START_STICKY;
     }
 

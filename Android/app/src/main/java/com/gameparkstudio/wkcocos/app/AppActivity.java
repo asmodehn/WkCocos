@@ -1,5 +1,6 @@
 package com.gameparkstudio.wkcocos.app;
 
+import android.app.NotificationManager;
 import android.os.Bundle;
 import com.gameparkstudio.wkcocos.lib.MainActivity;
 import com.gameparkstudio.wkcocos.lib.PushNotificationsManager;
@@ -15,16 +16,13 @@ public class AppActivity extends MainActivity {
     }
 
     @Override protected void onPause() {
-
         super.onPause();
         //TODO : JNI binding to remove this from here and make it doable in C++ app
-        //TODO : FIX "when" doesn't seem to work ?
-
     }
 
     @Override protected void onResume() {
-
         super.onResume();
-        //TODO : cancel remaining PN
+        NotificationManager WKNM = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+        WKNM.cancelAll();
     }
 }
