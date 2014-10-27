@@ -61,6 +61,7 @@ LOCAL_SRC_FILES := jni.cpp \
                    ../../../../../Classes/Lib/Timer/Systems/TimeUpdater.cpp \
                    ../../../../../Classes/Lib/StrongBox/StrongBox.cpp \
                    ../../../../../Classes/Lib/Save.cpp \
+				   ../../../../../Classes/Lib/Actor.cpp \
                    ../../../../../Classes/Lib/WebView/UIWebView.cpp \
                    ../../../../../Classes/Lib/WebView/UIWebViewImpl-android.cpp
 

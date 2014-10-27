@@ -319,7 +319,7 @@ namespace WkCocos
 
 			//save json string
 			doc.Accept(writer);
-			save.second->requestSaveData(strbuf.GetString());
+			//save.second->requestSaveData(strbuf.GetString());
 
 		}
 	}

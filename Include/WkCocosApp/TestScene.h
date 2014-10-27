@@ -30,7 +30,7 @@ public:
 
 	void error_CB(std::string msg);
 
-	void menuCloseCallback(cocos2d::Ref* pSender);
+	//void menuCloseCallback(cocos2d::Ref* pSender);
 
 	void prevCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input);
 	void nextCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input);
