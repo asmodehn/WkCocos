@@ -17,11 +17,11 @@ public class AppActivity extends MainActivity {
 
     @Override protected void onPause() {
         super.onPause();
-        //TODO : JNI binding to remove this from here and make it doable in C++ app
     }
 
     @Override protected void onResume() {
         super.onResume();
+        //TODO : JNI binding to remove this from here and make it doable in C++ app
         NotificationManager WKNM = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
         WKNM.cancelAll();
     }
