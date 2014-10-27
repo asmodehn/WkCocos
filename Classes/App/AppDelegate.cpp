@@ -4,6 +4,7 @@
 #include "WkCocosApp/GameLogic.h"
 
 #include "WkCocos/Utils/jni/Utils.h"
+#include "WkCocos/PushNotifications/PushNotifications.h"
 
 USING_NS_CC;
 
@@ -118,6 +119,8 @@ void AppDelegate::applicationDidEnterBackground() {
 
     // if you use SimpleAudioEngine, it must be pause
     // SimpleAudioEngine::getInstance()->pauseBackgroundMusic();
+
+	WkCocos::PushNotifications::PushNotifications::schedule(42, "Title WkCocos C++", "Useful Message");
 }
 
 // this function will be called when the app is active again
