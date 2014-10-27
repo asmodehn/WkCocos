@@ -89,13 +89,26 @@ namespace WkCocos
 			if (m_onlinedata)
 			{
 				++m_saved;
-				m_onlinedata->save(m_user, m_name, m_docId, m_rawData, [=](std::string data)
+				if (m_docId.size() > 0)
 				{
-					//we do not modify local data to not lose more recent changes.
-					--m_saved;
-					//CCLOG("user data saved : %s", data.c_str());
-					event_manager->emit<Saved>(getId(), m_name, data);
-				},m_key);
+					m_onlinedata->save(m_user, m_name, m_docId, m_rawData, [=](std::string data)
+					{
+						//we do not modify local data to not lose more recent changes.
+						--m_saved;
+						//CCLOG("user data saved : %s", data.c_str());
+						event_manager->emit<Saved>(getId(), m_name, data);
+					}, m_key);
+				}
+				else
+				{
+					m_onlinedata->saveNew(m_user, m_name, m_rawData, [=](std::string data)
+					{
+						//we do not modify local data to not lose more recent changes.
+						--m_saved;
+						//CCLOG("user data saved : %s", data.c_str());
+						event_manager->emit<Saved>(getId(), m_name, data);
+					}, m_key);
+				}
 			}
 			else
 			{
@@ -110,6 +123,7 @@ namespace WkCocos
 			{
 				++m_saved;
 				m_localdata->saveData(m_name, m_rawData, m_key);
+				//BUG : Save is not yet saved here...
 				event_manager->emit<Saved>(getId(), m_name, m_rawData);
 				--m_saved;
 			}
