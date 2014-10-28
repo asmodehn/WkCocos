@@ -236,7 +236,7 @@ namespace WkCocos
 	{
 		if (m_onlinedata)
 		{
-			//m_onlinedata->getUsersKeyValue(m_moreData.getName(), key, value, quantity, offset);
+			//m_onlinedata->getUsersKeyValue("MySave", key, value, quantity, offset);
 			return true;
 		}
 		else
@@ -247,7 +247,7 @@ namespace WkCocos
 	{
 		if (m_onlinedata)
 		{
-			//m_onlinedata->getUsersFromTo(m_moreData.getName(), key, from, to, quantity, offset);
+			//m_onlinedata->getUsersFromTo("MySave", key, from, to, quantity, offset);
 			return true;
 		}
 		else
@@ -258,7 +258,7 @@ namespace WkCocos
 	{
 		if (m_onlinedata)
 		{
-			//m_onlinedata->getAllDocsPaging(m_moreData.getName(), quantity, offset);
+			m_onlinedata->getAllDocsPaging("MySave", quantity, offset);
 			return true;
 		}
 		else
@@ -307,10 +307,10 @@ namespace WkCocos
 					alarms.PushBack(time, allocator);
 				}
 				doc.AddMember(sAlarms, alarms, allocator);
-				doc.Accept(writer);
+				//doc.Accept(writer);
 
 				save.second->getEventManager()->subscribe<Save::Saved>(*this);
-				save.second->requestSaveData(strbuf.GetString());
+				//save.second->requestSaveData(strbuf.GetString());
 			}
 			else if (moreSaveName == save.first)
 			{
@@ -319,7 +319,7 @@ namespace WkCocos
 
 			//save json string
 			doc.Accept(writer);
-			//save.second->requestSaveData(strbuf.GetString());
+			save.second->requestSaveData(strbuf.GetString());
 
 		}
 	}

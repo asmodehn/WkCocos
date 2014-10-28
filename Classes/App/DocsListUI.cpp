@@ -69,78 +69,68 @@ void DocsListUI::refreshCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::T
 		m_table.clear();
 
 		g_gameLogic->getPlayer().getAllDocsPaging(m_quantity, m_offset);
-
-		m_offset += m_quantity;
 	}
 }
 
 void DocsListUI::receive(const WkCocos::OnlineData::Events::DocsList &doclist)
 {
-	cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([=]()
+	m_offset += m_quantity;
+	auto tempVector = doclist.eventMessage;
+	if (tempVector.size())
 	{
-		auto tempVector = doclist.eventMessage;
-		if (tempVector.size())
+		for (unsigned int i = 0; i != tempVector.size(); ++i)
 		{
-			for (unsigned int i = 0; i != tempVector.size(); ++i)
+			std::map<std::string, cocos2d::ui::Text*> line;
+			std::string temp;
+
+			cocos2d::ui::Text* docIdText = cocos2d::ui::Text::create(tempVector[i]["Document_ID"], "Thonburi", 15);
+			docIdText->setPosition(cocos2d::Vec2(-m_widgetSize.width / 5 * 2, m_widgetSize.height / 2 - 22 - 20 * (m_quantity / 2 + i)));
+			line["Document_ID"] = docIdText;
+			m_widget->addChild(docIdText);
+
+			temp = tempVector[i]["JSON_Document"];
+			if (temp.size() > 24)
 			{
-				std::map<std::string, cocos2d::ui::Text*> line;
-				std::string temp;
-
-				temp = tempVector[i]["Document_ID"];
-				if (temp.size() > 24)
-				{
-					temp.resize(20);
-					temp = temp + "...";
-				}
-				cocos2d::ui::Text* docIdText = cocos2d::ui::Text::create(temp, "Thonburi", 15);
-				docIdText->setPosition(cocos2d::Vec2(-m_widgetSize.width / 5 * 2, m_widgetSize.height / 2 - 22 - 20 * (m_quantity / 2 + i)));
-				line["Document_ID"] = docIdText;
-				m_widget->addChild(docIdText);
-
-				temp = tempVector[i]["JSON_Document"];
-				if (temp.size() > 24)
-				{
-					temp.resize(20);
-					temp = temp + "...";
-				}
-				cocos2d::ui::Text* jsonDocText = cocos2d::ui::Text::create(temp, "Thonburi", 15);
-				jsonDocText->setPosition(cocos2d::Vec2(-m_widgetSize.width / 5, m_widgetSize.height / 2 - 22 - 20 * (m_quantity / 2 + i)));
-				line["JSON_Document"] = jsonDocText;
-				m_widget->addChild(jsonDocText);
-
-				temp = tempVector[i]["Owner"];
-				if (temp.size() > 24)
-				{
-					temp.resize(20);
-					temp = temp + "...";
-				}
-				cocos2d::ui::Text* ownerText = cocos2d::ui::Text::create(temp, "Thonburi", 15);
-				ownerText->setPosition(cocos2d::Vec2(0, m_widgetSize.height / 2 - 22 - 20 * (m_quantity / 2 + i)));
-				line["Owner"] = ownerText;
-				m_widget->addChild(ownerText);
-
-				cocos2d::ui::Text* createdText = cocos2d::ui::Text::create(tempVector[i]["Created_On"], "Thonburi", 15);
-				createdText->setPosition(cocos2d::Vec2(m_widgetSize.width / 5, m_widgetSize.height / 2 - 22 - 20 * (m_quantity / 2 + i)));
-				line["Created_On"] = createdText;
-				m_widget->addChild(createdText);
-
-				cocos2d::ui::Text* updatedText = cocos2d::ui::Text::create(tempVector[i]["Updated_On"], "Thonburi", 15);
-				updatedText->setPosition(cocos2d::Vec2(m_widgetSize.width / 5 * 2, m_widgetSize.height / 2 - 22 - 20 * (m_quantity / 2 + i)));
-				line["Updated_On"] = updatedText;
-				m_widget->addChild(updatedText);
-
-				m_table.push_back(line);
+				temp.resize(20);
+				temp = temp + "...";
 			}
+			cocos2d::ui::Text* jsonDocText = cocos2d::ui::Text::create(temp, "Thonburi", 15);
+			jsonDocText->setPosition(cocos2d::Vec2(-m_widgetSize.width / 5, m_widgetSize.height / 2 - 22 - 20 * (m_quantity / 2 + i)));
+			line["JSON_Document"] = jsonDocText;
+			m_widget->addChild(jsonDocText);
 
-			m_refreshLabel->setText("page " + WkCocos::ToolBox::itoa(++m_pages));
+			temp = tempVector[i]["Owner"];
+			if (temp.size() > 24)
+			{
+				temp.resize(20);
+				temp = temp + "...";
+			}
+			cocos2d::ui::Text* ownerText = cocos2d::ui::Text::create(temp, "Thonburi", 15);
+			ownerText->setPosition(cocos2d::Vec2(0, m_widgetSize.height / 2 - 22 - 20 * (m_quantity / 2 + i)));
+			line["Owner"] = ownerText;
+			m_widget->addChild(ownerText);
+
+			cocos2d::ui::Text* createdText = cocos2d::ui::Text::create(tempVector[i]["Created_On"], "Thonburi", 15);
+			createdText->setPosition(cocos2d::Vec2(m_widgetSize.width / 5, m_widgetSize.height / 2 - 22 - 20 * (m_quantity / 2 + i)));
+			line["Created_On"] = createdText;
+			m_widget->addChild(createdText);
+
+			cocos2d::ui::Text* updatedText = cocos2d::ui::Text::create(tempVector[i]["Updated_On"], "Thonburi", 15);
+			updatedText->setPosition(cocos2d::Vec2(m_widgetSize.width / 5 * 2, m_widgetSize.height / 2 - 22 - 20 * (m_quantity / 2 + i)));
+			line["Updated_On"] = updatedText;
+			m_widget->addChild(updatedText);
+
+			m_table.push_back(line);
 		}
-		else
-		{
-			m_pages = 0;
-			m_offset = 0;
-			g_gameLogic->getPlayer().getAllDocsPaging(m_quantity, m_offset);
-		}
-	});
+
+		m_refreshLabel->setText("page " + WkCocos::ToolBox::itoa(++m_pages));
+	}
+	else
+	{
+		m_pages = 0;
+		m_offset = 0;
+		g_gameLogic->getPlayer().getAllDocsPaging(m_quantity, m_offset);
+	}
 }
 
 DocsListUI::~DocsListUI()
