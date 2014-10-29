@@ -84,30 +84,49 @@ namespace WkCocos
 		bool saved = true;
 		m_rawData = data;
 
+		LOG_WARNING << "requested save of " << m_rawData << std::endl;
+
 		if (isMode(Mode::ONLINE)) //no encryption online
 		{
 			if (m_onlinedata)
 			{
 				++m_saved;
-				if (m_docId.size() > 0)
+				if (m_saved == 1) // we process first save only. others will be queued ( and intermediate will be skipped as useless )
 				{
-					m_onlinedata->save(m_user, m_name, m_docId, m_rawData, [=](std::string data)
+					if (m_docId.size() > 0)
 					{
-						//we do not modify local data to not lose more recent changes.
-						--m_saved;
-						//CCLOG("user data saved : %s", data.c_str());
-						event_manager->emit<Saved>(getId(), m_name, data);
-					}, m_key);
-				}
-				else
-				{
-					m_onlinedata->saveNew(m_user, m_name, m_rawData, [=](std::string data)
+						m_onlinedata->save(m_user, m_name, m_docId, m_rawData, [=](std::string data)
+						{
+							//we do not modify local data to not lose more recent changes.
+							if (--(this->m_saved) == 0) // if last answer came back
+							{
+								//CCLOG("user data saved : %s", data.c_str());
+								event_manager->emit<Saved>(getId(), m_name, data);
+							}
+							else //if we have many saves queued, we cancel all except last one, and we process it
+							{
+								this->m_saved = 0;
+								this->requestSaveData(m_rawData);
+							}
+						}, m_key);
+					}
+					else
 					{
-						//we do not modify local data to not lose more recent changes.
-						--m_saved;
-						//CCLOG("user data saved : %s", data.c_str());
-						event_manager->emit<Saved>(getId(), m_name, data);
-					}, m_key);
+						m_onlinedata->saveNew(m_user, m_name, m_rawData, [=](std::string data)
+						{
+							//we do not modify local data to not lose more recent changes.
+							if (--(this->m_saved) == 0) // if last answer came back
+							{
+								//CCLOG("user data saved : %s", data.c_str());
+								event_manager->emit<Saved>(getId(), m_name, data);
+							}
+							else //if we have many saves queued, we cancel all except last one, and we process it
+							{
+								this->m_saved = 0;
+								this->requestSaveData(m_rawData);
+							}
+						}, m_key);
+					}
 				}
 			}
 			else
@@ -116,11 +135,11 @@ namespace WkCocos
 				saved = false;
 			}
 		}
-
-		if (isMode(Mode::OFFLINE))
+		else if (isMode(Mode::OFFLINE))
 		{
 			if (m_localdata)
 			{
+				//no queue for local save at the moment as local save is assumed (wrongly) synchronous for now.
 				++m_saved;
 				m_localdata->saveData(m_name, m_rawData, m_key);
 				//BUG : Save is not yet saved here...
