@@ -18,8 +18,6 @@ MyPlayer::MyPlayer(std::shared_ptr<WkCocos::LocalData::LocalDataManager> localda
 	m_save.setOnlineDataMgr(m_player.getOnlineDatamgr());
 	WkCocos::Save::getEventManager()->subscribe<WkCocos::Save::Loaded>(*this);
 	WkCocos::Save::getEventManager()->subscribe<WkCocos::Save::Saved>(*this);
-
-	m_player.getEventManager()->subscribe<WkCocos::Player::LoggedIn>(*this);
 }
 
 MyPlayer::MyPlayer(std::shared_ptr<WkCocos::LocalData::LocalDataManager> localdatamngr, std::function<std::string(std::string userid)> pw_gen_cb, std::shared_ptr<WkCocos::OnlineData::OnlineDataManager> onlinedatamgr)
@@ -36,8 +34,6 @@ MyPlayer::MyPlayer(std::shared_ptr<WkCocos::LocalData::LocalDataManager> localda
 	m_save.setOnlineDataMgr(m_player.getOnlineDatamgr());
 	WkCocos::Save::getEventManager()->subscribe<WkCocos::Save::Loaded>(*this);
 	WkCocos::Save::getEventManager()->subscribe<WkCocos::Save::Saved>(*this);
-
-	m_player.getEventManager()->subscribe<WkCocos::Player::LoggedIn>(*this);
 }
 
 MyPlayer::~MyPlayer()
