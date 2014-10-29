@@ -40,13 +40,15 @@ namespace WkCocos
 
 			/**
 			* Save User Data
+			* callback will be passed saveName, docId and data
 			*/
-			void save(const std::string& userid, const std::string& saveName, std::string docId, std::string data, std::function<void(std::string)> callback, std::string key = "");
+			void save(const std::string& userid, const std::string& saveName, std::string docId, std::string data, std::function<void(std::string, std::string, std::string)> callback, std::string key = "");
 
 			/**
 			* Save New User Data
+			* callback will be passed saveName, docId and data.
 			*/
-			void saveNew(const std::string& userid, const std::string& saveName, std::string data, std::function<void(std::string)> success_callback, std::string key = "");
+			void saveNew(const std::string& userid, const std::string& saveName, std::string data, std::function<void(std::string, std::string, std::string)> success_callback, std::string key = "");
 
 			/**
 			* Load User Data

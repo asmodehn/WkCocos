@@ -95,13 +95,13 @@ namespace WkCocos
 				{
 					if (m_docId.size() > 0)
 					{
-						m_onlinedata->save(m_user, m_name, m_docId, m_rawData, [=](std::string data)
+						m_onlinedata->save(m_user, m_name, m_docId, m_rawData, [=](std::string saveName, std::string docId, std::string data)
 						{
 							//we do not modify local data to not lose more recent changes.
 							if (--(this->m_saved) == 0) // if last answer came back
 							{
 								//CCLOG("user data saved : %s", data.c_str());
-								event_manager->emit<Saved>(getId(), m_name, data);
+								this->event_manager->emit<Saved>(this->getId(), this->m_name, data);
 							}
 							else //if we have many saves queued, we cancel all except last one, and we process it
 							{
@@ -112,13 +112,16 @@ namespace WkCocos
 					}
 					else
 					{
-						m_onlinedata->saveNew(m_user, m_name, m_rawData, [=](std::string data)
+						m_onlinedata->saveNew(m_user, m_name, m_rawData, [=](std::string saveName, std::string docId, std::string data)
 						{
+							//storing docId to mark creation of save
+							this->m_docId = docId;
+
 							//we do not modify local data to not lose more recent changes.
 							if (--(this->m_saved) == 0) // if last answer came back
 							{
 								//CCLOG("user data saved : %s", data.c_str());
-								event_manager->emit<Saved>(getId(), m_name, data);
+								this->event_manager->emit<Saved>(this->getId(), this->m_name, data);
 							}
 							else //if we have many saves queued, we cancel all except last one, and we process it
 							{

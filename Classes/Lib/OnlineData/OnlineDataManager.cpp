@@ -75,7 +75,7 @@ namespace WkCocos
 			});
 		}
 
-		void OnlineDataManager::save(const std::string& userid, const std::string& saveName, std::string docId, std::string user_data, std::function<void(std::string)> success_callback, std::string key)
+		void OnlineDataManager::save(const std::string& userid, const std::string& saveName, std::string docId, std::string user_data, std::function<void(std::string, std::string, std::string)> success_callback, std::string key)
 		{
 			auto systemupdateentity = entity_manager->create();
 			systemupdateentity.assign < Comp::UpdateUserData >(userid, saveName, docId, user_data, [=](::App42::App42StorageResponse* r)
@@ -90,13 +90,13 @@ namespace WkCocos
 				else
 				{
 					cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, success_callback, r](){
-						success_callback(r->getBody());
+						success_callback(r->storages.back().collectionName, r->storages.back().jsonDocArray.back().getDocId(), r->getBody());
 					});
 				}
 			});
 		}
 
-		void OnlineDataManager::saveNew(const std::string& userid, const std::string& saveName, std::string user_data, std::function<void(std::string)> success_callback, std::string key)
+		void OnlineDataManager::saveNew(const std::string& userid, const std::string& saveName, std::string user_data, std::function<void(std::string, std::string, std::string)> success_callback, std::string key)
 		{
 			auto systeminsertentity = entity_manager->create();
 			systeminsertentity.assign < Comp::InsertUserData >(userid, saveName, user_data, [=](::App42::App42StorageResponse* r)
@@ -111,7 +111,7 @@ namespace WkCocos
 				else
 				{
 					cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, success_callback, r](){
-						success_callback(r->getBody());
+						success_callback(r->storages.back().collectionName, r->storages.back().jsonDocArray.back().getDocId(), r->getBody());
 					});
 				}
 			});
