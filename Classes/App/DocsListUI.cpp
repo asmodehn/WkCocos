@@ -83,15 +83,21 @@ void DocsListUI::receive(const WkCocos::OnlineData::Events::DocsList &doclist)
 			std::map<std::string, cocos2d::ui::Text*> line;
 			std::string temp;
 
-			cocos2d::ui::Text* docIdText = cocos2d::ui::Text::create(tempVector[i]["Document_ID"], "Thonburi", 15);
+			temp = tempVector[i]["Document_ID"];
+			if (temp.size() > 20)
+			{
+				temp.resize(16);
+				temp = temp + "...";
+			}
+			cocos2d::ui::Text* docIdText = cocos2d::ui::Text::create(temp, "Thonburi", 15);
 			docIdText->setPosition(cocos2d::Vec2(-m_widgetSize.width / 5 * 2, m_widgetSize.height / 2 - 22 - 20 * (m_quantity / 2 + i)));
 			line["Document_ID"] = docIdText;
 			m_widget->addChild(docIdText);
 
 			temp = tempVector[i]["JSON_Document"];
-			if (temp.size() > 24)
+			if (temp.size() > 20)
 			{
-				temp.resize(20);
+				temp.resize(16);
 				temp = temp + "...";
 			}
 			cocos2d::ui::Text* jsonDocText = cocos2d::ui::Text::create(temp, "Thonburi", 15);
@@ -100,9 +106,9 @@ void DocsListUI::receive(const WkCocos::OnlineData::Events::DocsList &doclist)
 			m_widget->addChild(jsonDocText);
 
 			temp = tempVector[i]["Owner"];
-			if (temp.size() > 24)
+			if (temp.size() > 20)
 			{
-				temp.resize(20);
+				temp.resize(16);
 				temp = temp + "...";
 			}
 			cocos2d::ui::Text* ownerText = cocos2d::ui::Text::create(temp, "Thonburi", 15);
@@ -110,12 +116,24 @@ void DocsListUI::receive(const WkCocos::OnlineData::Events::DocsList &doclist)
 			line["Owner"] = ownerText;
 			m_widget->addChild(ownerText);
 
-			cocos2d::ui::Text* createdText = cocos2d::ui::Text::create(tempVector[i]["Created_On"], "Thonburi", 15);
+			temp = tempVector[i]["Created_On"];
+			if (temp.size() > 20)
+			{
+				temp.resize(16);
+				temp = temp + "...";
+			}
+			cocos2d::ui::Text* createdText = cocos2d::ui::Text::create(temp, "Thonburi", 15);
 			createdText->setPosition(cocos2d::Vec2(m_widgetSize.width / 5, m_widgetSize.height / 2 - 22 - 20 * (m_quantity / 2 + i)));
 			line["Created_On"] = createdText;
 			m_widget->addChild(createdText);
 
-			cocos2d::ui::Text* updatedText = cocos2d::ui::Text::create(tempVector[i]["Updated_On"], "Thonburi", 15);
+			temp = tempVector[i]["Updated_On"];
+			if (temp.size() > 20)
+			{
+				temp.resize(16);
+				temp = temp + "...";
+			}
+			cocos2d::ui::Text* updatedText = cocos2d::ui::Text::create(temp, "Thonburi", 15);
 			updatedText->setPosition(cocos2d::Vec2(m_widgetSize.width / 5 * 2, m_widgetSize.height / 2 - 22 - 20 * (m_quantity / 2 + i)));
 			line["Updated_On"] = updatedText;
 			m_widget->addChild(updatedText);

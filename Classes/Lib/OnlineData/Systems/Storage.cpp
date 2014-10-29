@@ -125,8 +125,10 @@ namespace WkCocos
 					else if (!adp->in_progress)
 					{
 						CCLOG("Requesting list of documents page by page");
-
+						// following line is added only for debug
+						::App42::App42API::setIsTraceEnabled(true);
 						m_stor_service->FindAllDocuments(DB_NAME, adp->m_collection.c_str(), adp->m_quantity, adp->m_offset, adp->m_cb);
+						::App42::App42API::setIsTraceEnabled(false);
 						adp->in_progress = true;
 					}
 
