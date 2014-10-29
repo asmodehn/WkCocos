@@ -7,10 +7,11 @@
 namespace WkCocos
 {
 
-	CocosLogAppender::CocosLogAppender(cocos2d::Node* root, const std::string& fontName, const CheckBoxRes& res)
+	CocosLogAppender::CocosLogAppender(cocos2d::Node* root, const std::string& fontName, const CheckBoxRes& res, cocos2d::Size widgetSize)
 		: _log(nullptr)
 		, _model(nullptr)
 		, _logSize(_MAX_LINE)
+		, _UISize(widgetSize)
 	{
 		// make model
 		_model = cocos2d::ui::TextBMFont::create("", fontName);
@@ -23,7 +24,7 @@ namespace WkCocos
 		
 		// setup bg
 		bg->setTouchEnabled(false);
-		bg->setSize(cocos2d::Size(1920, 1080));
+		bg->setSize(_UISize);
 		bg->setBackGroundColorType(cocos2d::ui::Layout::BackGroundColorType::SOLID);
 		bg->setBackGroundColor(cocos2d::Color3B(20, 20, 20));
 		bg->setBackGroundColorOpacity(70);
@@ -35,7 +36,7 @@ namespace WkCocos
 		_log->setTouchEnabled(false);
 		_log->setItemModel(_model);
 		_log->pushBackDefaultItem();
-		_log->setSize(cocos2d::Size(1920, 900));
+		_log->setSize(_UISize);
 		_log->setSizePercent(cocos2d::Vec2(1.f, 0.9f));
 		_log->setBackGroundColorType(cocos2d::ui::Layout::BackGroundColorType::SOLID);
 		_log->setBackGroundColor(cocos2d::Color3B(20, 20, 20));
