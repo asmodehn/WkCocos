@@ -2,8 +2,6 @@
 
 #include "WkCocos/OnlineData/Comp/OnlineData.h"
 
-#define DB_NAME "PUBLIC"
-
 namespace WkCocos
 {
 	namespace OnlineData
@@ -30,6 +28,7 @@ namespace WkCocos
 				{
 					if (st->done)
 					{
+						CCLOG("Time Data entity lived %f seconds", st->life_time);
 						entity.remove<Comp::ServerTime>();
 						//if mask at 0 no request in this entity anymore
 						if (entity.component_mask() == 0)
@@ -40,6 +39,9 @@ namespace WkCocos
 						m_timer_service->GetCurrentTimeNoWinBase(st->m_cb);
 						st->in_progress = true;
 					}
+					else
+						st->life_time += dt;
+
 				}
 
 			}

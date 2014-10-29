@@ -2,8 +2,6 @@
 
 #include "WkCocos/OnlineData/Comp/OnlineData.h"
 
-#define DB_NAME "PUBLIC"
-
 namespace WkCocos
 {
 	namespace OnlineData
@@ -29,13 +27,18 @@ namespace WkCocos
 				{
 					if (uud->done)
 					{
+						CCLOG("Update User Data entity lived %f seconds", uud->life_time);
 						entity.remove<Comp::UpdateUserData>();
+						if (entity.component_mask() == 0)
+							entity.destroy();
 					}
 					else if (!uud->in_progress)
 					{
 						m_stor_service->UpdateDocumentByDocId(DB_NAME, uud->m_collection.c_str(), uud->m_docid.c_str(), uud->m_user_data.c_str(), uud->m_cb);
 						uud->in_progress = true;
 					}
+					else
+						uud->life_time += dt;
 
 				}
 
@@ -44,11 +47,10 @@ namespace WkCocos
 				{
 					if (iud->done)
 					{
+						CCLOG("Insert User Data entity lived %f seconds", iud->life_time);
 						entity.remove<Comp::InsertUserData>();
 						if (entity.component_mask() == 0)
-						{
 							entity.destroy();
-						}
 					}
 					else if (!iud->in_progress)
 					{
@@ -56,6 +58,8 @@ namespace WkCocos
 						m_stor_service->InsertJsonDocument(DB_NAME, iud->m_collection.c_str(), iud->m_user_data.c_str(), iud->m_cb);
 						iud->in_progress = true;
 					}
+					else
+						iud->life_time += dt;
 
 				}
 
@@ -64,11 +68,10 @@ namespace WkCocos
 				{
 					if (gukv->done)
 					{
+						CCLOG("Get Data By Key Value entity lived %f seconds", gukv->life_time);
 						entity.remove<Comp::GetUsersKeyValue>();
 						if (entity.component_mask() == 0)
-						{
 							entity.destroy();
-						}
 					}
 					else if (!gukv->in_progress)
 					{
@@ -81,6 +84,8 @@ namespace WkCocos
 						m_stor_service->FindDocumentsByQueryWithPaging(DB_NAME, gukv->m_collection.c_str(), queryFinal, gukv->m_quantity, gukv->m_offset, gukv->m_cb);
 						gukv->in_progress = true;
 					}
+					else
+						gukv->life_time += dt;
 
 				}
 
@@ -89,11 +94,10 @@ namespace WkCocos
 				{
 					if (guft->done)
 					{
+						CCLOG("Get Data By Query entity lived %f seconds", guft->life_time);
 						entity.remove<Comp::GetUsersFromTo>();
 						if (entity.component_mask() == 0)
-						{
 							entity.destroy();
-						}
 					}
 					else if (!guft->in_progress)
 					{
@@ -106,6 +110,8 @@ namespace WkCocos
 						m_stor_service->FindDocumentsByQueryWithPaging(DB_NAME, guft->m_collection.c_str(), queryCompound, guft->m_quantity, guft->m_offset, guft->m_cb);
 						guft->in_progress = true;
 					}
+					else
+						guft->life_time += dt;
 
 				}
 
@@ -114,11 +120,10 @@ namespace WkCocos
 				{
 					if (adp->done)
 					{
+						CCLOG("Docs List Data entity lived %f seconds", adp->life_time);
 						entity.remove<Comp::AllDocsPaging>();
 						if (entity.component_mask() == 0)
-						{
 							entity.destroy();
-						}
 					}
 					else if (!adp->in_progress)
 					{
@@ -129,6 +134,8 @@ namespace WkCocos
 						::App42::App42API::setIsTraceEnabled(false);
 						adp->in_progress = true;
 					}
+					else
+						adp->life_time += dt;
 
 				}
 
