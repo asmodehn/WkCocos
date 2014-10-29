@@ -222,33 +222,33 @@ namespace WkCocos
 		}
 	}
 
-	bool Player::getUsersKeyValue(std::string key, int value, int quantity, int offset)
+	bool Player::getUsersKeyValue(std::string saveName, std::string key, int value, int quantity, int offset)
 	{
 		if (m_onlinedata)
 		{
-			m_onlinedata->getUsersKeyValue("MySave", key, value, quantity, offset);
+			m_onlinedata->getUsersKeyValue(saveName, key, value, quantity, offset);
 			return true;
 		}
 		else
 			return false;
 	}
 
-	bool Player::getUsersFromTo(std::string key, int from, int to, int quantity, int offset)
+	bool Player::getUsersFromTo(std::string saveName, std::string key, int from, int to, int quantity, int offset)
 	{
 		if (m_onlinedata)
 		{
-			m_onlinedata->getUsersFromTo("MySave", key, from, to, quantity, offset);
+			m_onlinedata->getUsersFromTo(saveName, key, from, to, quantity, offset);
 			return true;
 		}
 		else
 			return false;
 	}
 
-	bool Player::getAllDocsPaging(int quantity, int offset)
+	bool Player::getAllDocsPaging(std::string saveName, int quantity, int offset)
 	{
 		if (m_onlinedata)
 		{
-			m_onlinedata->getAllDocsPaging("MySave", quantity, offset);
+			m_onlinedata->getAllDocsPaging(saveName, quantity, offset);
 			return true;
 		}
 		else

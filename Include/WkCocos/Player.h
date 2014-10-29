@@ -117,11 +117,11 @@ namespace WkCocos
 		
 		inline const std::string& getUser() const { return m_user; }
 
-		bool getUsersKeyValue(std::string key, int value, int quantity, int offset);
+		bool getUsersKeyValue(std::string saveName, std::string key, int value, int quantity, int offset);
 
-		bool getUsersFromTo(std::string key, int from, int to, int quantity, int offset);
+		bool getUsersFromTo(std::string saveName, std::string key, int from, int to, int quantity, int offset);
 
-		bool getAllDocsPaging(int quantity, int offset);
+		bool getAllDocsPaging(std::string saveName, int quantity, int offset);
 				
 		/**
 		* constructor for a local player. This will manage local saved data only

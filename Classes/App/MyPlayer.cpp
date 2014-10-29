@@ -4,9 +4,11 @@
 #include "json/stringbuffer.h"
 #include "json/writer.h"
 
+#define SAVENAME "MySave"
+
 MyPlayer::MyPlayer(std::shared_ptr<WkCocos::Timer::Timer> timermgr, std::shared_ptr<WkCocos::LocalData::LocalDataManager> localdatamngr, std::function<std::string(std::string userid)> pw_gen_cb)
 	: m_player(timermgr, localdatamngr, pw_gen_cb)
-	, m_save("MySave", WkCocos::Save::Mode::ONLINE)
+	, m_save(SAVENAME, WkCocos::Save::Mode::ONLINE)
 	, m_gem("53cr3t") // encrypted
 	, m_gold() // not encrypted
 	, m_loggingIn(false)
@@ -22,7 +24,7 @@ MyPlayer::MyPlayer(std::shared_ptr<WkCocos::Timer::Timer> timermgr, std::shared_
 
 MyPlayer::MyPlayer(std::shared_ptr<WkCocos::Timer::Timer> timermgr, std::shared_ptr<WkCocos::LocalData::LocalDataManager> localdatamngr, std::function<std::string(std::string userid)> pw_gen_cb, std::shared_ptr<WkCocos::OnlineData::OnlineDataManager> onlinedatamgr)
 	: m_player(timermgr, localdatamngr, pw_gen_cb, onlinedatamgr)
-, m_save("MySave", WkCocos::Save::Mode::ONLINE)
+	, m_save(SAVENAME, WkCocos::Save::Mode::ONLINE)
 , m_gem("53cr3t") // encrypted
 , m_gold() // not encrypted
 , m_loggingIn(false)
@@ -77,6 +79,17 @@ void MyPlayer::loadData()
 	m_player.loadData();
 	m_save.requestLoadData();
 }
+
+bool MyPlayer::getAllDocsPaging(int quantity, int offset)
+{
+	return m_player.getAllDocsPaging(SAVENAME, quantity, offset);
+}
+
+bool MyPlayer::getUsersFromTo(std::string key, int from, int to, int quantity, int offset)
+{
+	return m_player.getUsersFromTo(SAVENAME, key, from, to, quantity, offset);
+}
+
 
 void MyPlayer::receive(const WkCocos::Player::LoggedIn& loggedin)
 {

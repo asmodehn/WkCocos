@@ -87,15 +87,9 @@ public:
 		m_player.setupInventory(invent);
 	}
 
-	bool getAllDocsPaging(int quantity, int offset)
-	{
-		return m_player.getAllDocsPaging(quantity, offset);
-	}
+	bool getAllDocsPaging(int quantity, int offset);
 
-	bool getUsersFromTo(std::string key, int from, int to, int quantity, int offset )
-	{
-		return m_player.getUsersFromTo(key, from, to, quantity, offset);
-	}
+	bool getUsersFromTo(std::string key, int from, int to, int quantity, int offset);
 
 	std::shared_ptr<WkCocos::OnlineData::OnlineDataManager> getOnlineDatamgr()
 	{
