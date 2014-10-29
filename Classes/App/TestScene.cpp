@@ -123,7 +123,7 @@ bool TestScene::init()
 	webui->setEnabled(false);
 	webui->setVisible(false);
 	addInterface(WebUI::id,webui);
-	webui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.67f));
+	webui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.5f));
 	//*/
 
 	//LogUI
@@ -131,7 +131,7 @@ bool TestScene::init()
 	logui->setEnabled(false);
 	logui->setVisible(false);
 	addInterface(LogUI::id, logui);
-	logui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.67f));
+	logui->setPosition(cocos2d::Vec2(0, 40));
 	//*/
 
 	//activating first UI : 

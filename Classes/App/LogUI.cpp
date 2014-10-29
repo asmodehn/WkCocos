@@ -25,7 +25,7 @@ LogUI::LogUI()
 
 		// Test for cocos log appender
 		WkCocos::CocosLogAppender::CheckBoxRes resource;
-		m_cocosAppnd = new WkCocos::CocosLogAppender(m_widget, "fonts/Text.fnt", resource);
+		m_cocosAppnd = new WkCocos::CocosLogAppender(m_widget, "fonts/Text.fnt", resource, widgetSize);
 		WkCocos::LogStream::get()->addAppender(m_cocosAppnd);
 		LOG_INFO << "Add " << "cocos " << "appender" << std::endl;
 		LOG_INFO << "Next Line" << std::endl;
