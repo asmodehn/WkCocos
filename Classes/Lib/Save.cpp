@@ -165,6 +165,7 @@ namespace WkCocos
 		bool deleteSave = true;
 		if (isMode(Mode::ONLINE))
 		{
+			//TODO
 			LOG_WARNING << "Online save deletion not supported!" << std::endl;
 		}
 		if (isMode(Mode::OFFLINE))

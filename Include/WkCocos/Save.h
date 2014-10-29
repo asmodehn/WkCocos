@@ -174,8 +174,9 @@ namespace WkCocos
 		*/
 		inline void setUserName(const std::string& userName){ m_user = userName; }
 
-		inline std::string getName(){ return m_name; }
-
+		inline std::string getName() const { return m_name; }
+		inline void setName(const std::string& name){ m_name = name; }
+		
 		inline std::string getData(){ return m_rawData; }
 
 	private:
@@ -220,6 +221,16 @@ namespace WkCocos
 		* The online data manager, to make online call for save/load
 		*/
 		std::shared_ptr<OnlineData::OnlineDataManager> m_onlinedata;
+
+		/**
+		* flag to specify if the save has already been requested
+		*/
+		bool m_saveInProgress;
+
+		/**
+		* flag to specify if the load has already been requested
+		*/
+		bool m_loadInProgress;
 
 		/**
 		* Callback function to fill up save

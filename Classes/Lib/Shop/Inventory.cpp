@@ -39,7 +39,7 @@ namespace WkCocos
 			soomla::CCError *soomlaError = NULL;
 			soomla::CCSoomlaStore::getInstance()->refreshInventory();
 			if (soomlaError) {
-				CCLOGERROR("Inventory::refresh", soomlaError);
+				CCLOGERROR("ERROR Inventory::refresh %s", soomlaError->getInfo());
 				return;
 			}
 		}
@@ -49,7 +49,7 @@ namespace WkCocos
 			soomla::CCError *soomlaError = NULL;
 			soomla::CCStoreInventory::sharedStoreInventory()->buyItem(itemid.c_str(), &soomlaError);
 			if (soomlaError) {
-				CCLOGERROR("Inventory::buy", soomlaError);
+				CCLOGERROR("ERROR Inventory::buy %s", soomlaError->getInfo());
 				return;
 			}
 		}

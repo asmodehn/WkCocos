@@ -94,12 +94,18 @@ namespace WkCocos
 
 		void Preload::receive(const Download::Events::Downloaded &dl)
 		{
+			std::string dlfpath = cocos2d::FileUtils::getInstance()->fullPathForFilename(dl.m_filepath);
+			//getting cocos filepath for downloaded file ( inverse of fullpathForFilename() )
+			std::string shortpath = cocos2d::FileUtils::getInstance()->filenameForFullPath(dlfpath);
+
 			entityx::ptr<Comp::DataLoad> data;
 			for (auto entity : entity_manager->entities_with_components(data))
 			{
-				if (data->getFilepath() == dl.m_filepath)
+				if (data->getFilepath() == shortpath)
 				{
+					CCLOG("downloaded event received for %s. Forcing reload it into cocos2d-x", shortpath.c_str());
 					data->loaded = false;
+					data->force = true;
 					entity.assign<Comp::ProgressValue>(1);
 				}
 			}

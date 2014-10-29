@@ -4,8 +4,8 @@
 #include "json/stringbuffer.h"
 #include "json/writer.h"
 
-MyPlayer::MyPlayer(std::shared_ptr<WkCocos::LocalData::LocalDataManager> localdatamngr, std::function<std::string(std::string userid)> pw_gen_cb)
-	: m_player(localdatamngr, pw_gen_cb)
+MyPlayer::MyPlayer(std::shared_ptr<WkCocos::Timer::Timer> timermgr, std::shared_ptr<WkCocos::LocalData::LocalDataManager> localdatamngr, std::function<std::string(std::string userid)> pw_gen_cb)
+	: m_player(timermgr, localdatamngr, pw_gen_cb)
 	, m_save("MySave", WkCocos::Save::Mode::ONLINE)
 	, m_gem("53cr3t") // encrypted
 	, m_gold() // not encrypted
@@ -20,8 +20,8 @@ MyPlayer::MyPlayer(std::shared_ptr<WkCocos::LocalData::LocalDataManager> localda
 	WkCocos::Save::getEventManager()->subscribe<WkCocos::Save::Saved>(*this);
 }
 
-MyPlayer::MyPlayer(std::shared_ptr<WkCocos::LocalData::LocalDataManager> localdatamngr, std::function<std::string(std::string userid)> pw_gen_cb, std::shared_ptr<WkCocos::OnlineData::OnlineDataManager> onlinedatamgr)
-: m_player(localdatamngr, pw_gen_cb, onlinedatamgr)
+MyPlayer::MyPlayer(std::shared_ptr<WkCocos::Timer::Timer> timermgr, std::shared_ptr<WkCocos::LocalData::LocalDataManager> localdatamngr, std::function<std::string(std::string userid)> pw_gen_cb, std::shared_ptr<WkCocos::OnlineData::OnlineDataManager> onlinedatamgr)
+	: m_player(timermgr, localdatamngr, pw_gen_cb, onlinedatamgr)
 , m_save("MySave", WkCocos::Save::Mode::ONLINE)
 , m_gem("53cr3t") // encrypted
 , m_gold() // not encrypted

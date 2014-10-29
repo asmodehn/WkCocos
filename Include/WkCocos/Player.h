@@ -26,11 +26,6 @@ namespace WkCocos
 	class Player : public Actor, public entityx::Receiver<Player>
 	{
 	public:
-
-		/**
-		* Update loop, called by cocos after Activate has been called
-		*/
-		void Update(float deltatime);
 		
 		/**
 		* Settingup the Inventory of the player
@@ -131,12 +126,15 @@ namespace WkCocos
 		/**
 		* constructor for a local player. This will manage local saved data only
 		*/
-		Player(std::shared_ptr<LocalData::LocalDataManager> localdata, std::function<std::string(std::string userid)> pw_gen_cb);
+		Player(std::shared_ptr<WkCocos::Timer::Timer> timer, std::shared_ptr<LocalData::LocalDataManager> localdata, std::function<std::string(std::string userid)> pw_gen_cb);
 
 		/**
 		* constructor for an online player. this will manage local saved data and online saved data( these are handled as two separate dataset by WkCocos)
+		* TODO :
+		*       Login is now separated from player constructor : we do not need the online constructor here anymore.
+		*       A player can "become online" as soon as he does the login successfully.
 		*/
-		Player(std::shared_ptr<LocalData::LocalDataManager> localdata, std::function<std::string(std::string userid)> pw_gen_cb, std::shared_ptr<OnlineData::OnlineDataManager> onlinedata);
+		Player(std::shared_ptr<WkCocos::Timer::Timer> timer, std::shared_ptr<LocalData::LocalDataManager> localdata, std::function<std::string(std::string userid)> pw_gen_cb, std::shared_ptr<OnlineData::OnlineDataManager> onlinedata);
 
 		/**
 		* destructor

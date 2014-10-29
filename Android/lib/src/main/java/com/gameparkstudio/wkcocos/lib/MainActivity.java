@@ -1,10 +1,6 @@
 package com.gameparkstudio.wkcocos.lib;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 
 import com.soomla.cocos2dx.common.ServiceManager;
 import com.soomla.cocos2dx.store.StoreService;
@@ -22,7 +18,7 @@ public class MainActivity extends Cocos2dxActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(mWebViewHelper == null){
+        if(mWebViewHelper == null) {
             mWebViewHelper = new Cocos2dxWebViewHelper(mFrameLayout);
         }
     }

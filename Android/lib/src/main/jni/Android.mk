@@ -17,8 +17,6 @@ LOCAL_SRC_FILES := jni.cpp \
                    ../../../../../Classes/Lib/Player.cpp \
                    ../../../../../Classes/Lib/Scene.cpp \
                    ../../../../../Classes/Lib/Interface.cpp \
-                   ../../../../../Classes/Lib/App42/Setup.cpp \
-                   ../../../../../Classes/Lib/App42/Login.cpp \
                    ../../../../../Classes/Lib/Download/Download.cpp \
                    ../../../../../Classes/Lib/Preload/Preload.cpp \
                    ../../../../../Classes/Lib/Utils/CocosAppender.cpp \
@@ -63,7 +61,9 @@ LOCAL_SRC_FILES := jni.cpp \
                    ../../../../../Classes/Lib/Save.cpp \
 				   ../../../../../Classes/Lib/Actor.cpp \
                    ../../../../../Classes/Lib/WebView/UIWebView.cpp \
-                   ../../../../../Classes/Lib/WebView/UIWebViewImpl-android.cpp
+                   ../../../../../Classes/Lib/WebView/UIWebViewImpl-android.cpp \
+                   ../../../../../Classes/Lib/Helper/GameLogic.cpp \
+                   ../../../../../Classes/Lib/PushNotifications/PushNotifications.cpp
 
 #do not include this file, it's already in libcurl
 #                   ../../../../../Classes/Lib/Utils/md5.c \

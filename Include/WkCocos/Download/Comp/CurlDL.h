@@ -38,7 +38,7 @@ namespace WkCocos
 					}
 					curl_easy_setopt(m_easy_handle, CURLOPT_URL, m_url.c_str());
 #ifdef _DEBUG
-					curl_easy_setopt(m_easy_handle, CURLOPT_VERBOSE, 1L);
+					//curl_easy_setopt(m_easy_handle, CURLOPT_VERBOSE, 1L);
 #endif
 					curl_easy_setopt(m_easy_handle, CURLOPT_WRITEFUNCTION, download_file);
 					curl_easy_setopt(m_easy_handle, CURLOPT_WRITEDATA, this);
