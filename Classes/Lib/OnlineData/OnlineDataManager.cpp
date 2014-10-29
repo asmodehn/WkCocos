@@ -42,7 +42,9 @@ namespace WkCocos
 
 				if (r->isSuccess)
 				{
-					login(userid, password, success_callback);
+					cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, userid, password, success_callback](){
+						login(userid, password, success_callback);
+					});
 				}
 				else // if creation failed, emit event ( in cocos thread to allow cocos actions )
 				{
@@ -77,8 +79,8 @@ namespace WkCocos
 
 		void OnlineDataManager::save(const std::string& userid, const std::string& saveName, std::string docId, std::string user_data, std::function<void(std::string, std::string, std::string)> success_callback, std::string key)
 		{
-			auto systemupdateentity = entity_manager->create();
-			systemupdateentity.assign < Comp::UpdateUserData >(userid, saveName, docId, user_data, [=](::App42::App42StorageResponse* r)
+			auto updateentity = entity_manager->create();
+			updateentity.assign < Comp::UpdateUserData >(userid, saveName, docId, user_data, [=](::App42::App42StorageResponse* r)
 			{
 				if (!r->isSuccess)
 				{
@@ -98,8 +100,8 @@ namespace WkCocos
 
 		void OnlineDataManager::saveNew(const std::string& userid, const std::string& saveName, std::string user_data, std::function<void(std::string, std::string, std::string)> success_callback, std::string key)
 		{
-			auto systeminsertentity = entity_manager->create();
-			systeminsertentity.assign < Comp::InsertUserData >(userid, saveName, user_data, [=](::App42::App42StorageResponse* r)
+			auto insertentity = entity_manager->create();
+			insertentity.assign < Comp::InsertUserData >(userid, saveName, user_data, [=](::App42::App42StorageResponse* r)
 			{
 				if (!r->isSuccess)
 				{

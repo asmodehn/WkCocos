@@ -43,6 +43,17 @@ namespace WkCocos
 		*/
 		static unsigned long stoul(const std::string& _Str, size_t *_Idx = 0, int _Base = 10);
 
+		/**
+		* Implementation of std::to_string for Android, who doesnt have it.
+		*/
+		template <typename T>
+		static std::string to_string(T value)
+		{
+			std::ostringstream os;
+			os << value;
+			return os.str();
+		}
+
 	private:
 		/**
 		* Default constructor.
