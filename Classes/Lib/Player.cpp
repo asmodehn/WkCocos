@@ -236,7 +236,7 @@ namespace WkCocos
 	{
 		if (m_onlinedata)
 		{
-			//m_onlinedata->getUsersKeyValue("MySave", key, value, quantity, offset);
+			m_onlinedata->getUsersKeyValue("MySave", key, value, quantity, offset);
 			return true;
 		}
 		else
@@ -247,7 +247,7 @@ namespace WkCocos
 	{
 		if (m_onlinedata)
 		{
-			//m_onlinedata->getUsersFromTo("MySave", key, from, to, quantity, offset);
+			m_onlinedata->getUsersFromTo("MySave", key, from, to, quantity, offset);
 			return true;
 		}
 		else
