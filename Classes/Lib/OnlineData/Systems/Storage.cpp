@@ -1,5 +1,5 @@
 #include "WkCocos/OnlineData/Systems/Storage.h"
-
+#include "WkCocos/OnlineData/Events/Error.h"
 #include "WkCocos/OnlineData/Comp/OnlineData.h"
 
 namespace WkCocos
@@ -38,7 +38,16 @@ namespace WkCocos
 						uud->in_progress = true;
 					}
 					else
+					{
 						uud->life_time += dt;
+						if (uud->life_time > TIMEOUT)
+						{
+							events->emit<Events::Error>("update user data");
+							entity.remove<Comp::UpdateUserData>();
+							if (entity.component_mask() == 0)
+								entity.destroy();
+						}
+					}
 
 				}
 
@@ -59,7 +68,16 @@ namespace WkCocos
 						iud->in_progress = true;
 					}
 					else
+					{
 						iud->life_time += dt;
+						if (iud->life_time > TIMEOUT)
+						{
+							events->emit<Events::Error>("insert user data");
+							entity.remove<Comp::InsertUserData>();
+							if (entity.component_mask() == 0)
+								entity.destroy();
+						}
+					}
 
 				}
 
@@ -85,7 +103,16 @@ namespace WkCocos
 						gukv->in_progress = true;
 					}
 					else
+					{
 						gukv->life_time += dt;
+						if (gukv->life_time > TIMEOUT)
+						{
+							events->emit<Events::Error>("get data by key and value");
+							entity.remove<Comp::GetUsersKeyValue>();
+							if (entity.component_mask() == 0)
+								entity.destroy();
+						}
+					}
 
 				}
 
@@ -111,7 +138,16 @@ namespace WkCocos
 						guft->in_progress = true;
 					}
 					else
+					{
 						guft->life_time += dt;
+						if (guft->life_time > TIMEOUT)
+						{
+							events->emit<Events::Error>("get data by query");
+							entity.remove<Comp::GetUsersFromTo>();
+							if (entity.component_mask() == 0)
+								entity.destroy();
+						}
+					}
 
 				}
 
@@ -135,7 +171,16 @@ namespace WkCocos
 						adp->in_progress = true;
 					}
 					else
+					{
 						adp->life_time += dt;
+						if (adp->life_time > TIMEOUT)
+						{
+							events->emit<Events::Error>("docs list");
+							entity.remove<Comp::AllDocsPaging>();
+							if (entity.component_mask() == 0)
+								entity.destroy();
+						}
+					}
 
 				}
 

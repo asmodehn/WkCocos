@@ -1,5 +1,5 @@
 #include "WkCocos/OnlineData/Systems/Timer.h"
-
+#include "WkCocos/OnlineData/Events/Error.h"
 #include "WkCocos/OnlineData/Comp/OnlineData.h"
 
 namespace WkCocos
@@ -40,7 +40,16 @@ namespace WkCocos
 						st->in_progress = true;
 					}
 					else
+					{
 						st->life_time += dt;
+						if (st->life_time > TIMEOUT)
+						{
+							events->emit<Events::Error>("server time");
+							entity.remove<Comp::ServerTime>();
+							if (entity.component_mask() == 0)
+								entity.destroy();
+						}
+					}
 
 				}
 

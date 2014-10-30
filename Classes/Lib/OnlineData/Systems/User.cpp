@@ -1,5 +1,5 @@
 #include "WkCocos/OnlineData/Systems/User.h"
-
+#include "WkCocos/OnlineData/Events/Error.h"
 #include "WkCocos/OnlineData/Comp/OnlineData.h"
 
 namespace WkCocos
@@ -40,7 +40,16 @@ namespace WkCocos
 						c->in_progress = true;
 					}
 					else
+					{
 						c->life_time += dt;
+						if (c->life_time > TIMEOUT)
+						{
+							events->emit<Events::Error>("user create");
+							entity.remove<Comp::Create>();
+							if (entity.component_mask() == 0)
+								entity.destroy();
+						}
+					}
 
 				}
 
@@ -62,7 +71,16 @@ namespace WkCocos
 						l->in_progress = true;
 					}
 					else
+					{
 						l->life_time += dt;
+						if (l->life_time > TIMEOUT)
+						{
+							events->emit<Events::Error>("user login");
+							entity.remove<Comp::Login>();
+							if (entity.component_mask() == 0)
+								entity.destroy();
+						}
+					}
 
 				}
 
@@ -87,7 +105,16 @@ namespace WkCocos
 						lud->in_progress = true;
 					}
 					else
+					{
 						lud->life_time += dt;
+						if (lud->life_time > TIMEOUT)
+						{
+							events->emit<Events::Error>("user data load");
+							entity.remove<Comp::LoadUserData>();
+							if (entity.component_mask() == 0)
+								entity.destroy();
+						}
+					}
 
 				}
 
