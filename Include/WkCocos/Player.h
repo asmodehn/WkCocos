@@ -154,11 +154,11 @@ namespace WkCocos
 		/**
 		* request a Save
 		*/
-		void saveData();
+		bool saveData();
 		/**
 		* request a Load
 		*/
-		void loadData();
+		bool loadData();
 		/**
 		* Receive data loaded
 		*/

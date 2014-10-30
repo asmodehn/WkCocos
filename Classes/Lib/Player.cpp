@@ -259,8 +259,9 @@ namespace WkCocos
 	/**
 	* request a Save
 	*/
-	void Player::saveData()
+	bool Player::saveData()
 	{
+		bool saved = true;
 		for (auto save : m_save)
 		{
 			//init json doc
@@ -309,20 +310,22 @@ namespace WkCocos
 
 			//save json string
 			doc.Accept(writer);
-			save.second->requestSaveData(strbuf.GetString());
-
+			saved = save.second->requestSaveData(strbuf.GetString()) && saved ; //keep saving even if one fails.
 		}
+		return saved;
 	}
 
 	/**
 	* request a Load
 	*/
-	void Player::loadData()
+	bool Player::loadData()
 	{
+		bool loaded = true;
 		for (auto save : m_save)
 		{
-			save.second->requestLoadData();
+			loaded = save.second->requestLoadData() && loaded;
 		}
+		return loaded;
 	}
 
 	void Player::receive(const WkCocos::OnlineData::Events::Error& err)
