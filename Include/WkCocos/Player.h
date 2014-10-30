@@ -23,7 +23,7 @@ namespace WkCocos
 	/**
 	* Hold the player information.
 	*/
-	class Player : public Actor, public entityx::Receiver<Player>
+	class Player : public Actor
 	{
 	public:
 		
