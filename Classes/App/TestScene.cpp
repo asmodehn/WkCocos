@@ -6,6 +6,7 @@
 #include "WkCocosApp/DownloadUI.h"
 #include "WkCocosApp/ErrorUI.h"
 #include "WkCocosApp/PlayersListUI.h"
+#include "WkCocosApp/DocsListUI.h"
 #include "WkCocosApp/WebUI.h"
 #include "WkCocosApp/LogUI.h"
 
@@ -18,7 +19,6 @@
 
 TestScene::TestScene()
 : Scene()
-, ui_event_manager(entityx::EventManager::make())
 {
 }
 
@@ -39,23 +39,36 @@ bool TestScene::init()
 	cocos2d::Size visibleSize = cocos2d::Director::getInstance()->getVisibleSize();
 	cocos2d::Vec2 origin = cocos2d::Director::getInstance()->getVisibleOrigin();
 
-	auto closeItem = cocos2d::MenuItemImage::create("CloseNormal.png", "CloseSelected.png",
-		CC_CALLBACK_1(TestScene::menuCloseCallback, this));
-	closeItem->setPosition(cocos2d::Vec2(origin.x + visibleSize.width - closeItem->getContentSize().width / 2,
-		origin.y + closeItem->getContentSize().height / 2));
-	auto menu = cocos2d::Menu::create(closeItem, NULL);
-	menu->setPosition(cocos2d::Vec2::ZERO);
-	addChild(menu, 1);
+	//auto closeItem = cocos2d::MenuItemImage::create("CloseNormal.png", "CloseSelected.png",
+	//	CC_CALLBACK_1(TestScene::menuCloseCallback, this));
+	//closeItem->setPosition(cocos2d::Vec2(visibleSize.width - closeItem->getContentSize().width / 2,
+	//	visibleSize.height - closeItem->getContentSize().height / 2));
+	//auto menu = cocos2d::Menu::create(closeItem, NULL);
+	//menu->setPosition(cocos2d::Vec2::ZERO);
+	//addChild(menu, 1);
 
-	//Navigation UI
-	NavUI* navui = new NavUI(ui_event_manager);
-	ui_event_manager->subscribe<NavUI::Next>(*this);
-	ui_event_manager->subscribe<NavUI::Prev>(*this);
+	m_prevButton = cocos2d::ui::Button::create("SkipNormal.png", "SkipSelected.png");
+	m_prevButton->addTouchEventListener(CC_CALLBACK_2(TestScene::prevCallback, this));
+	m_prevButton->setPosition(cocos2d::Vec2(m_prevButton->getContentSize().width / 2, m_prevButton->getContentSize().height / 2));
+	m_prevButton->setScaleX(-1);
+	addChild(m_prevButton);
 
-	navui->setEnabled(true);
-	navui->setVisible(true);
-	addInterface(NavUI::id,navui);
-	navui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.17f));
+	m_prevLabel = cocos2d::ui::Text::create("PREV", "Thonburi", 21);
+	m_prevLabel->setPosition(m_prevButton->getPosition() + cocos2d::Vec2(m_prevButton->getContentSize().width + m_prevLabel->getContentSize().width, 0));
+	addChild(m_prevLabel);
+
+	m_nextButton = cocos2d::ui::Button::create("SkipNormal.png", "SkipSelected.png");
+	m_nextButton->addTouchEventListener(CC_CALLBACK_2(TestScene::nextCallback, this));
+	m_nextButton->setPosition(cocos2d::Vec2(visibleSize.width - m_nextButton->getContentSize().width / 2, m_prevButton->getContentSize().height / 2));
+	addChild(m_nextButton);
+
+	m_nextLabel = cocos2d::ui::Text::create("NEXT", "Thonburi", 21);
+	m_nextLabel->setPosition(m_nextButton->getPosition() - cocos2d::Vec2(m_nextLabel->getContentSize().width + m_nextButton->getContentSize().width, 0));
+	addChild(m_nextLabel);
+
+	m_titleLabel = cocos2d::ui::Text::create("ID", "Thonburi", 21);
+	m_titleLabel->setPosition((m_nextButton->getPosition() + m_prevButton->getPosition()) / 2);
+	addChild(m_titleLabel);
 
 	//Saving UI
 	SavingUI* saveui = new SavingUI();
@@ -63,6 +76,7 @@ bool TestScene::init()
 	saveui->setVisible(false);
 	addInterface(SavingUI::id,saveui);
 	saveui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.67f));
+	//*/
 
 	//TimerUI
 	TimerUI* timerui = new TimerUI();
@@ -72,45 +86,20 @@ bool TestScene::init()
 	timerui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.67f));
 	//*/
 
-	///PlayersListUI
+	//PlayersListUI
 	PlayersListUI* playerslistui = new PlayersListUI();
 	playerslistui->setEnabled(false);
 	playerslistui->setVisible(false);
 	addInterface(PlayersListUI::id,playerslistui);
-	playerslistui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5, visibleSize.height * 0.5));
+	playerslistui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.5f));
 	//*/
 
-	/*/Error UI
-	ErrorUI* errorui = new ErrorUI();
-	auto errorroot = errorui->getRoot();
-	addChild(errorroot);
-	errorroot->setEnabled(false);
-	errorroot->setVisible(false);
-	m_ui[ErrorUI::id] = errorui;
-	errorroot->setPosition(cocos2d::Vec2(visibleSize.width * 0.75, visibleSize.height * 0.25));
-
-	errorui->setRefreshCallback([this, errorui](){
-		
-		errorui->deactivate();
-
-	});
-
-	errorui->setSkipCallback([this, errorui](){
-
-		errorui->deactivate();
-
-	});
-	//*/
-	
-	//
-	auto sprite = cocos2d::Sprite::create("HelloWorld.png");
-	sprite->setScaleX((visibleSize.width / 2 - closeItem->getContentSize().width) / sprite->getContentSize().width);
-	sprite->setScaleY((visibleSize.height / 2 - closeItem->getContentSize().height) / sprite->getContentSize().height);
-	sprite->setPosition(cocos2d::Vec2((visibleSize.width / 2 + closeItem->getPositionX() - closeItem->getContentSize().width / 2) / 2,
-		(visibleSize.height / 2 + closeItem->getPositionY() + closeItem->getContentSize().height / 2) / 2));
-	addChild(sprite, 0);
-
-	sprite->setVisible(false);
+	//DocsListUI
+	DocsListUI* docslistui = new DocsListUI();
+	docslistui->setEnabled(false);
+	docslistui->setVisible(false);
+	addInterface(DocsListUI::id, docslistui);
+	docslistui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.5f));
 	//*/
 
 	//ShopUI
@@ -119,42 +108,45 @@ bool TestScene::init()
 	shopui->setVisible(false);
 	addInterface(ShopUI::id,shopui);
 	shopui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.67f));
+	//*/
 
 	//DownloadUI
 	DownloadUI* dlui = new DownloadUI();
 	dlui->setEnabled(false);
 	dlui->setVisible(false);
 	addInterface(DownloadUI::id,dlui);
-	dlui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.67f));
+	dlui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.5f));
+	//*/
 
 	//WebUI
 	WebUI* webui = new WebUI();
 	webui->setEnabled(false);
 	webui->setVisible(false);
 	addInterface(WebUI::id,webui);
-	webui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.67f));
+	webui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.5f));
+	//*/
 
 	//LogUI
 	LogUI* logui = new LogUI();
 	logui->setEnabled(false);
 	logui->setVisible(false);
 	addInterface(LogUI::id, logui);
-	logui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.67f));
+	logui->setPosition(cocos2d::Vec2(0, 40));
+	//*/
 
 	//activating first UI : 
 	saveui->setEnabled(true);
 	saveui->setVisible(true);
 	currentUI = SavingUI::id;
-	navui->setTitle(currentUI);
+	m_titleLabel->setText(currentUI);
 	
-	m_time = cocos2d::ui::Text::create("", "Arial", 20);
-	m_time->setPosition(cocos2d::Vec2(sprite->getPositionX(), closeItem->getPositionY()));
-	addChild(m_time);
+	m_time = cocos2d::ui::Text::create("", "Thonburi", 20);
+	m_time->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, /*closeItem->getPositionY()*/ visibleSize.height - 20));
+	addChild(m_time, 1);
 
 	g_gameLogic->getLocalDataManager().getEventManager()->subscribe<WkCocos::LocalData::Events::Error>(*this);
-	g_gameLogic->getPlayer().player_events->subscribe<WkCocos::Player::Error>(*this);
+	g_gameLogic->getPlayer().getEventManager()->subscribe<WkCocos::Player::Error>(*this);
 
-	//g_gameLogic->getPlayer().getOnlineDatamgr()->getEventManager()->subscribe<WkCocos::OnlineData::Events::ServerTime>(*this);
 	return true;
 }
 
@@ -171,81 +163,50 @@ void TestScene::onExitTransitionDidStart()
 
 void TestScene::update(float delta)
 {
-	//if (!m_waiting_for_server_time)
-	//{
-	//	g_gameLogic->getPlayer().getServerTime();
-	//	m_waiting_for_server_time = true;
-	//}
 	m_time->setText(WkCocos::ToolBox::itoa(g_gameLogic->getPlayer().getTimermgr()->getServerLocalTime().tm_hour) + ":" +
 		WkCocos::ToolBox::itoa(g_gameLogic->getPlayer().getTimermgr()->getServerLocalTime().tm_min) + ":" +
 		WkCocos::ToolBox::itoa(g_gameLogic->getPlayer().getTimermgr()->getServerLocalTime().tm_sec));
 	Scene::update(delta);
 }
 
-
-void TestScene::receive(const NavUI::Next &nxt)
+void TestScene::nextCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input)
 {
-	auto cur = m_ui.find(currentUI);
-
-	//if we canot find current UI we start again from beginning
-	if (cur == m_ui.end())
+	if (input == cocos2d::ui::Widget::TouchEventType::ENDED)
 	{
-		cur = m_ui.begin();
-	}
+		auto cur = m_ui.find(currentUI);
 
-	cur->second->setEnabled(false);
-	cur->second->setVisible(false);
+		cur->second->setEnabled(false);
+		cur->second->setVisible(false);
 
-	do
-	{
 		if (++cur == m_ui.end())
-		{
 			cur = m_ui.begin();
-		}
-	} while (cur->first == NavUI::id);
-	
-	cur->second->setEnabled(true);
-	cur->second->setVisible(true);
-	currentUI = cur->first;
 
-	NavUI* nav = getInterface<NavUI>(NavUI::id);
-	nav->setTitle(currentUI);
+		cur->second->setEnabled(true);
+		cur->second->setVisible(true);
+		currentUI = cur->first;
+		m_titleLabel->setText(currentUI);
+	}
 }
 
-void TestScene::receive(const NavUI::Prev &prv)
+void TestScene::prevCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input)
 {
-	auto cur = m_ui.find(currentUI);
-
-	//if we canot find current UI we start again from beginning
-	if (cur == m_ui.end())
+	if (input == cocos2d::ui::Widget::TouchEventType::ENDED)
 	{
-		cur = m_ui.begin();
+		auto cur = m_ui.find(currentUI);
+
+		cur->second->setEnabled(false);
+		cur->second->setVisible(false);
+
+		if (cur == m_ui.begin())
+			cur = m_ui.end();
+
+		--cur;
+
+		cur->second->setEnabled(true);
+		cur->second->setVisible(true);
+		currentUI = cur->first;
+		m_titleLabel->setText(currentUI);
 	}
-
-	cur->second->setEnabled(false);
-	cur->second->setVisible(false);
-
-	//reversing iterator
-	auto rcur = std::map<std::string, WkCocos::Interface*>::reverse_iterator(cur);
-	//check for rend after conversion
-	if (rcur == m_ui.rend())
-	{
-		rcur = m_ui.rbegin();
-	}
-
-	while (rcur->first == NavUI::id)
-	{
-		if (++rcur == m_ui.rend())
-		{
-			rcur = m_ui.rbegin();
-		}
-	}
-	rcur->second->setEnabled(true);
-	rcur->second->setVisible(true);
-	currentUI = rcur->first;
-
-	NavUI* nav = getInterface<NavUI>(NavUI::id);
-	nav->setTitle(currentUI);
 }
 
 void TestScene::receive(const WkCocos::Player::Error &PL)
@@ -270,49 +231,33 @@ void TestScene::error_CB(std::string msg)
 {
 	cocos2d::Size visibleSize = cocos2d::Director::getInstance()->getVisibleSize();
 
-	//Error UI. created only when we need it.
 	ErrorUI* errorui = new ErrorUI();
-	addInterface(ErrorUI::id,errorui);
+	addInterface(ErrorUI::id, errorui);
 	errorui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.67f));
 
 	errorui->setRefreshCallback([this, errorui](){
 		errorui->deactivate();
-		//removing UI from scene
 		removeInterface(ErrorUI::id);
-		//displaying navi
-		m_ui[NavUI::id]->setEnabled(true);
-		m_ui[NavUI::id]->setVisible(true);
-
-		NavUI* nav = getInterface<NavUI>(NavUI::id);
-		nav->setTitle(NavUI::id);
 	});
 
 	errorui->setSkipCallback([this, errorui](){
 		errorui->deactivate();
-		//removing UI from scene
 		removeInterface(ErrorUI::id);
-		//displaying navi
-		m_ui[NavUI::id]->setEnabled(true);
-		m_ui[NavUI::id]->setVisible(true);
-
-		NavUI* nav = getInterface<NavUI>(NavUI::id);
-		nav->setTitle(NavUI::id);
 	});
 
 	errorui->activate(msg);
-	
 }
 
-void TestScene::menuCloseCallback(Ref* pSender)
-{
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_WP8) || (CC_TARGET_PLATFORM == CC_PLATFORM_WINRT)
-	MessageBox("You pressed the close button. Windows Store Apps do not implement a close button.", "Alert");
-	return;
-#endif
-
-	cocos2d::Director::getInstance()->end();
-
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-	exit(0);
-#endif
-}
+//void TestScene::menuCloseCallback(Ref* pSender)
+//{
+//#if (CC_TARGET_PLATFORM == CC_PLATFORM_WP8) || (CC_TARGET_PLATFORM == CC_PLATFORM_WINRT)
+//	MessageBox("You pressed the close button. Windows Store Apps do not implement a close button.", "Alert");
+//	return;
+//#endif
+//
+//	cocos2d::Director::getInstance()->end();
+//
+//#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+//	exit(0);
+//#endif
+//}

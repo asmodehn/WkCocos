@@ -82,35 +82,38 @@ bool AppDelegate::applicationDidFinishLaunching() {
     }
 
     // turn on display FPS
-    director->setDisplayStats(true);
+    //director->setDisplayStats(true);
 
     // set FPS. the default value is 1.0/60 if you don't call this
-    director->setAnimationInterval(1.0 / 60);
+    //director->setAnimationInterval(1.0 / 60);
 
     // create a scene. it's an autorelease object
-	LoadingScene* loadscene = LoadingScene::create();
+	m_loadscene = LoadingScene::create();
 
 	//Creating gamelogic and setting player.
-	g_gameLogic.reset( new GameLogic("73a0a556fbecbb4a8dd28728a06d7796f207d017cb6b74e8c9e45973ad487c14", "f7976c94667424a528a4723eb3e4791c24ecf9b36ec770c251b9e039faa04517", [loadscene]()
-	{
-		//We launch loading scene with DLC only after login
-		loadscene->scheduleDLCCheck();
-
-		loadscene->addLoad("HelloWorld.png");
-
-		loadscene->setLoadDoneCallback([](){
-			auto director = cocos2d::Director::getInstance();
-			director->replaceScene(cocos2d::TransitionFade::create(1.0f, TestScene::create()));
-		});
-
-	}));
+	g_gameLogic.reset(new GameLogic("73a0a556fbecbb4a8dd28728a06d7796f207d017cb6b74e8c9e45973ad487c14", "f7976c94667424a528a4723eb3e4791c24ecf9b36ec770c251b9e039faa04517"));
+	g_gameLogic->logic_events.subscribe<GameLogic::Player_LoggedIn>(*this);
 
 	//TODO : improve the flow with a splash screen while login happens
 
     // run
-	director->runWithScene(cocos2d::TransitionFade::create(1.0f, loadscene));
+	director->runWithScene(cocos2d::TransitionFade::create(1.0f, m_loadscene));
 
     return true;
+}
+
+void AppDelegate::receive(const GameLogic::Player_LoggedIn& player_loggedIn)
+{
+	//We launch loading scene with DLC only after login
+	m_loadscene->scheduleDLCCheck();
+
+	m_loadscene->addLoad("HelloWorld.png");
+
+	m_loadscene->setLoadDoneCallback([](){
+		auto director = cocos2d::Director::getInstance();
+		director->replaceScene(cocos2d::TransitionFade::create(1.0f, TestScene::create()));
+	});
+
 }
 
 // This function will be called when the app is inactive. When comes a phone call,it's be invoked too

@@ -44,6 +44,7 @@ public:
 	void receive(const WkCocos::Player::Error &pe);
 	void receive(const WkCocos::Download::Events::Error &de);
 	void receive(const WkCocos::Preload::Events::Error &pe);
+	void receive(const WkCocos::LocalData::Events::Error &ld);
 
 protected:
 

@@ -59,26 +59,6 @@ namespace WkCocos
 
 				}
 
-				entityx::ptr<Comp::GetUsersWithDocs> guwd;
-				for (auto entity : entities->entities_with_components(guwd))
-				{
-					if (guwd->done)
-					{
-						entity.remove<Comp::GetUsersWithDocs>();
-						if (entity.component_mask() == 0)
-						{
-							entity.destroy();
-						}
-					}
-					else if (!guwd->in_progress)
-					{
-						CCLOG("Requesting full list of documents and retrieving their owners");
-						m_stor_service->FindAllDocuments(DB_NAME, guwd->m_collection.c_str(), guwd->m_cb);
-						guwd->in_progress = true;
-					}
-
-				}
-
 				entityx::ptr<Comp::GetUsersKeyValue> gukv;
 				for (auto entity : entities->entities_with_components(gukv))
 				{
@@ -95,8 +75,10 @@ namespace WkCocos
 						CCLOG("Requesting list of documents with needed value and retrieving their owners");
 
 						::App42::Query * query = ::App42::QueryBuilder::BuildQuery(gukv->m_key.c_str(), gukv->m_value, APP42_OP_EQUALS);
+						::App42::Query * querySearch = ::App42::QueryBuilder::BuildQuery("search", true, APP42_OP_EQUALS);
+						::App42::Query * queryFinal = ::App42::QueryBuilder::CompoundOperator(query, APP42_OP_AND, querySearch);
 
-						m_stor_service->FindDocumentsByQueryWithPaging(DB_NAME, gukv->m_collection.c_str(), query, gukv->m_quantity, gukv->m_offset, gukv->m_cb);
+						m_stor_service->FindDocumentsByQueryWithPaging(DB_NAME, gukv->m_collection.c_str(), queryFinal, gukv->m_quantity, gukv->m_offset, gukv->m_cb);
 						gukv->in_progress = true;
 					}
 
@@ -123,6 +105,29 @@ namespace WkCocos
 
 						m_stor_service->FindDocumentsByQueryWithPaging(DB_NAME, guft->m_collection.c_str(), queryCompound, guft->m_quantity, guft->m_offset, guft->m_cb);
 						guft->in_progress = true;
+					}
+
+				}
+
+				entityx::ptr<Comp::AllDocsPaging> adp;
+				for (auto entity : entities->entities_with_components(adp))
+				{
+					if (adp->done)
+					{
+						entity.remove<Comp::AllDocsPaging>();
+						if (entity.component_mask() == 0)
+						{
+							entity.destroy();
+						}
+					}
+					else if (!adp->in_progress)
+					{
+						CCLOG("Requesting list of documents page by page");
+						// following line is added only for debug
+						::App42::App42API::setIsTraceEnabled(true);
+						m_stor_service->FindAllDocuments(DB_NAME, adp->m_collection.c_str(), adp->m_quantity, adp->m_offset, adp->m_cb);
+						::App42::App42API::setIsTraceEnabled(false);
+						adp->in_progress = true;
 					}
 
 				}

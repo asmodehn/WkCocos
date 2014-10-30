@@ -1,7 +1,9 @@
 #ifndef  _APP_GAMELOGIC_H_
 #define  _APP_GAMELOGIC_H_
 
+#include "entityx/entityx.h"
 #include "WkCocos/Helper/GameLogic.h"
+
 #include "WkCocos/Shop/Shop.h"
 
 #include "WkCocosApp/MyPlayer.h"
@@ -11,13 +13,20 @@
 
 //TODO : This used ot be a singleton. but it is not needed, it can be just a global variable.
 // => We should review design in order to include GameLogic as a Helper in Lib ( providing easy access to all managers. )
-class GameLogic
+class GameLogic : public entityx::Receiver<GameLogic>
 {
 	//delegating engine logic to Wkcocos Helper
 	std::unique_ptr<WkCocos::Helper::GameLogic> m_logic;
 
 public:
-	
+
+	struct Player_LoggedIn : entityx::Event < Player_LoggedIn >
+	{
+
+	};
+
+	entityx::EventManager logic_events;
+
 	void localDataError()
 	{
 		CCLOG("LOCAL DATA ERROR");
@@ -50,7 +59,7 @@ public:
 
 
 public:
-	GameLogic(std::string app_access_key, std::string app_secret_key, std::function<void()> online_init_cb);
+	GameLogic(std::string app_access_key, std::string app_secret_key);
 	~GameLogic();
 	
 	//overall game concepts
@@ -58,9 +67,15 @@ public:
 	std::unique_ptr<WkCocos::Shop::Shop> m_shop;
 	std::unique_ptr<MyOptions> m_options;
 
+	void receive(const MyPlayer::LoggedIn& player_loggedin)
+	{
+		logic_events.emit<Player_LoggedIn>();
+	}
+	
 private:
 	//static utility method to run independently of when instance is constructed.
 	static std::unique_ptr<WkCocos::Shop::Assets> shopInit();
+
 };
 
 //global instance

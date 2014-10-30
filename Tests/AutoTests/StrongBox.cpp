@@ -190,8 +190,3 @@ SUITE(StrongBox)
 	//TODO
 
 }
-int main()
-{
-	//TODO improve report
-	return UnitTest::RunAllTests();
-}

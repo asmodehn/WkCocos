@@ -55,18 +55,6 @@ namespace WkCocos
 
 			};
 
-			struct FindUserData : entityx::Component<FindUserData>
-			{
-				FindUserData(std::string userid, std::string m_collection, std::function<void(std::string)> update_cb, std::function<void()> insert_cb);
-
-				bool in_progress;
-				bool done;
-				std::string m_userid;
-				std::string m_collection;
-				std::function<void(void*)> m_cb;
-
-			};
-			
 			struct InsertUserData : entityx::Component<InsertUserData>
 			{
 				InsertUserData(std::string userid, std::string m_collection, std::string user_data, std::function<void(::App42::App42StorageResponse*)> cb);
@@ -82,7 +70,7 @@ namespace WkCocos
 
 			struct LoadUserData : entityx::Component<LoadUserData>
 			{
-				LoadUserData(std::string userid, std::string m_collection, std::function<void(std::string)> cb);
+				LoadUserData(std::string userid, std::string m_collection, std::function<void(::App42::App42UserResponse*)> cb);
 
 				bool in_progress;
 				bool done;
@@ -92,20 +80,9 @@ namespace WkCocos
 
 			};
 
-			struct GetUsersWithDocs : entityx::Component<GetUsersWithDocs>
-			{
-				GetUsersWithDocs(std::string m_collection, std::function<void(std::string)> cb);
-
-				bool in_progress;
-				bool done;
-				std::string m_collection;
-				std::function<void(void*)> m_cb;
-
-			};
-
 			struct GetUsersKeyValue : entityx::Component<GetUsersKeyValue>
 			{
-				GetUsersKeyValue(std::string collection, std::string key, int value, int quantity, int offset, std::function<void(std::string)> cb);
+				GetUsersKeyValue(std::string collection, std::string key, int value, int quantity, int offset, std::function<void(std::map<std::string, std::string>, int)> cb);
 
 				bool in_progress;
 				bool done;
@@ -120,7 +97,7 @@ namespace WkCocos
 
 			struct GetUsersFromTo : entityx::Component<GetUsersFromTo>
 			{
-				GetUsersFromTo(std::string collection, std::string key, int from, int to, int quantity, int offset, std::function<void(std::string)> cb);
+				GetUsersFromTo(std::string collection, std::string key, int from, int to, int quantity, int offset, std::function<void(std::map<std::string, std::string>, int)> cb);
 
 				bool in_progress;
 				bool done;
@@ -140,6 +117,19 @@ namespace WkCocos
 
 				bool in_progress;
 				bool done;
+				std::function<void(void*)> m_cb;
+
+			};
+
+			struct AllDocsPaging : entityx::Component<AllDocsPaging>
+			{
+				AllDocsPaging(std::string collection, int quantity, int offset, std::function<void(std::vector<std::map<std::string, std::string>>)> cb);
+
+				bool in_progress;
+				bool done;
+				std::string m_collection;
+				int m_quantity;
+				int m_offset;
 				std::function<void(void*)> m_cb;
 
 			};

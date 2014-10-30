@@ -6,6 +6,7 @@
 
 #include "WkCocos/Download/Systems/ProgressUpdate.h"
 #include "WkCocos/Preload/Systems/ProgressUpdate.h"
+#include "WkCocosApp/GameLogic.h"
 #include <iostream>
 #include <numeric>
 
@@ -27,6 +28,7 @@ LoadingScene::LoadingScene() : Scene()
 
 	m_downloadManager->getEventManager()->subscribe<WkCocos::Download::Events::Error>(*this);
 	m_preloadManager->getEventManager()->subscribe<WkCocos::Preload::Events::Error>(*this);
+	
 }
 
 LoadingScene::~LoadingScene()
@@ -103,11 +105,12 @@ void LoadingScene::onEnterTransitionDidFinish()
 {
 	//launching update method
 	scheduleUpdate();
+	g_gameLogic->getLocalDataManager().getEventManager()->subscribe<WkCocos::LocalData::Events::Error>(*this);
 }
 
 void LoadingScene::onExitTransitionDidStart()
 {
-
+	
 }
 
 void LoadingScene::addLoad(const std::string& respath, std::vector<std::string> depends_respath)
@@ -223,4 +226,10 @@ void LoadingScene::receive(const WkCocos::Preload::Events::Error &pe)
 	errorui->activate(pe.msg);
 
 	m_loadMan_del_scheduled = true;
+}
+
+void LoadingScene::receive(const WkCocos::LocalData::Events::Error &ld)
+{
+	ErrorUI* errorui = getInterface<ErrorUI>(ErrorUI::id);
+	errorui->activate(ld.msg);
 }

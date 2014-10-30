@@ -20,7 +20,7 @@ LOCAL_SRC_FILES := main.cpp \
                    ../../../../../Classes/App/TimerUI.cpp \
                    ../../../../../Classes/App/PlayersListUI.cpp \
                    ../../../../../Classes/App/DownloadUI.cpp \
-                   ../../../../../Classes/App/NavUI.cpp \
+                   ../../../../../Classes/App/DocsListUI.cpp \
                    ../../../../../Classes/App/WebUI.cpp \
                    ../../../../../Classes/App/LogUI.cpp \
 

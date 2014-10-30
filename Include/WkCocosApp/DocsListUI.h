@@ -1,15 +1,14 @@
-#ifndef __PLAYERSLISTUI_H__
-#define __PLAYERSLISTUI_H__
+#ifndef __DOCSLISTUI_H__
+#define __DOCSLISTUI_H__
 
 #include "cocos/ui/CocosGUI.h"
-
 #include "WkCocos/Interface.h"
 #include "WkCocos/OnlineData/OnlineDataManager.h"
 
 /**
 * This UI is the main menu UI
 */
-class PlayersListUI : public WkCocos::Interface, public entityx::Receiver<PlayersListUI>
+class DocsListUI : public WkCocos::Interface, public entityx::Receiver<DocsListUI>
 {
 public:
 		
@@ -18,30 +17,28 @@ public:
 	/**
 	* Default constructor
 	*/
-	PlayersListUI();
+	DocsListUI();
 
 	/**
 	* Destructor
 	*/
-	virtual ~PlayersListUI();
-	
+	virtual ~DocsListUI();
+
 	void refreshCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input);
 
-	void receive(const WkCocos::OnlineData::Events::PlayersList &pl);
+	void receive(const WkCocos::OnlineData::Events::DocsList &doclist);
 
 protected:
 
-	cocos2d::ui::Button* m_refreshButton;
 	cocos2d::ui::Text* m_refreshLabel;
-	cocos2d::ui::Text* m_enemyLabel;
-	cocos2d::ui::Text* m_enemyData;
 	cocos2d::Size m_widgetSize;
 
-	std::map<std::string, cocos2d::ui::Text*> m_ptb;
+	std::vector<std::map<std::string, cocos2d::ui::Text*>> m_table;
 
 	int m_quantity = 2;
 	int m_offset = 0;
 	int m_pages = 0;
+
 };
 
-#endif // __PLAYERSLISTUI_H__
+#endif // __DOCSLISTUI_H__

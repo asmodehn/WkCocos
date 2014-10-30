@@ -90,7 +90,7 @@ namespace experimental{
         
         void WebView::loadFile(const std::string &fileName)
         {
-            _impl->loadFile(fileName);
+            _impl->loadFile(cocos2d::FileUtils::getInstance()->fullPathForFilename(fileName));
         }
         
         void WebView::stopLoading()

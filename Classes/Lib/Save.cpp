@@ -4,57 +4,54 @@
 
 namespace WkCocos
 {
-	Save::Save(const std::string& saveName, Mode mode)
+	Save::Save(const std::string& saveName, Mode mode, std::string key)
 		: m_name(saveName)
+		, m_key(key)
+		, m_rawData("")
 		, m_onLoading(nullptr)
 		, m_onSaving(nullptr)
-		, m_saveInProgress(false)
-		, m_loadInProgress(false)
+		, m_loaded(0)
+		, m_saved(0)
 	{
 		m_saveModes[static_cast<int>(mode)] = 1;
+
+		//making sure logstream exists.
+		WkCocos::LogStream::create();
 	}
 	
 	Save::~Save()
-	{}
-
-	bool Save::requestLoadData(std::function<void()> loaded_cb, std::string key)
 	{
-		/*	m_localdata->loadPlayerData([=](std::string data)
-		{
-		rapidjson::Document doc;
-		doc.Parse<0>(data.c_str());
-		if (doc.HasParseError())
-		{
-		//if parse error (also empty string), we ignore existing data.
-		doc.SetObject();
-		}
-		set_data_json(doc);
-		});*/
+	}
 
+	bool Save::requestLoadData()
+	{
 		bool loaded = true;
 
 		if (isMode(Mode::ONLINE)) //no encryption online
 		{
-			if (m_onlinedata&& !m_loadInProgress)
+			if (m_onlinedata)
 			{
-				m_loadInProgress = true;
-				m_onlinedata->load(m_user, m_name, [=](std::string data)
+				++m_loaded;
+				m_onlinedata->load(m_user, m_name, [=](std::string docId, std::vector<std::string> data)
 				{
-					m_onLoading(data);
-					CCLOG("user data loaded : %s", data.c_str());
+					m_docId = docId;
+					if (!data.empty())
+					{
+						m_rawData = data.back();
+					}
+					else
+					{
+						m_rawData = "";
+					}
 
-					if (loaded_cb) loaded_cb();
-					m_loadInProgress = false;
-				});
+					--m_loaded;
+					event_manager->emit<Loaded>(getId(),m_name, m_rawData);
+					//CCLOG("user data loaded : %s", data.c_str());
+				},m_key);
 			}
-			else if ( !m_onlinedata)
+			else
 			{
 				LOG_WARNING << "Online load requested but no online manager!" << std::endl;
-				loaded = false;
-			}
-			else if (m_loadInProgress)
-			{
-				LOG_WARNING << "Load already in progress. request ignored" << std::endl;
 				loaded = false;
 			}
 		}
@@ -63,11 +60,14 @@ namespace WkCocos
 		{
 			if (m_localdata)
 			{
-				m_localdata->loadData(m_name, [=](std::string data){
+				++m_loaded;
+				m_localdata->loadData(m_name, [=](std::vector<std::string> data){
+					m_rawData = data.back(); // we only care about last doc ( most recent ? )
+					//deprecated
 					m_onLoading(data);
-
-					if (loaded_cb) loaded_cb();
-				}, key);
+					--m_loaded;
+					event_manager->emit<Loaded>(getId(),m_name, m_rawData);
+				}, m_key);
 			}
 			else
 			{
@@ -79,56 +79,75 @@ namespace WkCocos
 		return loaded;
 	}
 
-	bool Save::requestSaveData(std::function<void()> saved_cb, std::string key)
+	bool Save::requestSaveData(std::string data)
 	{
-		/*	// create document
-		rapidjson::Document doc;
-		doc.SetObject();
-		// must pass an allocator when the object may need to allocate memory
-		rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
-
-		get_data_json(doc, allocator);
-
-		// Get the save string
-		rapidjson::StringBuffer strbuf;
-		rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
-		doc.Accept(writer);
-
-		std::string save = std::string(strbuf.GetString());
-
-		m_localdata->savePlayerData(save);*/
 		bool saved = true;
+		m_rawData = data;
+
+		LOG_WARNING << "requested save of " << m_rawData << std::endl;
 
 		if (isMode(Mode::ONLINE)) //no encryption online
 		{
-			if (m_onlinedata && ! m_saveInProgress)
+			if (m_onlinedata)
 			{
-				m_saveInProgress = true;
-				m_onlinedata->save(m_user, m_name, m_onSaving(), [=](std::string data)
+				++m_saved;
+				if (m_saved == 1) // we process first save only. others will be queued ( and intermediate will be skipped as useless )
 				{
-					//CCLOG("user data saved : %s", data.c_str());
-					if (saved_cb) saved_cb();
-					m_saveInProgress = false;
-				});
+					if (m_docId.size() > 0)
+					{
+						m_onlinedata->save(m_user, m_name, m_docId, m_rawData, [=](std::string saveName, std::string docId, std::string data)
+						{
+							//we do not modify local data to not lose more recent changes.
+							if (--(this->m_saved) == 0) // if last answer came back
+							{
+								//CCLOG("user data saved : %s", data.c_str());
+								this->event_manager->emit<Saved>(this->getId(), this->m_name, data);
+							}
+							else //if we have many saves queued, we cancel all except last one, and we process it
+							{
+								this->m_saved = 0;
+								this->requestSaveData(m_rawData);
+							}
+						}, m_key);
+					}
+					else
+					{
+						m_onlinedata->saveNew(m_user, m_name, m_rawData, [=](std::string saveName, std::string docId, std::string data)
+						{
+							//storing docId to mark creation of save
+							this->m_docId = docId;
+
+							//we do not modify local data to not lose more recent changes.
+							if (--(this->m_saved) == 0) // if last answer came back
+							{
+								//CCLOG("user data saved : %s", data.c_str());
+								this->event_manager->emit<Saved>(this->getId(), this->m_name, data);
+							}
+							else //if we have many saves queued, we cancel all except last one, and we process it
+							{
+								this->m_saved = 0;
+								this->requestSaveData(m_rawData);
+							}
+						}, m_key);
+					}
+				}
 			}
-			else if (! m_onlinedata)
+			else
 			{
 				LOG_WARNING << "Online save requested but no online manager!" << std::endl;
 				saved = false;
 			}
-			else if (m_saveInProgress)
-			{
-				LOG_WARNING << "Save already in progress. request ignored." << std::endl;
-				saved = false;
-			}
 		}
-
-		if (isMode(Mode::OFFLINE))
+		else if (isMode(Mode::OFFLINE))
 		{
 			if (m_localdata)
 			{
-				m_localdata->saveData(m_name, m_onSaving(), key);
-				if (saved_cb) saved_cb();
+				//no queue for local save at the moment as local save is assumed (wrongly) synchronous for now.
+				++m_saved;
+				m_localdata->saveData(m_name, m_rawData, m_key);
+				//BUG : Save is not yet saved here...
+				event_manager->emit<Saved>(getId(), m_name, m_rawData);
+				--m_saved;
 			}
 			else
 			{
@@ -141,7 +160,7 @@ namespace WkCocos
 		
 	}
 
-	bool Save::requestDeleteData(std::function<void()> delete_cb)
+	bool Save::requestDeleteData()
 	{
 		bool deleteSave = true;
 		if (isMode(Mode::ONLINE))
@@ -153,7 +172,10 @@ namespace WkCocos
 		{
 			if (m_localdata)
 			{
-				m_localdata->deleteData(m_name, [](std::string){});
+				m_localdata->deleteData(m_name, [=](std::string data){
+					//ignoring data...
+					event_manager->emit<Deleted>(getId());
+				});
 			}
 			else
 			{

@@ -1,7 +1,7 @@
 #include "WkCocosApp/GameLogic.h"
 #include "WkCocos/Shop/Assets.h"
 
-GameLogic::GameLogic(std::string app_access_key, std::string app_secret_key, std::function<void()> online_init_cb)
+GameLogic::GameLogic(std::string app_access_key, std::string app_secret_key)
 : m_player()
 , m_shop()
 {
@@ -25,9 +25,12 @@ GameLogic::GameLogic(std::string app_access_key, std::string app_secret_key, std
 			return "pass_" + userid;
 		}
 		, m_logic->getOnlineDataManager()
-		, online_init_cb
 	));
 
+	m_player->getEventManager()->subscribe<MyPlayer::LoggedIn>(*this);
+	m_player->login();
+
+	
 	//localData manager is created synchronously. we can alreayd access it
 	m_options.reset(new MyOptions(m_logic->getLocalDataManager()));
 }
