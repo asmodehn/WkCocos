@@ -8,8 +8,8 @@ namespace WkCocos
 		: m_name(saveName)
 		, m_key(key)
 		, m_rawData("")
-		, m_onLoading(nullptr)
-		, m_onSaving(nullptr)
+		, m_onLoading()
+		, m_onSaving()
 		, m_loaded(0)
 		, m_saved(0)
 	{
@@ -64,7 +64,7 @@ namespace WkCocos
 				m_localdata->loadData(m_name, [=](std::vector<std::string> data){
 					m_rawData = data.back(); // we only care about last doc ( most recent ? )
 					//deprecated
-					m_onLoading(data);
+					m_onLoading(m_rawData);
 					--m_loaded;
 					event_manager->emit<Loaded>(getId(),m_name, m_rawData);
 				}, m_key);
