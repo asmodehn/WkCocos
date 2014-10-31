@@ -47,7 +47,9 @@ namespace WkCocos
 							events->emit<Events::Error>("user create");
 							entity.remove<Comp::Create>();
 							if (entity.component_mask() == 0)
-								entity.destroy();
+							{
+								//entity.destroy();
+							}
 						}
 					}
 
@@ -78,7 +80,9 @@ namespace WkCocos
 							events->emit<Events::Error>("user login");
 							entity.remove<Comp::Login>();
 							if (entity.component_mask() == 0)
-								entity.destroy();
+							{
+								//entity.destroy();
+							}
 						}
 					}
 
@@ -112,7 +116,9 @@ namespace WkCocos
 							events->emit<Events::Error>("user data load");
 							entity.remove<Comp::LoadUserData>();
 							if (entity.component_mask() == 0)
-								entity.destroy();
+							{
+								//entity.destroy();
+							}
 						}
 					}
 

@@ -47,7 +47,9 @@ namespace WkCocos
 							events->emit<Events::Error>("server time");
 							entity.remove<Comp::ServerTime>();
 							if (entity.component_mask() == 0)
-								entity.destroy();
+							{
+								//entity.destroy();
+							}
 						}
 					}
 

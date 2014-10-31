@@ -45,7 +45,9 @@ namespace WkCocos
 							events->emit<Events::Error>("update user data");
 							entity.remove<Comp::UpdateUserData>();
 							if (entity.component_mask() == 0)
-								entity.destroy();
+							{
+								//entity.destroy();
+							}
 						}
 					}
 
@@ -75,7 +77,9 @@ namespace WkCocos
 							events->emit<Events::Error>("insert user data");
 							entity.remove<Comp::InsertUserData>();
 							if (entity.component_mask() == 0)
-								entity.destroy();
+							{
+								//entity.destroy();
+							}
 						}
 					}
 
@@ -110,7 +114,9 @@ namespace WkCocos
 							events->emit<Events::Error>("get data by key and value");
 							entity.remove<Comp::GetUsersKeyValue>();
 							if (entity.component_mask() == 0)
-								entity.destroy();
+							{
+								//entity.destroy();
+							}
 						}
 					}
 
@@ -145,7 +151,9 @@ namespace WkCocos
 							events->emit<Events::Error>("get data by query");
 							entity.remove<Comp::GetUsersFromTo>();
 							if (entity.component_mask() == 0)
-								entity.destroy();
+							{
+								//entity.destroy();
+							}
 						}
 					}
 
@@ -164,10 +172,7 @@ namespace WkCocos
 					else if (!adp->in_progress)
 					{
 						CCLOG("Requesting list of documents page by page");
-						// following line is added only for debug
-						::App42::App42API::setIsTraceEnabled(true);
 						m_stor_service->FindAllDocuments(DB_NAME, adp->m_collection.c_str(), adp->m_quantity, adp->m_offset, adp->m_cb);
-						//::App42::App42API::setIsTraceEnabled(false);
 						adp->in_progress = true;
 					}
 					else
@@ -178,7 +183,9 @@ namespace WkCocos
 							events->emit<Events::Error>("docs list");
 							entity.remove<Comp::AllDocsPaging>();
 							if (entity.component_mask() == 0)
-								entity.destroy();
+							{
+								//entity.destroy();
+							}
 						}
 					}
 

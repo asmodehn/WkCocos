@@ -24,6 +24,9 @@ namespace WkCocos
 			, system_manager(entityx::SystemManager::make(entity_manager, event_manager))
 		{
 			::App42::App42API::Initialize(app_access_key, app_secret_key);
+#ifdef _DEBUG
+			::App42::App42API::setIsTraceEnabled(true);
+#endif
 			system_manager->add<Systems::User>();
 			system_manager->add<Systems::Storage>();
 			system_manager->add<Systems::Timer>();
