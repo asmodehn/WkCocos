@@ -30,14 +30,19 @@ namespace WkCocos
 		, m_loggingin(0)
 	{
 		// Saves
-		Save* m_moreData = new Save(moreSaveName, Save::Mode::ONLINE);
-		Save* m_timerData = new Save(timerSaveName, Save::Mode::ONLINE);
-		m_moreData->setLocalDataMgr(m_localdata);
-		m_moreData->setOnlineDataMgr(m_onlinedata);
-		m_timerData->setLocalDataMgr(m_localdata);
-		m_timerData->setOnlineDataMgr(m_onlinedata);
-		m_save.insert(make_pair(moreSaveName, m_moreData));
-		m_save.insert(make_pair(timerSaveName, m_timerData));
+		Save* timerData = new Save(timerSaveName, Save::Mode::ONLINE);
+		timerData->setLocalDataMgr(m_localdata);
+		timerData->setOnlineDataMgr(m_onlinedata);
+		m_save.insert(make_pair(timerSaveName, timerData));
+		Save::getEventManager()->subscribe<Save::Loaded>(*this);
+		Save::getEventManager()->subscribe<Save::Saved>(*this);
+
+		//Exemple of additional save for player : 
+		//Save* moreData = new Save(moreSaveName, Save::Mode::ONLINE);
+		//moreData->setLocalDataMgr(m_localdata);
+		//moreData->setOnlineDataMgr(m_onlinedata);
+		//m_save.insert(make_pair(moreSaveName, moreData));
+
 		Save::getEventManager()->subscribe<Save::Loaded>(*this);
 		Save::getEventManager()->subscribe<Save::Saved>(*this);
 
