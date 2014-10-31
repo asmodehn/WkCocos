@@ -11,7 +11,7 @@
 #include <fstream>
 
 #define DB_NAME "PUBLIC"
-#define TIMEOUT 3.0
+#define TIMEOUT 10.0
 
 namespace WkCocos
 {
