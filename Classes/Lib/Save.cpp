@@ -43,7 +43,8 @@ namespace WkCocos
 					{
 						m_rawData = "";
 					}
-
+					//deprecated
+					if ( m_onLoading) m_onLoading(m_rawData);
 					--m_loaded;
 					event_manager->emit<Loaded>(getId(),m_name, m_rawData);
 					//CCLOG("user data loaded : %s", data.c_str());
@@ -64,7 +65,7 @@ namespace WkCocos
 				m_localdata->loadData(m_name, [=](std::vector<std::string> data){
 					m_rawData = data.back(); // we only care about last doc ( most recent ? )
 					//deprecated
-					m_onLoading(m_rawData);
+					if (m_onLoading) m_onLoading(m_rawData);
 					--m_loaded;
 					event_manager->emit<Loaded>(getId(),m_name, m_rawData);
 				}, m_key);
