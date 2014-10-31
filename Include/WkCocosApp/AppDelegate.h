@@ -53,7 +53,7 @@ private:
 	/**
 	* Log appender: Console
 	*/
-	WkCocos::CLogAppender*		m_consoleApp;
+	WkCocos::CCocosLogAppender*	m_consoleApp;
 
 	/**
 	* Log appender: File
