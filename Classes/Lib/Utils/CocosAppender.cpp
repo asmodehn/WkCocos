@@ -23,6 +23,7 @@ namespace WkCocos
 		
 		// setup bg
 		bg->setTouchEnabled(false);
+		// warning: deprecated call
 		bg->setSize(root->getContentSize());
 		bg->setBackGroundColorType(cocos2d::ui::Layout::BackGroundColorType::SOLID);
 		bg->setBackGroundColor(cocos2d::Color3B(20, 20, 20));
@@ -35,6 +36,7 @@ namespace WkCocos
 		_log->setTouchEnabled(false);
 		_log->setItemModel(_model);
 		_log->pushBackDefaultItem();
+		// warning: deprecated call
 		_log->setSize(root->getContentSize());
 		_log->setBackGroundColorType(cocos2d::ui::Layout::BackGroundColorType::SOLID);
 		_log->setBackGroundColor(cocos2d::Color3B(20, 20, 20));
@@ -42,6 +44,7 @@ namespace WkCocos
 
 		// check
 		toggle->setTouchEnabled(true);
+		// warning: deprecated call
 		toggle->setSize(cocos2d::Size(200, 200));
 		if (!res.m_textureName[CheckBoxRes::BG].empty())
 		{
@@ -86,7 +89,7 @@ namespace WkCocos
 
 		_log->pushBackDefaultItem();
 		cocos2d::ui::TextBMFont* line = static_cast<cocos2d::ui::TextBMFont*>(_log->getItem(_log->getItems().size() - 1));
-
+		// warning: deprecated call
 		line->setText(output);
 
 		_log->jumpToBottom();

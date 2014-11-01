@@ -55,11 +55,13 @@ TimerUI::~TimerUI()
 
 void TimerUI::receive(const WkCocos::Timer::Events::TimerUpdate &tu)
 {
+	// warning: deprecated call
 	m_countLabel->setText(WkCocos::ToolBox::itoa(tu.getTimeLeft()) + " sec");
 }
 
 void TimerUI::receive(const WkCocos::Timer::Events::AlarmOff &ao)
 {
+	// warning: deprecated call
 	m_countLabel->setText(ao.id + " alarm off");
 }
 

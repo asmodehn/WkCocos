@@ -9,7 +9,7 @@
 #include "WkCocosApp/DocsListUI.h"
 #include "WkCocosApp/WebUI.h"
 #include "WkCocosApp/LogUI.h"
-
+#include "WkCocosApp/GameUI.h"
 #include "WkCocosApp/GameLogic.h"
 
 #include "ui/CocosGUI.h"
@@ -74,7 +74,7 @@ bool TestScene::init()
 	SavingUI* saveui = new SavingUI();
 	saveui->setEnabled(false);
 	saveui->setVisible(false);
-	addInterface(SavingUI::id,saveui);
+	addInterface(SavingUI::id, saveui);
 	saveui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.67f));
 	//*/
 
@@ -82,7 +82,7 @@ bool TestScene::init()
 	TimerUI* timerui = new TimerUI();
 	timerui->setEnabled(false);
 	timerui->setVisible(false);
-	addInterface(TimerUI::id,timerui);
+	addInterface(TimerUI::id, timerui);
 	timerui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.67f));
 	//*/
 
@@ -90,7 +90,7 @@ bool TestScene::init()
 	PlayersListUI* playerslistui = new PlayersListUI();
 	playerslistui->setEnabled(false);
 	playerslistui->setVisible(false);
-	addInterface(PlayersListUI::id,playerslistui);
+	addInterface(PlayersListUI::id, playerslistui);
 	playerslistui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.5f));
 	//*/
 
@@ -106,7 +106,7 @@ bool TestScene::init()
 	ShopUI* shopui = new ShopUI();
 	shopui->setEnabled(false);
 	shopui->setVisible(false);
-	addInterface(ShopUI::id,shopui);
+	addInterface(ShopUI::id, shopui);
 	shopui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.67f));
 	//*/
 
@@ -114,7 +114,7 @@ bool TestScene::init()
 	DownloadUI* dlui = new DownloadUI();
 	dlui->setEnabled(false);
 	dlui->setVisible(false);
-	addInterface(DownloadUI::id,dlui);
+	addInterface(DownloadUI::id, dlui);
 	dlui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.5f));
 	//*/
 
@@ -122,7 +122,7 @@ bool TestScene::init()
 	WebUI* webui = new WebUI();
 	webui->setEnabled(false);
 	webui->setVisible(false);
-	addInterface(WebUI::id,webui);
+	addInterface(WebUI::id, webui);
 	webui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.5f));
 	//*/
 
@@ -134,10 +134,19 @@ bool TestScene::init()
 	logui->setPosition(cocos2d::Vec2(0, 40));
 	//*/
 
+	//GameUI
+	GameUI* gameui = new GameUI();
+	gameui->setEnabled(false);
+	gameui->setVisible(false);
+	addInterface(GameUI::id, gameui);
+	gameui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.5f));
+	//*/
+
 	//activating first UI : 
 	saveui->setEnabled(true);
 	saveui->setVisible(true);
 	currentUI = SavingUI::id;
+	// warning: deprecated call
 	m_titleLabel->setText(currentUI);
 	
 	m_time = cocos2d::ui::Text::create("", "Thonburi", 20);
@@ -163,6 +172,7 @@ void TestScene::onExitTransitionDidStart()
 
 void TestScene::update(float delta)
 {
+	// warning: deprecated call
 	m_time->setText(WkCocos::ToolBox::itoa(g_gameLogic->getPlayer().getTimermgr()->getServerLocalTime().tm_hour) + ":" +
 		WkCocos::ToolBox::itoa(g_gameLogic->getPlayer().getTimermgr()->getServerLocalTime().tm_min) + ":" +
 		WkCocos::ToolBox::itoa(g_gameLogic->getPlayer().getTimermgr()->getServerLocalTime().tm_sec));
@@ -184,6 +194,7 @@ void TestScene::nextCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::Touch
 		cur->second->setEnabled(true);
 		cur->second->setVisible(true);
 		currentUI = cur->first;
+		// warning: deprecated call
 		m_titleLabel->setText(currentUI);
 	}
 }
@@ -205,6 +216,7 @@ void TestScene::prevCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::Touch
 		cur->second->setEnabled(true);
 		cur->second->setVisible(true);
 		currentUI = cur->first;
+		// warning: deprecated call
 		m_titleLabel->setText(currentUI);
 	}
 }

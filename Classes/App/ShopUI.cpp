@@ -144,6 +144,7 @@ void ShopUI::refreshCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::Touch
 void ShopUI::receive(const WkCocos::Shop::Shop::CurrencyBalanceChanged& cbc)
 {
 	auto curtext = m_curMainLabel.at(cbc.m_virtualCurrency.itemid);
+	// warning: deprecated call
 	curtext->setText(WkCocos::ToolBox::itoa(cbc.m_balance) + cbc.m_virtualCurrency.name);
 }
 
@@ -203,6 +204,7 @@ void ShopUI::receive(const WkCocos::Shop::Shop::MarketItemsRefreshed& mir)
 				auto txtlbl = m_curPackLabel.find(p->itemid);
 				if (txtlbl != m_curPackLabel.end())
 				{ //label already exists
+					// warning: deprecated call
 					txtlbl->second->setText(p->name);
 				}
 				else
@@ -219,6 +221,7 @@ void ShopUI::receive(const WkCocos::Shop::Shop::MarketItemsRefreshed& mir)
 				if (pricelbl != m_curPriceLabel.end())
 				{ //label already exists
 					CCLOG("Setting pack price at : %s", p->marketPrice.c_str());
+					// warning: deprecated call
 					pricelbl->second->setText(p->marketPrice);
 				}
 				else

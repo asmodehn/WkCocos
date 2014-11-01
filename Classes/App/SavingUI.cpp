@@ -72,10 +72,12 @@ void SavingUI::update(float delta)
 {
 	if (m_gemLabel->isVisible())
 	{
+		// warning: deprecated call
 		m_gemLabel->setText(WkCocos::ToolBox::itoa(g_gameLogic->getPlayer().m_gem.get<int>()) + " GEM");
 	}
 	if (m_goldLabel->isVisible())
 	{
+		// warning: deprecated call
 		m_goldLabel->setText(WkCocos::ToolBox::itoa(g_gameLogic->getPlayer().m_gold.get<int>()) + " GOLD");
 	}
 

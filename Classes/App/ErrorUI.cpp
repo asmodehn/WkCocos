@@ -41,6 +41,7 @@ ErrorUI::ErrorUI() : Interface()
 
 void ErrorUI::activate(std::string msg)
 {
+	// warning: deprecated call
 	m_label->setText(msg);
 	m_widget->setVisible(true);
 	m_widget->setEnabled(true);

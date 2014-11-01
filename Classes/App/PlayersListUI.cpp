@@ -110,7 +110,9 @@ void PlayersListUI::receive(const WkCocos::OnlineData::Events::PlayersList &pl)
 			playertextbutton->addTouchEventListener (
 				[=](cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input) {
 					if (input == cocos2d::ui::Widget::TouchEventType::ENDED) {
+						// warning: deprecated call
 						m_enemyData->setText(gems + " GEMS and " + gold + " GOLD");
+						// warning: deprecated call
 						m_enemyLabel->setText("player " + enemyName + " has");
 					}
 				}
@@ -121,5 +123,6 @@ void PlayersListUI::receive(const WkCocos::OnlineData::Events::PlayersList &pl)
 		}
 	}
 	m_pages = (int)round((float)listSize / (float)m_quantity);
+	// warning: deprecated call
 	m_refreshLabel->setText("page " + WkCocos::ToolBox::itoa(m_offset / m_quantity + 1) + "/" + WkCocos::ToolBox::itoa(m_pages));
 }

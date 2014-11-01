@@ -140,7 +140,7 @@ void DocsListUI::receive(const WkCocos::OnlineData::Events::DocsList &doclist)
 
 			m_table.push_back(line);
 		}
-
+		// warning: deprecated call
 		m_refreshLabel->setText("page " + WkCocos::ToolBox::itoa(++m_pages));
 	}
 	else
