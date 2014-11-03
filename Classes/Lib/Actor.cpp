@@ -40,8 +40,12 @@ namespace WkCocos
 	
 	Actor::~Actor()
 	{
-		//removing myself from actors list
-		actors.erase(m_id);
+		//removing myself from actors list if needed
+		std::unordered_map<ActorID, Actor*>::iterator meit = actors.find(m_id);
+		if (actors.end() != meit)
+		{//id found
+			actors.erase(meit);
+		}
 	}
 
 	ActorID Actor::getId()
