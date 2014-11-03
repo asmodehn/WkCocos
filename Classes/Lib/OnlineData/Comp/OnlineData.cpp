@@ -228,6 +228,8 @@ namespace WkCocos
 						//event_emitter->emit<Events::ServerTime>(userdata->app42Timer.currentTime);
 						callback(userdata->app42Timer.currentTime);
 					}
+
+					done = true;
 				};
 			}
 
