@@ -114,6 +114,15 @@ namespace WkCocos
 			{}
 		};
 
+		bool isSaved() const
+		{
+			bool allsaved = true;
+			for (auto s : m_save)
+			{
+				allsaved = allsaved && s.second->isSaved();
+			}
+			return allsaved;
+		}
 		
 		inline const std::string& getUser() const { return m_user; }
 

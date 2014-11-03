@@ -55,11 +55,11 @@ namespace WkCocos
 		*/
 		virtual ~Save();
 		
-		bool isLoaded() {
+		bool isLoaded() const {
 			return 0 == m_loaded;
 		}
 
-		bool isSaved() {
+		bool isSaved() const {
 			return 0 == m_saved;
 		}
 
