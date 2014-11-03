@@ -11,7 +11,7 @@
 /**
 * This is the game player
 */
-class MyPlayer : public WkCocos::Actor, public entityx::Receiver<MyPlayer>
+class MyPlayer : public WkCocos::Actor
 {
 	//delegate
 	WkCocos::Player m_player;

@@ -27,7 +27,7 @@ namespace WkCocos
 		}
 	};
 
-	class Actor
+	class Actor : public entityx::Receiver<Actor>
 	{
 		static std::unordered_map<ActorID, Actor *> actors;
 		//simple random number generators (no need for seed here)

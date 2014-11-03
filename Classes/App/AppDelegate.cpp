@@ -27,7 +27,7 @@ AppDelegate::AppDelegate()
 
 	WkCocos::LogStream::create();
 
-	m_consoleApp = new WkCocos::CLogAppender(); //doesnt print in device console.
+	m_consoleApp = new WkCocos::CCocosLogAppender();
 	m_fileApp = new WkCocos::FileLogAppender(FileUtils::getInstance()->getWritablePath() + "my.log");
 
 	m_consoleApp->setLevel(WkCocos::loglevel::Core_LogInfo);

@@ -204,7 +204,13 @@ namespace WkCocos
 						}
 						cb(doc, (int)firstStorage->recordCount);
 					}
-					else
+					else if (404  == userdata->httpErrorCode && 2608 == userdata->appErrorCode)
+					{
+						// emulate no user found
+						// game logic needs to know when request failed.
+						cb(doc, 0);
+					}
+					else// if request failed,
 					{
 						CCLOG("\nerrordetails:%s", userdata->errorDetails.c_str());
 						CCLOG("\nerrorMessage:%s", userdata->errorMessage.c_str());

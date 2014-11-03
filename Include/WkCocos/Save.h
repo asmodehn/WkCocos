@@ -55,11 +55,11 @@ namespace WkCocos
 		*/
 		virtual ~Save();
 		
-		bool isLoaded() {
+		bool isLoaded() const {
 			return 0 == m_loaded;
 		}
 
-		bool isSaved() {
+		bool isSaved() const {
 			return 0 == m_saved;
 		}
 
@@ -151,7 +151,7 @@ namespace WkCocos
 		* Register callback emptying the save string
 		* DEPRECATED
 		*/
-		WKCOCOS_DEPRECATED_ATTRIBUTE inline void registerLoadingCallback(std::function<void(std::vector<std::string>)> onLoading) { m_onLoading = onLoading; }
+		WKCOCOS_DEPRECATED_ATTRIBUTE inline void registerLoadingCallback(std::function<void(std::string)> onLoading) { m_onLoading = onLoading; }
 
 		/**
 		* Test if a mode is active
@@ -240,7 +240,7 @@ namespace WkCocos
 		/**
 		* Callback function to empty save
 		*/
-		WKCOCOS_DEPRECATED_ATTRIBUTE std::function<void(std::vector<std::string>)>	m_onLoading;
+		WKCOCOS_DEPRECATED_ATTRIBUTE std::function<void(std::string)>	m_onLoading;
 
 		/**
 		* incremented by load request, decremented by loaded response

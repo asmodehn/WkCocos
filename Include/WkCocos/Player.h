@@ -23,7 +23,7 @@ namespace WkCocos
 	/**
 	* Hold the player information.
 	*/
-	class Player : public Actor, public entityx::Receiver<Player>
+	class Player : public Actor
 	{
 	public:
 		
@@ -114,6 +114,15 @@ namespace WkCocos
 			{}
 		};
 
+		bool isSaved() const
+		{
+			bool allsaved = true;
+			for (auto s : m_save)
+			{
+				allsaved = allsaved && s.second->isSaved();
+			}
+			return allsaved;
+		}
 		
 		inline const std::string& getUser() const { return m_user; }
 
@@ -154,13 +163,11 @@ namespace WkCocos
 		/**
 		* request a Save
 		*/
-		void saveData();
-
+		bool saveData();
 		/**
 		* request a Load
 		*/
-		void loadData();
-
+		bool loadData();
 		/**
 		* Receive data loaded
 		*/
