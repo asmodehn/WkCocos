@@ -134,7 +134,7 @@ bool TestScene::init()
 	logui->setPosition(cocos2d::Vec2(0, 40));
 	//*/
 
-	//GameUI
+	/*//GameUI
 	GameUI* gameui = new GameUI();
 	gameui->setEnabled(false);
 	gameui->setVisible(false);
