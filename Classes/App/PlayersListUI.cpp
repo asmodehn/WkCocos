@@ -48,8 +48,6 @@ PlayersListUI::PlayersListUI()
 	}
 	if (g_gameLogic->getPlayer().getOnlineDatamgr()) {
 		g_gameLogic->getPlayer().getOnlineDatamgr()->getEventManager()->subscribe<WkCocos::OnlineData::Events::PlayersList>(*this);
-		//g_gameLogic->getPlayer().getUsersKeyValue("currency.gold", 7711, m_quantity, m_offset);
-		//g_gameLogic->getPlayer().getUsersFromTo("currency.gold", 1, 999999, m_quantity, m_offset);
 	}
 }
 

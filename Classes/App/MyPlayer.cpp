@@ -87,11 +87,15 @@ bool MyPlayer::getAllDocsPaging(int quantity, int offset)
 	return m_player.getAllDocsPaging(SAVENAME, quantity, offset);
 }
 
+bool MyPlayer::getUsersKeyValue(std::string key, int value, int quantity, int offset)
+{
+	return m_player.getUsersKeyValue(SAVENAME, key, value, quantity, offset);
+}
+
 bool MyPlayer::getUsersFromTo(std::string key, int from, int to, int quantity, int offset)
 {
 	return m_player.getUsersFromTo(SAVENAME, key, from, to, quantity, offset);
 }
-
 
 void MyPlayer::receive(const WkCocos::Player::LoggedIn& loggedin)
 {

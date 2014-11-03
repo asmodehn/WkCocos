@@ -42,7 +42,7 @@ namespace WkCocos
 					else
 					{
 						c->life_time += dt;
-						if (c->life_time > TIMEOUT)
+						if (c->life_time > TIMEOUT && !c->timeout) // make sure error is emitted only once before i find out how to stop entity
 						{
 							c->timeout = true;
 							events->emit<Events::Error>(entity.id(), "user create");
@@ -71,7 +71,7 @@ namespace WkCocos
 					else
 					{
 						l->life_time += dt;
-						if (l->life_time > TIMEOUT)
+						if (l->life_time > TIMEOUT && !l->timeout) // make sure error is emitted only once before i find out how to stop entity
 						{
 							l->timeout = true;
 							events->emit<Events::Error>(entity.id(), "user login");
@@ -103,7 +103,7 @@ namespace WkCocos
 					else
 					{
 						lud->life_time += dt;
-						if (lud->life_time > TIMEOUT)
+						if (lud->life_time > TIMEOUT && !lud->timeout) // make sure error is emitted only once before i find out how to stop entity
 						{
 							lud->timeout = true;
 							events->emit<Events::Error>(entity.id(), "user data load");

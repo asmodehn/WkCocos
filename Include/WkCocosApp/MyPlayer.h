@@ -100,6 +100,8 @@ public:
 
 	bool getAllDocsPaging(int quantity, int offset);
 
+	bool getUsersKeyValue(std::string key, int value, int quantity, int offset);
+
 	bool getUsersFromTo(std::string key, int from, int to, int quantity, int offset);
 
 	std::shared_ptr<WkCocos::OnlineData::OnlineDataManager> getOnlineDatamgr()

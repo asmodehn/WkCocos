@@ -40,10 +40,10 @@ namespace WkCocos
 					else
 					{
 						uud->life_time += dt;
-						if (uud->life_time > 0.5)
+						if (uud->life_time > TIMEOUT && !uud->timeout) // make sure error is emitted only once before i find out how to stop entity
 						{
 							uud->timeout = true;
-							events->emit<Events::Error>( entity.id() ,"update user data");
+							events->emit<Events::Error>(entity.id(), "update user data");
 						}
 					}
 
@@ -68,10 +68,10 @@ namespace WkCocos
 					else
 					{
 						iud->life_time += dt;
-						if (iud->life_time > TIMEOUT)
+						if (iud->life_time > TIMEOUT && !iud->timeout) // make sure error is emitted only once before i find out how to stop entity
 						{
 							iud->timeout = true;
-							events->emit<Events::Error>(entity.id() ,"insert user data");
+							events->emit<Events::Error>(entity.id(), "insert user data");
 						}
 					}
 
@@ -92,16 +92,14 @@ namespace WkCocos
 						CCLOG("Requesting list of documents with needed value and retrieving their owners");
 
 						::App42::Query * query = ::App42::QueryBuilder::BuildQuery(gukv->m_key.c_str(), gukv->m_value, APP42_OP_EQUALS);
-						::App42::Query * querySearch = ::App42::QueryBuilder::BuildQuery("search", true, APP42_OP_EQUALS);
-						::App42::Query * queryFinal = ::App42::QueryBuilder::CompoundOperator(query, APP42_OP_AND, querySearch);
 
-						m_stor_service->FindDocumentsByQueryWithPaging(DB_NAME, gukv->m_collection.c_str(), queryFinal, gukv->m_quantity, gukv->m_offset, gukv->m_cb);
+						m_stor_service->FindDocumentsByQueryWithPaging(DB_NAME, gukv->m_collection.c_str(), query, gukv->m_quantity, gukv->m_offset, gukv->m_cb);
 						gukv->in_progress = true;
 					}
 					else
 					{
 						gukv->life_time += dt;
-						if (gukv->life_time > TIMEOUT)
+						if (gukv->life_time > TIMEOUT && !gukv->timeout) // make sure error is emitted only once before i find out how to stop entity
 						{
 							gukv->timeout = true;
 							events->emit<Events::Error>(entity.id(), "get data by key and value");
@@ -134,7 +132,7 @@ namespace WkCocos
 					else
 					{
 						guft->life_time += dt;
-						if (guft->life_time > TIMEOUT)
+						if (guft->life_time > TIMEOUT && !guft->timeout) // make sure error is emitted only once before i find out how to stop entity
 						{
 							guft->timeout = true;
 							events->emit<Events::Error>(entity.id(), "get data by query");
@@ -162,7 +160,7 @@ namespace WkCocos
 					else
 					{
 						adp->life_time += dt;
-						if (adp->life_time > TIMEOUT)
+						if (adp->life_time > TIMEOUT && !adp->timeout) // make sure error is emitted only once before i find out how to stop entity
 						{
 							adp->timeout = true;
 							events->emit<Events::Error>(entity.id(), "docs list");
