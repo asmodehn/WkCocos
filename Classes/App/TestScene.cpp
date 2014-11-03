@@ -153,6 +153,7 @@ bool TestScene::init()
 	m_time->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, /*closeItem->getPositionY()*/ visibleSize.height - 20));
 	addChild(m_time, 1);
 
+	g_gameLogic->getOnlineDataManager().getEventManager()->subscribe<WkCocos::OnlineData::Events::Error>(*this);
 	g_gameLogic->getLocalDataManager().getEventManager()->subscribe<WkCocos::LocalData::Events::Error>(*this);
 	g_gameLogic->getPlayer().getEventManager()->subscribe<WkCocos::Player::Error>(*this);
 
@@ -224,37 +225,81 @@ void TestScene::prevCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::Touch
 void TestScene::receive(const WkCocos::Player::Error &PL)
 {
 	std::string errmsg = PL.m_component + " : " + PL.m_code + " - " + PL.m_message;
-	auto errui = getInterface<ErrorUI>(ErrorUI::id);
-	errui->activate(errmsg);
-	errui->setVisible(true);
-	errui->setEnabled(true);
+
+	/**
+	* Handling all possible Player Errors here
+	*/
+	if (PL.m_component == "" && PL.m_code == "")
+	{
+		error_CB(errmsg
+			, [=](){
+		}
+			, [=](){
+		});
+	}
 }
 
 void TestScene::receive(const WkCocos::LocalData::Events::Error &LD)
 {
-	auto errui = getInterface<ErrorUI>(ErrorUI::id);
-	errui->activate(LD.msg);
-	errui->setVisible(true);
-	errui->setEnabled(true);
+	/**
+	* Handling all possible Local Errors here
+	*/
+	//if (LD.httpErrorCode == 4 && LD.app42ErrorCode == 56)
+	{
+
+		error_CB(LD.msg
+			, [=](){
+		}
+			, [=](){
+		});
+	}
 }
 
+void TestScene::receive(const WkCocos::OnlineData::Events::Error &OD)
+{
+	std::stringstream errormsg;
+	errormsg << "HTTP " << OD.httpErrorCode << std::endl;
+	errormsg << "App42 " << OD.app42ErrorCode << std::endl;
+	errormsg << OD.errorMessage << std::endl;
+	errormsg << OD.errorDetails << std::endl;
 
-void TestScene::error_CB(std::string msg)
+	/**
+	* Handling all possible Online Errors here
+	*/
+	if (OD.httpErrorCode == -1 && OD.app42ErrorCode == 0) 
+	{	// could not resolve host : api.shephertz.com; Host not found
+		// unknown SSL protocol error in connection to api.shephertz.com:443
+		error_CB(errormsg.str()
+			,[=](){
+
+		}
+			,[=](){
+
+		});
+	}
+	else if (OD.httpErrorCode == -1 && OD.app42ErrorCode == 0)
+	{
+	}
+}
+
+void TestScene::error_CB(std::string msg, std::function<void()> retryCB, std::function<void()> skipCB)
 {
 	cocos2d::Size visibleSize = cocos2d::Director::getInstance()->getVisibleSize();
 
 	ErrorUI* errorui = new ErrorUI();
-	addInterface(ErrorUI::id, errorui);
+	getUIView()->addChild(errorui->getRoot()); // we do not want to addInterface to the list of UI in scene ( multiple errors UI can appear and will cause problems ).
 	errorui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.67f));
 
-	errorui->setRefreshCallback([this, errorui](){
+	errorui->setRefreshCallback([this, errorui, retryCB](){
+		if (retryCB) retryCB();
 		errorui->deactivate();
-		removeInterface(ErrorUI::id);
+		getUIView()->removeChild(errorui->getRoot()); //garbage collected UI
 	});
 
-	errorui->setSkipCallback([this, errorui](){
+	errorui->setSkipCallback([this, errorui, skipCB](){
+		if (skipCB) skipCB();
 		errorui->deactivate();
-		removeInterface(ErrorUI::id);
+		getUIView()->removeChild(errorui->getRoot()); //garbage collected UI
 	});
 
 	errorui->activate(msg);
