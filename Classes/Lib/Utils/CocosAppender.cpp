@@ -23,8 +23,7 @@ namespace WkCocos
 		
 		// setup bg
 		bg->setTouchEnabled(false);
-		// warning: deprecated call
-		bg->setSize(root->getContentSize());
+		bg->setContentSize(root->getContentSize());
 		bg->setBackGroundColorType(cocos2d::ui::Layout::BackGroundColorType::SOLID);
 		bg->setBackGroundColor(cocos2d::Color3B(20, 20, 20));
 		bg->setBackGroundColorOpacity(70);
@@ -36,16 +35,14 @@ namespace WkCocos
 		_log->setTouchEnabled(false);
 		_log->setItemModel(_model);
 		_log->pushBackDefaultItem();
-		// warning: deprecated call
-		_log->setSize(root->getContentSize());
+		_log->setContentSize(root->getContentSize());
 		_log->setBackGroundColorType(cocos2d::ui::Layout::BackGroundColorType::SOLID);
 		_log->setBackGroundColor(cocos2d::Color3B(20, 20, 20));
 		_log->setBackGroundColorOpacity(70);
 
 		// check
 		toggle->setTouchEnabled(true);
-		// warning: deprecated call
-		toggle->setSize(cocos2d::Size(200, 200));
+		toggle->setContentSize(cocos2d::Size(200, 200));
 		if (!res.m_textureName[CheckBoxRes::BG].empty())
 		{
 			toggle->loadTextureBackGround(res.m_textureName[CheckBoxRes::BG], res.m_textureType[CheckBoxRes::BG]);
