@@ -140,8 +140,7 @@ void DocsListUI::receive(const WkCocos::OnlineData::Events::DocsList &doclist)
 
 			m_table.push_back(line);
 		}
-		// warning: deprecated call
-		m_refreshLabel->setText("page " + WkCocos::ToolBox::itoa(++m_pages));
+		m_refreshLabel->setString("page " + WkCocos::ToolBox::itoa(++m_pages));
 	}
 	else
 	{
@@ -154,8 +153,7 @@ void DocsListUI::receive(const WkCocos::OnlineData::Events::DocsList &doclist)
 		}
 		else
 		{
-			// warning: deprecated call
-			m_refreshLabel->setText("no documents found");
+			m_refreshLabel->setString("no documents found");
 		}
 	}
 }

@@ -55,14 +55,12 @@ TimerUI::~TimerUI()
 
 void TimerUI::receive(const WkCocos::Timer::Events::TimerUpdate &tu)
 {
-	// warning: deprecated call
-	m_countLabel->setText(WkCocos::ToolBox::itoa(tu.getTimeLeft()) + " sec");
+	m_countLabel->setString(WkCocos::ToolBox::itoa(tu.getTimeLeft()) + " sec");
 }
 
 void TimerUI::receive(const WkCocos::Timer::Events::AlarmOff &ao)
 {
-	// warning: deprecated call
-	m_countLabel->setText(ao.id + " alarm off");
+	m_countLabel->setString(ao.id + " alarm off");
 }
 
 void TimerUI::startCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input)

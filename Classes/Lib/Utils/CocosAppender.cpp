@@ -89,8 +89,7 @@ namespace WkCocos
 
 		_log->pushBackDefaultItem();
 		cocos2d::ui::TextBMFont* line = static_cast<cocos2d::ui::TextBMFont*>(_log->getItem(_log->getItems().size() - 1));
-		// warning: deprecated call
-		line->setText(output);
+		line->setString(output);
 
 		_log->jumpToBottom();
 

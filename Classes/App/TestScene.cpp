@@ -146,8 +146,7 @@ bool TestScene::init()
 	saveui->setEnabled(true);
 	saveui->setVisible(true);
 	currentUI = SavingUI::id;
-	// warning: deprecated call
-	m_titleLabel->setText(currentUI);
+	m_titleLabel->setString(currentUI);
 	
 	m_time = cocos2d::ui::Text::create("", "Thonburi", 20);
 	m_time->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, /*closeItem->getPositionY()*/ visibleSize.height - 20));
@@ -173,8 +172,7 @@ void TestScene::onExitTransitionDidStart()
 
 void TestScene::update(float delta)
 {
-	// warning: deprecated call
-	m_time->setText(WkCocos::ToolBox::itoa(g_gameLogic->getPlayer().getTimermgr()->getServerLocalTime().tm_hour) + ":" +
+	m_time->setString(WkCocos::ToolBox::itoa(g_gameLogic->getPlayer().getTimermgr()->getServerLocalTime().tm_hour) + ":" +
 		WkCocos::ToolBox::itoa(g_gameLogic->getPlayer().getTimermgr()->getServerLocalTime().tm_min) + ":" +
 		WkCocos::ToolBox::itoa(g_gameLogic->getPlayer().getTimermgr()->getServerLocalTime().tm_sec));
 	Scene::update(delta);
@@ -195,8 +193,7 @@ void TestScene::nextCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::Touch
 		cur->second->setEnabled(true);
 		cur->second->setVisible(true);
 		currentUI = cur->first;
-		// warning: deprecated call
-		m_titleLabel->setText(currentUI);
+		m_titleLabel->setString(currentUI);
 	}
 }
 
@@ -217,8 +214,7 @@ void TestScene::prevCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::Touch
 		cur->second->setEnabled(true);
 		cur->second->setVisible(true);
 		currentUI = cur->first;
-		// warning: deprecated call
-		m_titleLabel->setText(currentUI);
+		m_titleLabel->setString(currentUI);
 	}
 }
 
