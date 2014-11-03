@@ -36,6 +36,7 @@ MyPlayer::MyPlayer(std::shared_ptr<WkCocos::Timer::Timer> timermgr, std::shared_
 	m_save.setOnlineDataMgr(m_player.getOnlineDatamgr());
 	WkCocos::Save::getEventManager()->subscribe<WkCocos::Save::Loaded>(*this);
 	WkCocos::Save::getEventManager()->subscribe<WkCocos::Save::Saved>(*this);
+	WkCocos::Save::getEventManager()->subscribe<WkCocos::Save::Error>(*this);
 }
 
 MyPlayer::~MyPlayer()
@@ -46,6 +47,7 @@ void MyPlayer::login()
 {
 	m_loggingIn = true;
 	m_player.getEventManager()->subscribe<WkCocos::Player::LoggedIn>(*this);
+	m_player.getEventManager()->subscribe<WkCocos::Player::Error>(*this);
 	m_player.autologin();
 }
 
@@ -96,6 +98,22 @@ void MyPlayer::receive(const WkCocos::Player::LoggedIn& loggedin)
 	m_save.setUserName(loggedin.m_username);
 	m_save.requestLoadData();
 }
+
+void MyPlayer::receive(const WkCocos::Player::Error &PL)
+{
+	std::string errmsg = PL.m_component + " : " + PL.m_code + " - " + PL.m_message;
+
+	/**
+	* Handling all possible Player Errors here
+	*/
+	if (PL.m_component == "" && PL.m_code == "")
+	{
+		//TODO
+	}
+
+	getEventManager()->emit<MyPlayer::Error>(getId(), "Error on Player : " + errmsg);
+}
+
 
 void MyPlayer::receive(const WkCocos::Save::Loaded& loaded_evt)
 {
@@ -148,6 +166,19 @@ void MyPlayer::receive(const WkCocos::Save::Saved& saved_evt)
 	if (m_save.getName() == saved_evt.m_name)
 	{
 		getEventManager()->emit<MyPlayer::Saved>(getId());
+	}
+}
+
+
+void MyPlayer::receive(const WkCocos::Save::Error& save_err)
+{
+	if (save_err.error_type == WkCocos::Save::ErrorType::SAVE_UNKNOWN_ERROR)
+	{
+		getEventManager()->emit<MyPlayer::Error>(getId(), "Error Saving player");
+	}
+	else if (save_err.error_type == WkCocos::Save::ErrorType::LOAD_UNKNOWN_ERROR)
+	{
+		getEventManager()->emit<MyPlayer::Error>(getId(), "Error Loading Player");
 	}
 }
 

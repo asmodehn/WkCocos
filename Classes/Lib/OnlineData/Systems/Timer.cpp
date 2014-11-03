@@ -45,7 +45,7 @@ namespace WkCocos
 						if (st->life_time > TIMEOUT)
 						{
 							st->timeout = true;
-							events->emit<Events::Error>("server time");
+							events->emit<Events::Error>(entity.id(), "server time");
 						}
 					}
 

@@ -11,22 +11,25 @@ namespace WkCocos
 		{
 			struct Error : public entityx::Event<Error>
 			{
-				Error(::App42::App42Response* r)
-					: httpErrorCode(r->httpErrorCode)
+				Error(entityx::Entity::Id a_id, ::App42::App42Response* r)
+					: id(a_id)
+					, httpErrorCode(r->httpErrorCode)
 					, app42ErrorCode(r->appErrorCode)
 					, errorMessage(r->errorMessage)
 					, errorDetails(r->errorDetails)
 				{
 				}
 
-				Error(std::string r)
-					: httpErrorCode(0)
+				Error(entityx::Entity::Id a_id, std::string r)
+					: id(a_id)
+					, httpErrorCode(0)
 					, app42ErrorCode(0)
 					, errorMessage("timeout")
 					, errorDetails(r)
 				{
 				}
 
+				entityx::Entity::Id id;
 				int httpErrorCode;
 				int app42ErrorCode;
 				std::string errorMessage;

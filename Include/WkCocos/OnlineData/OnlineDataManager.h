@@ -42,18 +42,18 @@ namespace WkCocos
 			* Save User Data
 			* callback will be passed saveName, docId and data
 			*/
-			void save(const std::string& userid, const std::string& saveName, std::string docId, std::string data, std::function<void(std::string, std::string, std::string)> callback, std::string key = "");
+			entityx::Entity::Id save(const std::string& userid, const std::string& saveName, std::string docId, std::string data, std::function<void(std::string, std::string, std::string)> callback, std::string key = "");
 
 			/**
 			* Save New User Data
 			* callback will be passed saveName, docId and data.
 			*/
-			void saveNew(const std::string& userid, const std::string& saveName, std::string data, std::function<void(std::string, std::string, std::string)> success_callback, std::string key = "");
+			entityx::Entity::Id saveNew(const std::string& userid, const std::string& saveName, std::string data, std::function<void(std::string, std::string, std::string)> success_callback, std::string key = "");
 
 			/**
 			* Load User Data
 			*/
-			void load(const std::string& userid, const std::string& saveName, std::function<void(std::string,std::vector<std::string>)> callback, std::string key = "");
+			entityx::Entity::Id load(const std::string& userid, const std::string& saveName, std::function<void(std::string, std::vector<std::string>)> callback, std::string key = "");
 
 			/**
 			* Get Selected Users

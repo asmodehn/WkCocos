@@ -40,10 +40,10 @@ namespace WkCocos
 					else
 					{
 						uud->life_time += dt;
-						if (uud->life_time > TIMEOUT)
+						if (uud->life_time > 0.5)
 						{
 							uud->timeout = true;
-							events->emit<Events::Error>("update user data");
+							events->emit<Events::Error>( entity.id() ,"update user data");
 						}
 					}
 
@@ -71,7 +71,7 @@ namespace WkCocos
 						if (iud->life_time > TIMEOUT)
 						{
 							iud->timeout = true;
-							events->emit<Events::Error>("insert user data");
+							events->emit<Events::Error>(entity.id() ,"insert user data");
 						}
 					}
 
@@ -104,7 +104,7 @@ namespace WkCocos
 						if (gukv->life_time > TIMEOUT)
 						{
 							gukv->timeout = true;
-							events->emit<Events::Error>("get data by key and value");
+							events->emit<Events::Error>(entity.id(), "get data by key and value");
 						}
 					}
 
@@ -137,7 +137,7 @@ namespace WkCocos
 						if (guft->life_time > TIMEOUT)
 						{
 							guft->timeout = true;
-							events->emit<Events::Error>("get data by query");
+							events->emit<Events::Error>(entity.id(), "get data by query");
 						}
 					}
 
@@ -165,7 +165,7 @@ namespace WkCocos
 						if (adp->life_time > TIMEOUT)
 						{
 							adp->timeout = true;
-							events->emit<Events::Error>("docs list");
+							events->emit<Events::Error>(entity.id(), "docs list");
 						}
 					}
 

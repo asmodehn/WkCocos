@@ -9,7 +9,7 @@
 
 #include "WkCocos/OnlineData/OnlineDataManager.h"
 #include "WkCocos/LocalData/LocalDataManager.h"
-#include "WkCocos/Player.h"
+#include "MyPlayer.h"
 
 class TestScene : public WkCocos::Scene, public entityx::Receiver<TestScene>
 {
@@ -37,7 +37,7 @@ public:
 
 	void receive(const WkCocos::OnlineData::Events::Error &OD);
 	void receive(const WkCocos::LocalData::Events::Error &LD);
-	void receive(const WkCocos::Player::Error &PL);
+	void receive(const MyPlayer::Error &PL);
 
 protected:
 

@@ -45,7 +45,7 @@ namespace WkCocos
 						if (c->life_time > TIMEOUT)
 						{
 							c->timeout = true;
-							events->emit<Events::Error>("user create");
+							events->emit<Events::Error>(entity.id(), "user create");
 						}
 					}
 
@@ -74,7 +74,7 @@ namespace WkCocos
 						if (l->life_time > TIMEOUT)
 						{
 							l->timeout = true;
-							events->emit<Events::Error>("user login");
+							events->emit<Events::Error>(entity.id(), "user login");
 						}
 					}
 
@@ -106,7 +106,7 @@ namespace WkCocos
 						if (lud->life_time > TIMEOUT)
 						{
 							lud->timeout = true;
-							events->emit<Events::Error>("user data load");
+							events->emit<Events::Error>(entity.id(), "user data load");
 						}
 					}
 

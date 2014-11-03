@@ -154,8 +154,8 @@ bool TestScene::init()
 
 	g_gameLogic->getOnlineDataManager().getEventManager()->subscribe<WkCocos::OnlineData::Events::Error>(*this);
 	g_gameLogic->getLocalDataManager().getEventManager()->subscribe<WkCocos::LocalData::Events::Error>(*this);
-	g_gameLogic->getPlayer().getEventManager()->subscribe<WkCocos::Player::Error>(*this);
-
+	g_gameLogic->getPlayer().getEventManager()->subscribe<MyPlayer::Error>(*this);
+	
 	return true;
 }
 
@@ -218,23 +218,6 @@ void TestScene::prevCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::Touch
 	}
 }
 
-void TestScene::receive(const WkCocos::Player::Error &PL)
-{
-	std::string errmsg = PL.m_component + " : " + PL.m_code + " - " + PL.m_message;
-
-	/**
-	* Handling all possible Player Errors here
-	*/
-	if (PL.m_component == "" && PL.m_code == "")
-	{
-		error_CB(errmsg
-			, [=](){
-		}
-			, [=](){
-		});
-	}
-}
-
 void TestScene::receive(const WkCocos::LocalData::Events::Error &LD)
 {
 	/**
@@ -276,6 +259,23 @@ void TestScene::receive(const WkCocos::OnlineData::Events::Error &OD)
 	else if (OD.httpErrorCode == -1 && OD.app42ErrorCode == 0)
 	{
 	}
+}
+
+void TestScene::receive(const MyPlayer::Error &player_error)
+{
+	std::stringstream errormsg;
+	errormsg << player_error.message;
+	/**
+	* Handling all possible Online Errors here
+	*/
+	error_CB(errormsg.str()
+		, [=](){
+
+	}
+		, [=](){
+
+	});
+	
 }
 
 void TestScene::error_CB(std::string msg, std::function<void()> retryCB, std::function<void()> skipCB)
