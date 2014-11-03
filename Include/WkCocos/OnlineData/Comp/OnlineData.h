@@ -25,6 +25,7 @@ namespace WkCocos
 				
 				bool in_progress;
 				bool done;
+				bool timeout;
 				double life_time;
 				std::string m_userid;
 				std::string m_passwd;
@@ -39,6 +40,7 @@ namespace WkCocos
 
 				bool in_progress;
 				bool done;
+				bool timeout;
 				double life_time;
 				std::string m_userid;
 				std::string m_passwd;
@@ -52,6 +54,7 @@ namespace WkCocos
 
 				bool in_progress;
 				bool done;
+				bool timeout;
 				double life_time;
 				std::string m_userid;
 				std::string m_collection;
@@ -67,6 +70,7 @@ namespace WkCocos
 
 				bool in_progress;
 				bool done;
+				bool timeout;
 				double life_time;
 				std::string m_userid;
 				std::string m_collection;
@@ -81,6 +85,7 @@ namespace WkCocos
 
 				bool in_progress;
 				bool done;
+				bool timeout;
 				double life_time;
 				std::string m_userid;
 				std::string m_collection;
@@ -94,6 +99,7 @@ namespace WkCocos
 
 				bool in_progress;
 				bool done;
+				bool timeout;
 				double life_time;
 				std::string m_collection;
 				std::string m_key;
@@ -110,6 +116,7 @@ namespace WkCocos
 
 				bool in_progress;
 				bool done;
+				bool timeout;
 				double life_time;
 				std::string m_collection;
 				std::string m_key;
@@ -127,6 +134,7 @@ namespace WkCocos
 
 				bool in_progress;
 				bool done;
+				bool timeout;
 				double life_time;
 				std::function<void(void*)> m_cb;
 
@@ -138,6 +146,7 @@ namespace WkCocos
 
 				bool in_progress;
 				bool done;
+				bool timeout;
 				double life_time;
 				std::string m_collection;
 				int m_quantity;

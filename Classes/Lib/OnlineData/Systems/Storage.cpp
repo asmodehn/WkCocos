@@ -42,12 +42,8 @@ namespace WkCocos
 						uud->life_time += dt;
 						if (uud->life_time > TIMEOUT)
 						{
+							uud->timeout = true;
 							events->emit<Events::Error>("update user data");
-							entity.remove<Comp::UpdateUserData>();
-							if (entity.component_mask() == 0)
-							{
-								//entity.destroy();
-							}
 						}
 					}
 
@@ -74,12 +70,8 @@ namespace WkCocos
 						iud->life_time += dt;
 						if (iud->life_time > TIMEOUT)
 						{
+							iud->timeout = true;
 							events->emit<Events::Error>("insert user data");
-							entity.remove<Comp::InsertUserData>();
-							if (entity.component_mask() == 0)
-							{
-								//entity.destroy();
-							}
 						}
 					}
 
@@ -111,12 +103,8 @@ namespace WkCocos
 						gukv->life_time += dt;
 						if (gukv->life_time > TIMEOUT)
 						{
+							gukv->timeout = true;
 							events->emit<Events::Error>("get data by key and value");
-							entity.remove<Comp::GetUsersKeyValue>();
-							if (entity.component_mask() == 0)
-							{
-								//entity.destroy();
-							}
 						}
 					}
 
@@ -148,12 +136,8 @@ namespace WkCocos
 						guft->life_time += dt;
 						if (guft->life_time > TIMEOUT)
 						{
+							guft->timeout = true;
 							events->emit<Events::Error>("get data by query");
-							entity.remove<Comp::GetUsersFromTo>();
-							if (entity.component_mask() == 0)
-							{
-								//entity.destroy();
-							}
 						}
 					}
 
@@ -180,12 +164,8 @@ namespace WkCocos
 						adp->life_time += dt;
 						if (adp->life_time > TIMEOUT)
 						{
+							adp->timeout = true;
 							events->emit<Events::Error>("docs list");
-							entity.remove<Comp::AllDocsPaging>();
-							if (entity.component_mask() == 0)
-							{
-								//entity.destroy();
-							}
 						}
 					}
 

@@ -341,7 +341,7 @@ void GameUI::update(float delta)
 
 void GameUI::circleCreate(int i, int j)
 {
-	int sectorsInCircle = (int)(circleSize / 3.5);
+	int sectorsInCircle = (int)(circleSize / 4);
 	circles[i][j] = cocos2d::DrawNode::create();
 	circlesColors[i][j] = rand() % 7;
 	circlesPresent[i][j] = true;

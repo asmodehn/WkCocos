@@ -44,12 +44,8 @@ namespace WkCocos
 						c->life_time += dt;
 						if (c->life_time > TIMEOUT)
 						{
+							c->timeout = true;
 							events->emit<Events::Error>("user create");
-							entity.remove<Comp::Create>();
-							if (entity.component_mask() == 0)
-							{
-								//entity.destroy();
-							}
 						}
 					}
 
@@ -77,12 +73,8 @@ namespace WkCocos
 						l->life_time += dt;
 						if (l->life_time > TIMEOUT)
 						{
+							l->timeout = true;
 							events->emit<Events::Error>("user login");
-							entity.remove<Comp::Login>();
-							if (entity.component_mask() == 0)
-							{
-								//entity.destroy();
-							}
 						}
 					}
 
@@ -113,12 +105,8 @@ namespace WkCocos
 						lud->life_time += dt;
 						if (lud->life_time > TIMEOUT)
 						{
+							lud->timeout = true;
 							events->emit<Events::Error>("user data load");
-							entity.remove<Comp::LoadUserData>();
-							if (entity.component_mask() == 0)
-							{
-								//entity.destroy();
-							}
 						}
 					}
 

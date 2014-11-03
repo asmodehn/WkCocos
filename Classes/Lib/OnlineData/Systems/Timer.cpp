@@ -44,12 +44,8 @@ namespace WkCocos
 						st->life_time += dt;
 						if (st->life_time > TIMEOUT)
 						{
+							st->timeout = true;
 							events->emit<Events::Error>("server time");
-							entity.remove<Comp::ServerTime>();
-							if (entity.component_mask() == 0)
-							{
-								//entity.destroy();
-							}
 						}
 					}
 
