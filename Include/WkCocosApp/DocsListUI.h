@@ -39,6 +39,8 @@ protected:
 	int m_offset = 0;
 	int m_pages = 0;
 
+	bool m_user_request;
+
 };
 
 #endif // __DOCSLISTUI_H__

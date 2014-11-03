@@ -67,7 +67,7 @@ void DocsListUI::refreshCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::T
 			m_table[i].clear();
 		}
 		m_table.clear();
-
+		m_user_request = true;
 		g_gameLogic->getPlayer().getAllDocsPaging(m_quantity, m_offset);
 	}
 }
@@ -147,7 +147,16 @@ void DocsListUI::receive(const WkCocos::OnlineData::Events::DocsList &doclist)
 	{
 		m_pages = 0;
 		m_offset = 0;
-		g_gameLogic->getPlayer().getAllDocsPaging(m_quantity, m_offset);
+		if (m_user_request)
+		{
+			m_user_request = false;
+			g_gameLogic->getPlayer().getAllDocsPaging(m_quantity, m_offset);
+		}
+		else
+		{
+			// warning: deprecated call
+			m_refreshLabel->setText("no documents found");
+		}
 	}
 }
 
