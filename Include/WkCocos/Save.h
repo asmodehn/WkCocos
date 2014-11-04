@@ -64,8 +64,8 @@ namespace WkCocos
 		}
 
 		enum class ErrorType{
-			LOAD_TIMEOUT,
-			SAVE_TIMEOUT
+			LOAD_UNKNOWN_ERROR,
+			SAVE_UNKNOWN_ERROR
 		};
 
 		//Error Event : for asynchronous errors only
@@ -161,12 +161,17 @@ namespace WkCocos
 		/**
 		* Set local data manager
 		*/
-		inline void setLocalDataMgr(std::shared_ptr<LocalData::LocalDataManager> localdata) { m_localdata = localdata; }
+		void setLocalDataMgr(std::shared_ptr<LocalData::LocalDataManager> localdata);
 
 		/**
 		* Set online  data manager
 		*/
-		inline void setOnlineDataMgr(std::shared_ptr<OnlineData::OnlineDataManager> onlinedata) { m_onlinedata = onlinedata; }
+		void setOnlineDataMgr(std::shared_ptr<OnlineData::OnlineDataManager> onlinedata);
+
+		/**
+		* receiving errors from onlinedata manager
+		*/
+		void receive(const WkCocos::OnlineData::Events::Error& err);
 
 
 		/**
@@ -223,16 +228,6 @@ namespace WkCocos
 		std::shared_ptr<OnlineData::OnlineDataManager> m_onlinedata;
 
 		/**
-		* flag to specify if the save has already been requested
-		*/
-		bool m_saveInProgress;
-
-		/**
-		* flag to specify if the load has already been requested
-		*/
-		bool m_loadInProgress;
-
-		/**
 		* Callback function to fill up save
 		*/
 		WKCOCOS_DEPRECATED_ATTRIBUTE std::function<std::string()>		m_onSaving;
@@ -246,11 +241,14 @@ namespace WkCocos
 		* incremented by load request, decremented by loaded response
 		*/
 		unsigned short m_loaded;
+		entityx::Entity::Id m_current_load;
 
 		/**
 		* incremented by save request, decremented by saved response
 		*/
 		unsigned short m_saved;
+		entityx::Entity::Id m_current_save;
+
 	};
 
 }// namespace WkCocos

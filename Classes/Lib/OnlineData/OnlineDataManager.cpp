@@ -38,6 +38,7 @@ namespace WkCocos
 		{
 
 			auto newentity = entity_manager->create();
+			auto id = newentity.id();
 			newentity.assign<Comp::Create>(userid, password, email, [=](::App42::App42UserResponse* r){
 
 				if (r->isSuccess)
@@ -48,8 +49,8 @@ namespace WkCocos
 				}
 				else // if creation failed, emit event ( in cocos thread to allow cocos actions )
 				{
-					cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, r](){
-						event_manager->emit<Events::Error>(r);
+					cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, id, r](){
+						event_manager->emit<Events::Error>(id,r);
 					});
 				}
 				
@@ -60,11 +61,12 @@ namespace WkCocos
 		void OnlineDataManager::login(std::string userid, std::string password, std::function<void(std::string)> success_callback)
 		{
 			auto newentity = entity_manager->create();
+			auto id = newentity.id();
 			newentity.assign<Comp::Login>(userid, password, [=](::App42::App42UserResponse* r){
 				if (! r->isSuccess)
 				{
-					cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, r](){
-						event_manager->emit<Events::Error>(r);
+					cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this,id, r](){
+						event_manager->emit<Events::Error>(id,r);
 						//callback is not called if error
 					});
 				}
@@ -77,15 +79,16 @@ namespace WkCocos
 			});
 		}
 
-		void OnlineDataManager::save(const std::string& userid, const std::string& saveName, std::string docId, std::string user_data, std::function<void(std::string, std::string, std::string)> success_callback, std::string key)
+		entityx::Entity::Id OnlineDataManager::save(const std::string& userid, const std::string& saveName, std::string docId, std::string user_data, std::function<void(std::string, std::string, std::string)> success_callback, std::string key)
 		{
 			auto updateentity = entity_manager->create();
+			auto id = updateentity.id();
 			updateentity.assign < Comp::UpdateUserData >(userid, saveName, docId, user_data, [=](::App42::App42StorageResponse* r)
 			{
 				if (!r->isSuccess)
 				{
-					cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, r](){
-						event_manager->emit<Events::Error>(r);
+					cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, id, r](){
+						event_manager->emit<Events::Error>(id,r);
 						//callback is not called if error
 					});
 				}
@@ -96,17 +99,19 @@ namespace WkCocos
 					});
 				}
 			});
+			return id;
 		}
 
-		void OnlineDataManager::saveNew(const std::string& userid, const std::string& saveName, std::string user_data, std::function<void(std::string, std::string, std::string)> success_callback, std::string key)
+		entityx::Entity::Id OnlineDataManager::saveNew(const std::string& userid, const std::string& saveName, std::string user_data, std::function<void(std::string, std::string, std::string)> success_callback, std::string key)
 		{
 			auto insertentity = entity_manager->create();
+			auto id = insertentity.id();
 			insertentity.assign < Comp::InsertUserData >(userid, saveName, user_data, [=](::App42::App42StorageResponse* r)
 			{
 				if (!r->isSuccess)
 				{
-					cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, r](){
-						event_manager->emit<Events::Error>(r);
+					cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, id, r](){
+						event_manager->emit<Events::Error>(id,r);
 						//callback is not called if error
 					});
 				}
@@ -117,11 +122,13 @@ namespace WkCocos
 					});
 				}
 			});
+			return id;
 		}
 		
-		void OnlineDataManager::load(const std::string& userid, const std::string& saveName, std::function<void(std::string, std::vector<std::string>)> callback, std::string key)
+		entityx::Entity::Id OnlineDataManager::load(const std::string& userid, const std::string& saveName, std::function<void(std::string, std::vector<std::string>)> callback, std::string key)
 		{
 			auto newentity = entity_manager->create();
+			auto id = newentity.id();
 			//new File component for each request. The aggregator system will detect duplicates and group them
 			newentity.assign<Comp::LoadUserData>(userid, saveName, [=](::App42::App42UserResponse* r)
 			{
@@ -154,12 +161,13 @@ namespace WkCocos
 				}
 				else// if request failed, 
 				{
-					cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, r](){
-						event_manager->emit<Events::Error>(r);
+					cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, id, r](){
+						event_manager->emit<Events::Error>(id, r);
 						//callback is not called if error
 					});
 				}
 			});
+			return id;
 		}
 
 		void OnlineDataManager::getUsersKeyValue(const std::string& saveName, const std::string& key, int value, int quantity, int offset)

@@ -11,14 +11,16 @@ namespace WkCocos
 		{
 			struct Error : public entityx::Event<Error>
 			{
-				Error(::App42::App42Response* r)
-				: httpErrorCode(r->httpErrorCode)
+				Error(entityx::Entity::Id a_id, ::App42::App42Response* r)
+				: id(a_id)
+				, httpErrorCode(r->httpErrorCode)
 				, app42ErrorCode(r->appErrorCode)
 				, errorMessage(r->errorMessage)
 				, errorDetails(r->errorDetails)
 				{
 				}
 
+				entityx::Entity::Id id;
 				int httpErrorCode;
 				int app42ErrorCode;
 				std::string errorMessage;
