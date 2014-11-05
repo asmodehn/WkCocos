@@ -180,9 +180,17 @@ void MyPlayer::receive(const WkCocos::Save::Error& save_err)
 	{
 		getEventManager()->emit<MyPlayer::Error>(getId(), "Error Saving player");
 	}
+	else if (save_err.error_type == WkCocos::Save::ErrorType::SAVE_TIMEOUT_ERROR)
+	{
+		getEventManager()->emit<MyPlayer::Error>(getId(), "Timeout Error Saving player");
+	}
 	else if (save_err.error_type == WkCocos::Save::ErrorType::LOAD_UNKNOWN_ERROR)
 	{
 		getEventManager()->emit<MyPlayer::Error>(getId(), "Error Loading Player");
+	}
+	else if (save_err.error_type == WkCocos::Save::ErrorType::LOAD_TIMEOUT_ERROR)
+	{
+		getEventManager()->emit<MyPlayer::Error>(getId(), "Timeout Error Loading player");
 	}
 }
 

@@ -65,7 +65,9 @@ namespace WkCocos
 
 		enum class ErrorType{
 			LOAD_UNKNOWN_ERROR,
-			SAVE_UNKNOWN_ERROR
+			SAVE_UNKNOWN_ERROR,
+			LOAD_TIMEOUT_ERROR,
+			SAVE_TIMEOUT_ERROR
 		};
 
 		//Error Event : for asynchronous errors only
