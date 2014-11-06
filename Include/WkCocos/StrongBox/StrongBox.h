@@ -33,6 +33,7 @@ namespace WkCocos
 		public :
 
 			//exposing our conversion function from bin to string.
+			//this will malloc the C string
 			static void hexString2BinVal(const std::string&, unsigned char *& val, xxtea_long & val_length);
 			static void binVal2HexString(unsigned char * val, xxtea_long val_length, std::string&);
 
@@ -142,18 +143,23 @@ namespace WkCocos
 		{
 			xxtea_long ret_len;
 			unsigned char* data;
+			T result;
 			if (isEncrypted())
 			{
+				//this will malloc
 				data = xxtea_decrypt(m_value, m_value_len, m_key, m_key_len, &ret_len);
 				//data == 0 means there is a problem
+				result = *(reinterpret_cast<T*>(data));
+				free(data);//destroying memory after copy
 			}
 			else
 			{
 				data = m_value;
 				ret_len = m_value_len;
+				result = *(reinterpret_cast<T*>(data));
 			}
 			//copy on return
-			return *(reinterpret_cast<T*>(data));
+			return result;
 		}
 
 ////////specialization for getters and setters if needed///////////////
