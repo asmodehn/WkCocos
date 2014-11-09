@@ -37,7 +37,7 @@ bool TestScene::init()
 	}
 
 	cocos2d::Size visibleSize = cocos2d::Director::getInstance()->getVisibleSize();
-	cocos2d::Vec2 origin = cocos2d::Director::getInstance()->getVisibleOrigin();
+	//cocos2d::Vec2 origin = cocos2d::Director::getInstance()->getVisibleOrigin();
 
 	auto closeItem = cocos2d::MenuItemImage::create("CloseNormal.png", "CloseSelected.png",
 		CC_CALLBACK_1(TestScene::menuCloseCallback, this));
@@ -45,7 +45,7 @@ bool TestScene::init()
 		visibleSize.height - closeItem->getContentSize().height / 2));
 	auto menu = cocos2d::Menu::create(closeItem, NULL);
 	menu->setPosition(cocos2d::Vec2::ZERO);
-	addChild(menu, 1);
+	addChild(menu);
 
 	m_prevButton = cocos2d::ui::Button::create("SkipNormal.png", "SkipSelected.png");
 	m_prevButton->addTouchEventListener(CC_CALLBACK_2(TestScene::prevCallback, this));
@@ -150,7 +150,7 @@ bool TestScene::init()
 	
 	m_time = cocos2d::ui::Text::create("", "Thonburi", 20);
 	m_time->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, /*closeItem->getPositionY()*/ visibleSize.height - 20));
-	addChild(m_time, 1);
+	addChild(m_time);
 
 	g_gameLogic->getOnlineDataManager().getEventManager()->subscribe<WkCocos::OnlineData::Events::Error>(*this);
 	g_gameLogic->getLocalDataManager().getEventManager()->subscribe<WkCocos::LocalData::Events::Error>(*this);
@@ -283,7 +283,7 @@ void TestScene::error_CB(std::string msg, std::function<void()> retryCB, std::fu
 	cocos2d::Size visibleSize = cocos2d::Director::getInstance()->getVisibleSize();
 
 	ErrorUI* errorui = new ErrorUI();
-	getUIView()->addChild(errorui->getRoot()); // we do not want to addInterface to the list of UI in scene ( multiple errors UI can appear and will cause problems ).
+	getUIView()->addChild(errorui->getRoot(), 2); // we do not want to addInterface to the list of UI in scene ( multiple errors UI can appear and will cause problems ).
 	errorui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.67f));
 
 	errorui->setRefreshCallback([this, errorui, retryCB](){
