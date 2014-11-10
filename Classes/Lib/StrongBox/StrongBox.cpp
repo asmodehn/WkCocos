@@ -8,7 +8,7 @@ namespace WkCocos
 	namespace StrongBox
 	{
 		//internal method
-		void StrongBox::copy_key(unsigned char * key, size_t key_len)
+		void StrongBox::copy_key(unsigned char * key, xxtea_long key_len)
 		{
 			m_key_len = key_len;
 			if (m_key_len == 0) //to counter non deterministic malloc behavior when allocation 0 bytes
@@ -22,7 +22,7 @@ namespace WkCocos
 			}
 		}
 
-		void StrongBox::move_key(unsigned char *& key, size_t& key_len)
+		void StrongBox::move_key(unsigned char *& key, xxtea_long& key_len)
 		{
 			m_key_len = key_len;
 			m_key = key;
@@ -31,7 +31,7 @@ namespace WkCocos
 			key_len = 0;
 		}
 
-		void StrongBox::copy_value(unsigned char * value, size_t val_len)
+		void StrongBox::copy_value(unsigned char * value, xxtea_long val_len)
 		{
 			m_value_len = val_len;
 			if (m_value_len == 0) //to counter non deterministic malloc behavior when allocation 0 bytes
@@ -45,7 +45,7 @@ namespace WkCocos
 			}
 		}
 
-		void StrongBox::move_value(unsigned char *& value, size_t& val_len)
+		void StrongBox::move_value(unsigned char *& value, xxtea_long& val_len)
 		{
 			m_value_len = val_len;
 			m_value = value;

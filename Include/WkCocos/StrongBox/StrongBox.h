@@ -26,10 +26,10 @@ namespace WkCocos
 			xxtea_long m_key_len;
 
 			//internal method
-			void copy_key(unsigned char * key, size_t key_len);
-			void move_key(unsigned char *& key, size_t& key_len);
-			void copy_value(unsigned char * value, size_t val_len);
-			void move_value(unsigned char *& value, size_t& val_len);
+			void copy_key(unsigned char * key, xxtea_long key_len);
+			void move_key(unsigned char *& key, xxtea_long& key_len);
+			void copy_value(unsigned char * value, xxtea_long val_len);
+			void move_value(unsigned char *& value, xxtea_long& val_len);
 		public :
 
 			//exposing our conversion function from bin to string.
