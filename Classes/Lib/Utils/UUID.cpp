@@ -4,9 +4,12 @@
 
 //cocos style platform detection
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
+//works with MSYS2 MINGW GCC as well
 #include <locale>
-#include <codecvt>
-//For UUID on windows
+
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
+#include <uuid/uuid.h>
+
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
 //UUID generation on Android device ( Java calls )
 #include <jni.h>
@@ -73,6 +76,26 @@ namespace WkCocos
 			//RpcStringFree(&rpc_string);
 			//uuid = std::wstring_convert<std::codecvt_utf8<wchar_t> >().to_bytes(wuuid);
 		}
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
+    //TEST CODE !!!
+    uuid_t uuid_impl;
+    int result = uuid_generate_time_safe(uuid_impl);
+    printf("sizeof uuid = %d\n", (int)sizeof uuid_impl);
+    // or: printf("sizeof uuid = %zu\n", sizeof uuid_impl);
+    if (result == 0) {
+        puts("uuid generated safely");
+    }
+    else {
+        puts("uuid not generated safely");
+    }
+    for (size_t i = 0; i < sizeof uuid_impl; i ++) {
+        printf("%02x ", uuid_impl[i]);
+    }
+    putchar('\n');
+
+    char * strbuf;
+    uuid_unparse_lower(uid_impl,strbuf);
+    uuid.replace(0,strlen(strbuf),strbuf,strlen(strbuf));
 #endif
 
 		return uuid;
