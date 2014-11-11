@@ -29,8 +29,8 @@ public class MainService extends Service {
         NotificationCompat.Builder WKBuilder;
         WKBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.ic_launcher)
-                .setContentTitle(getInstance().WKTitle)
-                .setContentText(getInstance().WKMessage);
+                .setContentTitle(getInstance().WKTitle.poll())
+                .setContentText(getInstance().WKMessage.poll());
 
         Intent WKIntent = new Intent(MainActivity.getContext(), getInstance().appPNClickActivity);
 
@@ -40,7 +40,8 @@ public class MainService extends Service {
         WKBuilder.setContentIntent(WKPI);
 
         NotificationManager WKNM = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
-        WKNM.notify(0, WKBuilder.build());
+        final int intent_id = (int) System.currentTimeMillis();
+        WKNM.notify(intent_id, WKBuilder.build());
 
         return START_STICKY;
     }

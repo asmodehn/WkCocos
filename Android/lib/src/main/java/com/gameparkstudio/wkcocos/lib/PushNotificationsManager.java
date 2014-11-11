@@ -5,14 +5,15 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.app.AlarmManager;
 import java.lang.System;
+import java.util.LinkedList;
 
 //This is a singleton. ref : http://howtodoinjava.com/2012/10/22/singleton-design-pattern-in-java
 //when used via getInstance(), it will retrieve the context from the main activity
 //This context can be used to launch other activities
 public class PushNotificationsManager{
 
-    public String WKTitle;
-    public String WKMessage;
+    public LinkedList<String> WKTitle = new LinkedList<String>();
+    public LinkedList<String> WKMessage = new LinkedList<String>();
     public Class<?> appPNClickActivity;
 
     private static class LazyHolder {
@@ -32,13 +33,14 @@ public class PushNotificationsManager{
     }
 
     public boolean schedule(long when, String title, String message) {
-        WKTitle = title;
-        WKMessage = message;
+        WKTitle.offer(title);
+        WKMessage.offer(message);
 
         long time = System.currentTimeMillis();
 
         Intent WKIntent = new Intent(MainActivity.getContext(), MainBroadcastReceiver.class);
-        PendingIntent WKPI = PendingIntent.getBroadcast(MainActivity.getContext(), 0, WKIntent, 0);
+        final int intent_id = (int) System.currentTimeMillis();
+        PendingIntent WKPI = PendingIntent.getBroadcast(MainActivity.getContext(), intent_id, WKIntent, 0);
 
         AlarmManager alarmManager = (AlarmManager)MainActivity.getContext().getSystemService(MainActivity.getContext().ALARM_SERVICE);
         alarmManager.set(AlarmManager.RTC, when * 1000 + time, WKPI);
