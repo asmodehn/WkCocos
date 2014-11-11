@@ -22,6 +22,9 @@
  THE SOFTWARE.
  ****************************************************************************/
 
+#include "cocos/base/CCPlatformConfig.h"
+#if CC_TARGET_PLATFORM == CC_PLATFORM_LINUX
+
 #include "WkCocos/WebView/UIWebViewImpl-linux.h"
 
 #include <unordered_map>
@@ -111,3 +114,5 @@ namespace cocos2d {
         } // namespace ui
     } // namespace experimental
 } //namespace cocos2d
+
+#endif // CC_TARGET_PLATFORM == CC_PLATFORM_LINUX

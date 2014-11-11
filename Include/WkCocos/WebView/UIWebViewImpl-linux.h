@@ -25,6 +25,8 @@
 #ifndef __COCOS2D__UI__WEBVIEWIMPL_LINUX_H_
 #define __COCOS2D__UI__WEBVIEWIMPL_LINUX_H_
 
+#if CC_TARGET_PLATFORM == CC_PLATFORM_LINUX
+
 #include <iosfwd>
 #include <cstdint>
 
@@ -93,5 +95,7 @@ namespace cocos2d {
         } // namespace ui
     } // namespace experimental
 } //cocos2d
+
+#endif // CC_TARGET_PLATFORM == CC_PLATFORM_LINUX
 
 #endif /* __COCOS2D__UI__WEBVIEWIMPL_LINUX_H_ */
