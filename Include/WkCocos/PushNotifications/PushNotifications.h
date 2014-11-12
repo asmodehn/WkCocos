@@ -10,7 +10,7 @@ namespace WkCocos
 		class PushNotifications
 		{
 		public:
-			static bool schedule(long when, std::string title, std::string message);
+			static int schedule(long when, std::string title, std::string message);
 
 		};
 

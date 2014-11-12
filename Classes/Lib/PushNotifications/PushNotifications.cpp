@@ -20,24 +20,24 @@ namespace WkCocos
 	{
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-		bool PushNotifications::schedule(long when, std::string title, std::string message)
+		int PushNotifications::schedule(long when, std::string title, std::string message)
 		{
-			bool scheduled = false;
+			int scheduled = 0;
 			cocos2d::JniMethodInfo j_getInstanceMI;
 			cocos2d::JniMethodInfo j_signInMI;
 			CCLOG("Calling com/gameparkstudio/wkcocos/lib/PushNotificationsManager/getInstance()Lcom/gameparkstudio/wkcocos/lib/PushNotificationsManager");
 			if (cocos2d::JniHelper::getStaticMethodInfo(j_getInstanceMI, "com/gameparkstudio/wkcocos/lib/PushNotificationsManager", "getInstance", "()Lcom/gameparkstudio/wkcocos/lib/PushNotificationsManager;"))
 			{
 				jobject instance = j_getInstanceMI.env->CallStaticObjectMethod(j_getInstanceMI.classID, j_getInstanceMI.methodID);
-				CCLOG("Calling com/gameparkstudio/wkcocos/lib/PushNotificationsManager/schedule(JLjava/lang/String;Ljava/lang/String;)Z");
-				if (instance && cocos2d::JniHelper::getMethodInfo(j_signInMI, "com/gameparkstudio/wkcocos/lib/PushNotificationsManager", "schedule", "(JLjava/lang/String;Ljava/lang/String;)Z"))
+				CCLOG("Calling com/gameparkstudio/wkcocos/lib/PushNotificationsManager/schedule(JLjava/lang/String;Ljava/lang/String;)I");
+				if (instance && cocos2d::JniHelper::getMethodInfo(j_signInMI, "com/gameparkstudio/wkcocos/lib/PushNotificationsManager", "schedule", "(JLjava/lang/String;Ljava/lang/String;)I"))
 				{
 					//building arguments
 					jlong jwhen(when);
 					jstring jtitle = cocos2d::JniHelper::string2jstring(title.c_str());
 					jstring jmessage = cocos2d::JniHelper::string2jstring(message.c_str());
 
-					scheduled = j_signInMI.env->CallBooleanMethod(instance, j_signInMI.methodID, jwhen, jtitle, jmessage);
+					scheduled = j_signInMI.env->CallIntMethod(instance, j_signInMI.methodID, jwhen, jtitle, jmessage);
 
 					j_getInstanceMI.env->DeleteLocalRef(jtitle);
 					j_getInstanceMI.env->DeleteLocalRef(jmessage);
@@ -53,9 +53,9 @@ namespace WkCocos
 
 		//PN on Win32 (HOW TO ?)
 
-		bool PushNotifications::schedule(long when, std::string title, std::string message)
+		int PushNotifications::schedule(long when, std::string title, std::string message)
 		{
-			return false;
+			return 0;
 			//TODO ( REST calls ?? )
 		}
 #endif

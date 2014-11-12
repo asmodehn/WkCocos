@@ -32,7 +32,7 @@ public class PushNotificationsManager{
         return false;
     }
 
-    public boolean schedule(long when, String title, String message) {
+    public int schedule(long when, String title, String message) {
 
         long time = System.currentTimeMillis() + when * 1000;
         final int intent_id = (int) time;
@@ -46,7 +46,7 @@ public class PushNotificationsManager{
         AlarmManager alarmManager = (AlarmManager)MainActivity.getContext().getSystemService(MainActivity.getContext().ALARM_SERVICE);
         alarmManager.set(AlarmManager.RTC, time, WKPI);
 
-        return true;
+        return intent_id;
     }
 	
 }
