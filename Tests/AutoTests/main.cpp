@@ -2,7 +2,7 @@
 #include "UnitTest++/UnitTest++.h"
 #include "UnitTest++/TestReporterStdout.h"
 
-#include <string>
+#include <cstring>
 
 int main(int argc, char** argv)
 {

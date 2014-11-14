@@ -207,7 +207,6 @@ namespace WkCocos
 	void Save::setOnlineDataMgr(std::shared_ptr<OnlineData::OnlineDataManager> onlinedata)
 	{
 		m_onlinedata = onlinedata; 
-
 		//hoking us up to errors event
 		m_onlinedata->getEventManager()->subscribe<OnlineData::Events::Error>(*this);
 	}

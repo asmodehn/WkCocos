@@ -12,7 +12,7 @@ namespace WkCocos
 	 * This is the mother class of all WkCocos Actors.
 	 */
 	typedef unsigned long ActorID;
-	
+
 	template <typename Derived>
 	class Event : public entityx::Event<Derived> {
 		ActorID m_id;
@@ -33,18 +33,26 @@ namespace WkCocos
 		//simple random number generators (no need for seed here)
 		static std::default_random_engine generator;
 		static std::uniform_int_distribution<ActorID> distribution;
+
+		static ActorID registerMe(Actor*);
+
 	protected:
 		//event manager as sharedptr in case we need to use it in a non-actor.
 		static std::shared_ptr<entityx::EventManager> event_manager;
 		ActorID m_id;
 	public:
-	
+
 		static inline entityx::ptr<entityx::EventManager> getEventManager(){
 			return event_manager;
 		}
 
+        //default constructor
 		Actor();
-	
+
+		//copy constructor
+        Actor(const Actor& );
+
+        //destructor
 		~Actor();
 
 		ActorID getId();
@@ -56,7 +64,7 @@ namespace WkCocos
 		static Actor* getActor(ActorID id);
 
 	};
-	
+
 }//namespace WkCocos
 
 #endif // __WKCOCOS_ACTOR_H__

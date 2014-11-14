@@ -171,6 +171,11 @@ namespace WkCocos
 		void setOnlineDataMgr(std::shared_ptr<OnlineData::OnlineDataManager> onlinedata);
 
 		/**
+		* receiving errors from onlinedata manager
+		*/
+		void receive(const OnlineData::Events::Error& err);
+
+		/**
 		* Set user name
 		*/
 		inline void setUserName(const std::string& userName){ m_user = userName; }
@@ -180,11 +185,6 @@ namespace WkCocos
 		
 		inline std::string getData(){ return m_rawData; }
 		
-		/**
-		* receiving errors from OnlineData.
-		*/
-		void receive(const OnlineData::Events::Error & err);
-
 	private:
 		/**
 		* Name of the save
@@ -249,7 +249,6 @@ namespace WkCocos
 		*/
 		unsigned short m_saved;
 		entityx::Entity::Id m_current_save;
-		
 	};
 
 }// namespace WkCocos

@@ -4,9 +4,12 @@
 
 //cocos style platform detection
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
+//works with MSYS2 MINGW GCC as well
 #include <locale>
-#include <codecvt>
-//For UUID on windows
+
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
+#include <uuid/uuid.h>
+
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
 //UUID generation on Android device ( Java calls )
 #include <jni.h>
@@ -29,7 +32,7 @@ namespace WkCocos
 		//platform detection based on cocos
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
 		//generating UUID ( from Android code )
-		
+
 		cocos2d::JniMethodInfo j_randomUUIDMI;
 		CCLOG("Calling java/util/UUID/randomUUID()Ljava/util/UUID;");
 		if (cocos2d::JniHelper::getStaticMethodInfo(j_randomUUIDMI, "java/util/UUID", "randomUUID", "()Ljava/util/UUID;"))
@@ -73,6 +76,25 @@ namespace WkCocos
 			//RpcStringFree(&rpc_string);
 			//uuid = std::wstring_convert<std::codecvt_utf8<wchar_t> >().to_bytes(wuuid);
 		}
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
+        //TEST CODE !!!
+        uuid_t uuid_impl;
+        int result = uuid_generate_time_safe(uuid_impl);
+        CCLOG("sizeof uuid = %d\n", (int)sizeof uuid_impl);
+        // or: printf("sizeof uuid = %zu\n", sizeof uuid_impl);
+        if (result == 0) {
+            CCLOG("uuid generated safely");
+        }
+        else {
+            CCLOG("uuid not generated safely");
+        }
+        for (size_t i = 0; i < sizeof uuid_impl; i ++) {
+            CCLOG("%02x ", uuid_impl[i]);
+        }
+
+        char strbuf[37];
+        uuid_unparse_lower(uuid_impl,strbuf);
+        uuid.replace(0,strlen(strbuf),strbuf,strlen(strbuf));
 #endif
 
 		return uuid;
