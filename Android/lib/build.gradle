@@ -121,7 +121,7 @@ task copyAssets(type: Copy) {
 task ndkBuild(type: Exec, dependsOn: 'copyAssets') {
     //windows only
     def dependsDir = file('../../depends').absolutePath
-    def cpus = Runtime.runtime.availableProcessors() / 2
+    def cpus = Runtime.runtime.availableProcessors()
 
     if (System.properties['os.name'].toLowerCase().contains('windows')) {
         //windows
@@ -142,7 +142,7 @@ task cleanAssets(type: Delete) {
 task ndkClean(type: Exec, dependsOn: 'cleanAssets') {
     //windows only
     def dependsDir = file('../../depends').absolutePath
-    def cpus = Runtime.runtime.availableProcessors() / 2
+    def cpus = Runtime.runtime.availableProcessors()
 
     if (System.properties['os.name'].toLowerCase().contains('windows')) {
         //windows

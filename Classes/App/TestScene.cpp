@@ -39,13 +39,13 @@ bool TestScene::init()
 	cocos2d::Size visibleSize = cocos2d::Director::getInstance()->getVisibleSize();
 	cocos2d::Vec2 origin = cocos2d::Director::getInstance()->getVisibleOrigin();
 
-	//auto closeItem = cocos2d::MenuItemImage::create("CloseNormal.png", "CloseSelected.png",
-	//	CC_CALLBACK_1(TestScene::menuCloseCallback, this));
-	//closeItem->setPosition(cocos2d::Vec2(visibleSize.width - closeItem->getContentSize().width / 2,
-	//	visibleSize.height - closeItem->getContentSize().height / 2));
-	//auto menu = cocos2d::Menu::create(closeItem, NULL);
-	//menu->setPosition(cocos2d::Vec2::ZERO);
-	//addChild(menu, 1);
+	auto closeItem = cocos2d::MenuItemImage::create("CloseNormal.png", "CloseSelected.png",
+		CC_CALLBACK_1(TestScene::menuCloseCallback, this));
+	closeItem->setPosition(cocos2d::Vec2(visibleSize.width - closeItem->getContentSize().width / 2,
+		visibleSize.height - closeItem->getContentSize().height / 2));
+	auto menu = cocos2d::Menu::create(closeItem, NULL);
+	menu->setPosition(cocos2d::Vec2::ZERO);
+	addChild(menu, 1);
 
 	m_prevButton = cocos2d::ui::Button::create("SkipNormal.png", "SkipSelected.png");
 	m_prevButton->addTouchEventListener(CC_CALLBACK_2(TestScene::prevCallback, this));
@@ -248,16 +248,16 @@ void TestScene::error_CB(std::string msg)
 	errorui->activate(msg);
 }
 
-//void TestScene::menuCloseCallback(Ref* pSender)
-//{
-//#if (CC_TARGET_PLATFORM == CC_PLATFORM_WP8) || (CC_TARGET_PLATFORM == CC_PLATFORM_WINRT)
-//	MessageBox("You pressed the close button. Windows Store Apps do not implement a close button.", "Alert");
-//	return;
-//#endif
-//
-//	cocos2d::Director::getInstance()->end();
-//
-//#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-//	exit(0);
-//#endif
-//}
+void TestScene::menuCloseCallback(Ref* pSender)
+{
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_WP8) || (CC_TARGET_PLATFORM == CC_PLATFORM_WINRT)
+	MessageBox("You pressed the close button. Windows Store Apps do not implement a close button.", "Alert");
+	return;
+#endif
+
+	cocos2d::Director::getInstance()->end();
+
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+	exit(0);
+#endif
+}
