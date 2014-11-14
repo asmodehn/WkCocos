@@ -20,9 +20,9 @@ namespace WkCocos
 	{
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-		int PushNotifications::schedule(int id, long when, std::string title, std::string message)
+		void PushNotifications::schedule(int id, long when, std::string title, std::string message)
 		{
-			int scheduled = 0;
+
 			cocos2d::JniMethodInfo j_getInstanceMI;
 			cocos2d::JniMethodInfo j_signInMI;
 			CCLOG("Calling com/gameparkstudio/wkcocos/lib/PushNotificationsManager/getInstance()Lcom/gameparkstudio/wkcocos/lib/PushNotificationsManager");
@@ -38,7 +38,7 @@ namespace WkCocos
 					jstring jtitle = cocos2d::JniHelper::string2jstring(title.c_str());
 					jstring jmessage = cocos2d::JniHelper::string2jstring(message.c_str());
 
-					scheduled = j_signInMI.env->CallIntMethod(instance, j_signInMI.methodID, jid, jwhen, jtitle, jmessage);
+					j_signInMI.env->CallIntMethod(instance, j_signInMI.methodID, jid, jwhen, jtitle, jmessage);
 
 					j_getInstanceMI.env->DeleteLocalRef(jtitle);
 					j_getInstanceMI.env->DeleteLocalRef(jmessage);
@@ -47,16 +47,16 @@ namespace WkCocos
 				j_getInstanceMI.env->DeleteLocalRef(j_getInstanceMI.classID);
 				j_getInstanceMI.env->DeleteLocalRef(instance);
 			}
-			return scheduled;
+
 		}
 
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
 
 		//PN on Win32 (HOW TO ?)
 
-		int PushNotifications::schedule(long when, std::string title, std::string message)
+		void PushNotifications::schedule(int id, long when, std::string title, std::string message)
 		{
-			return 0;
+
 			//TODO ( REST calls ?? )
 		}
 #endif
