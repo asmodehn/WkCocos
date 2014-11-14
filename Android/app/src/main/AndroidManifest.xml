@@ -22,6 +22,7 @@
 
         <activity android:name="com.gameparkstudio.wkcocos.app.AppActivity"
             android:label="@string/app_name"
+            android:launchMode="singleInstance"
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
             android:configChanges="orientation">
@@ -34,11 +35,6 @@
 
         <activity android:name="com.soomla.store.billing.google.GooglePlayIabService$IabActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" />
-
-        <service android:name="com.gameparkstudio.wkcocos.lib.MainService"
-            android:enabled="true" />
-
-        <receiver android:name="com.gameparkstudio.wkcocos.lib.MainBroadcastReceiver" />
 
         <meta-data android:name="billing.service" android:value="google.GooglePlayIabService" />
 
