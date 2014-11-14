@@ -8,7 +8,7 @@ namespace WkCocos
 	namespace StrongBox
 	{
 		//internal method
-		void StrongBox::copy_key(unsigned char * key, size_t key_len)
+		void StrongBox::copy_key(unsigned char * key, xxtea_long key_len)
 		{
 			m_key_len = key_len;
 			if (m_key_len == 0) //to counter non deterministic malloc behavior when allocation 0 bytes
@@ -22,7 +22,7 @@ namespace WkCocos
 			}
 		}
 
-		void StrongBox::move_key(unsigned char *& key, size_t& key_len)
+		void StrongBox::move_key(unsigned char *& key, xxtea_long& key_len)
 		{
 			m_key_len = key_len;
 			m_key = key;
@@ -31,7 +31,7 @@ namespace WkCocos
 			key_len = 0;
 		}
 
-		void StrongBox::copy_value(unsigned char * value, size_t val_len)
+		void StrongBox::copy_value(unsigned char * value, xxtea_long val_len)
 		{
 			m_value_len = val_len;
 			if (m_value_len == 0) //to counter non deterministic malloc behavior when allocation 0 bytes
@@ -45,7 +45,7 @@ namespace WkCocos
 			}
 		}
 
-		void StrongBox::move_value(unsigned char *& value, size_t& val_len)
+		void StrongBox::move_value(unsigned char *& value, xxtea_long& val_len)
 		{
 			m_value_len = val_len;
 			m_value = value;
@@ -155,6 +155,7 @@ namespace WkCocos
 				//this will malloc.
 				m_value = xxtea_encrypt(data, data_len, m_key, m_key_len, &ret_len);
 				m_value_len = ret_len;
+				free(data);
 			}
 			else
 			{
@@ -168,18 +169,23 @@ namespace WkCocos
 		{
 			xxtea_long ret_len;
 			unsigned char* data;
+			std::string result;
 			if (isEncrypted())
 			{
+				//this will malloc
 				data = xxtea_decrypt(m_value, m_value_len, m_key, m_key_len, &ret_len);
+				result = std::string(reinterpret_cast<char*>(data), ret_len - 1);
+				free(data);
 			}
 			else
 			{
 				data = m_value;
 				ret_len = m_value_len;
+				result = std::string(reinterpret_cast<char*>(data), ret_len - 1);
 			}
 			//copy on string construct
 			//be careful with the \0 added at the end of a buffer comming from a string.
-			return std::string(reinterpret_cast<char*>(data),ret_len-1);
+			return result;
 		}
 
 		void StrongBox::hexString2BinVal(const std::string&  hex, unsigned char *& val, xxtea_long & val_length)

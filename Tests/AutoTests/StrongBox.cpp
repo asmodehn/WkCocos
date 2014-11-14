@@ -77,8 +77,8 @@ SUITE(StrongBox)
 		unsigned char* enc_buffer;
 		xxtea_long enc_buffer_len;
 		WkCocos::StrongBox::StrongBox::hexString2BinVal(enc_str, enc_buffer, enc_buffer_len);
-		int enc_value = *(reinterpret_cast<int*>(enc_buffer));
-
+		int enc_value = *(reinterpret_cast<int*>(enc_buffer));//this will copy the int
+		free(enc_buffer);
 		CHECK(raw_value == enc_value);
 	}
 
@@ -93,8 +93,8 @@ SUITE(StrongBox)
 		unsigned char* enc_buffer;
 		xxtea_long enc_buffer_len;
 		WkCocos::StrongBox::StrongBox::hexString2BinVal(enc_str, enc_buffer, enc_buffer_len);
-		std::string enc_value(reinterpret_cast<char*>(enc_buffer));
-
+		std::string enc_value(reinterpret_cast<char*>(enc_buffer));//this will copy the string
+		free(enc_buffer);
 		CHECK(raw_value == enc_value);
 	}
 
@@ -133,8 +133,8 @@ SUITE(StrongBox)
 		unsigned char* enc_buffer;
 		xxtea_long enc_buffer_len;
 		WkCocos::StrongBox::StrongBox::hexString2BinVal(enc_str, enc_buffer, enc_buffer_len);
-		int enc_value = *(reinterpret_cast<int*>(enc_buffer));
-
+		int enc_value = *(reinterpret_cast<int*>(enc_buffer));//this will copy the int
+		free(enc_buffer);
 		CHECK(raw_value != enc_value);
 	}
 
@@ -149,8 +149,8 @@ SUITE(StrongBox)
 		unsigned char* enc_buffer;
 		xxtea_long enc_buffer_len;
 		WkCocos::StrongBox::StrongBox::hexString2BinVal(enc_str, enc_buffer, enc_buffer_len);
-		std::string enc_value(reinterpret_cast<char*>(enc_buffer));
-
+		std::string enc_value(reinterpret_cast<char*>(enc_buffer)); //this will copy the string
+		free(enc_buffer);
 		CHECK(raw_value != enc_value);
 	}
 
