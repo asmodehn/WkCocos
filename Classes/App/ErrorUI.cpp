@@ -52,12 +52,15 @@ void ErrorUI::activate(std::string msg)
 	m_number->setString(WkCocos::ToolBox::itoa(errors));
 	m_label->setString(msg);
 	
-	m_widget->setContentSize(cocos2d::Size(m_label->getContentSize().width + 40, 140));
+	m_widget->setContentSize(cocos2d::Size(m_label->getContentSize().width + 40, m_label->getContentSize().height + 120));
 	cocos2d::Size widgetSize = m_widget->getContentSize();
 	cocos2d::Size visibleSize = cocos2d::Director::getInstance()->getVisibleSize();
 
 	m_number->setPositionX(-widgetSize.width / 2 + 20);
-	m_number->setPositionY(widgetSize.height / 2 - 20);
+	m_number->setPositionY(widgetSize.height / 2 - 24);
+
+	m_skipButton->setPositionY(-(m_label->getContentSize().height + m_skipButton->getContentSize().height) / 2);
+	m_refreshButton->setPositionY(-(m_label->getContentSize().height + m_refreshButton->getContentSize().height) / 2);
 
 	auto fadeBack = cocos2d::DrawNode::create();
 	auto errorBack = cocos2d::DrawNode::create();

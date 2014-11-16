@@ -26,8 +26,8 @@ namespace WkCocos
 		_amplitude = amplitude;
 		_speed = strength;
 		_curve.push_back(cocos2d::Vec2(0.f, 0.f));
-		_curve.push_back(cocos2d::Vec2(amplitude / 2, 0.f));
-		_curve.push_back(cocos2d::Vec2(-amplitude / 2, 0.f));
+		_curve.push_back(cocos2d::Vec2((float)amplitude / 2, 0.f));
+		_curve.push_back(cocos2d::Vec2(-(float)amplitude / 2, 0.f));
 		_curve.push_back(cocos2d::Vec2(0.f, 0.f));
 		_step.push_back(0.f);
 		_step.push_back(0.25f);

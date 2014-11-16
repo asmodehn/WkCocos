@@ -240,7 +240,7 @@ void TestScene::receive(const WkCocos::OnlineData::Events::Error &OD)
 	errormsg << "HTTP " << OD.httpErrorCode << std::endl;
 	errormsg << "App42 " << OD.app42ErrorCode << std::endl;
 	errormsg << OD.errorMessage << std::endl;
-	errormsg << OD.errorDetails << std::endl;
+	errormsg << OD.errorDetails;
 
 	/**
 	* Handling all possible Online Errors here
@@ -258,6 +258,26 @@ void TestScene::receive(const WkCocos::OnlineData::Events::Error &OD)
 	}
 	else if (OD.httpErrorCode == -1 && OD.app42ErrorCode == 0)
 	{
+	}
+	else if (!OD.errorDetails.compare("docs list"))
+	{
+		error_CB(errormsg.str()
+			, [=](){
+
+		}
+			, [=](){
+
+		});
+	}
+	else if (!OD.errorDetails.compare("get data by query"))
+	{
+		error_CB(errormsg.str()
+			, [=](){
+
+		}
+			, [=](){
+
+		});
 	}
 }
 
