@@ -63,13 +63,7 @@ namespace WkCocos
 		m_localdata->loadLoginID([=](std::string user, std::string passwd){
 			if (user != "" && passwd != "")
 			{
-				m_user = user;
-				m_passwd = passwd;
-				for (auto save : m_save)
-				{
-					save.second->setUserName(m_user);
-				}
-
+				setUser(user, passwd);
 				newPlayer = false;
 			}
 			else
@@ -78,13 +72,7 @@ namespace WkCocos
 
 				if (user.length() > 0 && passwd.length() > 0)
 				{
-					m_user = user;
-					m_passwd = passwd;
-					for (auto save : m_save)
-					{
-						save.second->setUserName(m_user);
-					}
-
+					setUser(user, passwd);
 					//store unique ID
 					m_localdata->saveLoginID(m_user, m_passwd, "l0g1nS3cr3tK3y"); //TODO : encyrpt this
 
@@ -357,12 +345,7 @@ namespace WkCocos
 			//if new Id is aceptable we replace old one
 			if (m_user.length() > 0 && m_passwd.length() > 0)
 			{
-				m_user = newUser;
-				m_passwd = newPasswd;
-				for (auto save : m_save)
-				{
-					save.second->setUserName(m_user);
-				}
+				setUser(newUser, newPasswd);
 				//store unique ID
 				m_localdata->saveLoginID(m_user, m_passwd, "l0g1nS3cr3tK3y");
 			}
@@ -382,12 +365,7 @@ namespace WkCocos
 			//if new Id is aceptable we replace old one
 			if (m_user.length() > 0 && m_passwd.length() > 0)
 			{
-				m_user = newUser;
-				m_passwd = newPasswd;
-				for (auto save : m_save)
-				{
-					save.second->setUserName(m_user);
-				}
+				setUser(newUser, newPasswd);
 				//store unique ID
 				m_localdata->saveLoginID(m_user, m_passwd, "l0g1nS3cr3tK3y");
 			}
