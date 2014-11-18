@@ -359,7 +359,10 @@ namespace WkCocos
 			{
 				m_user = newUser;
 				m_passwd = newPasswd;
-
+				for (auto save : m_save)
+				{
+					save.second->setUserName(m_user);
+				}
 				//store unique ID
 				m_localdata->saveLoginID(m_user, m_passwd, "l0g1nS3cr3tK3y");
 			}
@@ -381,7 +384,10 @@ namespace WkCocos
 			{
 				m_user = newUser;
 				m_passwd = newPasswd;
-
+				for (auto save : m_save)
+				{
+					save.second->setUserName(m_user);
+				}
 				//store unique ID
 				m_localdata->saveLoginID(m_user, m_passwd, "l0g1nS3cr3tK3y");
 			}

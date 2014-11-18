@@ -67,7 +67,7 @@ namespace WkCocos
 						CCLOG("\nResponse Body=%s", userdata->getBody().c_str());
 
 						if (userdata->isSuccess)
-						{//if login succeed then login.
+						{//if login succeed then login. // if login succeeded than what? login? again? really?
 							cb(userdata);
 						}
 						else// if login failed, 
