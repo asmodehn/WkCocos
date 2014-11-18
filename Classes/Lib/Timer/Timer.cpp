@@ -56,6 +56,22 @@ namespace WkCocos
 			entity.assign<Comp::Alarm>(alarm_date, m_time.m_server_time, m_time.m_msecs);
 			return true;
 		}
+
+		double Timer::getAlarmTimeLeft(std::string id)
+		{
+			entityx::ptr<Comp::ID> eid;
+			entityx::ptr<Comp::Alarm> alarm;
+			for (auto entity : entity_manager->entities_with_components(eid, alarm))
+			{
+				if (id == eid->m_id)
+				{
+					time_t now = mktime(&alarm->m_now);
+					time_t end = mktime(&alarm->m_end);
+					return difftime(end, now);
+				}
+			}
+			return 0.f;
+		}
 		
 		/**
 		* stops Timer
