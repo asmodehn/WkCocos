@@ -45,7 +45,7 @@ bool TestScene::init()
 		visibleSize.height - closeItem->getContentSize().height / 2));
 	auto menu = cocos2d::Menu::create(closeItem, NULL);
 	menu->setPosition(cocos2d::Vec2::ZERO);
-	addChild(menu);
+	addChild(menu, 1);
 
 	m_prevButton = cocos2d::ui::Button::create("SkipNormal.png", "SkipSelected.png");
 	m_prevButton->addTouchEventListener(CC_CALLBACK_2(TestScene::prevCallback, this));
@@ -142,12 +142,12 @@ bool TestScene::init()
 	gameui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.5f));
 	//*/
 
-	//activating first UI : 
+	//activating first UI :
 	saveui->setEnabled(true);
 	saveui->setVisible(true);
 	currentUI = SavingUI::id;
 	m_titleLabel->setString(currentUI);
-	
+
 	m_time = cocos2d::ui::Text::create("", "Thonburi", 20);
 	m_time->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, /*closeItem->getPositionY()*/ visibleSize.height - 20));
 	addChild(m_time);
@@ -155,7 +155,7 @@ bool TestScene::init()
 	g_gameLogic->getOnlineDataManager().getEventManager()->subscribe<WkCocos::OnlineData::Events::Error>(*this);
 	g_gameLogic->getLocalDataManager().getEventManager()->subscribe<WkCocos::LocalData::Events::Error>(*this);
 	g_gameLogic->getPlayer().getEventManager()->subscribe<MyPlayer::Error>(*this);
-	
+
 	return true;
 }
 
@@ -245,7 +245,7 @@ void TestScene::receive(const WkCocos::OnlineData::Events::Error &OD)
 	/**
 	* Handling all possible Online Errors here
 	*/
-	if (OD.httpErrorCode == -1 && OD.app42ErrorCode == 0) 
+	if (OD.httpErrorCode == -1 && OD.app42ErrorCode == 0)
 	{	// could not resolve host : api.shephertz.com; Host not found
 		// unknown SSL protocol error in connection to api.shephertz.com:443
 		error_CB(errormsg.str()
@@ -295,7 +295,7 @@ void TestScene::receive(const MyPlayer::Error &player_error)
 		, [=](){
 
 	});
-	
+
 }
 
 void TestScene::error_CB(std::string msg, std::function<void()> retryCB, std::function<void()> skipCB)
