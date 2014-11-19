@@ -45,7 +45,8 @@ LOCAL_SRC_FILES := jni.cpp \
                    ../../../../../Classes/Lib/OnlineData/Comp/OnlineData.cpp \
                    ../../../../../Classes/Lib/OnlineData/Systems/Storage.cpp \
                    ../../../../../Classes/Lib/OnlineData/Systems/User.cpp \
-				   ../../../../../Classes/Lib/OnlineData/Systems/Timer.cpp \
+                   ../../../../../Classes/Lib/OnlineData/Systems/Timer.cpp \
+                   ../../../../../Classes/Lib/OnlineData/Systems/ProgressUpdate.cpp \
                    ../../../../../Classes/Lib/Shop/Shop.cpp \
                    ../../../../../Classes/Lib/Shop/Inventory.cpp \
                    ../../../../../Classes/Lib/Shop/Assets.cpp \
@@ -59,7 +60,7 @@ LOCAL_SRC_FILES := jni.cpp \
                    ../../../../../Classes/Lib/Timer/Systems/TimeUpdater.cpp \
                    ../../../../../Classes/Lib/StrongBox/StrongBox.cpp \
                    ../../../../../Classes/Lib/Save.cpp \
-				   ../../../../../Classes/Lib/Actor.cpp \
+                   ../../../../../Classes/Lib/Actor.cpp \
                    ../../../../../Classes/Lib/WebView/UIWebView.cpp \
                    ../../../../../Classes/Lib/WebView/UIWebViewImpl-android.cpp \
                    ../../../../../Classes/Lib/Helper/GameLogic.cpp \
