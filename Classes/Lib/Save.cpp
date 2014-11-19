@@ -86,7 +86,7 @@ namespace WkCocos
 		bool saved = true;
 		m_rawData = data;
 
-		LOG_WARNING << "requested save of " << m_rawData << std::endl;
+		LOG_DEBUG << "requested save of " << m_rawData << std::endl;
 
 		if (isMode(Mode::ONLINE)) //no encryption online
 		{
