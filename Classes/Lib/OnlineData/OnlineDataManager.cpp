@@ -3,6 +3,7 @@
 #include "WkCocos/OnlineData/Systems/User.h"
 #include "WkCocos/OnlineData/Systems/Storage.h"
 #include "WkCocos/OnlineData/Systems/Timer.h"
+#include "WkCocos/OnlineData/Systems/ProgressUpdate.h"
 #include "WkCocos/OnlineData/Comp/OnlineData.h"
 
 #include "cocos/cocos2d.h"
@@ -30,6 +31,7 @@ namespace WkCocos
 			system_manager->add<Systems::User>();
 			system_manager->add<Systems::Storage>();
 			system_manager->add<Systems::Timer>();
+			system_manager->add<Systems::ProgressUpdate>();
 			system_manager->configure();
 		}
 		
@@ -42,6 +44,7 @@ namespace WkCocos
 
 			auto newentity = entity_manager->create();
 			auto id = newentity.id();
+			newentity.assign<Comp::ProgressUpdate>();
 			newentity.assign<Comp::Create>(userid, password, email, [=](::App42::App42UserResponse* r){
 
 				if (r->isSuccess)
@@ -65,6 +68,7 @@ namespace WkCocos
 		{
 			auto newentity = entity_manager->create();
 			auto id = newentity.id();
+			newentity.assign<Comp::ProgressUpdate>();
 			newentity.assign<Comp::Login>(userid, password, [=](::App42::App42UserResponse* r){
 				if (!r->isSuccess)
 				{
@@ -86,6 +90,7 @@ namespace WkCocos
 		{
 			auto updateentity = entity_manager->create();
 			auto id = updateentity.id();
+			updateentity.assign<Comp::ProgressUpdate>();
 			updateentity.assign < Comp::UpdateUserData >(userid, saveName, docId, user_data, [=](::App42::App42StorageResponse* r)
 			{
 				if (!r->isSuccess)
@@ -109,6 +114,7 @@ namespace WkCocos
 		{
 			auto insertentity = entity_manager->create();
 			auto id = insertentity.id();
+			insertentity.assign<Comp::ProgressUpdate>();
 			insertentity.assign < Comp::InsertUserData >(userid, saveName, user_data, [=](::App42::App42StorageResponse* r)
 			{
 				if (!r->isSuccess)
@@ -132,7 +138,7 @@ namespace WkCocos
 		{
 			auto newentity = entity_manager->create();
 			auto id = newentity.id();
-			//new File component for each request. The aggregator system will detect duplicates and group them
+			newentity.assign<Comp::ProgressUpdate>();
 			newentity.assign<Comp::LoadUserData>(userid, saveName, [=](::App42::App42UserResponse* r)
 			{
 				if (r->isSuccess)
@@ -176,6 +182,7 @@ namespace WkCocos
 		void OnlineDataManager::getUsersKeyValue(const std::string& saveName, const std::string& key, int value, int quantity, int offset)
 		{
 			auto newentity = entity_manager->create();
+			newentity.assign<Comp::ProgressUpdate>();
 			newentity.assign<Comp::GetUsersKeyValue>(saveName, key, value, quantity, offset, [=](std::map<std::string, std::string> data, int recordCount)
 			{
 				cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, data, recordCount](){
@@ -187,6 +194,7 @@ namespace WkCocos
 		void OnlineDataManager::getUsersFromTo(const std::string& saveName, const std::string& key, int from, int to, int quantity, int offset)
 		{
 			auto newentity = entity_manager->create();
+			newentity.assign<Comp::ProgressUpdate>();
 			newentity.assign<Comp::GetUsersFromTo>(saveName, key, from, to, quantity, offset, [=](std::map<std::string, std::string> data, int recordCount)
 			{
 				cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, data, recordCount](){
@@ -198,6 +206,7 @@ namespace WkCocos
 		void OnlineDataManager::getServerTime(std::function<void(std::string)> callback)
 		{
 			auto newentity = entity_manager->create();
+			newentity.assign<Comp::ProgressUpdate>();
 			newentity.assign<Comp::ServerTime>([=](std::string s_iso8601){
 				cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, callback, s_iso8601](){
 					callback(s_iso8601);
@@ -208,6 +217,7 @@ namespace WkCocos
 		void OnlineDataManager::getAllDocsPaging(const std::string& saveName, int quantity, int offset)
 		{
 			auto newentity = entity_manager->create();
+			newentity.assign<Comp::ProgressUpdate>();
 			newentity.assign<Comp::AllDocsPaging>(saveName, quantity, offset, [=](std::vector<std::map<std::string, std::string>> data)
 			{
 				cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, data](){
@@ -221,6 +231,7 @@ namespace WkCocos
 			system_manager->update<Systems::Storage>(dt);
 			system_manager->update<Systems::User>(dt);
 			system_manager->update<Systems::Timer>(dt);
+			system_manager->update<Systems::ProgressUpdate>(dt);
 		}
 
 	} // namespace LocalData

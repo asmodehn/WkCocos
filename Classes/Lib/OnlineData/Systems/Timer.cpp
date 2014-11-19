@@ -22,27 +22,27 @@ namespace WkCocos
 
 			void Timer::update(entityx::ptr<entityx::EntityManager> entities, entityx::ptr<entityx::EventManager> events, double dt)
 			{
+				entityx::ptr<Comp::ProgressUpdate> pu;
 
 				entityx::ptr<Comp::ServerTime> st;
-				for (auto entity : entities->entities_with_components(st))
+				for (auto entity : entities->entities_with_components(st, pu))
 				{
 					if (st->done)
 					{
-						CCLOG("Time Data entity lived %f seconds", st->life_time);
+						CCLOG("Time Data entity lived %f seconds", pu->life_time);
 						entity.remove<Comp::ServerTime>();
-						//if mask at 0 no request in this entity anymore
+						entity.remove<Comp::ProgressUpdate>();
 						if (entity.component_mask() == 0)
 							entity.destroy();
 					}
-					else if (!st->in_progress)
+					else if (!pu->in_progress)
 					{
 						m_timer_service->GetCurrentTimeNoWinBase(st->m_cb);
-						st->in_progress = true;
+						pu->in_progress = true;
 					}
 					else
 					{
-						st->life_time += dt;
-						if (st->life_time > TIMEOUT && !st->timeout) // make sure error is emitted only once before i find out how to stop entity
+						if (pu->life_time > TIMEOUT && !st->timeout) // make sure error is emitted only once before i find out how to stop entity
 						{
 							st->timeout = true;
 							events->emit<Events::Error>(entity.id(), "server time");

@@ -13,10 +13,8 @@ namespace WkCocos
 		namespace Comp
 		{
 			Create::Create(std::string userid, std::string passwd, std::string email, std::function<void(::App42::App42UserResponse*)> cb)
-				: in_progress(false)
-				, done(false)
+				: done(false)
 				, timeout(false)
-				, life_time(0)
 				, m_userid(userid)
 				, m_passwd(passwd)
 				, m_email(email)
@@ -50,10 +48,8 @@ namespace WkCocos
 			}
 
 			Login::Login(std::string userid, std::string passwd, std::function<void(::App42::App42UserResponse*)> cb)
-				: in_progress(false)
-				, done(false)
+				: done(false)
 				, timeout(false)
-				, life_time(0)
 				, m_userid(userid)
 				, m_passwd(passwd)
 			{
@@ -86,10 +82,8 @@ namespace WkCocos
 			}
 
 			UpdateUserData::UpdateUserData(std::string userid, std::string collection, std::string docId, std::string user_data, std::function<void(::App42::App42StorageResponse*)> cb)
-				: in_progress(false)
-				, done(false)
+				: done(false)
 				, timeout(false)
-				, life_time(0)
 				, m_userid(userid)
 				, m_collection(collection)
 				, m_docid(docId)
@@ -115,10 +109,8 @@ namespace WkCocos
 			}
 
 			InsertUserData::InsertUserData(std::string userid, std::string collection, std::string user_data, std::function<void(::App42::App42StorageResponse*)> cb)
-				: in_progress(false)
-				, done(false)
+				: done(false)
 				, timeout(false)
-				, life_time(0)
 				, m_userid(userid)
 				, m_collection(collection)
 				, m_user_data(user_data)
@@ -143,10 +135,8 @@ namespace WkCocos
 			}
 
 			LoadUserData::LoadUserData(std::string userid, std::string collection, std::function<void(::App42::App42UserResponse*)> cb)
-				: in_progress(false)
-				, done(false)
+				: done(false)
 				, timeout(false)
-				, life_time(0)
 				, m_userid(userid)
 				, m_collection(collection)
 			{
@@ -164,10 +154,8 @@ namespace WkCocos
 			}
 
 			GetUsersKeyValue::GetUsersKeyValue(std::string collection, std::string key, int value, int quantity, int offset, std::function<void(std::map<std::string, std::string>, int)> cb)
-				: in_progress(false)
-				, done(false)
+				: done(false)
 				, timeout(false)
-				, life_time(0)
 				, m_collection(collection)
 				, m_key(key)
 				, m_value(value)
@@ -204,10 +192,8 @@ namespace WkCocos
 			}
 
 			GetUsersFromTo::GetUsersFromTo(std::string collection, std::string key, int from, int to, int quantity, int offset, std::function<void(std::map<std::string, std::string>, int)> cb)
-				: in_progress(false)
-				, done(false)
+				: done(false)
 				, timeout(false)
-				, life_time(0)
 				, m_collection(collection)
 				, m_key(key)
 				, m_from(from)
@@ -251,10 +237,8 @@ namespace WkCocos
 			}
 
 			ServerTime::ServerTime(std::function<void(std::string)> callback)
-				: in_progress(false)
-				, done(false)
+				: done(false)
 				, timeout(false)
-				, life_time(0)
 			{
 				m_cb = [=](void* data)
 				{
@@ -273,10 +257,8 @@ namespace WkCocos
 			}
 
 			AllDocsPaging::AllDocsPaging(std::string collection, int quantity, int offset, std::function<void(std::vector<std::map<std::string, std::string>>)> cb)
-				: in_progress(false)
-				, done(false)
+				: done(false)
 				, timeout(false)
-				, life_time(0)
 				, m_collection(collection)
 				, m_quantity(quantity)
 				, m_offset(offset)
@@ -315,6 +297,8 @@ namespace WkCocos
 					done = true;
 				};
 			}
+
+			ProgressUpdate::ProgressUpdate() : in_progress(false), life_time(0) { }
 
 		}
 
