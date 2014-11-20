@@ -6,7 +6,7 @@
 #include "cocos2d.h"
 #include "cocos/ui/CocosGUI.h"
 
-const std::string PreloadUI::id = "download";
+const std::string PreloadUI::id = "preload";
 
 PreloadUI::PreloadUI()
 	: Interface()

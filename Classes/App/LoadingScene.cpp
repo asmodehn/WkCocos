@@ -1,6 +1,6 @@
 #include "WkCocosApp/LoadingScene.h"
 
-#include "WkCocosApp/LoadingUI.h"
+#include "WkCocosApp/DownloadingUI.h"
 
 #include "WkCocosApp/ErrorUI.h"
 
@@ -51,10 +51,10 @@ bool LoadingScene::init()
 
 	Size visibleSize = Director::getInstance()->getVisibleSize();
 	//Load UI
-	LoadingUI* loadui = new LoadingUI();
+	DownloadingUI* loadui = new DownloadingUI();
 	loadui->setEnabled(true);
 	loadui->setVisible(true);
-	addInterface(LoadingUI::id,loadui);
+	addInterface(DownloadingUI::id,loadui);
 	loadui->setPosition(Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.25f));
 
 	//Error UI
@@ -154,7 +154,7 @@ void LoadingScene::update(float delta)
 
 		float pct = 1.0f - (float)(downCurProgVal + preCurProgVal) / (float)(downTotProgVal + preTotProgVal);
 
-		LoadingUI* ui = getInterface<LoadingUI>(LoadingUI::id);
+		DownloadingUI* ui = getInterface<DownloadingUI>(DownloadingUI::id);
 
 		if (ui)
 		{
@@ -176,7 +176,7 @@ void LoadingScene::update(float delta)
 //expects pct in [0..1]
 void LoadingScene::progress_CB(float pct)
 {
-	/*LoadingUI* ui = getInterface<LoadingUI>(LoadingUI::id);
+	/*DownloadingUI* ui = getInterface<DownloadingUI>(DownloadingUI::id);
 	if (ui)
 	{
 		ui::LoadingBar* loadbar = ui->getRoot()->getChildByName<ui::LoadingBar*>("LoadingBar");

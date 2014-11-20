@@ -1,13 +1,13 @@
-#include "WkCocosApp/LoadingUI.h"
+#include "WkCocosApp/DownloadingUI.h"
 
 #include "WkCocosApp/LoadingScene.h"
 
 #include "cocos2d.h"
 #include "cocos/ui/CocosGUI.h"
 
-const std::string LoadingUI::id = "loading";
+const std::string DownloadingUI::id = "downloading";
 
-LoadingUI::LoadingUI()
+DownloadingUI::DownloadingUI()
 	: Interface()
 {
 	//building UI hierarchy
@@ -26,5 +26,5 @@ LoadingUI::LoadingUI()
 
 }
 
-LoadingUI::~LoadingUI()
+DownloadingUI::~DownloadingUI()
 {}

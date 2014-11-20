@@ -8,22 +8,22 @@
 /**
 * This UI is the main menu UI
 */
-class LoadingUI : public WkCocos::Interface
+class DownloadingUI : public WkCocos::Interface
 {
 public:
-		
+
 	static const std::string id;
 
 	/**
 	* Default constructor
 	*/
-	LoadingUI();
+	DownloadingUI();
 
 	/**
 	* Destructor
 	*/
-	virtual ~LoadingUI();
-	
+	virtual ~DownloadingUI();
+
 };
 
 
