@@ -1,4 +1,4 @@
-#include "WkCocosApp/DownloadUI.h"
+#include "WkCocosApp/PreloadUI.h"
 
 #include "WkCocosApp/GameLogic.h"
 #include "WkCocos/Utils/ToolBox.h"
@@ -6,9 +6,9 @@
 #include "cocos2d.h"
 #include "cocos/ui/CocosGUI.h"
 
-const std::string DownloadUI::id = "download";
+const std::string PreloadUI::id = "download";
 
-DownloadUI::DownloadUI()
+PreloadUI::PreloadUI()
 	: Interface()
 {
 	//building UI hierarchy
@@ -31,5 +31,5 @@ DownloadUI::DownloadUI()
 	}
 }
 
-DownloadUI::~DownloadUI()
+PreloadUI::~PreloadUI()
 {}

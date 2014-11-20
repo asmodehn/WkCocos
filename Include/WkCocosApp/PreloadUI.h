@@ -1,5 +1,5 @@
-#ifndef __DOWNLOADUI_H__
-#define __DOWNLOADUI_H__
+#ifndef __PRELOADUI_H__
+#define __PRELOADUI_H__
 
 #include "cocos/ui/CocosGUI.h"
 
@@ -8,22 +8,22 @@
 /**
 * This UI is the main menu UI
 */
-class DownloadUI : public WkCocos::Interface
+class PreloadUI : public WkCocos::Interface
 {
 public:
-		
+
 	static const std::string id;
 
 	/**
 	* Default constructor
 	*/
-	DownloadUI();
+	PreloadUI();
 
 	/**
 	* Destructor
 	*/
-	virtual ~DownloadUI();
-	
+	virtual ~PreloadUI();
+
 protected:
 
 	cocos2d::ui::ImageView* sprite;
