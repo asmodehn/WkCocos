@@ -83,7 +83,7 @@ namespace WkCocos
 					{
 
 						CCLOG("DLClisting can not read from %s, error code is %d", url.c_str(), res);
-						
+
 						dllist->m_retries--;
 						if (0 == dllist->m_retries)
 						{
@@ -120,7 +120,7 @@ namespace WkCocos
 						//	s = m.suffix().str();
 						//	CCLOG("DLClisting next string regex search : %s", s.c_str());
 						//}
-						
+
 						//STRING FIND IMPLEMENTATION
 						std::string s = m_dirlist;
 						std::string atag = "<a href=\"v";
@@ -139,6 +139,9 @@ namespace WkCocos
 						}
 
 						entity.remove<Comp::DataListDownload>();
+
+						//TODO : CHECK IF WE HAVE TO UPDATE BASED ON AVAILABLE DLC VERSION
+
 						//this entity has now the list of data folders found on this URL.
 						entity.assign<Comp::DataVerCheck>(dllist->m_url, dllist->m_current_version, dllist->m_current_minAppVersion, m_version_vec);
 
@@ -154,9 +157,9 @@ namespace WkCocos
 			{
 				_connectionTimeout = timeout;
 			}
-					
 
-					
+
+
 		}//namespace Systems
 	}//namespace Download
 }//namespace WkCocos
