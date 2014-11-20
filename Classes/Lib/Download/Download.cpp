@@ -22,10 +22,33 @@ namespace WkCocos
 		Download::Download(unsigned short concurrent_downloads,
 			std::function<void(float)> progress_callback
 			)
-			: m_concurrent_downloads(concurrent_downloads)
+			: event_manager(entityx::EventManager::make())
+            , entity_manager(entityx::EntityManager::make(event_manager))
+            , system_manager(entityx::SystemManager::make(entity_manager, event_manager))
+            , m_concurrent_downloads(concurrent_downloads)
 			, m_progress_callback(progress_callback)
 		{
 			curl_global_init(CURL_GLOBAL_DEFAULT);
+
+			auto dlc_list = system_manager->add<Systems::DLClisting>();
+			dlc_list->setConnectionTimeout(5);
+
+			auto dlc_check = system_manager->add<Systems::DLCchecking>();
+			dlc_check->setConnectionTimeout(5);
+
+			system_manager->add<Systems::MD5checking>();
+			system_manager->add<Systems::CurlDL>(m_concurrent_downloads);
+			system_manager->add<Systems::DLvalidating>();
+			system_manager->add<Systems::ProgressUpdate>(m_progress_callback);
+            system_manager->configure();
+
+            //adding writable path ( where DLC downloads) as search path. First in list
+			int i = 0;
+			cocos2d::FileUtils *fileUtils = cocos2d::FileUtils::getInstance();
+			std::vector<std::string> searchPaths = fileUtils->getSearchPaths();
+			searchPaths.insert(searchPaths.begin() + i++, cocos2d::FileUtils::getInstance()->getWritablePath());
+			//add more if needed
+			fileUtils->setSearchPaths(searchPaths);
 		}
 
 		Download::~Download()
@@ -58,7 +81,7 @@ namespace WkCocos
 				dlcUrl.replace(locahost, 9, "10.0.2.2");
 			}
 #endif
-				
+
 			CCLOG("dlcUrl : %s", dlcUrl.c_str());
 			CCLOG("minAppVersion : %s", minAppVersion.c_str());
 			CCLOG("version : %s",version.c_str());
@@ -76,32 +99,7 @@ namespace WkCocos
 
 		}
 
-		void Download::configure()
-		{
-			auto dlc_list = system_manager->add<Systems::DLClisting>();
-			dlc_list->setConnectionTimeout(5);
-
-			auto dlc_check = system_manager->add<Systems::DLCchecking>();
-			dlc_check->setConnectionTimeout(5);
-
-			system_manager->add<Systems::MD5checking>();
-			system_manager->add<Systems::CurlDL>(m_concurrent_downloads);
-			system_manager->add<Systems::DLvalidating>();
-			system_manager->add<Systems::ProgressUpdate>(m_progress_callback);
-		};
-
-		void Download::initialize()
-		{
-			//adding writable path ( where DLC downloads) as search path. First in list
-			int i = 0;
-			cocos2d::FileUtils *fileUtils = cocos2d::FileUtils::getInstance();
-			std::vector<std::string> searchPaths = fileUtils->getSearchPaths();
-			searchPaths.insert(searchPaths.begin() + i++, cocos2d::FileUtils::getInstance()->getWritablePath());
-			//add more if needed
-			fileUtils->setSearchPaths(searchPaths);
-		}
-
-		void Download::update(double dt) 
+		void Download::update(double dt)
 		{
 			//listing versions avialable on DLC
 			system_manager->update<Systems::DLClisting>(dt);
@@ -109,7 +107,7 @@ namespace WkCocos
 			system_manager->update<Systems::DLCchecking>(dt);
 			//check MD5 of files existing and downloaded
 			system_manager->update<Systems::MD5checking>(dt);
-			
+
 			//do the curl calls when needed
 			system_manager->update<Systems::CurlDL>(dt);
 
@@ -120,6 +118,6 @@ namespace WkCocos
 			system_manager->update<Systems::ProgressUpdate>(dt);
 
 		}
-			
+
 	} // namespace Download
 }  // namespace WkCocos

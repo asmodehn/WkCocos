@@ -28,7 +28,7 @@ LoadingScene::LoadingScene() : Scene()
 
 	m_downloadManager->getEventManager()->subscribe<WkCocos::Download::Events::Error>(*this);
 	m_preloadManager->getEventManager()->subscribe<WkCocos::Preload::Events::Error>(*this);
-	
+
 }
 
 LoadingScene::~LoadingScene()
@@ -65,14 +65,13 @@ bool LoadingScene::init()
 	errorui->setPosition(Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.75f));
 
 	errorui->setRefreshCallback([this, errorui](){
-		
+
 		m_downloadManager = new WkCocos::Download::Download(5,
 			std::bind(&LoadingScene::progress_CB, this, std::placeholders::_1));
 
 		m_preloadManager = new WkCocos::Preload::Preload(1,
 			std::bind(&LoadingScene::progress_CB, this, std::placeholders::_1));
 
-		m_downloadManager->start();
 		m_preloadManager->start();
 		m_preloadManager->setEventEmitter(m_downloadManager->getEventManager());
 
@@ -94,7 +93,6 @@ bool LoadingScene::init()
 
 	});
 
-	m_downloadManager->start();
 	m_preloadManager->start();
 	m_preloadManager->setEventEmitter(m_downloadManager->getEventManager());
 
@@ -110,7 +108,7 @@ void LoadingScene::onEnterTransitionDidFinish()
 
 void LoadingScene::onExitTransitionDidStart()
 {
-	
+
 }
 
 void LoadingScene::addLoad(const std::string& respath, std::vector<std::string> depends_respath)
@@ -146,7 +144,7 @@ void LoadingScene::update(float delta)
 	//if callback was called, loading is finished.
 	if (!m_loadDoneCB_called && m_downloadManager && m_preloadManager)
 	{
-		m_downloadManager->step(delta);
+		m_downloadManager->update(delta);
 		m_preloadManager->step(delta);
 
 		int downCurProgVal = m_downloadManager->getSystemManager()->system<WkCocos::Download::Systems::ProgressUpdate>()->curProgVal;
