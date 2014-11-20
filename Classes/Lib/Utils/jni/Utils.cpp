@@ -14,7 +14,7 @@
 #define  LOG_TAG    "main"
 #define  LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG,LOG_TAG,__VA_ARGS__)
 
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32 || CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
 
 #include "WkPlatform_WkCocos.h"
 
@@ -51,9 +51,8 @@ namespace WkCocos
 					j_getVNameMI.env->DeleteLocalRef(jvername);
 				}
 
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
-				//NOT IMPLEMENTED
-				version = "0.0.0";
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32 || CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
+				version = WK_WkCocos_VERSION;
 #endif
 				return version;
 			}

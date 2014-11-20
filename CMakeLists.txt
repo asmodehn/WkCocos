@@ -29,6 +29,7 @@
 
 #Mandatory commands to use wkcmake
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
+
 INCLUDE ( "CMake/WkCMake.cmake" )
 WkCMakeDir( "CMake" )
 
@@ -39,6 +40,18 @@ if (WIN32 AND MSVC)
 endif()
 
 #Project Declaration
+
+#getting BUILD_NUMBER
+SET(WKCOCOS_BUILD_NUMBER $ENV{BUILD_NUMBER})
+if ( NOT WKCOCOS_BUILD_NUMBER )
+    SET(WKCOCOS_BUILD_NUMBER 0)
+endif()
+message ( "build ${WKCOCOS_BUILD_NUMBER}")
+
+SET( WkCocos_VERSION "0.3.${WKCOCOS_BUILD_NUMBER}")
+
+#To change after WkCMake supports 3.0.2 as minimum required
+#WkProject( WkCocos VERSION 0.3.${WKCOCOS_BUILD_NUMBER} LANGUAGES CXX )
 WkProject( WkCocos CXX )
 
 #Configuration of custom directories
