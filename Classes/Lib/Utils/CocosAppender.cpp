@@ -6,7 +6,7 @@
 
 namespace WkCocos
 {
-
+#define CHECK_BOX_SIZE 100
 	CocosLogAppender::CocosLogAppender(cocos2d::Node* root, const std::string& fontName, const CheckBoxRes& res, cocos2d::Size widgetSize)
 		: _log(nullptr)
 		, _model(nullptr)
@@ -20,7 +20,8 @@ namespace WkCocos
 		// make tree hierarchy
 		cocos2d::ui::Layout* bg = cocos2d::ui::Layout::create();
 		_log = cocos2d::ui::ListView::create();
-		cocos2d::ui::CheckBox* toggle = cocos2d::ui::CheckBox::create();
+		cocos2d::ui::CheckBox* toggleEnable = cocos2d::ui::CheckBox::create();
+		cocos2d::ui::CheckBox* toggleVisible = cocos2d::ui::CheckBox::create();
 		
 		// setup bg
 		bg->setTouchEnabled(false);
@@ -30,7 +31,8 @@ namespace WkCocos
 		bg->setBackGroundColorOpacity(70);
 		bg->setLocalZOrder(9999);
 		bg->addChild(_log);
-		bg->addChild(toggle);
+		bg->addChild(toggleEnable);
+		bg->addChild(toggleVisible);
 
 		// setup log
 		_log->setTouchEnabled(false);
@@ -43,29 +45,39 @@ namespace WkCocos
 		_log->setBackGroundColorOpacity(70);
 
 		// check
-		toggle->setTouchEnabled(true);
-		toggle->setSize(cocos2d::Size(200, 200));
+		toggleEnable->setTouchEnabled(true);
+		toggleEnable->setSize(cocos2d::Size(CHECK_BOX_SIZE, CHECK_BOX_SIZE));
+		toggleEnable->setPosition(cocos2d::Vec2(CHECK_BOX_SIZE >> 1, CHECK_BOX_SIZE >> 1));
+		toggleVisible->setTouchEnabled(true);
+		toggleVisible->setSize(cocos2d::Size(CHECK_BOX_SIZE, CHECK_BOX_SIZE));
+		toggleVisible->setPosition(cocos2d::Vec2(widgetSize.width - (CHECK_BOX_SIZE >> 1), CHECK_BOX_SIZE >> 1));
 		if (!res.m_textureName[CheckBoxRes::BG].empty())
 		{
-			toggle->loadTextureBackGround(res.m_textureName[CheckBoxRes::BG], res.m_textureType[CheckBoxRes::BG]);
+			toggleEnable->loadTextureBackGround(res.m_textureName[CheckBoxRes::BG], res.m_textureType[CheckBoxRes::BG]);
+			toggleVisible->loadTextureBackGround(res.m_textureName[CheckBoxRes::BG], res.m_textureType[CheckBoxRes::BG]);
 		}
 		if (!res.m_textureName[CheckBoxRes::BG_DIS].empty())
 		{
-			toggle->loadTextureBackGroundDisabled(res.m_textureName[CheckBoxRes::BG_DIS], res.m_textureType[CheckBoxRes::BG_DIS]);
+			toggleEnable->loadTextureBackGroundDisabled(res.m_textureName[CheckBoxRes::BG_DIS], res.m_textureType[CheckBoxRes::BG_DIS]);
+			toggleVisible->loadTextureBackGroundDisabled(res.m_textureName[CheckBoxRes::BG_DIS], res.m_textureType[CheckBoxRes::BG_DIS]);
 		}
 		if (!res.m_textureName[CheckBoxRes::BG_SEL].empty())
 		{
-			toggle->loadTextureBackGroundSelected(res.m_textureName[CheckBoxRes::BG_SEL], res.m_textureType[CheckBoxRes::BG_SEL]);
+			toggleEnable->loadTextureBackGroundSelected(res.m_textureName[CheckBoxRes::BG_SEL], res.m_textureType[CheckBoxRes::BG_SEL]);
+			toggleVisible->loadTextureBackGroundSelected(res.m_textureName[CheckBoxRes::BG_SEL], res.m_textureType[CheckBoxRes::BG_SEL]);
 		}
 		if (!res.m_textureName[CheckBoxRes::MARK].empty())
 		{
-			toggle->loadTextureFrontCross(res.m_textureName[CheckBoxRes::MARK], res.m_textureType[CheckBoxRes::MARK]);
+			toggleEnable->loadTextureFrontCross(res.m_textureName[CheckBoxRes::MARK], res.m_textureType[CheckBoxRes::MARK]);
+			toggleVisible->loadTextureFrontCross(res.m_textureName[CheckBoxRes::MARK], res.m_textureType[CheckBoxRes::MARK]);
 		}
 		if (!res.m_textureName[CheckBoxRes::CROSS].empty())
 		{
-			toggle->loadTextureFrontCrossDisabled(res.m_textureName[CheckBoxRes::CROSS], res.m_textureType[CheckBoxRes::CROSS]);
+			toggleEnable->loadTextureFrontCrossDisabled(res.m_textureName[CheckBoxRes::CROSS], res.m_textureType[CheckBoxRes::CROSS]);
+			toggleVisible->loadTextureFrontCrossDisabled(res.m_textureName[CheckBoxRes::CROSS], res.m_textureType[CheckBoxRes::CROSS]);
 		}
-		toggle->addEventListener(std::bind(&CocosLogAppender::toggleScroll, this, std::placeholders::_1, std::placeholders::_2));
+		toggleEnable->addEventListener(std::bind(&CocosLogAppender::toggleScroll, this, std::placeholders::_1, std::placeholders::_2));
+		toggleVisible->addEventListener(std::bind(&CocosLogAppender::toggleVisibility, this, std::placeholders::_1, std::placeholders::_2));
 
 
 		root->addChild(bg);
@@ -105,6 +117,19 @@ namespace WkCocos
 			break;
 		case cocos2d::ui::CheckBox::EventType::UNSELECTED:
 			_log->setTouchEnabled(false);
+			break;
+		}
+	}
+
+	void CocosLogAppender::toggleVisibility(cocos2d::Ref*, cocos2d::ui::CheckBox::EventType event)
+	{
+		switch (event)
+		{
+		case cocos2d::ui::CheckBox::EventType::SELECTED:
+			_log->setVisible(true);
+			break;
+		case cocos2d::ui::CheckBox::EventType::UNSELECTED:
+			_log->setVisible(false);
 			break;
 		}
 	}
