@@ -1,5 +1,6 @@
 #include "WkCocos/Download/Systems/DLCchecking.h"
 #include "WkCocos/Download/Events/Error.h"
+#include "WkCocos/Download/Events/DownloadAdvised.h"
 
 #include "WkCocos/Download/Comp/DataLoad.h"
 #include "WkCocos/Download/Comp/ProgressValue.h"
@@ -52,6 +53,7 @@ namespace WkCocos
 				curl_easy_cleanup(_curl);
 			}
 
+            //TODO : replace this with Version class use.
 			std::vector<unsigned long> DLCchecking::splitVersion(std::string vstr)
 			{
 				std::vector<unsigned long> sv;
@@ -145,12 +147,13 @@ namespace WkCocos
 
 					if (!dllist->m_verlist.empty())
 					{
-						//order the list of versions ascendently
+						//order the list of versions ascendantly
 						std::sort(dllist->m_verlist.begin(), dllist->m_verlist.end(), std::bind(&DLCchecking::versionIsLess,this,std::placeholders::_1,std::placeholders::_2) );
-						//needed to make sure we just need to check from the last one.
+						//needed to make sure we should check from the last one first.
 
 						//we need to check if the version url is valid ( contains a manifest.json )
-						url += "/" + dllist->m_verlist.back() + "/manifest.json";
+						std::string manifest_path = "manifest.json";
+						url += "/" + dllist->m_verlist.back() + "/" + manifest_path;
 						m_manifest = "";
 						CCLOG("DLCchecking reading from %s", url.c_str());
 
@@ -218,21 +221,21 @@ namespace WkCocos
 										varr.pop_back();
 										std::string version3 = joinVersion(varr);
 
-										//NOTE : we might want to use this instead of extracting from dlcconfig.json : 
+										//NOTE : we might want to use this instead of extracting from dlcconfig.json :
 										//std::string cur_ver = Utils::jni::Utils::getVersionName();
 
 										std::vector<unsigned long> cvarr = splitVersion(dllist->m_current_version);
 										unsigned long cur_version4 = cvarr.back();
 										cvarr.pop_back();
 										std::string cur_version3 = joinVersion(cvarr);
-										
+
 										//check if online version can run on local app version
 										if (versionIsLess(version3, cur_version3))
 										{
 											dlc_update_allowed = true;
 
 											//check if update is still required
-											if ( cur_version4 < version4 && version4 != ULONG_MAX ) //dev verison must never update normal version
+											if ( cur_version4 < version4 && version4 != ULONG_MAX ) //dev version must never update normal version
 											{
 												dlc_update_required = true;
 											}
@@ -243,6 +246,8 @@ namespace WkCocos
 
 								if (dlc_update_required && dlc_update_allowed)
 								{
+								    //We found the advised download. we emit event and start downloading already.
+								    events->emit<Events::DownloadAdvised>(dllist->m_url , dllist->m_verlist.back(), manifest_path , true);
 
 									//prepare the list of downloads
 									const rapidjson::Value & assets = cocostudio::DictionaryHelper::getInstance()->getSubDictionary_json(json, "assets");
@@ -261,7 +266,7 @@ namespace WkCocos
 										newentity.assign<Comp::LocalFile>(filename);
 										newentity.assign<Comp::RemoteMD5>(filehash);
 										newentity.assign<Comp::RemoteFile>(dllist->m_url + "/" + dllist->m_verlist.back(), filename);
-										
+
 										newentity.assign<Comp::ProgressValue>(1);
 									}
 
@@ -273,7 +278,7 @@ namespace WkCocos
 									//}
 
 									//we dont need to do anything more with this entity
-									//updating from one data url should be enough.
+									//updating from the latest data url is enough.
 									entity.destroy();
 								}
 
@@ -283,13 +288,13 @@ namespace WkCocos
 							dllist->m_verlist.pop_back();
 							//In case of error, we should check the next version in stack on next update.
 							//If success this will not be done ( entity destroyed )
-							//TODO : check behavior
 
 						}
 
-						//exit this loop. one per update is enough
+						//exit this loop. one per update is enough.
+						//The remaining versions will be checked on next update.
 						break;
-			
+
 					}
 					else //no version left to check
 					{
@@ -304,7 +309,7 @@ namespace WkCocos
 				_connectionTimeout = timeout;
 			}
 
-					
+
 		}//namespace Systems
 	}//namespace Download
 }//namespace WkCocos

@@ -5,7 +5,8 @@
 
 #include "entityx/entityx.h"
 
-#include "WkCocos/Actor.h"
+#include "WkCocos/Download/Events/DownloadOptions.h"
+#include "WkCocos/Download/Events/DownloadAdvised.h"
 
 #include "curl/curl.h"
 
@@ -38,22 +39,6 @@ namespace WkCocos
 				{
 					return system_manager;
 				}
-
-                struct ForceUpdate : public entityx::Event<ForceUpdate>
-                {
-                    ForceUpdate()
-                    {
-
-                    }
-                };
-
-                struct DownloadAdvised : public entityx::Event<DownloadAdvised>
-                {
-                    DownloadAdvised()
-                    {
-
-                    }
-                };
 
 				void update(double dt);
 
