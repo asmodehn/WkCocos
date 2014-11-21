@@ -76,6 +76,11 @@ namespace WkCocos
 		*/
 		void toggleScroll(cocos2d::Ref*, cocos2d::ui::CheckBox::EventType);
 
+		/**
+		* Toggle log visibility
+		*/
+		void toggleVisibility(cocos2d::Ref*, cocos2d::ui::CheckBox::EventType);
+
 	private:
 
 		cocos2d::ui::ListView*	_log;

@@ -25,9 +25,33 @@ namespace WkCocos
 			)
 			: m_concurrent_loads(concurrent_loads)
 			, m_progress_callback(progress_callback)
+			, event_manager(entityx::EventManager::make())
+			, entity_manager(entityx::EntityManager::make(event_manager))
+			, system_manager(entityx::SystemManager::make(entity_manager, event_manager))
 			//, m_error_callback(error_callback)
 		{
 			//curl_global_init(CURL_GLOBAL_DEFAULT);
+			//system_manager->add<Systems::Error>(m_error_callback);
+			system_manager->add<Systems::DataEval>();
+			//system_manager->add<Systems::DLClisting>();
+			//system_manager->add<Systems::DLCchecking>();
+			//system_manager->add<Systems::MD5checking>();
+			//system_manager->add<Systems::CurlMultiDL>(m_concurrent_downloads);
+			//system_manager->add<Systems::CurlDL>(m_concurrent_downloads);
+			//system_manager->add<Systems::DLvalidating>();
+			system_manager->add<Systems::ASyncLoading>(m_concurrent_loads);
+			system_manager->add<Systems::SyncLoading>();
+			system_manager->add<Systems::ProgressUpdate>(m_progress_callback);
+
+			system_manager->configure();
+
+			//adding writable path ( where DLC downloads) as search path. First in list
+			int i = 0;
+			cocos2d::FileUtils *fileUtils = cocos2d::FileUtils::getInstance();
+			std::vector<std::string> searchPaths = fileUtils->getSearchPaths();
+			searchPaths.insert(searchPaths.begin() + i++, cocos2d::FileUtils::getInstance()->getWritablePath());
+			//add more if needed
+			fileUtils->setSearchPaths(searchPaths);
 		}
 
 		Preload::~Preload()
@@ -44,33 +68,7 @@ namespace WkCocos
 			
 			return true;
 		}
-
-		void Preload::configure()
-		{
-			//system_manager->add<Systems::Error>(m_error_callback);
-			system_manager->add<Systems::DataEval>();
-			//system_manager->add<Systems::DLClisting>();
-			//system_manager->add<Systems::DLCchecking>();
-			//system_manager->add<Systems::MD5checking>();
-			//system_manager->add<Systems::CurlMultiDL>(m_concurrent_downloads);
-			//system_manager->add<Systems::CurlDL>(m_concurrent_downloads);
-			//system_manager->add<Systems::DLvalidating>();
-			system_manager->add<Systems::ASyncLoading>(m_concurrent_loads);
-			system_manager->add<Systems::SyncLoading>();
-			system_manager->add<Systems::ProgressUpdate>(m_progress_callback);
-		};
-
-		void Preload::initialize()
-		{
-			//adding writable path ( where DLC downloads) as search path. First in list
-			int i = 0;
-			cocos2d::FileUtils *fileUtils = cocos2d::FileUtils::getInstance();
-			std::vector<std::string> searchPaths = fileUtils->getSearchPaths();
-			searchPaths.insert(searchPaths.begin() + i++, cocos2d::FileUtils::getInstance()->getWritablePath());
-			//add more if needed
-			fileUtils->setSearchPaths(searchPaths);
-		}
-
+		
 		void Preload::update(double dt) {
 
 			//check for error and report them if needed

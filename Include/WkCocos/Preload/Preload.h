@@ -13,7 +13,7 @@ namespace WkCocos
 {
 	namespace Preload
 	{
-		class Preload : public entityx::Manager, public entityx::Receiver<Preload>
+		class Preload : public entityx::Receiver<Preload>
 			{
 			public:
 				explicit Preload(unsigned short concurrent_loads,
@@ -42,17 +42,18 @@ namespace WkCocos
 
 				void receive(const Download::Events::Downloaded &dl);
 
+				void update(double dt);
+
 			protected:
-				void configure() override;
-
-				void initialize() override;
-
-				void update(double dt) override;
 
 				unsigned short m_concurrent_loads;
 
 				//std::function<void(std::string)> m_error_callback;
 				std::function<void(float)> m_progress_callback;
+
+				entityx::ptr<entityx::EventManager> event_manager;
+				entityx::ptr<entityx::EntityManager> entity_manager;
+				entityx::ptr<entityx::SystemManager> system_manager;
 
 			};
 
