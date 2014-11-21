@@ -4,6 +4,7 @@
 #include "WkCocosApp/ShopUI.h"
 #include "WkCocosApp/TimerUI.h"
 #include "WkCocosApp/PreloadUI.h"
+#include "WkCocosApp/DownloadingUI.h"
 #include "WkCocosApp/ErrorUI.h"
 #include "WkCocosApp/PlayersListUI.h"
 #include "WkCocosApp/DocsListUI.h"
@@ -20,10 +21,19 @@
 TestScene::TestScene()
 : Scene()
 {
+    m_downloadManager = new WkCocos::Download::Download(5,std::function<void(float)>());
+	m_preloadManager = new WkCocos::Preload::Preload(1,std::function<void(float)>());
+
+	m_downloadManager->getEventManager()->subscribe<WkCocos::Download::Events::Error>(*this);
+	m_preloadManager->getEventManager()->subscribe<WkCocos::Preload::Events::Error>(*this);
 }
 
 TestScene::~TestScene()
 {
+	if (m_preloadManager)
+		delete m_preloadManager;
+	if (m_downloadManager)
+		delete m_downloadManager;
 }
 
 // on "init" you need to initialize your instance
@@ -111,10 +121,19 @@ bool TestScene::init()
 	//*/
 
 	//PreloadUI
-	PreloadUI* dlui = new PreloadUI();
+	PreloadUI* plui = new PreloadUI();
+	plui->setEnabled(false);
+	plui->setVisible(false);
+	addInterface(PreloadUI::id,plui);
+	plui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.5f));
+	//*/
+
+	//DownloadingUI
+	DownloadingUI* dlui = new DownloadingUI();
 	dlui->setEnabled(false);
 	dlui->setVisible(false);
-	addInterface(PreloadUI::id,dlui);
+	dlui->setDownloadManager(m_downloadManager);
+	addInterface(DownloadingUI::id,dlui);
 	dlui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.5f));
 	//*/
 

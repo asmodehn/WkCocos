@@ -20,7 +20,7 @@ namespace WkCocos
 	{
 
 		Download::Download(unsigned short concurrent_downloads,
-			std::function<void(float)> progress_callback
+			std::function<void(float)> progress_callback //TODO : remove this
 			)
 			: event_manager(entityx::EventManager::make())
             , entity_manager(entityx::EntityManager::make(event_manager))
@@ -97,6 +97,14 @@ namespace WkCocos
 				CCLOG("Manifest IGNORED !");
 			}
 
+		}
+
+		std::pair<int,int> Download::getCurrentProgress()
+		{
+            int downCurProgVal = system_manager->system<WkCocos::Download::Systems::ProgressUpdate>()->curProgVal;
+            int downTotProgVal = system_manager->system<WkCocos::Download::Systems::ProgressUpdate>()->totalProgValMax;
+
+            return std::make_pair(downCurProgVal,downTotProgVal);
 		}
 
 		void Download::update(double dt)

@@ -1,5 +1,5 @@
-#ifndef __DFGAME_DOWNLOAD_EVENTS_DOWNLOADED_H__
-#define __DFGAME_DOWNLOAD_EVENTS_DOWNLOADED_H__
+#ifndef __WKCOCOS_DOWNLOAD_EVENTS_DOWNLOADED_H__
+#define __WKCOCOS_DOWNLOAD_EVENTS_DOWNLOADED_H__
 
 #include "entityx/entityx.h"
 
@@ -23,4 +23,4 @@ namespace WkCocos
 }//namespace WkCocos
 
 
-#endif // __DFGAME_DOWNLOAD_EVENTS_DOWNLOADED_H__
+#endif // __WKCOCOS_DOWNLOAD_EVENTS_DOWNLOADED_H__

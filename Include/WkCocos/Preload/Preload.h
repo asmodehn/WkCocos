@@ -1,4 +1,4 @@
-#ifndef __PRELOAD_ENTITY_PRLEOAD_H__
+#ifndef __PRELOAD_ENTITY_PRELOAD_H__
 #define __PRELOAD_ENTITY_PRELOAD_H__
 
 #include "cocos2d.h"
@@ -9,7 +9,7 @@
 
 #include "curl/curl.h"
 
-namespace WkCocos 
+namespace WkCocos
 {
 	namespace Preload
 	{
@@ -25,7 +25,7 @@ namespace WkCocos
 				// passing it sdependencies prevent to load it if a dependency is missing.
 				//DataLoad Event is sent when the load finishes.
 				bool addDataLoad(const std::string &  filepath, const std::vector<std::string> & depends_filepath);
-				
+
 				virtual ~Preload();
 
 				entityx::ptr<entityx::EventManager> getEventManager()

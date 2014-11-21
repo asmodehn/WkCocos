@@ -11,7 +11,7 @@
 class SavingUI : public WkCocos::Interface
 {
 public:
-		
+
 	static const std::string id;
 
 	/**
@@ -23,8 +23,8 @@ public:
 	* Destructor
 	*/
 	virtual ~SavingUI();
-	
-	void update(float delta);
+
+	void update(float delta) override;
 
 	void saveCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input);
 	void loadCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input);

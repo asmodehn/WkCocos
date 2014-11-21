@@ -22,7 +22,7 @@ namespace WkCocos
 			{
 			public:
 				explicit Download(unsigned short concurrent_downloads,
-					std::function<void(float)> progress_callback
+					std::function<void(float)> progress_callback // THIS WILL BE REMOVED SOON!!!
 					);
 
 				//TODO: This should return true if DLC will be done, or false if the manifest disables DLC.
@@ -41,6 +41,13 @@ namespace WkCocos
 				}
 
 				void update(double dt);
+
+				/**
+				* returning the current download progress
+				* @return pair where first is the current progress, and second is the total amount to get to.
+				*/
+				std::pair<int,int> getCurrentProgress();
+
 
 			protected:
 

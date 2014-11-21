@@ -33,7 +33,7 @@ namespace WkCocos
 			return uicached->second;
 		}
 	}
-	
+
 	void Interface::forget(std::string filepath)
 	{
 		auto uicached = widget_cache.find(filepath);
@@ -74,7 +74,7 @@ namespace WkCocos
 	{
 		forget(m_filepath);
 	}
-	
+
 	void Interface::setVisible(bool visible)
 	{
 		m_widget->setVisible(visible);
@@ -83,7 +83,12 @@ namespace WkCocos
 			wv->setVisible(visible);
 		}
 	}
-	
+
+	bool Interface::isVisible() const
+	{
+		return m_widget->isVisible();
+	}
+
 	void Interface::addChild(cocos2d::Node * child)
 	{
 		addWebView(child);
@@ -104,12 +109,17 @@ namespace WkCocos
 		}
 	}
 
+    cocos2d::Node* Interface::getChildByName(const std::string& name) const
+    {
+        return m_widget->getChildByName(name);
+    }
+
 	void Interface::removeChild(cocos2d::Node * child)
 	{
 		removeWebView(child);
 		m_widget->removeChild(child);
 	}
-	
+
 	void Interface::removeWebView(cocos2d::Node * child)
 	{
 		if ("WebView" == child->getDescription())
