@@ -72,7 +72,6 @@ bool LoadingScene::init()
 		m_preloadManager = new WkCocos::Preload::Preload(1,
 			std::bind(&LoadingScene::progress_CB, this, std::placeholders::_1));
 
-		m_preloadManager->start();
 		m_preloadManager->setEventEmitter(m_downloadManager->getEventManager());
 
 		m_downloadManager->getEventManager()->subscribe<WkCocos::Download::Events::Error>(*this);
@@ -93,7 +92,6 @@ bool LoadingScene::init()
 
 	});
 
-	m_preloadManager->start();
 	m_preloadManager->setEventEmitter(m_downloadManager->getEventManager());
 
 	return true;
@@ -145,7 +143,7 @@ void LoadingScene::update(float delta)
 	if (!m_loadDoneCB_called && m_downloadManager && m_preloadManager)
 	{
 		m_downloadManager->update(delta);
-		m_preloadManager->step(delta);
+		m_preloadManager->update(delta);
 
 		int downCurProgVal = m_downloadManager->getSystemManager()->system<WkCocos::Download::Systems::ProgressUpdate>()->curProgVal;
 		int downTotProgVal = m_downloadManager->getSystemManager()->system<WkCocos::Download::Systems::ProgressUpdate>()->totalProgValMax;
