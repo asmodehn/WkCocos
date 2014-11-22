@@ -27,9 +27,12 @@ public:
 	virtual ~DownloadingUI();
 
     /**
-    * Setting the download manager to listen to
+    * Getting the download manager to listen to
     */
-    void setDownloadManager( WkCocos::Download::Download* );
+    WkCocos::Download::Download* getDownloadManager()
+    {
+        return m_dlmgr;
+    };
 
     /**
     * Callback called when clicking on DL button
@@ -45,12 +48,6 @@ public:
     * Receiving DownloadAdvised event
     */
 	void receive(const WkCocos::Download::Events::DownloadAdvised &de);
-
-	/**
-	* Called from the Scene ( since the scene setup the download manager )
-	* expects pct in [0..1]
-	*/
-	void progress_CB(float pct);
 
     /**
     * update on Interface is called when scene update is called

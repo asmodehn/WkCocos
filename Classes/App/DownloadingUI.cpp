@@ -1,7 +1,5 @@
 #include "WkCocosApp/DownloadingUI.h"
 
-#include "WkCocosApp/LoadingScene.h"
-
 #include "cocos2d.h"
 #include "cocos/ui/CocosGUI.h"
 
@@ -17,7 +15,12 @@ const std::string DownloadingUI::id = "downloading";
 DownloadingUI::DownloadingUI()
 	: Interface()
 	, m_dlStarted(false)
+	, m_dlmgr (new WkCocos::Download::Download(5,std::function<void(float)>()))
+
 {
+    m_dlmgr->getEventManager()->subscribe<WkCocos::Download::Events::DownloadOptions>(*this);
+    m_dlmgr->getEventManager()->subscribe<WkCocos::Download::Events::DownloadAdvised>(*this);
+
 	//building UI hierarchy
 	m_widget = cocos2d::ui::Layout::create();
 
@@ -48,13 +51,9 @@ DownloadingUI::DownloadingUI()
 }
 
 DownloadingUI::~DownloadingUI()
-{}
-
-void DownloadingUI::setDownloadManager( WkCocos::Download::Download* dl)
 {
-    m_dlmgr = dl;
-    m_dlmgr->getEventManager()->subscribe<WkCocos::Download::Events::DownloadOptions>(*this);
-    m_dlmgr->getEventManager()->subscribe<WkCocos::Download::Events::DownloadAdvised>(*this);
+	if (m_dlmgr)
+		delete m_dlmgr, m_dlmgr = nullptr;
 }
 
 void DownloadingUI::DLCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input)

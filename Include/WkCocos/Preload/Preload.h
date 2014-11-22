@@ -40,6 +40,8 @@ namespace WkCocos
 
 				void setEventEmitter(entityx::ptr<entityx::EventManager> event_emitter);
 
+                std::pair<int,int> getCurrentProgress();
+
 				void receive(const Download::Events::Downloaded &dl);
 
 				void update(double dt);

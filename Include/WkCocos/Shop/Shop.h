@@ -14,25 +14,20 @@ namespace WkCocos
 {
 	namespace Shop
 	{
-		class Shop
+		class Shop : public WkCocos::Actor
 		{
 		public:
 
 			//It is not advised to have the googlePlayLicenseKey in clear in the code.
 			//shopAsset is a unique pointer to show the takeover in ownership.
 			Shop(std::string googlePlayLicenseKey, std::string encryptLocalSecretKey, std::unique_ptr<Assets> shopAssets);
-			
+
 			//activating the shop
 			void activate();
 
 			void deactivate();
 
 			~Shop();
-
-			entityx::ptr<entityx::EventManager> getEventManager()
-			{
-				return handler->m_event_manager;
-			}
 
 			std::shared_ptr<Inventory> getInventory()
 			{
@@ -43,7 +38,7 @@ namespace WkCocos
 			{
 				return assets.get();
 			}
-			
+
 			//Event that shop can emit
 			struct BillingNotSupported : public entityx::Event<BillingNotSupported>{
 			};
@@ -57,7 +52,7 @@ namespace WkCocos
 				, m_balance(balance)
 				, m_amountAdded(amountAdded)
 				{}
-				
+
 				Assets::VirtualCurrency m_virtualCurrency;
 				int m_balance;
 				int m_amountAdded;
@@ -147,7 +142,7 @@ namespace WkCocos
 				//TODO : use standard ( not soomla ) struct here for this item
 				soomla::CCMarketItem * m_marketItem;
 			};
-			
+
 			struct MarketItemsRefreshStarted : public entityx::Event<MarketItemsRefreshStarted>{
 			};
 
@@ -162,7 +157,7 @@ namespace WkCocos
 			};
 			struct IabServiceStarted : public entityx::Event<IabServiceStarted>{
 			};
-			
+
 			struct IabServiceStopped : public entityx::Event<IabServiceStopped>{
 			};
 #endif

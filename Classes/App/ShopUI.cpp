@@ -22,13 +22,57 @@ ShopUI::ShopUI()
 
 	cocos2d::Size visibleSize = cocos2d::Director::getInstance()->getVisibleSize();
 	m_widget->setContentSize(cocos2d::Size(visibleSize.width, visibleSize.height - 80)); //upper + lower lines of buttons
-	cocos2d::Size widgetSize = m_widget->getContentSize();
+
+	if (m_widget)
+	{
+		m_widget->retain(); //we need to retain it in memory ( or cocos will drop it )
+		widget_cache.insert(std::pair<std::string, cocos2d::ui::Widget*>(id, m_widget));
+	}
+
+	//ENTITYX WAY
+	g_gameLogic->logic_events.subscribe<GameLogic::ShopInitialized>(*this);
+
+}
+
+ShopUI::~ShopUI()
+{}
+
+void ShopUI::update(float delta)
+{
+}
+
+void ShopUI::buyCallback( WkCocos::Shop::Assets::VirtualCurrencyPack vcp, cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input)
+{
+	if (input == cocos2d::ui::Widget::TouchEventType::ENDED)
+	{
+		CCLOG("BUY ITEM %s BUTTON CLICKED", vcp.productID.c_str());
+
+		//test buy
+		g_gameLogic->getPlayer().getInventory()->buy(vcp.itemid);
+	}
+}
+
+
+void ShopUI::refreshCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input)
+{
+	if (input == cocos2d::ui::Widget::TouchEventType::ENDED)
+	{
+		CCLOG("REFRESH BUTTON CLICKED");
+
+		//test refresh
+		g_gameLogic->getPlayer().getInventory()->refresh();
+	}
+}
+
+void ShopUI::receive(const GameLogic::ShopInitialized& si)
+{
+    cocos2d::Size widgetSize = m_widget->getContentSize();
 	cocos2d::Vec2 origin = cocos2d::Director::getInstance()->getVisibleOrigin();
 
 	//building test UI based on ShopAssets content.
 	std::vector<WkCocos::Shop::Assets::VirtualCurrency> curncy = g_gameLogic->getShop().getAssets()->getCurrencies();
 	std::vector<WkCocos::Shop::Assets::VirtualCurrencyPack> curncyPacks = g_gameLogic->getShop().getAssets()->getCurrencyPacks();
-	
+
 	for (auto c = curncy.begin(); c != curncy.end(); ++c)
 	{
 		//filtering which pack belong to this currency
@@ -97,47 +141,9 @@ ShopUI::ShopUI()
 	m_refreshLabel->setPosition(m_refreshButton->getPosition() + cocos2d::Vec2(0, m_refreshButton->getContentSize().height));
 	m_widget->addChild(m_refreshLabel);
 
-	
-	if (m_widget)
-	{
-		m_widget->retain(); //we need to retain it in memory ( or cocos will drop it )
-		widget_cache.insert(std::pair<std::string, cocos2d::ui::Widget*>(id, m_widget));
-	}
-
-	//ENTITYX WAY
-	g_gameLogic->getShop().getEventManager()->subscribe<WkCocos::Shop::Shop::CurrencyBalanceChanged>(*this);
+    g_gameLogic->getShop().getEventManager()->subscribe<WkCocos::Shop::Shop::CurrencyBalanceChanged>(*this);
 	g_gameLogic->getShop().getEventManager()->subscribe<WkCocos::Shop::Shop::MarketItemsRefreshed>(*this);
 
-}
-
-ShopUI::~ShopUI()
-{}
-
-void ShopUI::update(float delta)
-{
-}
-
-void ShopUI::buyCallback( WkCocos::Shop::Assets::VirtualCurrencyPack vcp, cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input)
-{
-	if (input == cocos2d::ui::Widget::TouchEventType::ENDED)
-	{
-		CCLOG("BUY ITEM %s BUTTON CLICKED", vcp.productID.c_str());
-
-		//test buy
-		g_gameLogic->getPlayer().getInventory()->buy(vcp.itemid);
-	}
-}
-
-
-void ShopUI::refreshCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input)
-{
-	if (input == cocos2d::ui::Widget::TouchEventType::ENDED)
-	{
-		CCLOG("REFRESH BUTTON CLICKED");
-
-		//test refresh
-		g_gameLogic->getPlayer().getInventory()->refresh();
-	}
 }
 
 

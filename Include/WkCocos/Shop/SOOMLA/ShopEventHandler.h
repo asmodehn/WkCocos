@@ -6,6 +6,8 @@
 
 #include "entityx/entityx.h"
 
+#include "WkCocos/Actor.h"
+
 #define EVENT_ON_CURRENCY_BALANCE_CHANGED "onCurrencyBalanceChanged"
 #define EVENT_ON_MARKET_ITEM_REFRESHED "onMarketItemRefreshed"
 #define EVENT_ON_GOOD_BALANCE_CHANGED "onGoodBalanceChanged"
@@ -16,15 +18,14 @@
 using namespace std;
 
 //EventHandler translating StoreEvents to entityx Events
-class ShopEventHandler : public soomla::CCStoreEventHandler {
+class ShopEventHandler : public soomla::CCStoreEventHandler, public WkCocos::Actor
+{
 public:
 
 	ShopEventHandler()
-	: m_event_manager(entityx::EventManager::make())
+	: WkCocos::Actor()
 	{
 	};
-
-	entityx::ptr<entityx::EventManager> m_event_manager;
 
 	virtual void onBillingNotSupported();
 

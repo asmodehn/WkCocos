@@ -21,19 +21,11 @@
 TestScene::TestScene()
 : Scene()
 {
-    m_downloadManager = new WkCocos::Download::Download(5,std::function<void(float)>());
-	m_preloadManager = new WkCocos::Preload::Preload(1,std::function<void(float)>());
 
-	m_downloadManager->getEventManager()->subscribe<WkCocos::Download::Events::Error>(*this);
-	m_preloadManager->getEventManager()->subscribe<WkCocos::Preload::Events::Error>(*this);
 }
 
 TestScene::~TestScene()
 {
-	if (m_preloadManager)
-		delete m_preloadManager;
-	if (m_downloadManager)
-		delete m_downloadManager;
 }
 
 // on "init" you need to initialize your instance
@@ -126,15 +118,16 @@ bool TestScene::init()
 	plui->setVisible(false);
 	addInterface(PreloadUI::id,plui);
 	plui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.5f));
+	plui->getPreloadManager()->getEventManager()->subscribe<WkCocos::Preload::Events::Error>(*this);
 	//*/
 
 	//DownloadingUI
 	DownloadingUI* dlui = new DownloadingUI();
 	dlui->setEnabled(false);
 	dlui->setVisible(false);
-	dlui->setDownloadManager(m_downloadManager);
 	addInterface(DownloadingUI::id,dlui);
 	dlui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.5f));
+	dlui->getDownloadManager()->getEventManager()->subscribe<WkCocos::Download::Events::Error>(*this);
 	//*/
 
 	//WebUI
@@ -233,18 +226,25 @@ void TestScene::receive(const WkCocos::Player::Error &PL)
 	std::string errmsg = PL.m_component + " : " + PL.m_code + " - " + PL.m_message;
 	auto errui = getInterface<ErrorUI>(ErrorUI::id);
 	errui->activate(errmsg);
-	errui->setVisible(true);
-	errui->setEnabled(true);
 }
 
 void TestScene::receive(const WkCocos::LocalData::Events::Error &LD)
 {
 	auto errui = getInterface<ErrorUI>(ErrorUI::id);
 	errui->activate(LD.msg);
-	errui->setVisible(true);
-	errui->setEnabled(true);
 }
 
+void TestScene::receive(const WkCocos::Download::Events::Error &de)
+{
+	auto errorui = getInterface<ErrorUI>(ErrorUI::id);
+	errorui->activate(de.msg);
+}
+
+void TestScene::receive(const WkCocos::Preload::Events::Error &pe)
+{
+	auto errorui = getInterface<ErrorUI>(ErrorUI::id);
+	errorui->activate(pe.msg);
+}
 
 void TestScene::error_CB(std::string msg)
 {

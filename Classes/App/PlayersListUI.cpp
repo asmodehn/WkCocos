@@ -5,7 +5,7 @@
 
 #include "cocos2d.h"
 #include "cocos/ui/CocosGUI.h"
-#include "json/document.h"  
+#include "json/document.h"
 
 const std::string PlayersListUI::id = "players_list";
 
@@ -33,7 +33,7 @@ PlayersListUI::PlayersListUI()
 		m_refreshLabel = cocos2d::ui::Text::create("page", "Thonburi", 21);
 		m_refreshLabel->setPosition(m_refreshButton->getPosition() + cocos2d::Vec2(0, m_refreshButton->getContentSize().height));
 		m_widget->addChild(m_refreshLabel);
-	
+
 		m_enemyData = cocos2d::ui::Text::create("... GEMS and ... GOLD", "Thonburi", 21);
 		m_enemyData->setPosition(cocos2d::Vec2(m_widgetSize.width / 4, -m_widgetSize.height / 5));
 		m_widget->addChild(m_enemyData);
@@ -46,11 +46,10 @@ PlayersListUI::PlayersListUI()
 		widget_cache.insert(std::pair<std::string, cocos2d::ui::Widget*>(id, m_widget));
 
 	}
-	if (g_gameLogic->getPlayer().getOnlineDatamgr()) {
-		g_gameLogic->getPlayer().getOnlineDatamgr()->getEventManager()->subscribe<WkCocos::OnlineData::Events::PlayersList>(*this);
-		//g_gameLogic->getPlayer().getUsersKeyValue("currency.gold", 7711, m_quantity, m_offset);
-		//g_gameLogic->getPlayer().getUsersFromTo("currency.gold", 1, 999999, m_quantity, m_offset);
-	}
+
+	g_gameLogic->getOnlineDataManager().getEventManager()->subscribe<WkCocos::OnlineData::Events::PlayersList>(*this);
+	//g_gameLogic->getPlayer().getUsersKeyValue("currency.gold", 7711, m_quantity, m_offset);
+	//g_gameLogic->getPlayer().getUsersFromTo("currency.gold", 1, 999999, m_quantity, m_offset);
 }
 
 PlayersListUI::~PlayersListUI()
@@ -65,7 +64,7 @@ PlayersListUI::~PlayersListUI()
 }
 
 void PlayersListUI::refreshCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input)
-{	
+{
 	if (input == cocos2d::ui::Widget::TouchEventType::ENDED)
 	{	//this has bug if app42 respone has more than one record from one user
 		std::map<std::string, cocos2d::ui::Text*>::iterator currentPTB;

@@ -5,16 +5,8 @@ GameLogic::GameLogic(std::string app_access_key, std::string app_secret_key)
 : m_player()
 , m_shop()
 {
-	m_logic.reset(new WkCocos::Helper::GameLogic(app_access_key, app_secret_key, [=](){
-		//setting up shop after logic initialized
-		//careful : delayed initialization
-		m_shop.reset(new WkCocos::Shop::Shop(
-			"MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgckSrYT3yMLAYSS/2NVN3jtIdypsOCikdgiTr2mDu8fmwRPa3945vTPVPCOlbL3b77IYgpBf3PMOZcftGL2Jtdyk6AReLjixQzkeyaRLYK4kq9+0JYuD9V/uvqleuCw9NkzZaEOzGBU5IlFYGbXkZm6j/TPytjnJja0kTyXhiJKxzOyCsiUJ4VhLTUk4KL2py+YjPN8/MluOr+Uc/r88Rpd7M2fVH0pdqu35C2xuxLnnbCbu9xvVBPX3l/sb0srDgxdlrRY8JxkNr0mLMdmxnreDRz2aavMuXn2MS7xjB4YgbHLo75tgvTKxD1TbTtocB5VNPIg64a4hXq8rX/z2DwIDAQAB"
-			, "53CR3T" //license number is in clear here as this is not a published app.
-			, shopInit()
-		));
-
-	}));
+    WkCocos::Actor::getEventManager()->subscribe<WkCocos::Helper::GameLogic::TimerInit>(*this);
+	m_logic.reset(new WkCocos::Helper::GameLogic(app_access_key, app_secret_key));
 
 	//Player should be constructible independently of time based objects.
 	m_player.reset(new MyPlayer(m_logic->getGameClock()
@@ -30,13 +22,27 @@ GameLogic::GameLogic(std::string app_access_key, std::string app_secret_key)
 	m_player->getEventManager()->subscribe<MyPlayer::LoggedIn>(*this);
 	m_player->login();
 
-	
-	//localData manager is created synchronously. we can alreayd access it
+
+	//localData manager is created synchronously. we can already access it
 	m_options.reset(new MyOptions(m_logic->getLocalDataManager()));
 }
 
 GameLogic::~GameLogic()
 {}
+
+void GameLogic::receive(WkCocos::Helper::GameLogic::TimerInit const & ti)
+{
+    //setting up shop after logic initialized
+    //careful : delayed initialization
+
+    //we subscribe to event manager before creation to grab the initialized ( even if synchronous - happens on PC only )
+    WkCocos::Shop::Shop::getEventManager()->subscribe<WkCocos::Shop::Shop::StoreControllerInitialized>(*this);
+    m_shop.reset(new WkCocos::Shop::Shop(
+        "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgckSrYT3yMLAYSS/2NVN3jtIdypsOCikdgiTr2mDu8fmwRPa3945vTPVPCOlbL3b77IYgpBf3PMOZcftGL2Jtdyk6AReLjixQzkeyaRLYK4kq9+0JYuD9V/uvqleuCw9NkzZaEOzGBU5IlFYGbXkZm6j/TPytjnJja0kTyXhiJKxzOyCsiUJ4VhLTUk4KL2py+YjPN8/MluOr+Uc/r88Rpd7M2fVH0pdqu35C2xuxLnnbCbu9xvVBPX3l/sb0srDgxdlrRY8JxkNr0mLMdmxnreDRz2aavMuXn2MS7xjB4YgbHLo75tgvTKxD1TbTtocB5VNPIg64a4hXq8rX/z2DwIDAQAB"
+        , "53CR3T" //license number is in clear here as this is not a published app.
+        , shopInit()
+    ));
+}
 
 std::unique_ptr<WkCocos::Shop::Assets> GameLogic::shopInit()
 {

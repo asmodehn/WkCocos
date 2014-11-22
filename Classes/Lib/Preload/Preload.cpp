@@ -20,8 +20,7 @@ namespace WkCocos
 	{
 
 		Preload::Preload(unsigned short concurrent_loads,
-			std::function<void(float)> progress_callback/*,
-			std::function<void(std::string)> error_callback*/
+			std::function<void(float)> progress_callback // TODO : remove it
 			)
 			: m_concurrent_loads(concurrent_loads)
 			, m_progress_callback(progress_callback)
@@ -65,10 +64,10 @@ namespace WkCocos
 			entity.assign<Comp::DataLoad>(filepath);
 			entity.assign<Comp::DataDepends>(depends_filepath);
 			entity.assign<Comp::ProgressValue>(1);
-			
+
 			return true;
 		}
-		
+
 		void Preload::update(double dt) {
 
 			//check for error and report them if needed
@@ -88,6 +87,14 @@ namespace WkCocos
 		void Preload::setEventEmitter(entityx::ptr<entityx::EventManager> event_emitter)
 		{
 			event_emitter->subscribe<Download::Events::Downloaded>(*this);
+		}
+
+		std::pair<int,int> Preload::getCurrentProgress()
+		{
+            int preCurProgVal = system_manager->system<WkCocos::Preload::Systems::ProgressUpdate>()->curProgVal;
+            int preTotProgVal = system_manager->system<WkCocos::Preload::Systems::ProgressUpdate>()->totalProgValMax;
+
+            return std::make_pair(preCurProgVal,preTotProgVal);
 		}
 
 		void Preload::receive(const Download::Events::Downloaded &dl)

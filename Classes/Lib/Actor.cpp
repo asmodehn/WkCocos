@@ -8,7 +8,8 @@ namespace WkCocos
 	std::default_random_engine Actor::generator;
 	std::uniform_int_distribution<ActorID> Actor::distribution;
 
-	std::shared_ptr<entityx::EventManager> Actor::event_manager;
+    //as event_manager is static we need it from the beginning as some may want to subscribe to events before actor construction.
+	std::shared_ptr<entityx::EventManager> Actor::event_manager = entityx::EventManager::make();
 	//
 
 	ActorID Actor::registerMe(Actor* act)
@@ -32,12 +33,6 @@ namespace WkCocos
 
 	Actor::Actor()
 	{
-		//creates event manager with first actor.
-		if (!event_manager)
-		{
-			event_manager = entityx::EventManager::make();
-		}
-
         m_id = registerMe(this);
 	}
 

@@ -38,7 +38,7 @@ TimerUI::TimerUI()
 		m_stopLabel = cocos2d::ui::Text::create("STOP", "Thonburi", 21);
 		m_stopLabel->setPosition(m_stopButton->getPosition() + cocos2d::Vec2(0, m_stopButton->getContentSize().height));
 		m_widget->addChild(m_stopLabel);
-	
+
 		m_countLabel = cocos2d::ui::Text::create("", "Thonburi", 21);
 		m_widget->addChild(m_countLabel);
 
@@ -46,12 +46,18 @@ TimerUI::TimerUI()
 		widget_cache.insert(std::pair<std::string, cocos2d::ui::Widget*>(id, m_widget));
 
 	}
-	g_gameLogic->getPlayer().getTimermgr()->getEventManager()->subscribe<WkCocos::Timer::Events::TimerUpdate>(*this);
-	g_gameLogic->getPlayer().getTimermgr()->getEventManager()->subscribe<WkCocos::Timer::Events::AlarmOff>(*this);
 }
 
 TimerUI::~TimerUI()
 {}
+
+void TimerUI::receive(const GameLogic::Player_LoggedIn &pl)
+{
+    //we can get timermgr from player only after he has logged in
+    //TODO : access timer without player ??
+	g_gameLogic->getPlayer().getTimermgr()->getEventManager()->subscribe<WkCocos::Timer::Events::TimerUpdate>(*this);
+	g_gameLogic->getPlayer().getTimermgr()->getEventManager()->subscribe<WkCocos::Timer::Events::AlarmOff>(*this);
+}
 
 void TimerUI::receive(const WkCocos::Timer::Events::TimerUpdate &tu)
 {
@@ -68,9 +74,9 @@ void TimerUI::startCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchE
 	if (input == cocos2d::ui::Widget::TouchEventType::ENDED)
 	{
 		CCLOG("START BUTTON CLICKED");
-		
+
 		g_gameLogic->getPlayer().setTimer("testing", 65);
-		
+
 	}
 }
 
