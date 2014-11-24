@@ -99,7 +99,7 @@ namespace WkCocos
             Version vcopy = v;
             std::vector<unsigned long> v1l = split();
             std::vector<unsigned long> v2l = vcopy.split();
-            bool more = true;
+            bool thisIsSameOrMore = true;
             //getting all version to same size by assuming missing one is 0.
             while (v1l.size() < v2l.size())
             {
@@ -112,13 +112,18 @@ namespace WkCocos
 
             for (unsigned int i = 0; i < v1l.size(); ++i)
             {
-                if (v1l.at(i) < v2l.at(i))
+                if (v1l.at(i) > v2l.at(i))
                 {
-                    more = false; break;// if left number is less, we don't need to check right hand numbers. this version is less.
+                    break; // we already know we are (same or) more
                 }
+                else if (v1l.at(i) < v2l.at(i))
+                {
+                    thisIsSameOrMore = false; break;// if left number is less, we don't need to check right hand numbers. this version is less.
+                }
+                //else == we need to process next digit
             }
 #ifdef _DEBUG
-            if (more)
+            if (thisIsSameOrMore)
             {
                 std::cout << "Version " << m_version_str << " >= " << v.m_version_str << std::endl;
             }
@@ -127,7 +132,7 @@ namespace WkCocos
                 std::cout << "Version " << m_version_str << " < " << v.m_version_str << std::endl;
             }
 #endif
-            return !more;
+            return !thisIsSameOrMore;
         }
 
         bool Version::isSame(int index, Version const& v) const
