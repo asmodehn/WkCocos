@@ -2,6 +2,7 @@
 #define __DFGAME_DOWNLOAD_EVENTS_DOWNLOADOPTIONS_H__
 
 #include "entityx/entityx.h"
+#include "WkCocos/Download/Version.h"
 
 namespace WkCocos
 {
@@ -11,7 +12,7 @@ namespace WkCocos
 		{
             struct DownloadOptions : public entityx::Event<DownloadOptions>
             {
-                DownloadOptions(std::string url, std::string current_version, std::vector<std::string> version_vec , bool force_update )
+                DownloadOptions(std::string url, Version current_version, std::vector<Version> version_vec , Version force_update )
                 : m_url(url)
                 , m_current_version(current_version)
                 , m_version_vec(version_vec)
@@ -20,9 +21,9 @@ namespace WkCocos
                 }
 
                 std::string m_url;
-                std::string m_current_version;
-                std::vector<std::string> m_version_vec;
-                bool m_force_update;
+                Version m_current_version;
+                std::vector<Version> m_version_vec;
+                Version m_force_update;
             };
 
 		}//namespace Event

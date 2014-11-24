@@ -143,13 +143,14 @@ namespace WkCocos
 						entity.remove<Comp::DataListDownload>();
 
                         //TODO order the list of versions ascendantly ( using operator< )
-						//std::sort(dllist->m_verlist.begin(), dllist->m_verlist.end());
+						std::sort(m_version_vec.begin(), m_version_vec.end());
 
 						//TODO : CHECK IF WE HAVE TO UPDATE BASED ON AVAILABLE DLC VERSIONS
 						// we will update to latest version available if and only if our current version is not in the version interval of Downloadable content.
+                        Version force_update_version;
 
                         //TODO emit event
-                        //events->emit<DownloadOptions>(dllist->m_url, dllist->m_current_version, m_version_vec, force_update_version);
+                        events->emit<Events::DownloadOptions>(dllist->m_url, dllist->m_current_dataVersion, m_version_vec, force_update_version);
 
 						//this entity has now the list of data folders found on this URL.
 						entity.assign<Comp::DataVerCheck>(dllist->m_url, dllist->m_current_dataVersion, dllist->m_current_minAppVersion, m_version_vec);

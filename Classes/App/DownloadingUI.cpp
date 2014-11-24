@@ -43,6 +43,7 @@ DownloadingUI::DownloadingUI()
 		button->setPosition(cocos2d::Vec2(button->getContentSize().width / 2, -button->getContentSize().height / 2));
         dlLabel->setPosition(button->getPosition() + cocos2d::Vec2(0, button->getContentSize().height));
         m_widget->addChild(button);
+        m_widget->addChild(dlLabel);
 
 		m_widget->retain(); //we need to retain it in memory ( or cocos will drop it )
 		widget_cache.insert(std::pair<std::string, cocos2d::ui::Widget*>(id, m_widget));
@@ -73,7 +74,9 @@ void DownloadingUI::receive(const WkCocos::Download::Events::DownloadOptions &dl
 	LOG_DEBUG << "Received DownloadOptions Event !" << std::endl;
 
 	//TODO : display the list of possible URL, with special color for the force update if there is one
-	//dlo.
+
+
+
 }
 
 void DownloadingUI::receive(const WkCocos::Download::Events::DownloadAdvised &dla)
@@ -83,7 +86,9 @@ void DownloadingUI::receive(const WkCocos::Download::Events::DownloadAdvised &dl
 	//if we started the advised download already : display the url and version.
 	if ( dla.m_started)
     {
-        //TODO
+        auto verdlLabel = cocos2d::ui::Text::create(dla.m_version.toString(), "Thonburi", 21);
+        //dlLabel->setPosition(button->getPosition() + cocos2d::Vec2(0, button->getContentSize().height));
+        m_widget->addChild(verdlLabel);
     }
 }
 

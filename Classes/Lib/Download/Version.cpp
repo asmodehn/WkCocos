@@ -7,6 +7,11 @@ namespace WkCocos
 {
 	namespace Download
 	{
+	    Version::Version()
+        : m_version_str("v0") // default version
+        {
+        }
+
 	    Version::Version(std::string vstr)
         : m_version_str(vstr)
         {
