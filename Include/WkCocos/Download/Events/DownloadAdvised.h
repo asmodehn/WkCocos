@@ -2,6 +2,7 @@
 #define __WKCOCOS_DOWNLOAD_EVENTS_DOWNLOADADVISED_H__
 
 #include "entityx/entityx.h"
+#include "WkCocos/Download/Version.h"
 
 namespace WkCocos
 {
@@ -11,7 +12,7 @@ namespace WkCocos
 		{
             struct DownloadAdvised : public entityx::Event<DownloadAdvised>
             {
-                DownloadAdvised( std::string url, std::string version, std::string manifest_path, bool started)
+                DownloadAdvised( std::string url, Version version, std::string manifest_path, bool started)
                 : m_url(url)
                 , m_version(version)
                 , m_manifest_path(manifest_path)
@@ -20,7 +21,7 @@ namespace WkCocos
                 }
 
                 std::string m_url;
-                std::string m_version;
+                Version m_version;
                 std::string m_manifest_path;
                 bool m_started;
             };

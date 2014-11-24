@@ -1,9 +1,7 @@
 {
     "dlcEnable": true,
     "dlcUrl": "http://localhost:8080",
-    "minAppVersion": "0.1",
-    "searchPaths": [
-        "res/"
-    ],
-    "version": "42"
+    "minAppVersion": "v0.3.0",
+    "dataVersion": "v0.3.42",
+    "COMMENTS" : "Careful the patch version number is different for data and app ! However the minor version is the same as they are supposed to always match. This also allows the data patch version number to restart at 0 for every minor version"
 }

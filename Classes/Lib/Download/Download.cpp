@@ -70,7 +70,7 @@ namespace WkCocos
 			bool dlcEnable = cocostudio::DictionaryHelper::getInstance()->getBooleanValue_json(json, "dlcEnable", "error");
 			std::string dlcUrl = cocostudio::DictionaryHelper::getInstance()->getStringValue_json(json, "dlcUrl", "error");
 			std::string minAppVersion = cocostudio::DictionaryHelper::getInstance()->getStringValue_json(json, "minAppVersion", "error");
-			std::string version = cocostudio::DictionaryHelper::getInstance()->getStringValue_json(json, "version", "0");
+			std::string dataVersion = cocostudio::DictionaryHelper::getInstance()->getStringValue_json(json, "dataVersion", "0");
 
 //hack to override localhost DLC URL when we cross build for android
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
@@ -84,12 +84,15 @@ namespace WkCocos
 
 			CCLOG("dlcUrl : %s", dlcUrl.c_str());
 			CCLOG("minAppVersion : %s", minAppVersion.c_str());
-			CCLOG("version : %s",version.c_str());
+			CCLOG("dataVersion : %s",dataVersion.c_str());
+
+            Version dver(dataVersion);
+            Version maver(minAppVersion);
 
 			if (dlcEnable)
 			{
 				entityx::Entity entity = entity_manager->create();
-				entity.assign<Comp::DataListDownload>(dlcUrl, version , minAppVersion);
+				entity.assign<Comp::DataListDownload>(dlcUrl, dver , maver);
 				entity.assign<Comp::ProgressValue>(1);
 			}
 			else

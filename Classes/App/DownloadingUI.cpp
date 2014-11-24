@@ -58,10 +58,13 @@ DownloadingUI::~DownloadingUI()
 
 void DownloadingUI::DLCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input)
 {
-    if (m_dlmgr)
+    if (input == cocos2d::ui::Widget::TouchEventType::ENDED)
     {
-		m_dlmgr->addDataDownload(MANIFEST_FILENAME);
-		m_dlStarted = true;
+        if (m_dlmgr)
+        {
+            m_dlmgr->addDataDownload(MANIFEST_FILENAME);
+            m_dlStarted = true;
+        }
     }
 }
 
@@ -75,7 +78,7 @@ void DownloadingUI::receive(const WkCocos::Download::Events::DownloadOptions &dl
 
 void DownloadingUI::receive(const WkCocos::Download::Events::DownloadAdvised &dla)
 {
-	LOG_DEBUG << "Received DownloadAdvised Event : " << dla.m_version << std::endl;
+	LOG_DEBUG << "Received DownloadAdvised Event : " << dla.m_version.toString() << std::endl;
 
 	//if we started the advised download already : display the url and version.
 	if ( dla.m_started)

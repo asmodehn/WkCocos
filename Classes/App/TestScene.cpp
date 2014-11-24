@@ -224,26 +224,22 @@ void TestScene::prevCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::Touch
 void TestScene::receive(const WkCocos::Player::Error &PL)
 {
 	std::string errmsg = PL.m_component + " : " + PL.m_code + " - " + PL.m_message;
-	auto errui = getInterface<ErrorUI>(ErrorUI::id);
-	errui->activate(errmsg);
+	error_CB(errmsg);
 }
 
 void TestScene::receive(const WkCocos::LocalData::Events::Error &LD)
 {
-	auto errui = getInterface<ErrorUI>(ErrorUI::id);
-	errui->activate(LD.msg);
+	error_CB(LD.msg);
 }
 
 void TestScene::receive(const WkCocos::Download::Events::Error &de)
 {
-	auto errorui = getInterface<ErrorUI>(ErrorUI::id);
-	errorui->activate(de.msg);
+	error_CB(de.msg);
 }
 
 void TestScene::receive(const WkCocos::Preload::Events::Error &pe)
 {
-	auto errorui = getInterface<ErrorUI>(ErrorUI::id);
-	errorui->activate(pe.msg);
+	error_CB(pe.msg);
 }
 
 void TestScene::error_CB(std::string msg)

@@ -1,7 +1,7 @@
 // autotest.cpp
 #include "UnitTest++/UnitTest++.h"
 
-#include "WkCocos/Download/Comp/DataLoad.h"
+#include "WkCocos/Download/Version.h"
 
 #include <string>
 
@@ -36,6 +36,21 @@ SUITE(Version)
 		WkCocos::Download::Version v2(v1s);
 
 		CHECK( v2 == v1);
+	}
+
+    //toString
+    TEST(toString_3)
+	{
+	    WkCocos::Download::Version v1("v0.1.2");
+
+		CHECK( v1.toString() == "v0.1.2");
+	}
+
+    TEST(toString_4)
+	{
+	    WkCocos::Download::Version v1("v0.1.2.3");
+
+		CHECK( v1.toString() == "v0.1.2.3");
 	}
 
     //equals

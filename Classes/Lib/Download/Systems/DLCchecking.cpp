@@ -53,92 +53,7 @@ namespace WkCocos
 				curl_easy_cleanup(_curl);
 			}
 
-            //TODO : replace this with Version class use.
-			std::vector<unsigned long> DLCchecking::splitVersion(std::string vstr)
-			{
-				std::vector<unsigned long> sv;
-
-				if (vstr.length() > 0)
-				{
-					if (vstr.at(0) == 'v')
-					{
-						//removing first 'v'
-						vstr = vstr.substr(1);
-					}
-
-					std::string delimiters = ".";
-					size_t current;
-					size_t next = -1;
-					do
-					{
-						current = next + 1;
-						next = vstr.find_first_of(delimiters, current);
-						//in case we do not find any delimiter
-						size_t endsub = (std::string::npos == next) ? next : next - current;
-						//std::cout << vstr.substr(current, next - current) << std::endl;
-						unsigned long tmp = 0;
-						try
-						{
-							tmp = ToolBox::stoul(vstr.substr(current, endsub));
-						}
-						catch (std::out_of_range oor)
-						{
-							tmp = ULONG_MAX;
-						}
-						sv.push_back(tmp);
-					} while (next != std::string::npos);
-				}
-				return sv;
-			}
-
-			std::string DLCchecking::joinVersion(std::vector<unsigned long> version)
-			{
-				std::string vstr = "v";
-				for (unsigned long num : version)
-				{
-					vstr += WkCocos::ToolBox::to_string(num) + ".";
-				}
-				vstr.pop_back(); // removing trialing '.'
-				return vstr;
-			}
-
-			bool DLCchecking::versionIsLess(const std::string & v1, const std::string & v2)
-			{
-				std::vector<unsigned long> v1l = splitVersion(v1);
-				std::vector<unsigned long> v2l = splitVersion(v2);
-				bool less = true;
-				//getting all version to same size by assuming missing one is 0.
-				while (v1l.size() < v2l.size())
-				{
-					v1l.push_back(0);
-				}
-				while (v1l.size() > v2l.size())
-				{
-					v2l.push_back(0);
-				}
-
-				for (unsigned int i = 0; i < v1l.size(); ++i)
-				{
-					if (v1l.at(i) > v2l.at(i))
-					{
-						less = false; break;
-					}
-				}
-#ifdef _DEBUG
-				if (less)
-				{
-					std::cout << "Version " << v1 << " <= " << v2 << std::endl;
-				}
-				else
-				{
-					std::cout << "Version " << v1 << " > " << v2 << std::endl;
-				}
-#endif
-				return less;
-			}
-
-
-			void DLCchecking::update(entityx::ptr<entityx::EntityManager> es, entityx::ptr<entityx::EventManager> events, double dt)
+            void DLCchecking::update(entityx::ptr<entityx::EntityManager> es, entityx::ptr<entityx::EventManager> events, double dt)
 			{
 				for (auto entity : es->entities_with_components<Comp::DataVerCheck>())
 				{
@@ -148,12 +63,12 @@ namespace WkCocos
 					if (!dllist->m_verlist.empty())
 					{
 						//order the list of versions ascendantly
-						std::sort(dllist->m_verlist.begin(), dllist->m_verlist.end(), std::bind(&DLCchecking::versionIsLess,this,std::placeholders::_1,std::placeholders::_2) );
+						std::sort(dllist->m_verlist.begin(), dllist->m_verlist.end());
 						//needed to make sure we should check from the last one first.
 
 						//we need to check if the version url is valid ( contains a manifest.json )
 						std::string manifest_path = "manifest.json";
-						url += "/" + dllist->m_verlist.back() + "/" + manifest_path;
+						url += "/" + dllist->m_verlist.back().toString() + "/" + manifest_path;
 						m_manifest = "";
 						CCLOG("DLCchecking reading from %s", url.c_str());
 
@@ -205,43 +120,24 @@ namespace WkCocos
 								//do we need to update ?
 								bool dlc_update_required = false;
 
-								std::string version = cocostudio::DictionaryHelper::getInstance()->getStringValue_json(json, "version", "");
-								if ( version != "") //if we cannot read the minimum app version. we dont download. better safe than sorry.
+                                std::string minAppVersionstr = cocostudio::DictionaryHelper::getInstance()->getStringValue_json(json, "minAppVersion", "");
+								std::string dataVersionstr = cocostudio::DictionaryHelper::getInstance()->getStringValue_json(json, "dataVersion", "");
+								if ( minAppVersionstr != "" && dataVersionstr != "") //if we cannot read the version. we dont download. better safe than sorry.
 								{
-									if (version == dllist->m_current_version) //if we have the exact same string : developer update or current version hotfix.
-									{
-										dlc_update_required = true;
-										dlc_update_allowed = true;
-									}
-									else //we need to compare strings to find if the online version is more recent, and if it is supported on current code version
-									{
-										//extracting minimum code version required
-										std::vector<unsigned long> varr = splitVersion(version);
-										unsigned long version4 = varr.back();
-										varr.pop_back();
-										std::string version3 = joinVersion(varr);
-
-										//NOTE : we might want to use this instead of extracting from dlcconfig.json :
-										//std::string cur_ver = Utils::jni::Utils::getVersionName();
-
-										std::vector<unsigned long> cvarr = splitVersion(dllist->m_current_version);
-										unsigned long cur_version4 = cvarr.back();
-										cvarr.pop_back();
-										std::string cur_version3 = joinVersion(cvarr);
-
-										//check if online version can run on local app version
-										if (versionIsLess(version3, cur_version3))
-										{
-											dlc_update_allowed = true;
-
-											//check if update is still required
-											if ( cur_version4 < version4 && version4 != ULONG_MAX ) //dev version must never update normal version
-											{
-												dlc_update_required = true;
-											}
-
-										}
-									}
+								    Version version(dataVersionstr);
+								    Version maversion(minAppVersionstr);
+								    //guarantee same major + minor version number
+								    if (version.isSame(0,dllist->m_current_dataVersion) && version.isSame(1,dllist->m_current_dataVersion) )
+                                    {
+                                        if(dllist->m_current_dataVersion <= version) //if we have the exact same data version : developer update or current version hotfix.
+                                        {
+                                            dlc_update_required = true;
+                                            if (maversion <= dllist->m_current_minAppVersion) // instead of minAppVersion we could use the current app version name from APK
+                                            {
+                                                dlc_update_allowed = true;
+                                            }
+                                        }
+                                    }
 								} // ( version != "")
 
 								if (dlc_update_required && dlc_update_allowed)
@@ -265,7 +161,7 @@ namespace WkCocos
 										entityx::Entity newentity = es->create();
 										newentity.assign<Comp::LocalFile>(filename);
 										newentity.assign<Comp::RemoteMD5>(filehash);
-										newentity.assign<Comp::RemoteFile>(dllist->m_url + "/" + dllist->m_verlist.back(), filename);
+										newentity.assign<Comp::RemoteFile>(dllist->m_url + "/" + dllist->m_verlist.back().toString(), filename);
 
 										newentity.assign<Comp::ProgressValue>(1);
 									}

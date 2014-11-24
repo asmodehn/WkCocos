@@ -1,0 +1,11 @@
+{
+    "assets": {
+        "HelloWorld.png": {
+            "md5": "D18A199D0FFEFB9E617356018176ACF9"
+        }
+    },
+    "minAppVersion": "v0.4.2",
+    "dataVersion": "v0.4.74",
+    "COMMENTS" : "should NOT be downloaded : newer minAppVersion than ours : 0.4.2 > 0.3",
+    "NOTE" : "update is NOT forced here because the minimum app available on DLC is less than ( or equal to ) current 0.3"
+}

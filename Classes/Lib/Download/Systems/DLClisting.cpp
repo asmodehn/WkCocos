@@ -97,7 +97,7 @@ namespace WkCocos
 					else
 					{
 						// extract what we need from the listing
-						std::vector<std::string> m_version_vec;
+						std::vector<Version> m_version_vec;
 
 						CCLOG("DLClisting before versions retrieval");
 						//REGEX IMPLEMENTATION GCC 4.9 required
@@ -135,7 +135,7 @@ namespace WkCocos
 							{
 								std::string verstr = s.substr(pos , endpos - pos );
 								CCLOG("verstr = %s ", verstr.c_str());
-								m_version_vec.push_back(verstr);
+								m_version_vec.push_back(Version(verstr));
 							}
 							pos = s.find(atag, endpos);
 						}
@@ -152,7 +152,7 @@ namespace WkCocos
                         //events->emit<DownloadOptions>(dllist->m_url, dllist->m_current_version, m_version_vec, force_update_version);
 
 						//this entity has now the list of data folders found on this URL.
-						entity.assign<Comp::DataVerCheck>(dllist->m_url, dllist->m_current_version, dllist->m_current_minAppVersion, m_version_vec);
+						entity.assign<Comp::DataVerCheck>(dllist->m_url, dllist->m_current_dataVersion, dllist->m_current_minAppVersion, m_version_vec);
 
 						CCLOG("DLClisting after versions retrieval");
 
