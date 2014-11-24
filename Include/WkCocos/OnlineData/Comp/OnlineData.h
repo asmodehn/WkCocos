@@ -22,7 +22,7 @@ namespace WkCocos
 			struct Create : entityx::Component<Create>
 			{
 				Create(std::string userid, std::string passwd, std::string email, std::function<void(::App42::App42UserResponse*)> cb);
-				
+
 				bool done;
 				bool timeout;
 				std::string m_userid;
@@ -48,8 +48,6 @@ namespace WkCocos
 			{
 				UpdateUserData(std::string userid, std::string collec, std::string docid, std::string user_data, std::function<void(::App42::App42StorageResponse*)> cb);
 
-				bool done;
-				bool timeout;
 				std::string m_userid;
 				std::string m_collection;
 				std::string m_docid;

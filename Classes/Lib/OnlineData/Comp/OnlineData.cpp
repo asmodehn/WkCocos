@@ -32,7 +32,7 @@ namespace WkCocos
 						{//if creation succeed then login.
 							cb(userdata);
 						}
-						else// if creation failed, 
+						else// if creation failed,
 						{
 							CCLOG("\nerrordetails:%s", userdata->errorDetails.c_str());
 							CCLOG("\nerrorMessage:%s", userdata->errorMessage.c_str());
@@ -66,7 +66,7 @@ namespace WkCocos
 						{//if login succeed then login. // if login succeeded than what? login? again? really?
 							cb(userdata);
 						}
-						else// if login failed, 
+						else// if login failed,
 						{
 							CCLOG("\nerrordetails:%s", userdata->errorDetails.c_str());
 							CCLOG("\nerrorMessage:%s", userdata->errorMessage.c_str());
@@ -82,29 +82,23 @@ namespace WkCocos
 			}
 
 			UpdateUserData::UpdateUserData(std::string userid, std::string collection, std::string docId, std::string user_data, std::function<void(::App42::App42StorageResponse*)> cb)
-				: done(false)
-				, timeout(false)
-				, m_userid(userid)
+				: m_userid(userid)
 				, m_collection(collection)
 				, m_docid(docId)
 				, m_user_data(user_data)
 			{
 				m_cb = [=](void* data)
 				{
-					if (!timeout)
-					{
-						::App42::App42StorageResponse* userdata = static_cast<::App42::App42StorageResponse*>(data);
+                    ::App42::App42StorageResponse* userdata = static_cast<::App42::App42StorageResponse*>(data);
 
-						CCLOG("\ncode=%d...=%d", userdata->getCode(), userdata->isSuccess);
+                    CCLOG("\ncode=%d...=%d", userdata->getCode(), userdata->isSuccess);
 
-						CCLOG("\nerrordetails:%s", userdata->errorDetails.c_str());
-						CCLOG("\nerrorMessage:%s", userdata->errorMessage.c_str());
-						CCLOG("\nappErrorCode:%d", userdata->appErrorCode);
-						CCLOG("\nhttpErrorCode:%d", userdata->httpErrorCode);
+                    CCLOG("\nerrordetails:%s", userdata->errorDetails.c_str());
+                    CCLOG("\nerrorMessage:%s", userdata->errorMessage.c_str());
+                    CCLOG("\nappErrorCode:%d", userdata->appErrorCode);
+                    CCLOG("\nhttpErrorCode:%d", userdata->httpErrorCode);
 
-						cb(userdata);
-					}
-					done = true; 
+                    cb(userdata);
 				};
 			}
 

@@ -27,27 +27,35 @@ namespace WkCocos
 				entityx::ptr<Comp::UpdateUserData> uud;
 				for (auto entity : entities->entities_with_components(uud, pu))
 				{
-					if (uud->done)
+                    if (!pu->in_progress)
 					{
-						CCLOG("Update User Data entity lived %f seconds", pu->life_time);
-						entity.remove<Comp::UpdateUserData>();
-						entity.remove<Comp::ProgressUpdate>();
-						if (entity.component_mask() == 0)
-							entity.destroy();
-					}
-					else if (!pu->in_progress)
-					{
-						m_stor_service->UpdateDocumentByDocId(DB_NAME, uud->m_collection.c_str(), uud->m_docid.c_str(), uud->m_user_data.c_str(), uud->m_cb);
+						m_stor_service->UpdateDocumentByDocId(  DB_NAME
+                                                                , uud->m_collection.c_str()
+                                                                , uud->m_docid.c_str()
+                                                                , uud->m_user_data.c_str()
+                                                                , [entity](void* data) mutable {//we need only entity here which is just an ID ( and can mutate)
+                                                                        if (entity.valid()) //to be on the safe side
+                                                                        {
+                                                                            entityx::ptr<Comp::ProgressUpdate> ecpu = entity.component<Comp::ProgressUpdate>();
+                                                                            if (ecpu && !ecpu->life_time < TIMEOUT)
+                                                                            {
+                                                                                entityx::ptr<Comp::UpdateUserData> ecuud = entity.component<Comp::UpdateUserData>();
+                                                                                if (ecuud && ecuud->m_cb) ecuud->m_cb(data);
+                                                                            }
+                                                                            //job is done
+                                                                            CCLOG("Update User Data entity lived %f seconds", ecpu->life_time);
+                                                                            entity.destroy();
+                                                                        }
+                                                                    }
+                                                                );
 						pu->in_progress = true;
 					}
-					else
-					{
-						if (pu->life_time > TIMEOUT && !uud->timeout) // make sure error is emitted only once before i find out how to stop entity
-						{
-							uud->timeout = true;
-							events->emit<Events::Error>(entity.id(), "update user data");
-						}
-					}
+					else if (pu->life_time > TIMEOUT) // make sure error is emitted only once before i find out how to stop entity
+                    {
+                        events->emit<Events::Error>(entity.id(), "update user data");
+                        //removing entity to make sure it doesnt get called later
+                        entity.destroy();
+                    }
 
 				}
 
