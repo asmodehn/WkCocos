@@ -2,7 +2,7 @@
 #define __SAVINGUI_H__
 
 #include "cocos/ui/CocosGUI.h"
-
+#include "extensions/GUI/CCEditBox/CCEditBox.h"
 #include "WkCocos/Interface.h"
 
 /**
@@ -41,6 +41,7 @@ protected:
 	cocos2d::ui::Text* m_goldLabel;
 	cocos2d::ui::Button* m_gemrandButton;
 	cocos2d::ui::Button* m_goldrandButton;
+	cocos2d::extension::EditBox* m_saveEdit;
 };
 
 

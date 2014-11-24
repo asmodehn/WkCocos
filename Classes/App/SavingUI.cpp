@@ -1,11 +1,8 @@
 #include "WkCocosApp/SavingUI.h"
-
 #include "WkCocosApp/GameLogic.h"
 #include "WkCocos/Utils/ToolBox.h"
-
 #include "cocos2d.h"
 #include "cocos/ui/CocosGUI.h"
-#include "extensions/GUI/CCEditBox/CCEditBox.h"
 
 const std::string SavingUI::id = "saving";
 
@@ -27,7 +24,7 @@ SavingUI::SavingUI()
 
 		m_saveButton = cocos2d::ui::Button::create("SkipNormal.png", "SkipSelected.png");
 		m_saveButton->addTouchEventListener(CC_CALLBACK_2(SavingUI::saveCallback, this));
-		m_saveButton->setPosition(cocos2d::Vec2(-widgetSize.width / 4, -widgetSize.height / 6));
+		m_saveButton->setPosition(cocos2d::Vec2(-widgetSize.width / 4, 0));
 		m_widget->addChild(m_saveButton);
 
 		m_saveLabel = cocos2d::ui::Text::create("SAVE", "Thonburi", 21);
@@ -36,7 +33,7 @@ SavingUI::SavingUI()
 
 		m_loadButton = cocos2d::ui::Button::create("SkipNormal.png", "SkipSelected.png");
 		m_loadButton->addTouchEventListener(CC_CALLBACK_2(SavingUI::loadCallback, this));
-		m_loadButton->setPosition(cocos2d::Vec2(-widgetSize.width / 4, widgetSize.height / 6));
+		m_loadButton->setPosition(cocos2d::Vec2(-widgetSize.width / 4, widgetSize.height / 4));
 		m_widget->addChild(m_loadButton);
 
 		m_loadLabel = cocos2d::ui::Text::create("LOAD", "Thonburi", 21);
@@ -44,25 +41,27 @@ SavingUI::SavingUI()
 		m_widget->addChild(m_loadLabel);
 	
 		m_gemLabel = cocos2d::ui::Text::create("? GEM", "Thonburi", 21);
-		m_gemLabel->setPosition(cocos2d::Vec2(0, widgetSize.height / 6));
+		m_gemLabel->setPosition(cocos2d::Vec2(0, widgetSize.height / 4));
 		m_widget->addChild(m_gemLabel);
 
 		m_goldLabel = cocos2d::ui::Text::create("? GOLD", "Thonburi", 21);
-		m_goldLabel->setPosition(cocos2d::Vec2(0, -widgetSize.height / 6));
+		m_goldLabel->setPosition(cocos2d::Vec2(0, 0));
 		m_widget->addChild(m_goldLabel);
 	
 		m_gemrandButton = cocos2d::ui::Button::create("RefreshNormal.png", "RefreshSelected.png");
 		m_gemrandButton->addTouchEventListener(CC_CALLBACK_2(SavingUI::gemrandCallback, this));
-		m_gemrandButton->setPosition(cocos2d::Vec2(widgetSize.width / 4, widgetSize.height / 6));
+		m_gemrandButton->setPosition(cocos2d::Vec2(widgetSize.width / 4, widgetSize.height / 4));
 		m_widget->addChild(m_gemrandButton);
 
 		m_goldrandButton = cocos2d::ui::Button::create("RefreshNormal.png", "RefreshSelected.png");
 		m_goldrandButton->addTouchEventListener(CC_CALLBACK_2(SavingUI::goldrandCallback, this));
-		m_goldrandButton->setPosition(cocos2d::Vec2(widgetSize.width / 4, -widgetSize.height / 6));
+		m_goldrandButton->setPosition(cocos2d::Vec2(widgetSize.width / 4, 0));
 		m_widget->addChild(m_goldrandButton);
 
-		cocos2d::extension::EditBox* editor = cocos2d::extension::EditBox::create(cocos2d::Size(widgetSize.width / 2, 40), cocos2d::extension::Scale9Sprite::create("EditBox.png"));
-		m_widget->addChild(editor);
+		m_saveEdit = cocos2d::extension::EditBox::create(cocos2d::Size(widgetSize.width / 2, 40), cocos2d::extension::Scale9Sprite::create("EditBox.png"));
+		m_saveEdit->setPosition(cocos2d::Vec2(0, -widgetSize.height / 4));
+		m_saveEdit->setPlaceHolder("input string here");
+		m_widget->addChild(m_saveEdit);
 
 		m_widget->retain(); //we need to retain it in memory ( or cocos will drop it )
 		widget_cache.insert(std::pair<std::string, cocos2d::ui::Widget*>(id, m_widget));

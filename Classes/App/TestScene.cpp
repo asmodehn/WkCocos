@@ -75,7 +75,7 @@ bool TestScene::init()
 	saveui->setEnabled(false);
 	saveui->setVisible(false);
 	addInterface(SavingUI::id,saveui);
-	saveui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.67f));
+	saveui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.5f));
 	//*/
 
 	//TimerUI
