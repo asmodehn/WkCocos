@@ -23,8 +23,6 @@ namespace WkCocos
 			{
 				Create(std::string userid, std::string passwd, std::string email, std::function<void(::App42::App42UserResponse*)> cb);
 
-				bool done;
-				bool timeout;
 				std::string m_userid;
 				std::string m_passwd;
 				std::string m_email;
@@ -36,8 +34,6 @@ namespace WkCocos
 			{
 				Login(std::string userid, std::string passwd, std::function<void(::App42::App42UserResponse*)> cb);
 
-				bool done;
-				bool timeout;
 				std::string m_userid;
 				std::string m_passwd;
 				std::function<void(void*)> m_cb;
@@ -60,8 +56,6 @@ namespace WkCocos
 			{
 				InsertUserData(std::string userid, std::string m_collection, std::string user_data, std::function<void(::App42::App42StorageResponse*)> cb);
 
-				bool done;
-				bool timeout;
 				std::string m_userid;
 				std::string m_collection;
 				std::string m_user_data;
@@ -73,8 +67,6 @@ namespace WkCocos
 			{
 				LoadUserData(std::string userid, std::string m_collection, std::function<void(::App42::App42UserResponse*)> cb);
 
-				bool done;
-				bool timeout;
 				std::string m_userid;
 				std::string m_collection;
 				std::function<void(void*)> m_cb;
@@ -85,8 +77,6 @@ namespace WkCocos
 			{
 				GetUsersKeyValue(std::string collection, std::string key, int value, int quantity, int offset, std::function<void(std::map<std::string, std::string>, int)> cb);
 
-				bool done;
-				bool timeout;
 				std::string m_collection;
 				std::string m_key;
 				int m_value;
@@ -100,8 +90,6 @@ namespace WkCocos
 			{
 				GetUsersFromTo(std::string collection, std::string key, int from, int to, int quantity, int offset, std::function<void(std::map<std::string, std::string>, int)> cb);
 
-				bool done;
-				bool timeout;
 				std::string m_collection;
 				std::string m_key;
 				int m_from;
@@ -116,8 +104,6 @@ namespace WkCocos
 			{
 				ServerTime(std::function<void(std::string)> callback);
 
-				bool done;
-				bool timeout;
 				std::function<void(void*)> m_cb;
 
 			};
@@ -126,8 +112,6 @@ namespace WkCocos
 			{
 				AllDocsPaging(std::string collection, int quantity, int offset, std::function<void(std::vector<std::map<std::string, std::string>>)> cb);
 
-				bool done;
-				bool timeout;
 				std::string m_collection;
 				int m_quantity;
 				int m_offset;

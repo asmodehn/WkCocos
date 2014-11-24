@@ -27,26 +27,29 @@ namespace WkCocos
 				entityx::ptr<Comp::ServerTime> st;
 				for (auto entity : entities->entities_with_components(st, pu))
 				{
-					if (st->done)
+					if (!pu->in_progress)
 					{
-						CCLOG("Time Data entity lived %f seconds", pu->life_time);
-						entity.remove<Comp::ServerTime>();
-						entity.remove<Comp::ProgressUpdate>();
-						if (entity.component_mask() == 0)
-							entity.destroy();
-					}
-					else if (!pu->in_progress)
-					{
-						m_timer_service->GetCurrentTimeNoWinBase(st->m_cb);
+						m_timer_service->GetCurrentTimeNoWinBase([entity](void* data) mutable
+						{//we need only entity here which is just an ID (and can mutate)
+							if (entity.valid()) //to be on the safe side
+							{
+								entityx::ptr<Comp::ProgressUpdate> ecpu = entity.component<Comp::ProgressUpdate>();
+								if (ecpu && !ecpu->life_time < TIMEOUT)
+								{
+									entityx::ptr<Comp::ServerTime> ecst = entity.component<Comp::ServerTime>();
+									if (ecst && ecst->m_cb) ecst->m_cb(data);
+								}
+								//job is done
+								CCLOG("Get Server Time entity lived %f seconds", ecpu->life_time);
+								entity.destroy();
+							}
+						});
 						pu->in_progress = true;
 					}
-					else
+					else if (pu->life_time > TIMEOUT)
 					{
-						if (pu->life_time > TIMEOUT && !st->timeout) // make sure error is emitted only once before i find out how to stop entity
-						{
-							st->timeout = true;
-							events->emit<Events::Error>(entity.id(), "server time");
-						}
+						events->emit<Events::Error>(entity.id(), "server time");
+						entity.destroy();
 					}
 
 				}

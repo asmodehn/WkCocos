@@ -27,27 +27,29 @@ namespace WkCocos
 				entityx::ptr<Comp::Create> c;
 				for (auto entity : entities->entities_with_components(c, pu))
 				{
-					if (c->done)
+					if (!pu->in_progress)
 					{
-						CCLOG("Create User entity lived %f seconds", pu->life_time);
-						entity.remove<Comp::Create>();
-						entity.remove<Comp::ProgressUpdate>();
-						if (entity.component_mask() == 0)
-							entity.destroy();
-					}
-					else if (!pu->in_progress)
-					{
-						CCLOG("Requesting App42 User creation : %s ", c->m_userid.c_str());
-						m_user_service->CreateUser(c->m_userid.c_str(), c->m_passwd.c_str(), c->m_email.c_str(), c->m_cb);
+						m_user_service->CreateUser(c->m_userid.c_str(), c->m_passwd.c_str(), c->m_email.c_str(), [entity](void* data) mutable
+						{//we need only entity here which is just an ID (and can mutate)
+							if (entity.valid()) //to be on the safe side
+							{
+								entityx::ptr<Comp::ProgressUpdate> ecpu = entity.component<Comp::ProgressUpdate>();
+								if (ecpu && !ecpu->life_time < TIMEOUT)
+								{
+									entityx::ptr<Comp::Create> ecc = entity.component<Comp::Create>();
+									if (ecc && ecc->m_cb) ecc->m_cb(data);
+								}
+								//job is done
+								CCLOG("Create User entity lived %f seconds", ecpu->life_time);
+								entity.destroy();
+							}
+						});
 						pu->in_progress = true;
 					}
-					else
+					else if (pu->life_time > TIMEOUT)
 					{
-						if (pu->life_time > TIMEOUT && !c->timeout) // make sure error is emitted only once before i find out how to stop entity
-						{
-							c->timeout = true;
-							events->emit<Events::Error>(entity.id(), "user create");
-						}
+						events->emit<Events::Error>(entity.id(), "user create");
+						entity.destroy();
 					}
 
 				}
@@ -55,27 +57,29 @@ namespace WkCocos
 				entityx::ptr<Comp::Login> l;
 				for (auto entity : entities->entities_with_components(l, pu))
 				{
-					if (l->done)
+					if (!pu->in_progress)
 					{
-						CCLOG("Login entity lived %f seconds", pu->life_time);
-						entity.remove<Comp::Login>();
-						entity.remove<Comp::ProgressUpdate>();
-						if (entity.component_mask() == 0)
-							entity.destroy();
-					}
-					else if (!pu->in_progress)
-					{
-						CCLOG("Requesting App42 User login : %s ", l->m_userid.c_str());
-						m_user_service->Authenticate(l->m_userid.c_str(), l->m_passwd.c_str(), l->m_cb);
+						m_user_service->Authenticate(l->m_userid.c_str(), l->m_passwd.c_str(), [entity](void* data) mutable
+						{//we need only entity here which is just an ID (and can mutate)
+							if (entity.valid()) //to be on the safe side
+							{
+								entityx::ptr<Comp::ProgressUpdate> ecpu = entity.component<Comp::ProgressUpdate>();
+								if (ecpu && !ecpu->life_time < TIMEOUT)
+								{
+									entityx::ptr<Comp::Login> ecl = entity.component<Comp::Login>();
+									if (ecl && ecl->m_cb) ecl->m_cb(data);
+								}
+								//job is done
+								CCLOG("Login User entity lived %f seconds", ecpu->life_time);
+								entity.destroy();
+							}
+						});
 						pu->in_progress = true;
 					}
-					else
+					else if (pu->life_time > TIMEOUT)
 					{
-						if (pu->life_time > TIMEOUT && !l->timeout) // make sure error is emitted only once before i find out how to stop entity
-						{
-							l->timeout = true;
-							events->emit<Events::Error>(entity.id(), "user login");
-						}
+						events->emit<Events::Error>(entity.id(), "user login");
+						entity.destroy();
 					}
 
 				}
@@ -83,31 +87,33 @@ namespace WkCocos
 				entityx::ptr<Comp::LoadUserData> lud;
 				for (auto entity : entities->entities_with_components(lud, pu))
 				{
-					if (lud->done)
+					if (!pu->in_progress)
 					{
-						CCLOG("Load User Data entity lived %f seconds", pu->life_time);
-						entity.remove<Comp::LoadUserData>();
-						entity.remove<Comp::ProgressUpdate>();
-						if (entity.component_mask() == 0)
-							entity.destroy();
-					}
-					else if (!pu->in_progress)
-					{
-						CCLOG("Requesting App42 stored data in collection %s for user : %s ", lud->m_collection.c_str(), lud->m_userid.c_str());
 						::App42::App42API::setLoggedInUser(lud->m_userid.c_str());
 						::App42::App42API::setDbName(DB_NAME);
 						m_user_service->setQuery(lud->m_collection.c_str(), NULL); //This will tell
 						//App42 that you are requesting all the data linked to the above userName
-						m_user_service->GetUser(lud->m_userid.c_str(), lud->m_cb);
+						m_user_service->GetUser(lud->m_userid.c_str(), [entity](void* data) mutable
+						{//we need only entity here which is just an ID (and can mutate)
+							if (entity.valid()) //to be on the safe side
+							{
+								entityx::ptr<Comp::ProgressUpdate> ecpu = entity.component<Comp::ProgressUpdate>();
+								if (ecpu && !ecpu->life_time < TIMEOUT)
+								{
+									entityx::ptr<Comp::LoadUserData> eclud = entity.component<Comp::LoadUserData>();
+									if (eclud && eclud->m_cb) eclud->m_cb(data);
+								}
+								//job is done
+								CCLOG("Load User Data entity lived %f seconds", ecpu->life_time);
+								entity.destroy();
+							}
+						});
 						pu->in_progress = true;
 					}
-					else
+					else if (pu->life_time > TIMEOUT)
 					{
-						if (pu->life_time > TIMEOUT && !lud->timeout) // make sure error is emitted only once before i find out how to stop entity
-						{
-							lud->timeout = true;
-							events->emit<Events::Error>(entity.id(), "user data load");
-						}
+						events->emit<Events::Error>(entity.id(), "user data load");
+						entity.destroy();
 					}
 
 				}
