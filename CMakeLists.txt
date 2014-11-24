@@ -262,6 +262,9 @@ if ( ${PROJECT_NAME} STREQUAL ${CMAKE_PROJECT_NAME} )
 	WkLibraryBuild(WkCocosApp "Classes/App")
 	target_link_libraries(WkCocosApp
 	  WkCocos
+	  extensions
+	  audio
+	  cocos2d
 	  entityx  # needed because entityx is not a wkcmake project
 	)
 
@@ -301,11 +304,6 @@ if ( ${PROJECT_NAME} STREQUAL ${CMAKE_PROJECT_NAME} )
 	  box2d
 	)
 	endif()
-
-	target_link_libraries(WkCocosApp
-	  audio
-	  cocos2d
-	)
 
 	#WKCMAKE ISSUE 43 https://github.com/asmodehn/wkcmake/issues/43
 	# Workaround to actually do the linking
