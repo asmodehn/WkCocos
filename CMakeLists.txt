@@ -320,6 +320,12 @@ if ( ${PROJECT_NAME} STREQUAL ${CMAKE_PROJECT_NAME} )
 		WkTestRun( WkCocosApp maintest WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/${${PROJECT_NAME}_TEST_DIR}/${${PROJECT_NAME}_TEST_DATA_DIR} )
 		#also copying dlls to binary directory for the executable to run
 		ADD_CUSTOM_COMMAND( TARGET maintest POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
+					"$<TARGET_FILE:extensions>"
+					"$<TARGET_FILE_DIR:maintest>"
+					COMMENT
+					"Copying $<TARGET_FILE:extensions> to $<TARGET_FILE_DIR:maintest>"
+					VERBATIM)
+		ADD_CUSTOM_COMMAND( TARGET maintest POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
 					"$<TARGET_FILE:cocos2d>"
 					"$<TARGET_FILE_DIR:maintest>"
 					COMMENT
@@ -384,6 +390,12 @@ if ( ${PROJECT_NAME} STREQUAL ${CMAKE_PROJECT_NAME} )
 
 		if(WIN32)
 		#also copying dlls to binary directory for the executable to run
+		ADD_CUSTOM_COMMAND( TARGET autotest POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
+					"$<TARGET_FILE:extensions>"
+					"$<TARGET_FILE_DIR:autotest>"
+					COMMENT
+					"Copying $<TARGET_FILE:extensions> to $<TARGET_FILE_DIR:autotest>"
+					VERBATIM)
 		ADD_CUSTOM_COMMAND( TARGET autotest POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
 					"$<TARGET_FILE:cocos2d>"
 					"$<TARGET_FILE_DIR:autotest>"
