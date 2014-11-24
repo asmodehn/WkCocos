@@ -5,6 +5,8 @@
 
 #include "cocos2d.h"
 #include "cocos/ui/CocosGUI.h"
+#include "extensions/GUI/CCEditBox/CCEditBox.h"
+
 const std::string SavingUI::id = "saving";
 
 SavingUI::SavingUI()
@@ -58,6 +60,9 @@ SavingUI::SavingUI()
 		m_goldrandButton->addTouchEventListener(CC_CALLBACK_2(SavingUI::goldrandCallback, this));
 		m_goldrandButton->setPosition(cocos2d::Vec2(widgetSize.width / 4, -widgetSize.height / 6));
 		m_widget->addChild(m_goldrandButton);
+
+		cocos2d::extension::EditBox* editor = cocos2d::extension::EditBox::create(cocos2d::Size(widgetSize.width / 2, 40), cocos2d::extension::Scale9Sprite::create("EditBox.png"));
+		m_widget->addChild(editor);
 
 		m_widget->retain(); //we need to retain it in memory ( or cocos will drop it )
 		widget_cache.insert(std::pair<std::string, cocos2d::ui::Widget*>(id, m_widget));
