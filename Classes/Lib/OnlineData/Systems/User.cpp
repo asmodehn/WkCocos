@@ -2,6 +2,10 @@
 #include "WkCocos/OnlineData/Events/Error.h"
 #include "WkCocos/OnlineData/Comp/OnlineData.h"
 
+#include "json/document.h"         // rapidjson's DOM-style API
+#include "json/stringbuffer.h"
+#include "json/writer.h"
+
 namespace WkCocos
 {
 	namespace OnlineData
@@ -93,7 +97,7 @@ namespace WkCocos
 						::App42::App42API::setDbName(DB_NAME);
 						m_user_service->setQuery(lud->m_collection.c_str(), NULL); //This will tell
 						//App42 that you are requesting all the data linked to the above userName
-						m_user_service->GetUser(lud->m_userid.c_str(), [entity](void* data) mutable
+						m_user_service->GetUser(lud->m_userid.c_str(), [entity, events](void* data) mutable
 						{//we need only entity here which is just an ID (and can mutate)
 							if (entity.valid()) //to be on the safe side
 							{
@@ -101,7 +105,43 @@ namespace WkCocos
 								if (ecpu && !ecpu->life_time < TIMEOUT)
 								{
 									entityx::ptr<Comp::LoadUserData> eclud = entity.component<Comp::LoadUserData>();
-									if (eclud && eclud->m_cb) eclud->m_cb(data);
+									::App42::App42UserResponse* userdata = static_cast<::App42::App42UserResponse*>(data);
+									if (userdata->isSuccess)
+									{
+										std::vector<std::string> docs;
+										std::vector<::App42::JSONDocument> jsonDocArray = userdata->users.front().jsonDocArray;
+										std::string docId = "";
+
+										if (!jsonDocArray.empty())
+										{
+											//id of last doc is the one we want to use ( others are discarded )
+											docId = jsonDocArray.back().getDocId();
+
+											for (std::vector<::App42::JSONDocument>::iterator it = jsonDocArray.begin(); it != jsonDocArray.end(); ++it)
+											{
+												rapidjson::Document doc;
+												rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
+												auto jsonDoc = it->getJsonDoc();
+												docs.push_back(jsonDoc.c_str());
+											}
+										}
+
+										//callback called even if data not present
+										cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([eclud, docId, docs]()
+										{
+											eclud->m_cb(docId, docs);
+										});
+
+									}
+									else// if request failed, 
+									{
+										cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([events, entity, userdata](){
+											events->emit<Events::Error>(entity.id(), userdata);
+											//callback is not called if error
+										});
+									}
+									//entityx::ptr<Comp::LoadUserData> eclud = entity.component<Comp::LoadUserData>();
+									//if (eclud && eclud->m_cb) eclud->m_cb(data);
 								}
 								//job is done
 								CCLOG("Load User Data entity lived %f seconds", ecpu->life_time);

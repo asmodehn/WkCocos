@@ -139,14 +139,14 @@ namespace WkCocos
 			auto newentity = entity_manager->create();
 			auto id = newentity.id();
 			newentity.assign<Comp::ProgressUpdate>();
-			newentity.assign<Comp::LoadUserData>(userid, saveName, [=](::App42::App42UserResponse* r)
+			newentity.assign<Comp::LoadUserData>(userid, saveName, /*[=](::App42::App42UserResponse* r)
 			{
 				if (r->isSuccess)
 				{
 					std::vector<std::string> docs;
 					std::vector<::App42::JSONDocument> jsonDocArray = r->users.front().jsonDocArray;
-					std::string docId  ="";
-
+					std::string docId = "";
+					
 					if (!jsonDocArray.empty())
 					{
 						//id of last doc is the one we want to use ( others are discarded )
@@ -175,7 +175,7 @@ namespace WkCocos
 						//callback is not called if error
 					});
 				}
-			});
+			});*/ callback);
 			return id;
 		}
 

@@ -65,11 +65,12 @@ namespace WkCocos
 
 			struct LoadUserData : entityx::Component<LoadUserData>
 			{
-				LoadUserData(std::string userid, std::string m_collection, std::function<void(::App42::App42UserResponse*)> cb);
+				LoadUserData(std::string userid, std::string m_collection, /*std::function<void(::App42::App42UserResponse*)> cb*/ std::function<void(std::string, std::vector<std::string>)> callback);
 
 				std::string m_userid;
 				std::string m_collection;
-				std::function<void(void*)> m_cb;
+				//std::function<void(void*)> m_cb;
+				std::function<void(std::string, std::vector<std::string>)> m_cb;
 
 			};
 

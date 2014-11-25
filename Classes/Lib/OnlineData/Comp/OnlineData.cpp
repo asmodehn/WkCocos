@@ -96,11 +96,12 @@ namespace WkCocos
 				};
 			}
 
-			LoadUserData::LoadUserData(std::string userid, std::string collection, std::function<void(::App42::App42UserResponse*)> cb)
+			LoadUserData::LoadUserData(std::string userid, std::string collection, /*std::function<void(::App42::App42UserResponse*)> cb*/ std::function<void(std::string, std::vector<std::string>)> callback)
 				: m_userid(userid)
 				, m_collection(collection)
+				, m_cb(callback)
 			{
-				m_cb = [=](void* data)
+			/*	m_cb = [=](void* data)
 				{
 					::App42::App42UserResponse* userdata = static_cast<::App42::App42UserResponse*>(data);
 	
@@ -113,7 +114,7 @@ namespace WkCocos
 
 					cb(userdata);
 
-				};
+				};*/
 			}
 
 			GetUsersKeyValue::GetUsersKeyValue(std::string collection, std::string key, int value, int quantity, int offset, std::function<void(std::map<std::string, std::string>, int)> cb)
