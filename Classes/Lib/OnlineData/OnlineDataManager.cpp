@@ -45,21 +45,8 @@ namespace WkCocos
 			auto newentity = entity_manager->create();
 			auto id = newentity.id();
 			newentity.assign<Comp::ProgressUpdate>();
-			newentity.assign<Comp::Create>(userid, password, email, [=](::App42::App42UserResponse* r){
-
-				if (r->isSuccess)
-				{
-					cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, userid, password, success_callback](){
-						login(userid, password, success_callback);
-					});
-				}
-				else // if creation failed, emit event ( in cocos thread to allow cocos actions )
-				{
-					cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, id, r](){
-						event_manager->emit<Events::Error>(id, r);
-					});
-				}
-				
+			newentity.assign<Comp::Create>(userid, password, email, [=](){
+				login(userid, password, success_callback);
 			});
 			
 		}
@@ -69,21 +56,7 @@ namespace WkCocos
 			auto newentity = entity_manager->create();
 			auto id = newentity.id();
 			newentity.assign<Comp::ProgressUpdate>();
-			newentity.assign<Comp::Login>(userid, password, [=](::App42::App42UserResponse* r){
-				if (!r->isSuccess)
-				{
-					cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, id, r](){
-						event_manager->emit<Events::Error>(id, r);
-						//callback is not called if error
-					});
-				}
-				else
-				{
-					cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, success_callback, r](){
-						success_callback(r->getBody());
-					});
-				}
-			});
+			newentity.assign<Comp::Login>(userid, password, success_callback);
 		}
 
 		entityx::Entity::Id OnlineDataManager::save(const std::string& userid, const std::string& saveName, std::string docId, std::string user_data, std::function<void(std::string, std::string, std::string)> success_callback, std::string key)
@@ -139,43 +112,7 @@ namespace WkCocos
 			auto newentity = entity_manager->create();
 			auto id = newentity.id();
 			newentity.assign<Comp::ProgressUpdate>();
-			newentity.assign<Comp::LoadUserData>(userid, saveName, /*[=](::App42::App42UserResponse* r)
-			{
-				if (r->isSuccess)
-				{
-					std::vector<std::string> docs;
-					std::vector<::App42::JSONDocument> jsonDocArray = r->users.front().jsonDocArray;
-					std::string docId = "";
-					
-					if (!jsonDocArray.empty())
-					{
-						//id of last doc is the one we want to use ( others are discarded )
-						docId = jsonDocArray.back().getDocId();
-
-						for (std::vector<::App42::JSONDocument>::iterator it = jsonDocArray.begin(); it != jsonDocArray.end(); ++it)
-						{
-							rapidjson::Document doc;
-							rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
-							auto jsonDoc = it->getJsonDoc();
-							docs.push_back(jsonDoc.c_str());
-						}
-					}
-
-					//callback called even if data not present
-					cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, callback, docId, docs]()
-					{
-						callback(docId, docs);
-					});
-
-				}
-				else// if request failed, 
-				{
-					cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, id, r](){
-						event_manager->emit<Events::Error>(id, r);
-						//callback is not called if error
-					});
-				}
-			});*/ callback);
+			newentity.assign<Comp::LoadUserData>(userid, saveName, callback);
 			return id;
 		}
 

@@ -12,45 +12,21 @@ namespace WkCocos
 	{
 		namespace Comp
 		{
-			Create::Create(std::string userid, std::string passwd, std::string email, std::function<void(::App42::App42UserResponse*)> cb)
+			Create::Create(std::string userid, std::string passwd, std::string email, std::function<void(void)> cb)
 				: m_userid(userid)
 				, m_passwd(passwd)
 				, m_email(email)
+				, m_cb(cb)
 			{
-				m_cb = [=](void* data)
-				{
-					::App42::App42UserResponse* userdata = static_cast<::App42::App42UserResponse*>(data);
 
-					CCLOG("\ncode=%d...=%d", userdata->getCode(), userdata->isSuccess);
-
-					CCLOG("\nerrordetails:%s", userdata->errorDetails.c_str());
-					CCLOG("\nerrorMessage:%s", userdata->errorMessage.c_str());
-					CCLOG("\nappErrorCode:%d", userdata->appErrorCode);
-					CCLOG("\nhttpErrorCode:%d", userdata->httpErrorCode);
-
-					cb(userdata);
-
-				};
 			}
 
-			Login::Login(std::string userid, std::string passwd, std::function<void(::App42::App42UserResponse*)> cb)
+			Login::Login(std::string userid, std::string passwd, std::function<void(std::string)> cb)
 				: m_userid(userid)
 				, m_passwd(passwd)
+				, m_cb(cb)
 			{
-				m_cb = [=](void* data)
-				{
-					::App42::App42UserResponse* userdata = static_cast<::App42::App42UserResponse*>(data);
 
-					CCLOG("\ncode=%d...=%d", userdata->getCode(), userdata->isSuccess);
-
-					CCLOG("\nerrordetails:%s", userdata->errorDetails.c_str());
-					CCLOG("\nerrorMessage:%s", userdata->errorMessage.c_str());
-					CCLOG("\nappErrorCode:%d", userdata->appErrorCode);
-					CCLOG("\nhttpErrorCode:%d", userdata->httpErrorCode);
-
-					cb(userdata);
-
-				};
 			}
 
 			UpdateUserData::UpdateUserData(std::string userid, std::string collection, std::string docId, std::string user_data, std::function<void(::App42::App42StorageResponse*)> cb)
@@ -96,25 +72,12 @@ namespace WkCocos
 				};
 			}
 
-			LoadUserData::LoadUserData(std::string userid, std::string collection, /*std::function<void(::App42::App42UserResponse*)> cb*/ std::function<void(std::string, std::vector<std::string>)> callback)
+			LoadUserData::LoadUserData(std::string userid, std::string collection, /*std::function<void(::App42::App42UserResponse*)>*/ std::function<void(std::string, std::vector<std::string>)> cb)
 				: m_userid(userid)
 				, m_collection(collection)
-				, m_cb(callback)
+				, m_cb(cb)
 			{
-			/*	m_cb = [=](void* data)
-				{
-					::App42::App42UserResponse* userdata = static_cast<::App42::App42UserResponse*>(data);
-	
-					CCLOG("\ncode=%d...=%d", userdata->getCode(), userdata->isSuccess);
 
-					CCLOG("\nerrordetails:%s", userdata->errorDetails.c_str());
-					CCLOG("\nerrorMessage:%s", userdata->errorMessage.c_str());
-					CCLOG("\nappErrorCode:%d", userdata->appErrorCode);
-					CCLOG("\nhttpErrorCode:%d", userdata->httpErrorCode);
-
-					cb(userdata);
-
-				};*/
 			}
 
 			GetUsersKeyValue::GetUsersKeyValue(std::string collection, std::string key, int value, int quantity, int offset, std::function<void(std::map<std::string, std::string>, int)> cb)

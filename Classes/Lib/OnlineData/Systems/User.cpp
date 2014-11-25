@@ -33,7 +33,7 @@ namespace WkCocos
 				{
 					if (!pu->in_progress)
 					{
-						m_user_service->CreateUser(c->m_userid.c_str(), c->m_passwd.c_str(), c->m_email.c_str(), [entity](void* data) mutable
+						m_user_service->CreateUser(c->m_userid.c_str(), c->m_passwd.c_str(), c->m_email.c_str(), [entity, events](void* data) mutable
 						{//we need only entity here which is just an ID (and can mutate)
 							if (entity.valid()) //to be on the safe side
 							{
@@ -41,9 +41,20 @@ namespace WkCocos
 								if (ecpu && !ecpu->life_time < TIMEOUT)
 								{
 									entityx::ptr<Comp::Create> ecc = entity.component<Comp::Create>();
-									if (ecc && ecc->m_cb) ecc->m_cb(data);
+									::App42::App42UserResponse* userdata = static_cast<::App42::App42UserResponse*>(data);
+									if (userdata->isSuccess)
+									{
+										cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([ecc](){
+											ecc->m_cb();
+										});
+									}
+									else
+									{
+										cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([events, entity, userdata](){
+											events->emit<Events::Error>(entity.id(), userdata);
+										});
+									}
 								}
-								//job is done
 								CCLOG("Create User entity lived %f seconds", ecpu->life_time);
 								entity.destroy();
 							}
@@ -52,7 +63,9 @@ namespace WkCocos
 					}
 					else if (pu->life_time > TIMEOUT)
 					{
-						events->emit<Events::Error>(entity.id(), "user create");
+						cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([events, entity](){
+							events->emit<Events::Error>(entity.id(), "user create");
+						});
 						entity.destroy();
 					}
 
@@ -63,7 +76,7 @@ namespace WkCocos
 				{
 					if (!pu->in_progress)
 					{
-						m_user_service->Authenticate(l->m_userid.c_str(), l->m_passwd.c_str(), [entity](void* data) mutable
+						m_user_service->Authenticate(l->m_userid.c_str(), l->m_passwd.c_str(), [entity, events](void* data) mutable
 						{//we need only entity here which is just an ID (and can mutate)
 							if (entity.valid()) //to be on the safe side
 							{
@@ -71,9 +84,20 @@ namespace WkCocos
 								if (ecpu && !ecpu->life_time < TIMEOUT)
 								{
 									entityx::ptr<Comp::Login> ecl = entity.component<Comp::Login>();
-									if (ecl && ecl->m_cb) ecl->m_cb(data);
+									::App42::App42UserResponse* userdata = static_cast<::App42::App42UserResponse*>(data);
+									if (userdata->isSuccess)
+									{
+										cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([ecl, userdata](){
+											ecl->m_cb(userdata->getBody());
+										});
+									}
+									else
+									{
+										cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([events, entity, userdata](){
+											events->emit<Events::Error>(entity.id(), userdata);
+										});
+									}
 								}
-								//job is done
 								CCLOG("Login User entity lived %f seconds", ecpu->life_time);
 								entity.destroy();
 							}
@@ -82,7 +106,9 @@ namespace WkCocos
 					}
 					else if (pu->life_time > TIMEOUT)
 					{
-						events->emit<Events::Error>(entity.id(), "user login");
+						cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([events, entity](){
+							events->emit<Events::Error>(entity.id(), "user login");
+						});
 						entity.destroy();
 					}
 
@@ -125,8 +151,6 @@ namespace WkCocos
 												docs.push_back(jsonDoc.c_str());
 											}
 										}
-
-										//callback called even if data not present
 										cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([eclud, docId, docs]()
 										{
 											eclud->m_cb(docId, docs);
@@ -137,13 +161,9 @@ namespace WkCocos
 									{
 										cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([events, entity, userdata](){
 											events->emit<Events::Error>(entity.id(), userdata);
-											//callback is not called if error
 										});
 									}
-									//entityx::ptr<Comp::LoadUserData> eclud = entity.component<Comp::LoadUserData>();
-									//if (eclud && eclud->m_cb) eclud->m_cb(data);
 								}
-								//job is done
 								CCLOG("Load User Data entity lived %f seconds", ecpu->life_time);
 								entity.destroy();
 							}
@@ -152,7 +172,9 @@ namespace WkCocos
 					}
 					else if (pu->life_time > TIMEOUT)
 					{
-						events->emit<Events::Error>(entity.id(), "user data load");
+						cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([events, entity](){
+							events->emit<Events::Error>(entity.id(), "user data load");
+						});
 						entity.destroy();
 					}
 

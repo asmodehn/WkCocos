@@ -21,22 +21,22 @@ namespace WkCocos
 		{
 			struct Create : entityx::Component<Create>
 			{
-				Create(std::string userid, std::string passwd, std::string email, std::function<void(::App42::App42UserResponse*)> cb);
+				Create(std::string userid, std::string passwd, std::string email, std::function<void(void)> cb);
 
 				std::string m_userid;
 				std::string m_passwd;
 				std::string m_email;
-				std::function<void(void*)> m_cb;
+				std::function<void(void)> m_cb;
 
 			};
 
 			struct Login : entityx::Component<Login>
 			{
-				Login(std::string userid, std::string passwd, std::function<void(::App42::App42UserResponse*)> cb);
+				Login(std::string userid, std::string passwd, std::function<void(std::string)> cb);
 
 				std::string m_userid;
 				std::string m_passwd;
-				std::function<void(void*)> m_cb;
+				std::function<void(std::string)> m_cb;
 
 			};
 
@@ -65,11 +65,10 @@ namespace WkCocos
 
 			struct LoadUserData : entityx::Component<LoadUserData>
 			{
-				LoadUserData(std::string userid, std::string m_collection, /*std::function<void(::App42::App42UserResponse*)> cb*/ std::function<void(std::string, std::vector<std::string>)> callback);
+				LoadUserData(std::string userid, std::string m_collection, std::function<void(std::string, std::vector<std::string>)> cb);
 
 				std::string m_userid;
 				std::string m_collection;
-				//std::function<void(void*)> m_cb;
 				std::function<void(std::string, std::vector<std::string>)> m_cb;
 
 			};
