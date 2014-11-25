@@ -31,19 +31,20 @@ DownloadingUI::DownloadingUI()
 		m_widget->setContentSize(cocos2d::Size(visibleSize.width, visibleSize.height - 80)); //upper + lower lines of buttons
 		cocos2d::Size widgetSize = m_widget->getContentSize();
 
-		//loadingbar
-		auto loadingbar = cocos2d::ui::LoadingBar::create("loadingbar.png", 0.5f);
-		loadingbar->setName("LoadingBar");
-		m_widget->addChild(loadingbar);
-
         //BIG button to start download
         auto dlLabel = cocos2d::ui::Text::create(MANIFEST_FILENAME, "Thonburi", 21);
         auto button = cocos2d::ui::Button::create("SkipNormal.png", "SkipSelected.png");
 		button->addTouchEventListener(CC_CALLBACK_2(DownloadingUI::DLCallback, this));
-		button->setPosition(cocos2d::Vec2(button->getContentSize().width / 2, -button->getContentSize().height / 2));
+		button->setPosition(-1 * widgetSize /2 + button->getContentSize());
         dlLabel->setPosition(button->getPosition() + cocos2d::Vec2(0, button->getContentSize().height));
         m_widget->addChild(button);
         m_widget->addChild(dlLabel);
+
+		//loadingbar
+		auto loadingbar = cocos2d::ui::LoadingBar::create("loadingbar.png", 0.5f);
+		loadingbar->setName("LoadingBar");
+		loadingbar->setPosition(button->getPosition() + cocos2d::Vec2(button->getContentSize().width + loadingbar->getContentSize().width ,0));
+		m_widget->addChild(loadingbar);
 
 		m_widget->retain(); //we need to retain it in memory ( or cocos will drop it )
 		widget_cache.insert(std::pair<std::string, cocos2d::ui::Widget*>(id, m_widget));
@@ -73,10 +74,34 @@ void DownloadingUI::receive(const WkCocos::Download::Events::DownloadOptions &dl
 {
 	LOG_DEBUG << "Received DownloadOptions Event !" << std::endl;
 
-	//TODO : display the list of possible URL, with special color for the force update if there is one
+    int posincr = -40;
+    int pos = posincr;
 
+    //title //ERROR Thonburi doesnt have => or ->
+    auto verdlTitle = cocos2d::ui::Text::create(dlo.m_current_version.toString() + " upgrade to " + dlo.m_url, "Thonburi", 21);
+    cocos2d::Vec2 posanchor = cocos2d::Vec2(0, m_widget->getContentSize().height /2);
+    verdlTitle->setPosition(posanchor + cocos2d::Vec2(20,pos));
+    m_widget->addChild(verdlTitle);
+    pos+=posincr;
 
+	//display the list of possible URL.
+    for ( auto v : dlo.m_version_vec )
+	{
+	    auto verdlLabel = cocos2d::ui::Text::create(v.toString(), "Thonburi", 21);
+        verdlLabel->setPosition(posanchor + cocos2d::Vec2(20,pos));
+        m_widget->addChild(verdlLabel);
+        pos += posincr;
+	}
 
+    //TODO : special color for the force update if there is one
+    if ( dlo.m_force_update != WkCocos::Download::Version() )
+    {
+        auto fverdlLabel = cocos2d::ui::Text::create("Force Update " + dlo.m_force_update.toString(), "Thonburi", 21);
+        fverdlLabel->setPosition(posanchor + cocos2d::Vec2(20,pos));
+        m_widget->addChild(fverdlLabel);
+        pos += posincr;
+
+    }
 }
 
 void DownloadingUI::receive(const WkCocos::Download::Events::DownloadAdvised &dla)
@@ -86,8 +111,9 @@ void DownloadingUI::receive(const WkCocos::Download::Events::DownloadAdvised &dl
 	//if we started the advised download already : display the url and version.
 	if ( dla.m_started)
     {
+        auto lbar = getChildByName<cocos2d::ui::LoadingBar*>("LoadingBar");
         auto verdlLabel = cocos2d::ui::Text::create(dla.m_version.toString(), "Thonburi", 21);
-        //dlLabel->setPosition(button->getPosition() + cocos2d::Vec2(0, button->getContentSize().height));
+        verdlLabel->setPosition(lbar->getPosition());
         m_widget->addChild(verdlLabel);
     }
 }

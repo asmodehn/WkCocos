@@ -145,11 +145,15 @@ namespace WkCocos
                         //TODO order the list of versions ascendantly ( using operator< )
 						std::sort(m_version_vec.begin(), m_version_vec.end());
 
-						//TODO : CHECK IF WE HAVE TO UPDATE BASED ON AVAILABLE DLC VERSIONS
-						// we will update to latest version available if and only if our current version is not in the version interval of Downloadable content.
+						//CHECK IF WE HAVE TO UPDATE BASED ON AVAILABLE DLC VERSIONS
+						// we will update to latest version available if and only if our current version is not under the minimum version of Downloadable content.
                         Version force_update_version;
+                        if (dllist->m_current_dataVersion < m_version_vec.front() )
+                        {
+                            force_update_version = m_version_vec.back();
+                        }
 
-                        //TODO emit event
+                        //emit event
                         events->emit<Events::DownloadOptions>(dllist->m_url, dllist->m_current_dataVersion, m_version_vec, force_update_version);
 
 						//this entity has now the list of data folders found on this URL.
