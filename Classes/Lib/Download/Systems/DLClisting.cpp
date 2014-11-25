@@ -62,6 +62,8 @@ namespace WkCocos
 
 					CCLOG("DLClisting reading from %s", url.c_str());
 
+                    //cleaning up dirlist data
+                    m_dirlist.clear();
 
 					//list all files at given url
 					CURLcode res;
@@ -97,7 +99,7 @@ namespace WkCocos
 					else
 					{
 						// extract what we need from the listing
-						std::vector<Version> m_version_vec;
+						std::vector<Version> version_vec;
 
 						CCLOG("DLClisting before versions retrieval");
 						//REGEX IMPLEMENTATION GCC 4.9 required
@@ -135,7 +137,7 @@ namespace WkCocos
 							{
 								std::string verstr = s.substr(pos , endpos - pos );
 								CCLOG("verstr = %s ", verstr.c_str());
-								m_version_vec.push_back(Version(verstr));
+								version_vec.push_back(Version(verstr));
 							}
 							pos = s.find(atag, endpos);
 						}
@@ -143,21 +145,21 @@ namespace WkCocos
 						entity.remove<Comp::DataListDownload>();
 
                         //TODO order the list of versions ascendantly ( using operator< )
-						std::sort(m_version_vec.begin(), m_version_vec.end());
+						std::sort(version_vec.begin(), version_vec.end());
 
 						//CHECK IF WE HAVE TO UPDATE BASED ON AVAILABLE DLC VERSIONS
 						// we will update to latest version available if and only if our current version is not under the minimum version of Downloadable content.
                         Version force_update_version;
-                        if (dllist->m_current_dataVersion < m_version_vec.front() )
+                        if (dllist->m_current_dataVersion < version_vec.front() )
                         {
-                            force_update_version = m_version_vec.back();
+                            force_update_version = version_vec.back();
                         }
 
                         //emit event
-                        events->emit<Events::DownloadOptions>(dllist->m_url, dllist->m_current_dataVersion, m_version_vec, force_update_version);
+                        events->emit<Events::DownloadOptions>(dllist->m_url, dllist->m_current_dataVersion, version_vec, force_update_version);
 
 						//this entity has now the list of data folders found on this URL.
-						entity.assign<Comp::DataVerCheck>(dllist->m_url, dllist->m_current_dataVersion, dllist->m_current_minAppVersion, m_version_vec);
+						entity.assign<Comp::DataVerCheck>(dllist->m_url, dllist->m_current_dataVersion, dllist->m_current_minAppVersion, version_vec);
 
 						CCLOG("DLClisting after versions retrieval");
 
