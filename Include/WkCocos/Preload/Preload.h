@@ -5,6 +5,7 @@
 
 #include "entityx/entityx.h"
 
+#include "WkCocos/Preload/Events/Loaded.h"
 #include "WkCocos/Download/Events/Downloaded.h"
 
 #include "curl/curl.h"
@@ -41,6 +42,7 @@ namespace WkCocos
 				void setEventEmitter(entityx::ptr<entityx::EventManager> event_emitter);
 
 				void receive(const Download::Events::Downloaded &dl);
+				void receive(const Events::Loaded &dl);
 
 				void update(double dt);
 
