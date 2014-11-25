@@ -88,20 +88,15 @@ void DownloadingUI::receive(const WkCocos::Download::Events::DownloadOptions &dl
     for ( auto v : dlo.m_version_vec )
 	{
 	    auto verdlLabel = cocos2d::ui::Text::create(v.toString(), "Thonburi", 21);
+	    if ( v == dlo.m_force_update)
+	    {
+            verdlLabel->setColor(cocos2d::Color3B::RED);
+            verdlLabel->setString(verdlLabel->getString() + " FORCE UPDATE");
+	    }
         verdlLabel->setPosition(posanchor + cocos2d::Vec2(20,pos));
         m_widget->addChild(verdlLabel);
         pos += posincr;
 	}
-
-    //TODO : special color for the force update if there is one
-    if ( dlo.m_force_update != WkCocos::Download::Version() )
-    {
-        auto fverdlLabel = cocos2d::ui::Text::create("Force Update " + dlo.m_force_update.toString(), "Thonburi", 21);
-        fverdlLabel->setPosition(posanchor + cocos2d::Vec2(20,pos));
-        m_widget->addChild(fverdlLabel);
-        pos += posincr;
-
-    }
 }
 
 void DownloadingUI::receive(const WkCocos::Download::Events::DownloadAdvised &dla)
