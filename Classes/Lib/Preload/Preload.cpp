@@ -15,6 +15,7 @@
 #include "WkCocos/Utils/ToolBox.h"
 
 #include <functional>
+#include <algorithm>
 
 namespace WkCocos
 {
@@ -62,7 +63,7 @@ namespace WkCocos
 			//curl_global_cleanup();
 		}
 
-		bool Preload::addDataLoad(const std::string &  filepath, const std::vector<std::string> & depends_filepath)
+		bool Preload::addDataLoad(const std::string &  filepath, std::vector<std::string> depends_filepath)
 		{
 			entityx::ptr<Comp::DataLoad> data;
 			bool exist = false;
@@ -78,17 +79,30 @@ namespace WkCocos
 			{
 				entityx::Entity entity = entity_manager->create();
 				entity.assign<Comp::DataLoad>(filepath);
+
+				//keeping only unique values in depends
+				std::sort(depends_filepath.begin(),depends_filepath.end() );
+				auto lastunique_it = std::unique(depends_filepath.begin(),depends_filepath.end() );
+				depends_filepath.resize( std::distance(depends_filepath.begin(),lastunique_it));
+
+                LOG_DEBUG << "Preload > Adding Resource \"" << filepath << "\"" << std::endl;
+                LOG_DEBUG << "Preload > with dependencies : " << std::endl;
+                for ( auto d : depends_filepath )
+                {
+                    LOG_DEBUG << "Preload > - " << d << std::endl;
+                }
+
 				entity.assign<Comp::DataDepends>(depends_filepath);
 				entity.assign<Comp::ProgressValue>(1);
 			}
 			else
 			{
-				LOG_INFO << "Preload > Resource \"" << filepath << "\" already added!" << std::endl;
+				LOG_DEBUG << "Preload > Resource \"" << filepath << "\" already added!" << std::endl;
 			}
 
 			return true;
 		}
-		
+
 		void Preload::update(double dt) {
 
 			//check for error and report them if needed

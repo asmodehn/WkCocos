@@ -10,7 +10,7 @@
 
 #include "curl/curl.h"
 
-namespace WkCocos 
+namespace WkCocos
 {
 	namespace Preload
 	{
@@ -22,11 +22,11 @@ namespace WkCocos
 					std::function<void(std::string)> error_callback*/
 					);
 
-				//scheduel the load in memory of a data.
-				// passing it sdependencies prevent to load it if a dependency is missing.
+				//schedule the load in memory of a data.
+				// passing its dependencies prevent to load it if a dependency is missing.
 				//DataLoad Event is sent when the load finishes.
-				bool addDataLoad(const std::string &  filepath, const std::vector<std::string> & depends_filepath);
-				
+				bool addDataLoad(const std::string &  filepath, std::vector<std::string> depends_filepath);
+
 				virtual ~Preload();
 
 				entityx::ptr<entityx::EventManager> getEventManager()
