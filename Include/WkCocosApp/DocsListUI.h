@@ -35,7 +35,7 @@ protected:
 
 	std::vector<std::map<std::string, cocos2d::ui::Text*>> m_table;
 
-	int m_quantity = 2;
+	int m_quantity = 5;
 	int m_offset = 0;
 	int m_pages = 0;
 

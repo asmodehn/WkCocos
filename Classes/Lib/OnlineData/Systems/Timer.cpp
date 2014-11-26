@@ -37,9 +37,20 @@ namespace WkCocos
 								if (ecpu && !ecpu->life_time < TIMEOUT)
 								{
 									entityx::ptr<Comp::ServerTime> ecst = entity.component<Comp::ServerTime>();
-									if (ecst && ecst->m_cb) ecst->m_cb(data);
+									::App42::App42TimerResponse* userdata = static_cast<::App42::App42TimerResponse*>(data);
+									if (userdata->isSuccess)
+									{
+										cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([ecst, userdata](){
+											ecst->m_cb(userdata->app42Timer.currentTime);
+										});
+									}
+									else
+									{
+										cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([ecst](){
+											ecst->m_cb("1900-01-00T00:00:00.000");
+										});
+									}
 								}
-								//job is done
 								CCLOG("Get Server Time entity lived %f seconds", ecpu->life_time);
 								entity.destroy();
 							}
@@ -48,7 +59,9 @@ namespace WkCocos
 					}
 					else if (pu->life_time > TIMEOUT)
 					{
-						events->emit<Events::Error>(entity.id(), "server time");
+						cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([events, entity](){
+							events->emit<Events::Error>(entity.id(), "server time");
+						});
 						entity.destroy();
 					}
 

@@ -81,6 +81,7 @@ void PlayersListUI::refreshCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget
 				m_offset = 0;
 		}
 		g_gameLogic->getPlayer().getUsersFromTo("currency.gold", 1, 999999, m_quantity, m_offset);
+		//g_gameLogic->getPlayer().getUsersKeyValue("currency.gold", 699, m_quantity, m_offset);
 	}
 }
 
@@ -118,6 +119,6 @@ void PlayersListUI::receive(const WkCocos::OnlineData::Events::PlayersList &pl)
 			m_widget->addChild(playertextbutton);
 		}
 	}
-	m_pages = (int)round((float)listSize / (float)m_quantity);
+	m_pages = (int)ceil((float)listSize / (float)m_quantity);
 	m_refreshLabel->setString("page " + WkCocos::ToolBox::itoa(m_offset / m_quantity + 1) + "/" + WkCocos::ToolBox::itoa(m_pages));
 }

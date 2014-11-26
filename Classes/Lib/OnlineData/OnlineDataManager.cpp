@@ -64,22 +64,7 @@ namespace WkCocos
 			auto updateentity = entity_manager->create();
 			auto id = updateentity.id();
 			updateentity.assign<Comp::ProgressUpdate>();
-			updateentity.assign < Comp::UpdateUserData >(userid, saveName, docId, user_data, [=](::App42::App42StorageResponse* r)
-			{
-				if (!r->isSuccess)
-				{
-					cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, id, r](){
-						event_manager->emit<Events::Error>(id, r);
-						//callback is not called if error
-					});
-				}
-				else
-				{
-					cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, success_callback, r](){
-						success_callback(r->storages.back().collectionName, r->storages.back().jsonDocArray.back().getDocId(), r->getBody());
-					});
-				}
-			});
+			updateentity.assign < Comp::UpdateUserData >(userid, saveName, docId, user_data, success_callback);
 			return id;
 		}
 
@@ -88,22 +73,7 @@ namespace WkCocos
 			auto insertentity = entity_manager->create();
 			auto id = insertentity.id();
 			insertentity.assign<Comp::ProgressUpdate>();
-			insertentity.assign < Comp::InsertUserData >(userid, saveName, user_data, [=](::App42::App42StorageResponse* r)
-			{
-				if (!r->isSuccess)
-				{
-					cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, id, r](){
-						event_manager->emit<Events::Error>(id, r);
-						//callback is not called if error
-					});
-				}
-				else
-				{
-					cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, success_callback, r](){
-						success_callback(r->storages.back().collectionName, r->storages.back().jsonDocArray.back().getDocId(), r->getBody());
-					});
-				}
-			});
+			insertentity.assign < Comp::InsertUserData >(userid, saveName, user_data, success_callback);
 			return id;
 		}
 		
@@ -120,47 +90,28 @@ namespace WkCocos
 		{
 			auto newentity = entity_manager->create();
 			newentity.assign<Comp::ProgressUpdate>();
-			newentity.assign<Comp::GetUsersKeyValue>(saveName, key, value, quantity, offset, [=](std::map<std::string, std::string> data, int recordCount)
-			{
-				cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, data, recordCount](){
-					event_manager->emit<Events::PlayersList>(data, recordCount);
-				});
-			});
+			newentity.assign<Comp::GetUsersKeyValue>(saveName, key, value, quantity, offset);
 		}
 
 		void OnlineDataManager::getUsersFromTo(const std::string& saveName, const std::string& key, int from, int to, int quantity, int offset)
 		{
 			auto newentity = entity_manager->create();
 			newentity.assign<Comp::ProgressUpdate>();
-			newentity.assign<Comp::GetUsersFromTo>(saveName, key, from, to, quantity, offset, [=](std::map<std::string, std::string> data, int recordCount)
-			{
-				cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, data, recordCount](){
-					event_manager->emit<Events::PlayersList>(data, recordCount);
-				});
-			});
+			newentity.assign<Comp::GetUsersFromTo>(saveName, key, from, to, quantity, offset);
 		}
 
 		void OnlineDataManager::getServerTime(std::function<void(std::string)> callback)
 		{
 			auto newentity = entity_manager->create();
 			newentity.assign<Comp::ProgressUpdate>();
-			newentity.assign<Comp::ServerTime>([=](std::string s_iso8601){
-				cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, callback, s_iso8601](){
-					callback(s_iso8601);
-				});
-			});
+			newentity.assign<Comp::ServerTime>(callback);
 		}
 
 		void OnlineDataManager::getAllDocsPaging(const std::string& saveName, int quantity, int offset)
 		{
 			auto newentity = entity_manager->create();
 			newentity.assign<Comp::ProgressUpdate>();
-			newentity.assign<Comp::AllDocsPaging>(saveName, quantity, offset, [=](std::vector<std::map<std::string, std::string>> data)
-			{
-				cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, data](){
-					event_manager->emit<Events::DocsList>(data);
-				});
-			});
+			newentity.assign<Comp::AllDocsPaging>(saveName, quantity, offset);
 		}
 
 		void OnlineDataManager::update(double dt) {

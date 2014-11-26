@@ -42,24 +42,24 @@ namespace WkCocos
 
 			struct UpdateUserData : entityx::Component<UpdateUserData>
 			{
-				UpdateUserData(std::string userid, std::string collec, std::string docid, std::string user_data, std::function<void(::App42::App42StorageResponse*)> cb);
+				UpdateUserData(std::string userid, std::string collec, std::string docid, std::string user_data, std::function<void(std::string, std::string, std::string)> cb);
 
 				std::string m_userid;
 				std::string m_collection;
 				std::string m_docid;
 				std::string m_user_data;
-				std::function<void(void*)> m_cb;
+				std::function<void(std::string, std::string, std::string)> m_cb;
 
 			};
 
 			struct InsertUserData : entityx::Component<InsertUserData>
 			{
-				InsertUserData(std::string userid, std::string m_collection, std::string user_data, std::function<void(::App42::App42StorageResponse*)> cb);
+				InsertUserData(std::string userid, std::string m_collection, std::string user_data, std::function<void(std::string, std::string, std::string)> cb);
 
 				std::string m_userid;
 				std::string m_collection;
 				std::string m_user_data;
-				std::function<void(void*)> m_cb;
+				std::function<void(std::string, std::string, std::string)> m_cb;
 
 			};
 
@@ -75,20 +75,19 @@ namespace WkCocos
 
 			struct GetUsersKeyValue : entityx::Component<GetUsersKeyValue>
 			{
-				GetUsersKeyValue(std::string collection, std::string key, int value, int quantity, int offset, std::function<void(std::map<std::string, std::string>, int)> cb);
+				GetUsersKeyValue(std::string collection, std::string key, int value, int quantity, int offset);
 
 				std::string m_collection;
 				std::string m_key;
 				int m_value;
 				int m_quantity;
 				int m_offset;
-				std::function<void(void*)> m_cb;
 
 			};
 
 			struct GetUsersFromTo : entityx::Component<GetUsersFromTo>
 			{
-				GetUsersFromTo(std::string collection, std::string key, int from, int to, int quantity, int offset, std::function<void(std::map<std::string, std::string>, int)> cb);
+				GetUsersFromTo(std::string collection, std::string key, int from, int to, int quantity, int offset);
 
 				std::string m_collection;
 				std::string m_key;
@@ -96,7 +95,6 @@ namespace WkCocos
 				int m_to;
 				int m_quantity;
 				int m_offset;
-				std::function<void(void*)> m_cb;
 
 			};
 
@@ -104,18 +102,17 @@ namespace WkCocos
 			{
 				ServerTime(std::function<void(std::string)> callback);
 
-				std::function<void(void*)> m_cb;
+				std::function<void(std::string)> m_cb;
 
 			};
 
 			struct AllDocsPaging : entityx::Component<AllDocsPaging>
 			{
-				AllDocsPaging(std::string collection, int quantity, int offset, std::function<void(std::vector<std::map<std::string, std::string>>)> cb);
+				AllDocsPaging(std::string collection, int quantity, int offset);
 
 				std::string m_collection;
 				int m_quantity;
 				int m_offset;
-				std::function<void(void*)> m_cb;
 
 			};
 
