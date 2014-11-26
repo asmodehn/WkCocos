@@ -2,32 +2,52 @@
 #define __WKCOCOS_ACTOR_H__
 
 #include "entityx/entityx.h"
-#include "WkCocos/internal/Config.h"
-#include "WkCocos/World.h"
+
+#include <random>
+#include <unordered_map>
 
 namespace WkCocos
 {
 	/**
 	 * This is the mother class of all WkCocos Actors.
 	 */
+	typedef unsigned long ActorID;
+
+	template <typename Derived>
+	class Event : public entityx::Event<Derived> {
+		ActorID m_id;
+	public:
+		//forcing Actors to pass their ID in events they trigger
+		Event(ActorID id)
+			: m_id(id)
+		{}
+
+		ActorID getSenderID() {
+			return m_id;
+		}
+	};
+
 	class Actor : public entityx::Receiver<Actor>
 	{
-	    //static World smart pointer to allow default constructor
-	    static std::shared_ptr<World> s_default_world;
+		static std::unordered_map<ActorID, Actor *> actors;
+		//simple random number generators (no need for seed here)
+		static std::default_random_engine generator;
+		static std::uniform_int_distribution<ActorID> distribution;
+
+		static ActorID registerMe(Actor*);
 
 	protected:
-		//the world this is a part of.
-		std::shared_ptr<World> m_world;
-
+		//event manager as sharedptr in case we need to use it in a non-actor.
+		static std::shared_ptr<entityx::EventManager> event_manager;
 		ActorID m_id;
 	public:
 
-		std::shared_ptr<entityx::EventManager> events();
+		static inline entityx::ptr<entityx::EventManager> getEventManager(){
+			return event_manager;
+		}
 
-		WKCOCOS_DEPRECATED_ATTRIBUTE static std::shared_ptr<entityx::EventManager> getEventManager();
-
-        //constructor setting the world
-		Actor(std::shared_ptr<World> world = s_default_world);
+        //default constructor
+		Actor();
 
 		//copy constructor
         Actor(const Actor& );
@@ -35,8 +55,13 @@ namespace WkCocos
         //destructor
 		~Actor();
 
-        //Getting the ID of this Actor
 		ActorID getId();
+
+		/**
+		* find actor in list from Id.
+		* return nullptr if not found
+		*/
+		static Actor* getActor(ActorID id);
 
 	};
 

@@ -37,7 +37,7 @@ namespace WkCocos
 		Save::getEventManager()->subscribe<Save::Loaded>(*this);
 		Save::getEventManager()->subscribe<Save::Saved>(*this);
 
-		//Exemple of additional save for player :
+		//Exemple of additional save for player : 
 		//Save* moreData = new Save(moreSaveName, Save::Mode::ONLINE);
 		//moreData->setLocalDataMgr(m_localdata);
 		//moreData->setOnlineDataMgr(m_onlinedata);
@@ -124,10 +124,10 @@ namespace WkCocos
 		//if all saves loaded, we can trigger loaded event.
 		if (all_saved)
 		{
-			events()->emit<Saved>(getId());
+			event_manager->emit<Saved>(getId());
 		}
 	}
-
+	
 	void Player::receive(const WkCocos::Save::Loaded& loaded_evt)
 	{
 		auto saveit = m_save.find(loaded_evt.m_name);
@@ -185,8 +185,8 @@ namespace WkCocos
 				//TODO : fill in with more useful data
 			}
 
-            //checking if all saves are loaded
-            bool all_loaded(true);
+		//checking if all saves are loaded
+		bool all_loaded(true);
 			for ( auto save : m_save)
 			{
 				if (!save.second->isLoaded())
@@ -204,11 +204,11 @@ namespace WkCocos
 				{
 					data.insert(make_pair(save.first, save.second->getData()));
 				}
-				events()->emit<Loaded>(getId());
+				event_manager->emit<Loaded>(getId());
 				if (0 == --m_loggingin)
 				{
 					//if all login requests have replied we are logged in.
-					events()->emit<LoggedIn>(getId(), m_user);
+					event_manager->emit<LoggedIn>(getId(), m_user);
 				}
 			}
 
@@ -329,7 +329,7 @@ namespace WkCocos
 			//Major error : we cannot do anything, just trigger an error event.
 			//IN COCOS THREAD !!!
 			cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, err](){
-				this->events()->emit<Error>(getId(),"app42", ToolBox::itoa(err.httpErrorCode), ToolBox::itoa(err.errorMessage));
+				this->event_manager->emit<Error>(getId(),"app42", ToolBox::itoa(err.httpErrorCode), ToolBox::itoa(err.errorMessage));
 			});
 
 		}

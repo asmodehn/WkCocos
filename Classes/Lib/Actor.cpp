@@ -2,44 +2,58 @@
 
 namespace WkCocos
 {
-    std::shared_ptr<World> Actor::s_default_world = std::make_shared<World>();
+	//static instances
+	std::unordered_map<ActorID, Actor *> Actor::actors;
 
-	Actor::Actor( std::shared_ptr<World> world )
-	: m_world(world)
+	std::default_random_engine Actor::generator;
+	std::uniform_int_distribution<ActorID> Actor::distribution;
+
+	std::shared_ptr<entityx::EventManager> Actor::event_manager;
+	//
+
+	ActorID Actor::registerMe(Actor* act)
 	{
-	    if ( m_world)
-        {
-            m_id = m_world->addActor(this);
-        }
-        else
-        {
-            throw std::logic_error("This Actor doesnt have a world!!! This should never happen.");
-        }
+	    //generate an id that is not in the list
+		ActorID id = distribution(generator);  // generates id
+
+		//tentative insert into actor map
+		bool inserted = false;
+		while (!inserted) // careful we have a max number of actors !!
+		{
+			std::pair<std::unordered_map<ActorID, Actor *>::iterator, bool> res = actors.insert(std::make_pair(id, act));
+			if (!res.second)// cannot be inserted -> regenerate id
+			{
+				id = distribution(generator);
+			}
+			inserted = res.second;
+		}
+		return id;
+	}
+
+	Actor::Actor()
+	{
+		//creates event manager with first actor.
+		if (!event_manager)
+		{
+			event_manager = entityx::EventManager::make();
+		}
+
+        m_id = registerMe(this);
 	}
 
 	Actor::Actor(const Actor& a)
 	{
-        m_world = a.m_world;
-	    if ( m_world)
-        {
-            m_id = m_world->addActor(this);
-        }
-        else
-        {
-            throw std::logic_error("This Actor lost his world!!! This should never happen.");
-        }
+        m_id = registerMe(this);
 	}
 
 	Actor::~Actor()
 	{
-	    if ( m_world)
-        {
-            m_world->removeActor(m_id);
-        }
-        else
-        {
-            throw std::logic_error("This Actor lost his world!!! This should never happen.");
-        }
+		//removing myself from actors list if needed
+		std::unordered_map<ActorID, Actor*>::iterator meit = actors.find(m_id);
+		if (actors.end() != meit)
+		{//id found
+			actors.erase(meit);
+		}
 	}
 
 	ActorID Actor::getId()
@@ -47,29 +61,19 @@ namespace WkCocos
 		return m_id;
 	}
 
-	std::shared_ptr<entityx::EventManager> Actor::events()
-	{
-	    if ( m_world)
-        {
-            return m_world->getEventManager();
-        }
-        else
-        {
-            throw std::logic_error("This Actor lost his world!!! This should never happen.");
-        }
-	}
 
-
-	std::shared_ptr<entityx::EventManager> Actor::getEventManager()
+	/**
+	* find actor in list from Id.
+	* return nullptr if not found
+	*/
+	Actor* Actor::getActor(ActorID id)
 	{
-	    if ( s_default_world)
-        {
-            return s_default_world->getEventManager();
-        }
-        else
-        {
-            throw std::logic_error("The default world was lost!!! This should never happen.");
-        }
+		std::unordered_map<ActorID, Actor*>::iterator it = actors.find(id);
+		if (actors.end() != it)
+		{//id found
+			return it->second;
+		}
+		return nullptr;
 	}
 
 }//namespace WkCocos
