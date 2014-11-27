@@ -242,6 +242,17 @@ namespace WkCocos
 
 		//requests for logging in
 		unsigned short m_loggingin;
+
+		void setUser(std::string& user, std::string& passwd)
+		{
+			m_user = user;
+			m_passwd = passwd;
+			for (auto save : m_save)
+			{
+				save.second->setUserName(m_user);
+			}
+		}
+
 	};
 } //namespace WkCocos
 

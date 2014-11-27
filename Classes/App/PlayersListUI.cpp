@@ -48,8 +48,6 @@ PlayersListUI::PlayersListUI()
 	}
 	if (g_gameLogic->getPlayer().getOnlineDatamgr()) {
 		g_gameLogic->getPlayer().getOnlineDatamgr()->getEventManager()->subscribe<WkCocos::OnlineData::Events::PlayersList>(*this);
-		//g_gameLogic->getPlayer().getUsersKeyValue("currency.gold", 7711, m_quantity, m_offset);
-		//g_gameLogic->getPlayer().getUsersFromTo("currency.gold", 1, 999999, m_quantity, m_offset);
 	}
 }
 
@@ -110,8 +108,8 @@ void PlayersListUI::receive(const WkCocos::OnlineData::Events::PlayersList &pl)
 			playertextbutton->addTouchEventListener (
 				[=](cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input) {
 					if (input == cocos2d::ui::Widget::TouchEventType::ENDED) {
-						m_enemyData->setText(gems + " GEMS and " + gold + " GOLD");
-						m_enemyLabel->setText("player " + enemyName + " has");
+						m_enemyData->setString(gems + " GEMS and " + gold + " GOLD");
+						m_enemyLabel->setString("player " + enemyName + " has");
 					}
 				}
 			);
@@ -121,5 +119,5 @@ void PlayersListUI::receive(const WkCocos::OnlineData::Events::PlayersList &pl)
 		}
 	}
 	m_pages = (int)round((float)listSize / (float)m_quantity);
-	m_refreshLabel->setText("page " + WkCocos::ToolBox::itoa(m_offset / m_quantity + 1) + "/" + WkCocos::ToolBox::itoa(m_pages));
+	m_refreshLabel->setString("page " + WkCocos::ToolBox::itoa(m_offset / m_quantity + 1) + "/" + WkCocos::ToolBox::itoa(m_pages));
 }

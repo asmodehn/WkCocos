@@ -9,7 +9,7 @@
 
 #include "WkCocos/OnlineData/OnlineDataManager.h"
 #include "WkCocos/LocalData/LocalDataManager.h"
-#include "WkCocos/Player.h"
+#include "MyPlayer.h"
 
 class TestScene : public WkCocos::Scene, public entityx::Receiver<TestScene>
 {
@@ -28,15 +28,16 @@ public:
 
 	virtual void onExitTransitionDidStart() override;
 
-	void error_CB(std::string msg);
+	void error_CB(std::string msg, std::function<void()> retryCB, std::function<void()> skipCB);
 
 	void menuCloseCallback(cocos2d::Ref* pSender);
 
 	void prevCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input);
 	void nextCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input);
 
+	void receive(const WkCocos::OnlineData::Events::Error &OD);
 	void receive(const WkCocos::LocalData::Events::Error &LD);
-	void receive(const WkCocos::Player::Error &PL);
+	void receive(const MyPlayer::Error &PL);
 
 protected:
 

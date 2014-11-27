@@ -10,6 +10,9 @@
 
 #include <fstream>
 
+#define DB_NAME "PUBLIC"
+#define TIMEOUT 10.0
+
 namespace WkCocos
 {
 	namespace OnlineData
@@ -22,6 +25,8 @@ namespace WkCocos
 				
 				bool in_progress;
 				bool done;
+				bool timeout;
+				double life_time;
 				std::string m_userid;
 				std::string m_passwd;
 				std::string m_email;
@@ -35,6 +40,8 @@ namespace WkCocos
 
 				bool in_progress;
 				bool done;
+				bool timeout;
+				double life_time;
 				std::string m_userid;
 				std::string m_passwd;
 				std::function<void(void*)> m_cb;
@@ -47,6 +54,8 @@ namespace WkCocos
 
 				bool in_progress;
 				bool done;
+				bool timeout;
+				double life_time;
 				std::string m_userid;
 				std::string m_collection;
 				std::string m_docid;
@@ -61,6 +70,8 @@ namespace WkCocos
 
 				bool in_progress;
 				bool done;
+				bool timeout;
+				double life_time;
 				std::string m_userid;
 				std::string m_collection;
 				std::string m_user_data;
@@ -74,6 +85,8 @@ namespace WkCocos
 
 				bool in_progress;
 				bool done;
+				bool timeout;
+				double life_time;
 				std::string m_userid;
 				std::string m_collection;
 				std::function<void(void*)> m_cb;
@@ -86,6 +99,8 @@ namespace WkCocos
 
 				bool in_progress;
 				bool done;
+				bool timeout;
+				double life_time;
 				std::string m_collection;
 				std::string m_key;
 				int m_value;
@@ -101,6 +116,8 @@ namespace WkCocos
 
 				bool in_progress;
 				bool done;
+				bool timeout;
+				double life_time;
 				std::string m_collection;
 				std::string m_key;
 				int m_from;
@@ -117,6 +134,8 @@ namespace WkCocos
 
 				bool in_progress;
 				bool done;
+				bool timeout;
+				double life_time;
 				std::function<void(void*)> m_cb;
 
 			};
@@ -127,6 +146,8 @@ namespace WkCocos
 
 				bool in_progress;
 				bool done;
+				bool timeout;
+				double life_time;
 				std::string m_collection;
 				int m_quantity;
 				int m_offset;

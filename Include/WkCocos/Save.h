@@ -10,15 +10,6 @@
 #include "WkCocos/OnlineData/OnlineDataManager.h"
 
 #include "WkCocos/Actor.h"
-
-#if defined(__GNUC__) && ((__GNUC__ >= 4) || ((__GNUC__ == 3) && (__GNUC_MINOR__ >= 1)))
-#define WKCOCOS_DEPRECATED_ATTRIBUTE __attribute__((deprecated))
-#elif _MSC_VER >= 1400 //vs 2005 or higher
-#define WKCOCOS_DEPRECATED_ATTRIBUTE __declspec(deprecated)
-#else
-#define WKCOCOS_DEPRECATED_ATTRIBUTE
-#endif
-
 namespace WkCocos
 {
 	/**
@@ -33,8 +24,8 @@ namespace WkCocos
 			ONLINE,
 			END
 		};
-		
-		//to manage async callbacks 
+
+		//to manage async callbacks
 		//entityx::EventManager save_events;
 
 	public:
@@ -46,7 +37,7 @@ namespace WkCocos
 		/**
 		* Constructor
 		* @param saveName Will be used to create the file
-		* @param mode 
+		* @param mode
 		*/
 		Save(const std::string& saveName, Mode mode, std::string encrypt_key = "");
 
@@ -54,7 +45,7 @@ namespace WkCocos
 		* Destructor
 		*/
 		virtual ~Save();
-		
+
 		bool isLoaded() const {
 			return 0 == m_loaded;
 		}
@@ -65,7 +56,9 @@ namespace WkCocos
 
 		enum class ErrorType{
 			LOAD_UNKNOWN_ERROR,
-			SAVE_UNKNOWN_ERROR
+			SAVE_UNKNOWN_ERROR,
+			LOAD_TIMEOUT_ERROR,
+			SAVE_TIMEOUT_ERROR
 		};
 
 		//Error Event : for asynchronous errors only
@@ -143,7 +136,7 @@ namespace WkCocos
 
 		/**
 		* Register callback filling the save string
-		* DEPRECATED 
+		* DEPRECATED
 		*/
 		WKCOCOS_DEPRECATED_ATTRIBUTE inline void registerSavingCallback(std::function<std::string()> onSaving) { m_onSaving = onSaving; }
 
@@ -171,7 +164,7 @@ namespace WkCocos
 		/**
 		* receiving errors from onlinedata manager
 		*/
-		void receive(const WkCocos::OnlineData::Events::Error& err);
+		void receive(const OnlineData::Events::Error& err);
 
 
 		/**
@@ -181,7 +174,7 @@ namespace WkCocos
 
 		inline std::string getName() const { return m_name; }
 		inline void setName(const std::string& name){ m_name = name; }
-		
+
 		inline std::string getData(){ return m_rawData; }
 
 	private:
@@ -221,7 +214,7 @@ namespace WkCocos
 		* The local data manager, to make local call for save/load
 		*/
 		std::shared_ptr<LocalData::LocalDataManager> m_localdata;
-		
+
 		/**
 		* The online data manager, to make online call for save/load
 		*/
@@ -248,7 +241,6 @@ namespace WkCocos
 		*/
 		unsigned short m_saved;
 		entityx::Entity::Id m_current_save;
-
 	};
 
 }// namespace WkCocos

@@ -37,8 +37,10 @@ public:
 	* event receivers
 	*/
 	void receive(const WkCocos::Player::LoggedIn& constructed);
+	void receive(const WkCocos::Player::Error &PL);
 	void receive(const WkCocos::Save::Loaded& loaded);
 	void receive(const WkCocos::Save::Saved& saved);
+	void receive(const WkCocos::Save::Error & save_err);
 
 	//ingame currency
 	WkCocos::StrongBox::StrongBox m_gold;
@@ -76,6 +78,15 @@ public:
 		{}
 	};
 
+	struct Error : public WkCocos::Event < Error >
+	{
+		Error(WkCocos::ActorID id, std::string msg)
+			: WkCocos::Event< Error >(id)
+			, message(msg)
+		{}
+
+		std::string message;
+	};
 
 	WkCocos::Shop::Inventory* getInventory()
 	{
@@ -88,6 +99,8 @@ public:
 	}
 
 	bool getAllDocsPaging(int quantity, int offset);
+
+	bool getUsersKeyValue(std::string key, int value, int quantity, int offset);
 
 	bool getUsersFromTo(std::string key, int from, int to, int quantity, int offset);
 

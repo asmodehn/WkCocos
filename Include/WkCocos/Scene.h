@@ -80,7 +80,7 @@ namespace WkCocos
 		* Get the ui view
 		* @return the ui view
 		*/
-		inline cocos2d::CameraView* getUIView() const { return m_uiView; }
+		inline cocos2d::CameraView* getUIView() { return m_uiView; }
 
 		/**
 		* Override update to trigger update in all UIs

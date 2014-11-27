@@ -42,22 +42,22 @@ namespace WkCocos
 
 	std::string Scene::addInterface(std::string id, Interface* ui)
 	{
-		m_uiView->addChild(ui->m_widget);
-
 		m_ui[id] = ui;
-
+		m_uiView->addChild(ui->m_widget);
 		return id;
 	}
 
 	Interface* Scene::removeInterface(std::string id)
 	{
-		Interface* ui = m_ui[id];
-
-		m_uiView->removeChild(ui->m_widget);
-
-		m_ui.erase(id);
-
-		return ui;
+		auto uiit = m_ui.find(id);
+		if (uiit != m_ui.end())
+		{
+			Interface* ui = uiit->second;
+			m_uiView->removeChild(ui->m_widget);
+			m_ui.erase(id);
+			return ui;
+		}
+		return nullptr;
 	}
 
 	void Scene::update(float delta)

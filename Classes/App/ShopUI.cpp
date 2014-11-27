@@ -144,7 +144,7 @@ void ShopUI::refreshCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::Touch
 void ShopUI::receive(const WkCocos::Shop::Shop::CurrencyBalanceChanged& cbc)
 {
 	auto curtext = m_curMainLabel.at(cbc.m_virtualCurrency.itemid);
-	curtext->setText(WkCocos::ToolBox::itoa(cbc.m_balance) + cbc.m_virtualCurrency.name);
+	curtext->setString(WkCocos::ToolBox::itoa(cbc.m_balance) + cbc.m_virtualCurrency.name);
 }
 
 void ShopUI::receive(const WkCocos::Shop::Shop::MarketItemsRefreshed& mir)
@@ -203,7 +203,7 @@ void ShopUI::receive(const WkCocos::Shop::Shop::MarketItemsRefreshed& mir)
 				auto txtlbl = m_curPackLabel.find(p->itemid);
 				if (txtlbl != m_curPackLabel.end())
 				{ //label already exists
-					txtlbl->second->setText(p->name);
+					txtlbl->second->setString(p->name);
 				}
 				else
 				{
@@ -219,7 +219,7 @@ void ShopUI::receive(const WkCocos::Shop::Shop::MarketItemsRefreshed& mir)
 				if (pricelbl != m_curPriceLabel.end())
 				{ //label already exists
 					CCLOG("Setting pack price at : %s", p->marketPrice.c_str());
-					pricelbl->second->setText(p->marketPrice);
+					pricelbl->second->setString(p->marketPrice);
 				}
 				else
 				{
