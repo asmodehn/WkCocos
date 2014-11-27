@@ -159,7 +159,7 @@ task cleanNdkLibs(type: Delete) {
 task ndkCustomBuildDebug(type: Exec, dependsOn: ['cleanNdkLibs', 'copyAssets']) {
     //windows only
     def dependsDir = file('../../depends').absolutePath
-    def cpus = Runtime.runtime.availableProcessors() / 2
+    def cpus = Runtime.runtime.availableProcessors()
     if (System.properties['os.name'].toLowerCase().contains('windows')) {
         //windows
         commandLine 'cmd', '/c', 'ndk-build', 'NDK_DEBUG=1', 'V=1', '-j', cpus, '-C', file('src/main/jni').absolutePath, 'NDK_MODULE_PATH=' + file('..').absolutePath + ';' + dependsDir + ';' + dependsDir + '\\cocos2dx-store\\submodules;' + dependsDir + '\\cocos2dx-store\\submodules\\soomla-cocos2dx-core\\submodules;' + dependsDir + '\\cocos2d-x;' + dependsDir + '\\cocos2d-x\\external;' + dependsDir + '\\cocos2d-x\\external-bin;' + dependsDir + '\\cocos2d-x\\cocos'
@@ -176,7 +176,7 @@ task ndkCustomBuildDebug(type: Exec, dependsOn: ['cleanNdkLibs', 'copyAssets']) 
 task ndkCustomBuildRelease(type: Exec, dependsOn: ['cleanNdkLibs', 'copyAssets']) {
     //windows only
     def dependsDir = file('../../depends').absolutePath
-    def cpus = Runtime.runtime.availableProcessors() / 2
+    def cpus = Runtime.runtime.availableProcessors()
     if (System.properties['os.name'].toLowerCase().contains('windows')) {
         //windows
         commandLine 'cmd', '/c', 'ndk-build', 'NDK_DEBUG=0','V=1',  '-j', cpus, '-C', file('src/main/jni').absolutePath, 'NDK_MODULE_PATH=' + file('..').absolutePath + ';' + dependsDir + ';' + dependsDir + '\\cocos2dx-store\\submodules;' + dependsDir + '\\cocos2dx-store\\submodules\\soomla-cocos2dx-core\\submodules;' + dependsDir + '\\cocos2d-x;' + dependsDir + '\\cocos2d-x\\external;' + dependsDir + '\\cocos2d-x\\external-bin;' + dependsDir + '\\cocos2d-x\\cocos'
@@ -253,7 +253,7 @@ task cleanAssets(type: Delete) {
 task ndkCleanDebug(type: Exec, dependsOn: 'cleanAssets') {
     //windows only
     def dependsDir = file('../../depends').absolutePath
-    def cpus = Runtime.runtime.availableProcessors() / 2
+    def cpus = Runtime.runtime.availableProcessors()
 
     if (System.properties['os.name'].toLowerCase().contains('windows')) {
         //windows
@@ -271,7 +271,7 @@ task ndkCleanDebug(type: Exec, dependsOn: 'cleanAssets') {
 task ndkCleanRelease(type: Exec, dependsOn: 'cleanAssets') {
     //windows only
     def dependsDir = file('../../depends').absolutePath
-    def cpus = Runtime.runtime.availableProcessors() / 2
+    def cpus = Runtime.runtime.availableProcessors()
 
     if (System.properties['os.name'].toLowerCase().contains('windows')) {
         //windows
