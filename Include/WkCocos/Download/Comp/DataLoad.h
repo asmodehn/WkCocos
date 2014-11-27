@@ -12,31 +12,31 @@ namespace WkCocos
 		namespace Comp
 		{
 			struct DataListDownload : entityx::Component<DataListDownload> {
-				DataListDownload(std::string url, Version current_dataVersion, Version minAppVersion, unsigned short retries = 3)
+				DataListDownload(std::string url, Version current_dataVersion, Version appVersion, unsigned short retries = 3)
 				: m_url(url)
 				, m_current_dataVersion(current_dataVersion)
-				, m_current_minAppVersion(minAppVersion)
+				, m_currentAppVersion(appVersion)
 				, m_retries(retries)
 				{}
 
 				Version m_current_dataVersion;
-				Version m_current_minAppVersion;
+				Version m_currentAppVersion;
 				std::string m_url;
 				unsigned short m_retries;
 			};
 
 			struct DataVerCheck : entityx::Component<DataVerCheck> {
-				DataVerCheck(std::string url, Version current_dataVersion, Version minAppVersion, std::vector<Version> verlist, unsigned short retries = 3)
+				DataVerCheck(std::string url, Version current_dataVersion, Version appVersion, std::vector<Version> verlist, unsigned short retries = 3)
 				: m_url(url)
 				, m_current_dataVersion(current_dataVersion)
-				, m_current_minAppVersion(minAppVersion)
+				, m_currentAppVersion(appVersion)
 				, m_verlist(verlist)
 				, m_retries(retries)
 				{}
 
 				std::vector<Version> m_verlist;
 				Version m_current_dataVersion;
-				Version m_current_minAppVersion;
+				Version m_currentAppVersion;
 				std::string m_url;
 				unsigned short m_retries;
 			};

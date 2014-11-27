@@ -26,7 +26,7 @@ namespace WkCocos
 					);
 
 				//TODO: This should return true if DLC will be done, or false if the manifest disables DLC.
-				void addDataDownload(const std::string json_manifest_filename);
+				void addDataDownload(Version currentVersion,const std::string json_manifest_filename);
 
 				virtual ~Download();
 

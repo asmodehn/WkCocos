@@ -8,6 +8,12 @@
 //TMP
 #include "WkCocos/Download/Systems/ProgressUpdate.h"
 
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32 || CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
+#include "WkPlatform_WkCocos.h"
+#endif
+
+#include "WkCocos/Utils/jni/Utils.h"
+
 #define MANIFEST_FILENAME "manifest.json"
 
 const std::string DownloadingUI::id = "downloading";
@@ -64,7 +70,12 @@ void DownloadingUI::DLCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::Tou
     {
         if (m_dlmgr)
         {
-            m_dlmgr->addDataDownload(MANIFEST_FILENAME);
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32 || CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
+		WkCocos::Download::Version curVersion("v" + std::string(WK_WkCocos_VERSION));
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+        WkCocos::Download::Version curVersion("v" + WkCocos::Utils::jni::Utils::getVersionName());
+#endif
+            m_dlmgr->addDataDownload(curVersion ,MANIFEST_FILENAME);
             m_dlStarted = true;
         }
     }

@@ -132,7 +132,7 @@ namespace WkCocos
                                         if(dllist->m_current_dataVersion <= version) //if we have the exact same data version : developer update or current version hotfix.
                                         {
                                             dlc_update_required = true;
-                                            if (maversion <= dllist->m_current_minAppVersion) // instead of minAppVersion we could use the current app version name from APK
+                                            if (maversion <= dllist->m_currentAppVersion) // instead of minAppVersion we could use the current app version name from APK
                                             {
                                                 dlc_update_allowed = true;
                                             }

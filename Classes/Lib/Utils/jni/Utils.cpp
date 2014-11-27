@@ -50,12 +50,27 @@ namespace WkCocos
 					j_getVNameMI.env->DeleteLocalRef(j_getVNameMI.classID);
 					j_getVNameMI.env->DeleteLocalRef(jvername);
 				}
-
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32 || CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
-				version = WK_WkCocos_VERSION;
 #endif
 				return version;
 			}
+
+			void Utils::openURL(std::string url)
+            {
+
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+                cocos2d::JniMethodInfo minfo;
+
+                if (cocos2d::JniHelper::getStaticMethodInfo(minfo, "com/gameparkstudio/wkcocos/lib/MainActivity", "openURL", "(Ljava/lang/String;)V")) {
+                    jstring StringArg1 = minfo.env->NewStringUTF(url.c_str());
+                    minfo.env->CallStaticVoidMethod(minfo.classID, minfo.methodID, StringArg1);
+                    minfo.env->DeleteLocalRef(StringArg1);
+                    minfo.env->DeleteLocalRef(minfo.classID);
+                }
+#else
+                //TODO
+#endif
+            }
+
 		}//namespace jni
 	}
 }

@@ -159,7 +159,7 @@ namespace WkCocos
                         events->emit<Events::DownloadOptions>(dllist->m_url, dllist->m_current_dataVersion, version_vec, force_update_version);
 
 						//this entity has now the list of data folders found on this URL.
-						entity.assign<Comp::DataVerCheck>(dllist->m_url, dllist->m_current_dataVersion, dllist->m_current_minAppVersion, version_vec);
+						entity.assign<Comp::DataVerCheck>(dllist->m_url, dllist->m_current_dataVersion, dllist->m_currentAppVersion, version_vec);
 
 						CCLOG("DLClisting after versions retrieval");
 

@@ -1,6 +1,9 @@
 package com.gameparkstudio.wkcocos.lib;
 
+import android.app.Activity;
 import android.os.Bundle;
+import android.content.Intent;
+import android.net.Uri;
 
 import com.soomla.cocos2dx.common.ServiceManager;
 import com.soomla.cocos2dx.store.StoreService;
@@ -14,9 +17,13 @@ public class MainActivity extends Cocos2dxActivity {
 
     private Cocos2dxWebViewHelper mWebViewHelper = null;
 
+    private static Activity me = null;
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        me = this;
 
         if(mWebViewHelper == null) {
             mWebViewHelper = new Cocos2dxWebViewHelper(mFrameLayout);
@@ -47,4 +54,11 @@ public class MainActivity extends Cocos2dxActivity {
         ServiceManager.getInstance().onResume();
         super.onResume();
     }
+
+    public static void openURL(String url) {
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        i.setData(Uri.parse(url));
+        me.startActivity(i);
+    }
+
 }
