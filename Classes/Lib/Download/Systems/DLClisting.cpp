@@ -150,13 +150,22 @@ namespace WkCocos
 						//CHECK IF WE HAVE TO UPDATE BASED ON AVAILABLE DLC VERSIONS
 						// we will update to latest version available if and only if our current version is not under the minimum version of Downloadable content.
                         Version force_update_version;
-                        if (dllist->m_current_dataVersion < version_vec.front() )
+
+                        CCLOG("Checking for Force update required : %s < %s", dllist->m_current_dataVersion.toString().c_str() , version_vec.front().toString().c_str() );
+                        if ( dllist->m_current_dataVersion < version_vec.front() // if current data MAJOR.minor.build is lower than lowest data MAJOR.minor.build
+                             || dllist->m_currentAppVersion < version_vec.front() && ( ! dllist->m_currentAppVersion.isSame(0, version_vec.front() ) || ! dllist->m_currentAppVersion.isSame(1, version_vec.front() )) // if current app MAJOR.minor is lower than lowest data MAJOR.minor
+                           )
                         {
                             force_update_version = version_vec.back();
+                            CCLOG("Force update required detected : %s", force_update_version.toString().c_str());
                         }
 
                         //emit event
                         events->emit<Events::DownloadOptions>(dllist->m_url, dllist->m_current_dataVersion, version_vec, force_update_version);
+
+                        //TOFIx : BUG when index.html has versions that are not present on the server. -> we should check each of them before saying we can download them...
+
+                        //TOFIX : BUG when manifest have too high minimum required version. -> we should check each of them before saying we can download them...
 
 						//this entity has now the list of data folders found on this URL.
 						entity.assign<Comp::DataVerCheck>(dllist->m_url, dllist->m_current_dataVersion, dllist->m_currentAppVersion, version_vec);
