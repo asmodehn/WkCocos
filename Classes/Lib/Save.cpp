@@ -21,7 +21,7 @@ namespace WkCocos
 		//hooking us up to detect errors
 
 	}
-	
+
 	Save::~Save()
 	{
 	}
@@ -50,7 +50,7 @@ namespace WkCocos
 					//deprecated
 					if ( m_onLoading) m_onLoading(m_rawData);
 					--m_loaded;
-					event_manager->emit<Loaded>(getId(),m_name, m_rawData);
+					events()->emit<Loaded>(getId(),m_name, m_rawData);
 					//CCLOG("user data loaded : %s", data.c_str());
 				},m_key);
 			}
@@ -71,7 +71,7 @@ namespace WkCocos
 					//deprecated
 					if (m_onLoading) m_onLoading(m_rawData);
 					--m_loaded;
-					event_manager->emit<Loaded>(getId(),m_name, m_rawData);
+					events()->emit<Loaded>(getId(),m_name, m_rawData);
 				}, m_key);
 			}
 			else
@@ -107,7 +107,7 @@ namespace WkCocos
 							if (--(this->m_saved) == 0) // if last answer came back
 							{
 								//CCLOG("user data saved : %s", data.c_str());
-								this->event_manager->emit<Saved>(this->getId(), this->m_name, data);
+								this->events()->emit<Saved>(this->getId(), this->m_name, data);
 							}
 							else //if we have many saves queued, we cancel all except last one, and we process it
 							{
@@ -128,7 +128,7 @@ namespace WkCocos
 							if (--(this->m_saved) == 0) // if last answer came back
 							{
 								//CCLOG("user data saved : %s", data.c_str());
-								this->event_manager->emit<Saved>(this->getId(), this->m_name, data);
+								this->events()->emit<Saved>(this->getId(), this->m_name, data);
 							}
 							else //if we have many saves queued, we cancel all except last one, and we process it
 							{
@@ -153,7 +153,7 @@ namespace WkCocos
 				++m_saved;
 				m_localdata->saveData(m_name, m_rawData, m_key);
 				//BUG : Save is not yet saved here...
-				event_manager->emit<Saved>(getId(), m_name, m_rawData);
+				events()->emit<Saved>(getId(), m_name, m_rawData);
 				--m_saved;
 			}
 			else
@@ -164,7 +164,7 @@ namespace WkCocos
 		}
 
 		return saved;
-		
+
 	}
 
 	bool Save::requestDeleteData()
@@ -181,7 +181,7 @@ namespace WkCocos
 			{
 				m_localdata->deleteData(m_name, [=](std::string data){
 					//ignoring data...
-					event_manager->emit<Deleted>(getId());
+					events()->emit<Deleted>(getId());
 				});
 			}
 			else
@@ -198,7 +198,7 @@ namespace WkCocos
 	*/
 	void Save::setLocalDataMgr(std::shared_ptr<LocalData::LocalDataManager> localdata)
 	{
-		m_localdata = localdata; 
+		m_localdata = localdata;
 	}
 
 	/**
@@ -206,7 +206,7 @@ namespace WkCocos
 	*/
 	void Save::setOnlineDataMgr(std::shared_ptr<OnlineData::OnlineDataManager> onlinedata)
 	{
-		m_onlinedata = onlinedata; 
+		m_onlinedata = onlinedata;
 		//hoking us up to errors event
 		m_onlinedata->getEventManager()->subscribe<OnlineData::Events::Error>(*this);
 	}
@@ -217,7 +217,7 @@ namespace WkCocos
 		{
 			if (!err.errorMessage.compare("timeout"))
 			{
-				event_manager->emit<Error>(this->getId(), ErrorType::LOAD_TIMEOUT_ERROR);
+				events()->emit<Error>(this->getId(), ErrorType::LOAD_TIMEOUT_ERROR);
 			}
 			else
 			{
@@ -226,7 +226,7 @@ namespace WkCocos
 				if (--(m_loaded) == 0) // if last answer came back
 				{
 					//CCLOG("user data saved : %s", data.c_str());
-					event_manager->emit<Error>(this->getId(), ErrorType::LOAD_UNKNOWN_ERROR); //TODO : check for and trigger more errors type
+					events()->emit<Error>(this->getId(), ErrorType::LOAD_UNKNOWN_ERROR); //TODO : check for and trigger more errors type
 				}
 				else //if we have many saves queued, we cancel all except last one, and we process it
 				{					// ^^^^^ maybe loads?
@@ -241,7 +241,7 @@ namespace WkCocos
 		{
 			if (!err.errorMessage.compare("timeout"))
 			{
-				event_manager->emit<Error>(this->getId(), ErrorType::SAVE_TIMEOUT_ERROR);
+				events()->emit<Error>(this->getId(), ErrorType::SAVE_TIMEOUT_ERROR);
 			}
 			else
 			{
@@ -250,7 +250,7 @@ namespace WkCocos
 				if (--(m_saved) == 0) // if last answer came back
 				{
 					//CCLOG("user data saved : %s", data.c_str());
-					event_manager->emit<Error>(this->getId(), ErrorType::SAVE_UNKNOWN_ERROR); //TODO : check for and trigger more errors type
+					events()->emit<Error>(this->getId(), ErrorType::SAVE_UNKNOWN_ERROR); //TODO : check for and trigger more errors type
 				}
 				else //if we have many saves queued, we cancel all except last one, and we process it
 				{

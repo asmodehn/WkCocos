@@ -45,7 +45,7 @@ bool TestScene::init()
 		visibleSize.height - closeItem->getContentSize().height / 2));
 	auto menu = cocos2d::Menu::create(closeItem, NULL);
 	menu->setPosition(cocos2d::Vec2::ZERO);
-	addChild(menu);
+	addChild(menu, 1);
 
 	m_prevButton = cocos2d::ui::Button::create("SkipNormal.png", "SkipSelected.png");
 	m_prevButton->addTouchEventListener(CC_CALLBACK_2(TestScene::prevCallback, this));

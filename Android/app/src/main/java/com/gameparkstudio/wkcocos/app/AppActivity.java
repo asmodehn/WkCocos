@@ -12,7 +12,7 @@ public class AppActivity extends MainActivity {
 
         super.onCreate(savedInstanceState);
         //TODO : can we do that in MainActivity in lib ??
-        PushNotificationsManager.getInstance().setActivity(AppActivity.class);
+        PushNotificationsManager.getInstance().setActivity(this);
     }
 
     @Override protected void onPause() {
