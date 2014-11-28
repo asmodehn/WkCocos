@@ -7,14 +7,13 @@
 namespace WkCocos
 {
 #define CHECK_BOX_SIZE 100
-	CocosLogAppender::CocosLogAppender(cocos2d::Node* root, const std::string& fontName, const CheckBoxRes& res, cocos2d::Size widgetSize)
+	CocosLogAppender::CocosLogAppender(cocos2d::Node* root, const CheckBoxRes& res)
 		: _log(nullptr)
 		, _model(nullptr)
 		, _logSize(_MAX_LINE)
-		, _UISize(widgetSize)
 	{
 		// make model
-		_model = cocos2d::ui::TextBMFont::create("", fontName);
+		_model = cocos2d::ui::TextBMFont::create("", "fonts/Text.fnt");
 		_model->setTouchEnabled(false);
 
 		// make tree hierarchy
@@ -22,10 +21,10 @@ namespace WkCocos
 		_log = cocos2d::ui::ListView::create();
 		cocos2d::ui::CheckBox* toggleEnable = cocos2d::ui::CheckBox::create();
 		cocos2d::ui::CheckBox* toggleVisible = cocos2d::ui::CheckBox::create();
-		
+
 		// setup bg
 		bg->setTouchEnabled(false);
-		bg->setSize(_UISize);
+		bg->setContentSize(root->getContentSize());
 		bg->setBackGroundColorType(cocos2d::ui::Layout::BackGroundColorType::SOLID);
 		bg->setBackGroundColor(cocos2d::Color3B(20, 20, 20));
 		bg->setBackGroundColorOpacity(70);
@@ -38,8 +37,7 @@ namespace WkCocos
 		_log->setTouchEnabled(false);
 		_log->setItemModel(_model);
 		_log->pushBackDefaultItem();
-		_log->setSize(_UISize);
-		_log->setSizePercent(cocos2d::Vec2(1.f, 0.9f));
+		_log->setContentSize(root->getContentSize());
 		_log->setBackGroundColorType(cocos2d::ui::Layout::BackGroundColorType::SOLID);
 		_log->setBackGroundColor(cocos2d::Color3B(20, 20, 20));
 		_log->setBackGroundColorOpacity(70);
@@ -49,8 +47,8 @@ namespace WkCocos
 		toggleEnable->setSize(cocos2d::Size(CHECK_BOX_SIZE, CHECK_BOX_SIZE));
 		toggleEnable->setPosition(cocos2d::Vec2(CHECK_BOX_SIZE >> 1, CHECK_BOX_SIZE >> 1));
 		toggleVisible->setTouchEnabled(true);
-		toggleVisible->setSize(cocos2d::Size(CHECK_BOX_SIZE, CHECK_BOX_SIZE));
-		toggleVisible->setPosition(cocos2d::Vec2(widgetSize.width - (CHECK_BOX_SIZE >> 1), CHECK_BOX_SIZE >> 1));
+		toggleVisible->setContentSize(cocos2d::Size(CHECK_BOX_SIZE, CHECK_BOX_SIZE));
+		toggleVisible->setPosition(cocos2d::Vec2(root->getContentSize().width - (CHECK_BOX_SIZE >> 1), CHECK_BOX_SIZE >> 1));
 		if (!res.m_textureName[CheckBoxRes::BG].empty())
 		{
 			toggleEnable->loadTextureBackGround(res.m_textureName[CheckBoxRes::BG], res.m_textureType[CheckBoxRes::BG]);
@@ -82,15 +80,15 @@ namespace WkCocos
 
 		root->addChild(bg);
 	}
-	
+
 	CocosLogAppender::~CocosLogAppender()
 	{}
 
 	LogAppender& CocosLogAppender::operator << (const LogStreamBuf & msg)
-	{	
+	{
 		std::stringstream str;
 		str << msg;
-		
+
 		std::string output = str.str();
 
 		if (_log->getItems().size() >= _logSize)
@@ -100,8 +98,7 @@ namespace WkCocos
 
 		_log->pushBackDefaultItem();
 		cocos2d::ui::TextBMFont* line = static_cast<cocos2d::ui::TextBMFont*>(_log->getItem(_log->getItems().size() - 1));
-
-		line->setText(output);
+		line->setString(output);
 
 		_log->jumpToBottom();
 
@@ -136,10 +133,10 @@ namespace WkCocos
 
 	CCocosLogAppender::CCocosLogAppender()
 	{}
-	
+
 	CCocosLogAppender::~CCocosLogAppender()
 	{}
-	
+
 	LogAppender& CCocosLogAppender::operator << (const LogStreamBuf & msg)
 	{
 		CCLOG("%s", msg.str().c_str());

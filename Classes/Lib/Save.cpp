@@ -17,8 +17,11 @@ namespace WkCocos
 
 		//making sure logstream exists.
 		WkCocos::LogStream::create();
+
+		//hooking us up to detect errors
+
 	}
-	
+
 	Save::~Save()
 	{
 	}
@@ -34,7 +37,7 @@ namespace WkCocos
 				++m_loaded;
 				m_current_load = m_onlinedata->load(m_user, m_name, [=](std::string docId, std::vector<std::string> data)
 				{
-					m_current_load = entityx::Entity::Id();
+					m_current_load = entityx::Entity::Id(); // load finished
 					m_docId = docId;
 					if (!data.empty())
 					{
@@ -47,7 +50,7 @@ namespace WkCocos
 					//deprecated
 					if ( m_onLoading) m_onLoading(m_rawData);
 					--m_loaded;
-					event_manager->emit<Loaded>(getId(),m_name, m_rawData);
+					events()->emit<Loaded>(getId(),m_name, m_rawData);
 					//CCLOG("user data loaded : %s", data.c_str());
 				},m_key);
 			}
@@ -68,7 +71,7 @@ namespace WkCocos
 					//deprecated
 					if (m_onLoading) m_onLoading(m_rawData);
 					--m_loaded;
-					event_manager->emit<Loaded>(getId(),m_name, m_rawData);
+					events()->emit<Loaded>(getId(),m_name, m_rawData);
 				}, m_key);
 			}
 			else
@@ -99,12 +102,12 @@ namespace WkCocos
 					{
 						m_current_save = m_onlinedata->save(m_user, m_name, m_docId, m_rawData, [=](std::string saveName, std::string docId, std::string data)
 						{
-							m_current_save = entityx::Entity::Id();
+							m_current_save = entityx::Entity::Id();// save finished
 							//we do not modify local data to not lose more recent changes.
 							if (--(this->m_saved) == 0) // if last answer came back
 							{
 								//CCLOG("user data saved : %s", data.c_str());
-								this->event_manager->emit<Saved>(this->getId(), this->m_name, data);
+								this->events()->emit<Saved>(this->getId(), this->m_name, data);
 							}
 							else //if we have many saves queued, we cancel all except last one, and we process it
 							{
@@ -115,9 +118,9 @@ namespace WkCocos
 					}
 					else
 					{
-						m_current_save =  m_onlinedata->saveNew(m_user, m_name, m_rawData, [=](std::string saveName, std::string docId, std::string data)
+						m_current_save = m_onlinedata->saveNew(m_user, m_name, m_rawData, [=](std::string saveName, std::string docId, std::string data)
 						{
-							m_current_save = entityx::Entity::Id();
+							m_current_save = entityx::Entity::Id();// save finished
 							//storing docId to mark creation of save
 							this->m_docId = docId;
 
@@ -125,7 +128,7 @@ namespace WkCocos
 							if (--(this->m_saved) == 0) // if last answer came back
 							{
 								//CCLOG("user data saved : %s", data.c_str());
-								this->event_manager->emit<Saved>(this->getId(), this->m_name, data);
+								this->events()->emit<Saved>(this->getId(), this->m_name, data);
 							}
 							else //if we have many saves queued, we cancel all except last one, and we process it
 							{
@@ -150,7 +153,7 @@ namespace WkCocos
 				++m_saved;
 				m_localdata->saveData(m_name, m_rawData, m_key);
 				//BUG : Save is not yet saved here...
-				event_manager->emit<Saved>(getId(), m_name, m_rawData);
+				events()->emit<Saved>(getId(), m_name, m_rawData);
 				--m_saved;
 			}
 			else
@@ -161,7 +164,7 @@ namespace WkCocos
 		}
 
 		return saved;
-		
+
 	}
 
 	bool Save::requestDeleteData()
@@ -178,7 +181,7 @@ namespace WkCocos
 			{
 				m_localdata->deleteData(m_name, [=](std::string data){
 					//ignoring data...
-					event_manager->emit<Deleted>(getId());
+					events()->emit<Deleted>(getId());
 				});
 			}
 			else
@@ -190,13 +193,12 @@ namespace WkCocos
 		return deleteSave;
 	}
 
-
 	/**
 	* Set local data manager
 	*/
 	void Save::setLocalDataMgr(std::shared_ptr<LocalData::LocalDataManager> localdata)
 	{
-		m_localdata = localdata; 
+		m_localdata = localdata;
 	}
 
 	/**
@@ -204,45 +206,58 @@ namespace WkCocos
 	*/
 	void Save::setOnlineDataMgr(std::shared_ptr<OnlineData::OnlineDataManager> onlinedata)
 	{
-		m_onlinedata = onlinedata; 
+		m_onlinedata = onlinedata;
 		//hoking us up to errors event
 		m_onlinedata->getEventManager()->subscribe<OnlineData::Events::Error>(*this);
 	}
 
-
-	void Save::receive(const WkCocos::OnlineData::Events::Error& err)
+	void Save::receive(const OnlineData::Events::Error & err)
 	{
 		if (err.id == m_current_load)
 		{
-			m_current_load = entityx::Entity::Id();// load finished
-			//current load requests has errored
-			if (--(m_loaded) == 0) // if last answer came back
+			if (!err.errorMessage.compare("timeout"))
 			{
-				//CCLOG("user data saved : %s", data.c_str());
-				event_manager->emit<Error>(this->getId(), ErrorType::LOAD_UNKNOWN_ERROR); //TODO : check for and trigger more errors type
+				events()->emit<Error>(this->getId(), ErrorType::LOAD_TIMEOUT_ERROR);
 			}
-			else //if we have many saves queued, we cancel all except last one, and we process it
+			else
 			{
-				m_loaded = 0;
-				requestLoadData();
-				//no need to trigger errors here, if a saves succeed we are fine...
+				m_current_load = entityx::Entity::Id();// load finished
+				//current load requests has errored
+				if (--(m_loaded) == 0) // if last answer came back
+				{
+					//CCLOG("user data saved : %s", data.c_str());
+					events()->emit<Error>(this->getId(), ErrorType::LOAD_UNKNOWN_ERROR); //TODO : check for and trigger more errors type
+				}
+				else //if we have many saves queued, we cancel all except last one, and we process it
+				{					// ^^^^^ maybe loads?
+					m_loaded = 0;
+					requestLoadData();
+					//no need to trigger errors here, if a saves succeed we are fine...
+				}										// ^^^^^ maybe loads?
 			}
 		}
 
 		if (err.id == m_current_save)
 		{
-			m_current_save = entityx::Entity::Id();// save finished
-			//current save requests has errored
-			if (--(m_saved) == 0) // if last answer came back
+			if (!err.errorMessage.compare("timeout"))
 			{
-				//CCLOG("user data saved : %s", data.c_str());
-				event_manager->emit<Error>(this->getId(), ErrorType::SAVE_UNKNOWN_ERROR); //TODO : check for and trigger more errors type
+				events()->emit<Error>(this->getId(), ErrorType::SAVE_TIMEOUT_ERROR);
 			}
-			else //if we have many saves queued, we cancel all except last one, and we process it
+			else
 			{
-				m_saved = 0;
-				requestSaveData(m_rawData);
-				//no need to trigger errors here, if a saves succeed we are fine...
+				m_current_save = entityx::Entity::Id();// save finished
+				//current save requests has errored
+				if (--(m_saved) == 0) // if last answer came back
+				{
+					//CCLOG("user data saved : %s", data.c_str());
+					events()->emit<Error>(this->getId(), ErrorType::SAVE_UNKNOWN_ERROR); //TODO : check for and trigger more errors type
+				}
+				else //if we have many saves queued, we cancel all except last one, and we process it
+				{
+					m_saved = 0;
+					requestSaveData(m_rawData);
+					//no need to trigger errors here, if a saves succeed we are fine...
+				}
 			}
 		}
 	}

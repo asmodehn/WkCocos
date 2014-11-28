@@ -8,103 +8,103 @@
 
 void ShopEventHandler::onBillingNotSupported() {
 	soomla::CCStoreUtils::logDebug(TAG, "BillingNotSupported");
-	event_manager->emit(WkCocos::Shop::Shop::BillingNotSupported());
+	events()->emit(WkCocos::Shop::Shop::BillingNotSupported());
 }
 
 void ShopEventHandler::onBillingSupported() {
 	soomla::CCStoreUtils::logDebug(TAG, "BillingSupported");
-	event_manager->emit(WkCocos::Shop::Shop::BillingSupported());
+	events()->emit(WkCocos::Shop::Shop::BillingSupported());
 }
 
 void ShopEventHandler::onCurrencyBalanceChanged(soomla::CCVirtualCurrency *virtualCurrency, int balance, int amountAdded) {
 	soomla::CCStoreUtils::logDebug(TAG, "CurrencyBalanceChanged");
 	cocos2d::Director::getInstance()->getEventDispatcher()->dispatchCustomEvent(EVENT_ON_CURRENCY_BALANCE_CHANGED, cocos2d::CCInteger::create(balance));
-	event_manager->emit(WkCocos::Shop::Shop::CurrencyBalanceChanged(virtualCurrency, balance, amountAdded));
+	events()->emit(WkCocos::Shop::Shop::CurrencyBalanceChanged(virtualCurrency, balance, amountAdded));
 }
 
 void ShopEventHandler::onGoodBalanceChanged(soomla::CCVirtualGood *virtualGood, int balance, int amountAdded) {
 	soomla::CCStoreUtils::logDebug(TAG, "GoodBalanceChanged");
 	cocos2d::Director::getInstance()->getEventDispatcher()->dispatchCustomEvent
 		(EVENT_ON_GOOD_BALANCE_CHANGED, cocos2d::CCArray::create(virtualGood, cocos2d::CCInteger::create(balance), NULL));
-	//event_manager->emit(WkCocos::Shop::Shop::GoodBalanceChanged(virtualGood, balance, amountAdded));
+	//events()->emit(WkCocos::Shop::Shop::GoodBalanceChanged(virtualGood, balance, amountAdded));
 }
 
 void ShopEventHandler::onGoodEquipped(soomla::CCEquippableVG *equippableVG) {
 	soomla::CCStoreUtils::logDebug(TAG, "GoodEquipped");
 	cocos2d::Director::getInstance()->getEventDispatcher()->dispatchCustomEvent(EVENT_ON_GOOD_EQUIPPED, equippableVG);
-	//event_manager->emit(WkCocos::Shop::Shop::GoodEquipped(equippableVG));
+	//events()->emit(WkCocos::Shop::Shop::GoodEquipped(equippableVG));
 }
 
 void ShopEventHandler::onGoodUnEquipped(soomla::CCEquippableVG *equippableVG) {
 	soomla::CCStoreUtils::logDebug(TAG, "GoodUnEquipped");
 	cocos2d::Director::getInstance()->getEventDispatcher()->dispatchCustomEvent(EVENT_ON_GOOD_UNEQUIPPED, equippableVG);
-	//event_manager->emit(WkCocos::Shop::Shop::GoodUnEquipped(equippableVG));
+	//events()->emit(WkCocos::Shop::Shop::GoodUnEquipped(equippableVG));
 }
 
 void ShopEventHandler::onGoodUpgrade(soomla::CCVirtualGood *virtualGood, soomla::CCUpgradeVG *upgradeVG) {
 	soomla::CCStoreUtils::logDebug(TAG, "GoodUpgrade");
 	cocos2d::Director::getInstance()->getEventDispatcher()->dispatchCustomEvent(EVENT_ON_GOOD_UPGRADE, virtualGood);
-	//event_manager->emit(WkCocos::Shop::Shop::GoodUpgrade(equippableVG));
+	//events()->emit(WkCocos::Shop::Shop::GoodUpgrade(equippableVG));
 }
 
 void ShopEventHandler::onItemPurchased(soomla::CCPurchasableVirtualItem *purchasableVirtualItem) {
 	soomla::CCStoreUtils::logDebug(TAG, "ItemPurchased");
-	event_manager->emit(WkCocos::Shop::Shop::ItemPurchased(purchasableVirtualItem));
+	events()->emit(WkCocos::Shop::Shop::ItemPurchased(purchasableVirtualItem));
 }
 
 void ShopEventHandler::onItemPurchaseStarted(soomla::CCPurchasableVirtualItem *purchasableVirtualItem) {
 	soomla::CCStoreUtils::logDebug(TAG, "ItemPurchaseStarted");
-	event_manager->emit(WkCocos::Shop::Shop::ItemPurchaseStarted(purchasableVirtualItem));
+	events()->emit(WkCocos::Shop::Shop::ItemPurchaseStarted(purchasableVirtualItem));
 }
 
 void ShopEventHandler::onMarketPurchaseCancelled(soomla::CCPurchasableVirtualItem *purchasableVirtualItem) {
 	soomla::CCStoreUtils::logDebug(TAG, "MarketPurchaseCancelled");
-	event_manager->emit(WkCocos::Shop::Shop::MarketPurchaseCancelled(purchasableVirtualItem));
+	events()->emit(WkCocos::Shop::Shop::MarketPurchaseCancelled(purchasableVirtualItem));
 }
 
 void ShopEventHandler::onMarketPurchase(soomla::CCPurchasableVirtualItem *purchasableVirtualItem, cocos2d::__String *token, cocos2d::__String *payload) {
 	soomla::CCStoreUtils::logDebug(TAG, "MarketPurchase");
-	event_manager->emit(WkCocos::Shop::Shop::MarketPurchase(purchasableVirtualItem, token, payload));
+	events()->emit(WkCocos::Shop::Shop::MarketPurchase(purchasableVirtualItem, token, payload));
 }
 
 void ShopEventHandler::onMarketPurchaseStarted(soomla::CCPurchasableVirtualItem *purchasableVirtualItem) {
 	soomla::CCStoreUtils::logDebug(TAG, "MarketPurchaseStarted");
-	event_manager->emit(WkCocos::Shop::Shop::MarketPurchaseStarted(purchasableVirtualItem));
+	events()->emit(WkCocos::Shop::Shop::MarketPurchaseStarted(purchasableVirtualItem));
 }
 
 void ShopEventHandler::onMarketPurchaseVerification(soomla::CCPurchasableVirtualItem *purchasableVirtualItem) {
 	soomla::CCStoreUtils::logDebug(TAG, "MarketPurchaseVerification");
-	event_manager->emit(WkCocos::Shop::Shop::MarketPurchaseVerification(purchasableVirtualItem));
+	events()->emit(WkCocos::Shop::Shop::MarketPurchaseVerification(purchasableVirtualItem));
 }
 
 void ShopEventHandler::onRestoreTransactionsStarted() {
 	soomla::CCStoreUtils::logDebug(TAG, "RestoreTransactionsStarted");
-	event_manager->emit(WkCocos::Shop::Shop::RestoreTransactionsStarted());
+	events()->emit(WkCocos::Shop::Shop::RestoreTransactionsStarted());
 }
 
 void ShopEventHandler::onRestoreTransactionsFinished(bool success) {
 	soomla::CCStoreUtils::logDebug(TAG, "RestoreTransactionsFinished");
-	event_manager->emit(WkCocos::Shop::Shop::RestoreTransactionsFinished(success));
+	events()->emit(WkCocos::Shop::Shop::RestoreTransactionsFinished(success));
 }
 
 void ShopEventHandler::onUnexpectedErrorInStore() {
 	soomla::CCStoreUtils::logDebug(TAG, "UnexpectedErrorInStore");
-	event_manager->emit(WkCocos::Shop::Shop::UnexpectedErrorInStore());
+	events()->emit(WkCocos::Shop::Shop::UnexpectedErrorInStore());
 }
 
 void ShopEventHandler::onStoreControllerInitialized() {
 	soomla::CCStoreUtils::logDebug(TAG, "StoreControllerInitialized");
-	event_manager->emit(WkCocos::Shop::Shop::StoreControllerInitialized());
+	events()->emit(WkCocos::Shop::Shop::StoreControllerInitialized());
 }
 
 void ShopEventHandler::onMarketItemsRefreshed() {
 	soomla::CCStoreUtils::logDebug(TAG, "MarketItemsRefreshed");
-	event_manager->emit(WkCocos::Shop::Shop::MarketItemsRefreshed());
+	events()->emit(WkCocos::Shop::Shop::MarketItemsRefreshed());
 }
 
 void ShopEventHandler::onMarketItemsRefreshStarted() {
 	soomla::CCStoreUtils::logDebug(TAG, "MarketItemsRefreshStarted");
-	event_manager->emit(WkCocos::Shop::Shop::MarketItemsRefreshStarted());
+	events()->emit(WkCocos::Shop::Shop::MarketItemsRefreshStarted());
 }
 
 void ShopEventHandler::onMarketItemRefreshed(soomla::CCMarketItem *mi)
@@ -121,7 +121,7 @@ void ShopEventHandler::onMarketItemRefreshed(soomla::CCMarketItem *mi)
 
 	cocos2d::Director::getInstance()->getEventDispatcher()->dispatchCustomEvent(EVENT_ON_MARKET_ITEM_REFRESHED, mi);
 
-	event_manager->emit(WkCocos::Shop::Shop::MarketItemRefreshed(mi));
+	events()->emit(WkCocos::Shop::Shop::MarketItemRefreshed(mi));
 
 }
 
@@ -133,16 +133,16 @@ void ShopEventHandler::onMarketRefund(soomla::CCPurchasableVirtualItem *purchasa
 	std::ostringstream logmsg;
 	logmsg << "[SOOMLA MARKET onMarketRefund] item:[" << itemID << "] " << std::endl;
 	soomla::CCStoreUtils::logDebug(TAG, "MarketRefund");
-	event_manager->emit(WkCocos::Shop::Shop::MarketRefund(purchasableVirtualItem));
+	events()->emit(WkCocos::Shop::Shop::MarketRefund(purchasableVirtualItem));
 }
 
 void ShopEventHandler::onIabServiceStarted() {
 	soomla::CCStoreUtils::logDebug(TAG, "IabServiceStarted");
-	event_manager->emit(WkCocos::Shop::Shop::IabServiceStarted());
+	events()->emit(WkCocos::Shop::Shop::IabServiceStarted());
 }
 
 void ShopEventHandler::onIabServiceStopped() {
 	soomla::CCStoreUtils::logDebug(TAG, "IabServiceStopped");
-	event_manager->emit(WkCocos::Shop::Shop::IabServiceStopped());
+	events()->emit(WkCocos::Shop::Shop::IabServiceStopped());
 }
 #endif

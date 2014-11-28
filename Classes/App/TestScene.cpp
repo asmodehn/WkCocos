@@ -10,7 +10,7 @@
 #include "WkCocosApp/DocsListUI.h"
 #include "WkCocosApp/WebUI.h"
 #include "WkCocosApp/LogUI.h"
-
+#include "WkCocosApp/GameUI.h"
 #include "WkCocosApp/GameLogic.h"
 
 #include "ui/CocosGUI.h"
@@ -39,7 +39,7 @@ bool TestScene::init()
 	}
 
 	cocos2d::Size visibleSize = cocos2d::Director::getInstance()->getVisibleSize();
-	cocos2d::Vec2 origin = cocos2d::Director::getInstance()->getVisibleOrigin();
+	//cocos2d::Vec2 origin = cocos2d::Director::getInstance()->getVisibleOrigin();
 
 	auto closeItem = cocos2d::MenuItemImage::create("CloseNormal.png", "CloseSelected.png",
 		CC_CALLBACK_1(TestScene::menuCloseCallback, this));
@@ -76,7 +76,7 @@ bool TestScene::init()
 	SavingUI* saveui = new SavingUI();
 	saveui->setEnabled(false);
 	saveui->setVisible(false);
-	addInterface(SavingUI::id,saveui);
+	addInterface(SavingUI::id, saveui);
 	saveui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.67f));
 	//*/
 
@@ -84,7 +84,7 @@ bool TestScene::init()
 	TimerUI* timerui = new TimerUI();
 	timerui->setEnabled(false);
 	timerui->setVisible(false);
-	addInterface(TimerUI::id,timerui);
+	addInterface(TimerUI::id, timerui);
 	timerui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.67f));
 	//*/
 
@@ -92,7 +92,7 @@ bool TestScene::init()
 	PlayersListUI* playerslistui = new PlayersListUI();
 	playerslistui->setEnabled(false);
 	playerslistui->setVisible(false);
-	addInterface(PlayersListUI::id,playerslistui);
+	addInterface(PlayersListUI::id, playerslistui);
 	playerslistui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.5f));
 	//*/
 
@@ -108,7 +108,7 @@ bool TestScene::init()
 	ShopUI* shopui = new ShopUI();
 	shopui->setEnabled(false);
 	shopui->setVisible(false);
-	addInterface(ShopUI::id,shopui);
+	addInterface(ShopUI::id, shopui);
 	shopui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.67f));
 	//*/
 
@@ -134,7 +134,7 @@ bool TestScene::init()
 	WebUI* webui = new WebUI();
 	webui->setEnabled(false);
 	webui->setVisible(false);
-	addInterface(WebUI::id,webui);
+	addInterface(WebUI::id, webui);
 	webui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.5f));
 	//*/
 
@@ -146,18 +146,27 @@ bool TestScene::init()
 	logui->setPosition(cocos2d::Vec2(0, 40));
 	//*/
 
+	/*//GameUI
+	GameUI* gameui = new GameUI();
+	gameui->setEnabled(false);
+	gameui->setVisible(false);
+	addInterface(GameUI::id, gameui);
+	gameui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.5f));
+	//*/
+
 	//activating first UI :
 	saveui->setEnabled(true);
 	saveui->setVisible(true);
 	currentUI = SavingUI::id;
-	m_titleLabel->setText(currentUI);
+	m_titleLabel->setString(currentUI);
 
 	m_time = cocos2d::ui::Text::create("", "Thonburi", 20);
 	m_time->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, /*closeItem->getPositionY()*/ visibleSize.height - 20));
-	addChild(m_time, 1);
+	addChild(m_time);
 
+	g_gameLogic->getOnlineDataManager().getEventManager()->subscribe<WkCocos::OnlineData::Events::Error>(*this);
 	g_gameLogic->getLocalDataManager().getEventManager()->subscribe<WkCocos::LocalData::Events::Error>(*this);
-	g_gameLogic->getPlayer().getEventManager()->subscribe<WkCocos::Player::Error>(*this);
+	g_gameLogic->getPlayer().getEventManager()->subscribe<MyPlayer::Error>(*this);
 
 	return true;
 }
@@ -175,7 +184,7 @@ void TestScene::onExitTransitionDidStart()
 
 void TestScene::update(float delta)
 {
-	m_time->setText(WkCocos::ToolBox::itoa(g_gameLogic->getPlayer().getTimermgr()->getServerLocalTime().tm_hour) + ":" +
+	m_time->setString(WkCocos::ToolBox::itoa(g_gameLogic->getPlayer().getTimermgr()->getServerLocalTime().tm_hour) + ":" +
 		WkCocos::ToolBox::itoa(g_gameLogic->getPlayer().getTimermgr()->getServerLocalTime().tm_min) + ":" +
 		WkCocos::ToolBox::itoa(g_gameLogic->getPlayer().getTimermgr()->getServerLocalTime().tm_sec));
 	Scene::update(delta);
@@ -196,7 +205,7 @@ void TestScene::nextCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::Touch
 		cur->second->setEnabled(true);
 		cur->second->setVisible(true);
 		currentUI = cur->first;
-		m_titleLabel->setText(currentUI);
+		m_titleLabel->setString(currentUI);
 	}
 }
 
@@ -217,47 +226,130 @@ void TestScene::prevCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::Touch
 		cur->second->setEnabled(true);
 		cur->second->setVisible(true);
 		currentUI = cur->first;
-		m_titleLabel->setText(currentUI);
+		m_titleLabel->setString(currentUI);
 	}
-}
-
-void TestScene::receive(const WkCocos::Player::Error &PL)
-{
-	std::string errmsg = PL.m_component + " : " + PL.m_code + " - " + PL.m_message;
-	error_CB(errmsg);
 }
 
 void TestScene::receive(const WkCocos::LocalData::Events::Error &LD)
 {
-	error_CB(LD.msg);
+	/**
+	* Handling all possible Local Errors here
+	*/
+	//if (LD.httpErrorCode == 4 && LD.app42ErrorCode == 56)
+	{
+
+		error_CB(LD.msg
+			, [=](){
+		}
+			, [=](){
+		});
+	}
 }
 
-void TestScene::receive(const WkCocos::Download::Events::Error &de)
+void TestScene::receive(const WkCocos::OnlineData::Events::Error &OD)
 {
-	error_CB(de.msg);
+	std::stringstream errormsg;
+	errormsg << "HTTP " << OD.httpErrorCode << std::endl;
+	errormsg << "App42 " << OD.app42ErrorCode << std::endl;
+	errormsg << OD.errorMessage << std::endl;
+	errormsg << OD.errorDetails;
+
+	/**
+	* Handling all possible Online Errors here
+	*/
+	if (OD.httpErrorCode == -1 && OD.app42ErrorCode == 0)
+	{	// could not resolve host : api.shephertz.com; Host not found
+		// unknown SSL protocol error in connection to api.shephertz.com:443
+		error_CB(errormsg.str()
+			,[=](){
+
+		}
+			,[=](){
+
+		});
+	}
+	else if (OD.httpErrorCode == -1 && OD.app42ErrorCode == 0)
+	{
+	}
+	else if (!OD.errorDetails.compare("docs list"))
+	{
+		error_CB(errormsg.str()
+			, [=](){
+
+		}
+			, [=](){
+
+		});
+	}
+	else if (!OD.errorDetails.compare("get data by query"))
+	{
+		error_CB(errormsg.str()
+			, [=](){
+
+		}
+			, [=](){
+
+		});
+	}
 }
 
 void TestScene::receive(const WkCocos::Preload::Events::Error &pe)
 {
-	error_CB(pe.msg);
+        error_CB(pe.msg
+			, [=](){
+
+		}
+			, [=](){
+
+		});
 }
 
-void TestScene::error_CB(std::string msg)
+void TestScene::receive(const WkCocos::Download::Events::Error &de)
+{
+        error_CB(de.msg
+			, [=](){
+
+		}
+			, [=](){
+
+		});
+}
+
+void TestScene::receive(const MyPlayer::Error &player_error)
+{
+	std::stringstream errormsg;
+	errormsg << player_error.message;
+	/**
+	* Handling all possible Online Errors here
+	*/
+	error_CB(errormsg.str()
+		, [=](){
+
+	}
+		, [=](){
+
+	});
+
+}
+
+void TestScene::error_CB(std::string msg, std::function<void()> retryCB, std::function<void()> skipCB)
 {
 	cocos2d::Size visibleSize = cocos2d::Director::getInstance()->getVisibleSize();
 
 	ErrorUI* errorui = new ErrorUI();
-	addInterface(ErrorUI::id, errorui);
+	getUIView()->addChild(errorui->getRoot(), 2); // we do not want to addInterface to the list of UI in scene ( multiple errors UI can appear and will cause problems ).
 	errorui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.67f));
 
-	errorui->setRefreshCallback([this, errorui](){
+	errorui->setRefreshCallback([this, errorui, retryCB](){
+		if (retryCB) retryCB();
 		errorui->deactivate();
-		removeInterface(ErrorUI::id);
+		getUIView()->removeChild(errorui->getRoot()); //garbage collected UI
 	});
 
-	errorui->setSkipCallback([this, errorui](){
+	errorui->setSkipCallback([this, errorui, skipCB](){
+		if (skipCB) skipCB();
 		errorui->deactivate();
-		removeInterface(ErrorUI::id);
+		getUIView()->removeChild(errorui->getRoot()); //garbage collected UI
 	});
 
 	errorui->activate(msg);

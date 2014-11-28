@@ -24,6 +24,9 @@ namespace WkCocos
 			, system_manager(entityx::SystemManager::make(entity_manager, event_manager))
 		{
 			::App42::App42API::Initialize(app_access_key, app_secret_key);
+#ifdef _DEBUG
+			::App42::App42API::setIsTraceEnabled(true);
+#endif
 			system_manager->add<Systems::User>();
 			system_manager->add<Systems::Storage>();
 			system_manager->add<Systems::Timer>();
@@ -50,7 +53,7 @@ namespace WkCocos
 				else // if creation failed, emit event ( in cocos thread to allow cocos actions )
 				{
 					cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, id, r](){
-						event_manager->emit<Events::Error>(id,r);
+						event_manager->emit<Events::Error>(id, r);
 					});
 				}
 				
@@ -63,10 +66,10 @@ namespace WkCocos
 			auto newentity = entity_manager->create();
 			auto id = newentity.id();
 			newentity.assign<Comp::Login>(userid, password, [=](::App42::App42UserResponse* r){
-				if (! r->isSuccess)
+				if (!r->isSuccess)
 				{
-					cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this,id, r](){
-						event_manager->emit<Events::Error>(id,r);
+					cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, id, r](){
+						event_manager->emit<Events::Error>(id, r);
 						//callback is not called if error
 					});
 				}
@@ -88,7 +91,7 @@ namespace WkCocos
 				if (!r->isSuccess)
 				{
 					cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, id, r](){
-						event_manager->emit<Events::Error>(id,r);
+						event_manager->emit<Events::Error>(id, r);
 						//callback is not called if error
 					});
 				}
@@ -111,7 +114,7 @@ namespace WkCocos
 				if (!r->isSuccess)
 				{
 					cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, id, r](){
-						event_manager->emit<Events::Error>(id,r);
+						event_manager->emit<Events::Error>(id, r);
 						//callback is not called if error
 					});
 				}

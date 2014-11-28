@@ -1,8 +1,6 @@
 #include "WkCocos/OnlineData/Systems/User.h"
-
+#include "WkCocos/OnlineData/Events/Error.h"
 #include "WkCocos/OnlineData/Comp/OnlineData.h"
-
-#define DB_NAME "PUBLIC"
 
 namespace WkCocos
 {
@@ -29,29 +27,28 @@ namespace WkCocos
 				{
 					if (c->done)
 					{
+						CCLOG("Create User entity lived %f seconds", c->life_time);
 						entity.remove<Comp::Create>();
 						//if mask at 0 no request in this entity anymore
 						if (entity.component_mask() == 0)
-						{
 							entity.destroy();
-						}
 					}
 					else if (!c->in_progress)
 					{
-						//auto data = entity.component<Comp::SaveUserData>();
-						//if (data && !data->in_progress)
-						//{
-						//	::App42::App42Object app42Object;
-						//	app42Object.setObject("user_id", data->m_userid.c_str());
-						//	app42Object.setObject("data", data->m_user_data.c_str());
-						//	::App42::App42API::setDbName(DB_NAME);
-						//	m_user_service->AddUserInfo(&app42Object, data->m_collection.c_str());
-						//	data->in_progress = true;
-						//}
 						CCLOG("Requesting App42 User creation : %s ", c->m_userid.c_str());
 						m_user_service->CreateUser(c->m_userid.c_str(), c->m_passwd.c_str(), c->m_email.c_str(), c->m_cb);
 						c->in_progress = true;
 					}
+					else
+					{
+						c->life_time += dt;
+						if (c->life_time > TIMEOUT && !c->timeout) // make sure error is emitted only once before i find out how to stop entity
+						{
+							c->timeout = true;
+							events->emit<Events::Error>(entity.id(), "user create");
+						}
+					}
+
 				}
 
 				entityx::ptr<Comp::Login> l;
@@ -59,18 +56,26 @@ namespace WkCocos
 				{
 					if (l->done)
 					{
+						CCLOG("Login entity lived %f seconds", l->life_time);
 						entity.remove<Comp::Login>();
 						//if mask at 0 no request in this entity anymore
 						if (entity.component_mask() == 0)
-						{
 							entity.destroy();
-						}
 					}
 					else if (!l->in_progress)
 					{
 						CCLOG("Requesting App42 User login : %s ", l->m_userid.c_str());
 						m_user_service->Authenticate(l->m_userid.c_str(), l->m_passwd.c_str(), l->m_cb);
 						l->in_progress = true;
+					}
+					else
+					{
+						l->life_time += dt;
+						if (l->life_time > TIMEOUT && !l->timeout) // make sure error is emitted only once before i find out how to stop entity
+						{
+							l->timeout = true;
+							events->emit<Events::Error>(entity.id(), "user login");
+						}
 					}
 
 				}
@@ -80,11 +85,10 @@ namespace WkCocos
 				{
 					if (lud->done)
 					{
+						CCLOG("Load User Data entity lived %f seconds", lud->life_time);
 						entity.remove<Comp::LoadUserData>();
 						if (entity.component_mask() == 0)
-						{
 							entity.destroy();
-						}
 					}
 					else if (!lud->in_progress)
 					{
@@ -96,6 +100,16 @@ namespace WkCocos
 						m_user_service->GetUser(lud->m_userid.c_str(), lud->m_cb);
 						lud->in_progress = true;
 					}
+					else
+					{
+						lud->life_time += dt;
+						if (lud->life_time > TIMEOUT && !lud->timeout) // make sure error is emitted only once before i find out how to stop entity
+						{
+							lud->timeout = true;
+							events->emit<Events::Error>(entity.id(), "user data load");
+						}
+					}
+
 				}
 
 			}

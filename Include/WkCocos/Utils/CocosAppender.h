@@ -53,7 +53,7 @@ namespace WkCocos
 		* @param fontName Name of the font to use (must be .fnt type)
 		* @param res Resource for checkbox used for toggling input on log
 		*/
-		CocosLogAppender(cocos2d::Node* root, const std::string& fontName, const CheckBoxRes& res, cocos2d::Size widgetSize);
+		CocosLogAppender(cocos2d::Node* root, const CheckBoxRes& res);
 
 		/**
 		* Destructor
@@ -85,7 +85,6 @@ namespace WkCocos
 
 		cocos2d::ui::ListView*	_log;
 		cocos2d::ui::Widget*	_model;
-		cocos2d::Size			_UISize;
 
 		static const int		_MAX_LINE = 1000;
 		int						_logSize;

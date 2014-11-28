@@ -68,6 +68,7 @@ namespace WkCocos
 					std::string file = dataload->getFilepath();
 					//assigning the proper loadfunc component
 					entity.assign<Comp::LoadSyncFunc>(file, 0, [file, entity](){
+						// warning: deprecated call
 						cocostudio::ArmatureDataManager::sharedArmatureDataManager()->addArmatureFileInfo(file);
 					});
 
