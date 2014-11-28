@@ -18,6 +18,7 @@ LOCAL_SRC_FILES := jni.cpp \
                    ../../../../../Classes/Lib/Scene.cpp \
                    ../../../../../Classes/Lib/Interface.cpp \
                    ../../../../../Classes/Lib/Download/Download.cpp \
+                   ../../../../../Classes/Lib/Download/Version.cpp \
                    ../../../../../Classes/Lib/Preload/Preload.cpp \
                    ../../../../../Classes/Lib/Utils/CocosAppender.cpp \
                    ../../../../../Classes/Lib/Utils/log/logappender.cpp \

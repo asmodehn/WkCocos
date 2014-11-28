@@ -15,6 +15,8 @@ namespace WkCocos
 			public:
 
 				static std::string getVersionName();
+
+				static void openURL(std::string url);
 			};
 		} // nmaepsace Utils
 	} // namespace jni
