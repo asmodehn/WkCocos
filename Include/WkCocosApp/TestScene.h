@@ -53,6 +53,8 @@ protected:
 	cocos2d::ui::Text* m_prevLabel;
 	cocos2d::ui::Text* m_titleLabel;
 
+	void commonKeyPress();
+
 };
 
 #endif // __SAVING_SCENE_H__

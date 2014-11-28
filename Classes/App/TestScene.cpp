@@ -70,6 +70,17 @@ bool TestScene::init()
 	m_titleLabel->setPosition((m_nextButton->getPosition() + m_prevButton->getPosition()) / 2);
 	addChild(m_titleLabel);
 
+	cocos2d::EventListenerKeyboard* backButtonListener = cocos2d::EventListenerKeyboard::create();
+	backButtonListener->onKeyReleased = [=](cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event *event)
+	{
+		if (keyCode == cocos2d::EventKeyboard::KeyCode::KEY_ESCAPE)
+		{
+			commonKeyPress();
+		}
+	};
+
+	this->_eventDispatcher->addEventListenerWithSceneGraphPriority(backButtonListener, this);
+
 	//Saving UI
 	SavingUI* saveui = new SavingUI();
 	saveui->setEnabled(false);
@@ -201,20 +212,7 @@ void TestScene::prevCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::Touch
 {
 	if (input == cocos2d::ui::Widget::TouchEventType::ENDED)
 	{
-		auto cur = m_ui.find(currentUI);
-
-		cur->second->setEnabled(false);
-		cur->second->setVisible(false);
-
-		if (cur == m_ui.begin())
-			cur = m_ui.end();
-
-		--cur;
-
-		cur->second->setEnabled(true);
-		cur->second->setVisible(true);
-		currentUI = cur->first;
-		m_titleLabel->setString(currentUI);
+		commonKeyPress();
 	}
 }
 
@@ -333,4 +331,22 @@ void TestScene::menuCloseCallback(Ref* pSender)
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
 	exit(0);
 #endif
+}
+
+void TestScene::commonKeyPress()
+{
+	auto cur = m_ui.find(currentUI);
+
+	cur->second->setEnabled(false);
+	cur->second->setVisible(false);
+
+	if (cur == m_ui.begin())
+		cur = m_ui.end();
+
+	--cur;
+
+	cur->second->setEnabled(true);
+	cur->second->setVisible(true);
+	currentUI = cur->first;
+	m_titleLabel->setString(currentUI);
 }
