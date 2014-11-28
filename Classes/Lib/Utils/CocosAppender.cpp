@@ -7,13 +7,13 @@
 namespace WkCocos
 {
 #define CHECK_BOX_SIZE 100
-	CocosLogAppender::CocosLogAppender(cocos2d::Node* root, const CheckBoxRes& res)
+	CocosLogAppender::CocosLogAppender(cocos2d::Node* root, const std::string& fontName, const CheckBoxRes& res)
 		: _log(nullptr)
 		, _model(nullptr)
 		, _logSize(_MAX_LINE)
 	{
 		// make model
-		_model = cocos2d::ui::TextBMFont::create("", "fonts/Text.fnt");
+		_model = cocos2d::ui::TextBMFont::create("", fontName);
 		_model->setTouchEnabled(false);
 
 		// make tree hierarchy
