@@ -5,6 +5,7 @@
 
 #include "entityx/entityx.h"
 
+#include "WkCocos/Preload/Events/Loaded.h"
 #include "WkCocos/Download/Events/Downloaded.h"
 
 #include "curl/curl.h"
@@ -21,10 +22,10 @@ namespace WkCocos
 					std::function<void(std::string)> error_callback*/
 					);
 
-				//scheduel the load in memory of a data.
-				// passing it sdependencies prevent to load it if a dependency is missing.
+				//schedule the load in memory of a data.
+				// passing its dependencies prevent to load it if a dependency is missing.
 				//DataLoad Event is sent when the load finishes.
-				bool addDataLoad(const std::string &  filepath, const std::vector<std::string> & depends_filepath);
+				bool addDataLoad(const std::string &  filepath, std::vector<std::string> depends_filepath);
 
 				virtual ~Preload();
 
@@ -43,6 +44,7 @@ namespace WkCocos
                 std::pair<int,int> getCurrentProgress();
 
 				void receive(const Download::Events::Downloaded &dl);
+				void receive(const Events::Loaded &dl);
 
 				void update(double dt);
 

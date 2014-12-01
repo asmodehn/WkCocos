@@ -152,6 +152,15 @@ namespace WkCocos
 		inline bool isMode(Mode mode) const { return m_saveModes[static_cast<int>(mode)]; }
 
 		/**
+		* Test if a mode is active
+		*/
+		inline void changeMode(Mode mode) 
+		{ 
+			m_saveModes.reset();
+			m_saveModes[static_cast<int>(mode)].flip(); 
+		}
+
+		/**
 		* Set local data manager
 		*/
 		void setLocalDataMgr(std::shared_ptr<LocalData::LocalDataManager> localdata);
