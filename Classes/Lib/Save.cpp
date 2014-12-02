@@ -37,7 +37,6 @@ namespace WkCocos
 				++m_loaded;
 				m_current_load = m_onlinedata->load(m_user, m_name, [=](std::string docId, std::vector<std::string> data)
 				{
-					m_current_load = entityx::Entity::Id(); // load finished
 					m_docId = docId;
 					if (!data.empty())
 					{
@@ -102,7 +101,6 @@ namespace WkCocos
 					{
 						m_current_save = m_onlinedata->save(m_user, m_name, m_docId, m_rawData, [=](std::string saveName, std::string docId, std::string data)
 						{
-							m_current_save = entityx::Entity::Id();// save finished
 							//we do not modify local data to not lose more recent changes.
 							if (--(this->m_saved) == 0) // if last answer came back
 							{
@@ -120,7 +118,6 @@ namespace WkCocos
 					{
 						m_current_save = m_onlinedata->saveNew(m_user, m_name, m_rawData, [=](std::string saveName, std::string docId, std::string data)
 						{
-							m_current_save = entityx::Entity::Id();// save finished
 							//storing docId to mark creation of save
 							this->m_docId = docId;
 
@@ -213,7 +210,7 @@ namespace WkCocos
 
 	void Save::receive(const OnlineData::Events::Error & err)
 	{
-		if (err.id == m_current_load)
+		if (m_loaded > 0 && err.id == m_current_load)
 		{
 			if (!err.errorMessage.compare("timeout"))
 			{
@@ -221,7 +218,6 @@ namespace WkCocos
 			}
 			else
 			{
-				m_current_load = entityx::Entity::Id();// load finished
 				//current load requests has errored
 				if (--(m_loaded) == 0) // if last answer came back
 				{
@@ -237,7 +233,7 @@ namespace WkCocos
 			}
 		}
 
-		if (err.id == m_current_save)
+		if (m_saved > 0 && err.id == m_current_save)
 		{
 			if (!err.errorMessage.compare("timeout"))
 			{
@@ -245,7 +241,6 @@ namespace WkCocos
 			}
 			else
 			{
-				m_current_save = entityx::Entity::Id();// save finished
 				//current save requests has errored
 				if (--(m_saved) == 0) // if last answer came back
 				{
