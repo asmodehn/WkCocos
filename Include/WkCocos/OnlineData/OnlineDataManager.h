@@ -1,7 +1,7 @@
 #ifndef __WKCOCOS_ONLINEDATA_ONLINEDATAMANAGER_H__
 #define __WKCOCOS_ONLINEDATA_ONLINEDATAMANAGER_H__
 
-#include "entityx/entityx.h"
+#include "WkCocos/OnlineData/RequestStatus.h"
 
 #include "Common/App42API.h"
 
@@ -19,7 +19,7 @@ namespace WkCocos
 		{
 		public:
 			/**
-			* Constructor 
+			* Constructor
 			*/
 			OnlineDataManager(std::string app_access_key, std::string app_secret_key);
 
@@ -27,12 +27,12 @@ namespace WkCocos
 			* Destructor
 			*/
 			~OnlineDataManager();
-			
+
 			/**
 			* Create User
 			*/
 			void loginNew(std::string userid, std::string password, std::string email, std::function<void(std::string)> callback);
-			
+
 			/**
 			* Login User
 			*/
@@ -42,18 +42,18 @@ namespace WkCocos
 			* Save User Data
 			* callback will be passed saveName, docId and data
 			*/
-			entityx::Entity::Id save(const std::string& userid, const std::string& saveName, std::string docId, std::string data, std::function<void(std::string, std::string, std::string)> callback, std::string key = "");
+			RequestID save(const std::string& userid, const std::string& saveName, std::string docId, std::string data, std::function<void(std::string, std::string, std::string)> callback, std::string key = "");
 
 			/**
 			* Save New User Data
 			* callback will be passed saveName, docId and data.
 			*/
-			entityx::Entity::Id saveNew(const std::string& userid, const std::string& saveName, std::string data, std::function<void(std::string, std::string, std::string)> success_callback, std::string key = "");
+			RequestID saveNew(const std::string& userid, const std::string& saveName, std::string data, std::function<void(std::string, std::string, std::string)> success_callback, std::string key = "");
 
 			/**
 			* Load User Data
 			*/
-			entityx::Entity::Id load(const std::string& userid, const std::string& saveName, std::function<void(std::string, std::vector<std::string>)> callback, std::string key = "");
+			RequestID load(const std::string& userid, const std::string& saveName, std::function<void(std::string, std::vector<std::string>)> callback, std::string key = "");
 
 			/**
 			* Get Selected Users

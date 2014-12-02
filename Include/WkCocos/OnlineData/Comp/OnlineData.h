@@ -1,7 +1,7 @@
 #ifndef __WKCOCOS_ONLINEDATA_COMP_ONLINEDATA_H__
 #define __WKCOCOS_ONLINEDATA_COMP_ONLINEDATA_H__
 
-#include "entityx/entityx.h"
+#include "WkCocos/OnlineData/RequestStatus.h"
 
 #include "Common/App42API.h"
 
@@ -32,11 +32,11 @@ namespace WkCocos
 
 			struct Login : entityx::Component<Login>
 			{
-				Login(std::string userid, std::string passwd, std::function<void(std::string)> cb);
+				Login(std::string userid, std::string passwd, std::function<void(RequestStatus, std::string)> cb);
 
 				std::string m_userid;
 				std::string m_passwd;
-				std::function<void(std::string)> m_cb;
+				std::function<void(RequestStatus, std::string)> m_cb;
 
 			};
 

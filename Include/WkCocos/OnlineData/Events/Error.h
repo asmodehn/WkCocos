@@ -3,6 +3,10 @@
 
 #include "entityx/entityx.h"
 
+#include "WkCocos/OnlineData/RequestStatus.h"
+
+#include "Common/App42API.h"
+
 namespace WkCocos
 {
 	namespace OnlineData
@@ -11,23 +15,11 @@ namespace WkCocos
 		{
 			struct Error : public entityx::Event<Error>
 			{
-				Error(entityx::Entity::Id a_id, ::App42::App42Response* r)
-					: id(a_id)
-					, httpErrorCode(r->httpErrorCode)
-					, app42ErrorCode(r->appErrorCode)
-					, errorMessage(r->errorMessage)
-					, errorDetails(r->errorDetails)
-				{
-				}
+				Error(entityx::Entity::Id a_id, ::App42::App42Response* r);;
 
-				Error(entityx::Entity::Id a_id, std::string r)
-					: id(a_id)
-					, httpErrorCode(0)
-					, app42ErrorCode(0)
-					, errorMessage("timeout")
-					, errorDetails(r)
-				{
-				}
+				Error(RequestStatus rs);
+
+				Error(entityx::Entity::Id a_id, std::string r);
 
 				entityx::Entity::Id id;
 				int httpErrorCode;

@@ -1,4 +1,5 @@
 #include "WkCocos/OnlineData/Systems/User.h"
+#include "WkCocos/OnlineData/RequestStatus.h"
 #include "WkCocos/OnlineData/Events/Error.h"
 #include "WkCocos/OnlineData/Comp/OnlineData.h"
 
@@ -24,7 +25,7 @@ namespace WkCocos
 				//m_service = nullptr;
 			}
 
-			void User::update(entityx::ptr<entityx::EntityManager> entities, entityx::ptr<entityx::EventManager> events, double dt) 
+			void User::update(entityx::ptr<entityx::EntityManager> entities, entityx::ptr<entityx::EventManager> events, double dt)
 			{
 				entityx::ptr<Comp::ProgressUpdate> pu;
 
@@ -42,6 +43,7 @@ namespace WkCocos
 								{
 									entityx::ptr<Comp::Create> ecc = entity.component<Comp::Create>();
 									::App42::App42UserResponse* userdata = static_cast<::App42::App42UserResponse*>(data);
+
 									if (userdata->isSuccess)
 									{
 										cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([ecc](){
@@ -85,18 +87,11 @@ namespace WkCocos
 								{
 									entityx::ptr<Comp::Login> ecl = entity.component<Comp::Login>();
 									::App42::App42UserResponse* userdata = static_cast<::App42::App42UserResponse*>(data);
-									if (userdata->isSuccess)
-									{
-										cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([ecl, userdata](){
-											ecl->m_cb(userdata->getBody());
-										});
-									}
-									else
-									{
-										cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([events, entity, userdata](){
-											events->emit<Events::Error>(entity.id(), userdata);
-										});
-									}
+                                    ImplError httpErr(userdata->httpErrorCode, userdata->errorMessage);
+                                    ImplError app42Err(userdata->appErrorCode, userdata->errorDetails);
+                                    RequestStatus rs(entity.id(), userdata->isSuccess? Status::REQUEST_SUCCESS : Status::REQUEST_ERROR, { {Impl::HTTP, httpErr}, {Impl::App42,app42Err} } );
+
+                                    ecl->m_cb(rs,userdata->getBody());
 								}
 								CCLOG("Login User entity lived %f seconds", ecpu->life_time);
 								entity.destroy();
@@ -106,9 +101,9 @@ namespace WkCocos
 					}
 					else if (pu->life_time > TIMEOUT)
 					{
-						cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([events, entity](){
-							events->emit<Events::Error>(entity.id(), "user login");
-						});
+                        ImplError wkErr(1, "user login timeout");
+                        RequestStatus rs(entity.id(), Status::REQUEST_TIMEOUT, { {Impl::WkCocos ,wkErr} } );
+					    l->m_cb(rs,"");
 						entity.destroy();
 					}
 
@@ -157,7 +152,7 @@ namespace WkCocos
 										});
 
 									}
-									else// if request failed, 
+									else// if request failed,
 									{
 										cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([events, entity, userdata](){
 											events->emit<Events::Error>(entity.id(), userdata);

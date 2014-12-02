@@ -1,4 +1,5 @@
 #include "WkCocos/OnlineData/Systems/Storage.h"
+#include "WkCocos/OnlineData/RequestStatus.h"
 #include "WkCocos/OnlineData/Events/Error.h"
 #include "WkCocos/OnlineData/Events/PlayersList.h"
 #include "WkCocos/OnlineData/Events/DocsList.h"

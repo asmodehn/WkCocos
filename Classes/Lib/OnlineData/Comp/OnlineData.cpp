@@ -21,7 +21,7 @@ namespace WkCocos
 
 			}
 
-			Login::Login(std::string userid, std::string passwd, std::function<void(std::string)> cb)
+			Login::Login(std::string userid, std::string passwd, std::function<void(RequestStatus rs, std::string)> cb)
 				: m_userid(userid)
 				, m_passwd(passwd)
 				, m_cb(cb)

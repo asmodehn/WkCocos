@@ -1,5 +1,4 @@
 #include "WkCocos/OnlineData/OnlineDataManager.h"
-
 #include "WkCocos/OnlineData/Systems/User.h"
 #include "WkCocos/OnlineData/Systems/Storage.h"
 #include "WkCocos/OnlineData/Systems/Timer.h"
@@ -14,6 +13,8 @@
 #include "json/document.h"         // rapidjson's DOM-style API
 #include "json/stringbuffer.h"
 #include "json/writer.h"
+
+#include <sstream>
 
 namespace WkCocos
 {
@@ -34,7 +35,7 @@ namespace WkCocos
 			system_manager->add<Systems::ProgressUpdate>();
 			system_manager->configure();
 		}
-		
+
 		OnlineDataManager::~OnlineDataManager()
 		{
 		}
@@ -48,7 +49,7 @@ namespace WkCocos
 			newentity.assign<Comp::Create>(userid, password, email, [=](){
 				login(userid, password, success_callback);
 			});
-			
+
 		}
 
 		void OnlineDataManager::login(std::string userid, std::string password, std::function<void(std::string)> success_callback)
@@ -56,7 +57,20 @@ namespace WkCocos
 			auto newentity = entity_manager->create();
 			auto id = newentity.id();
 			newentity.assign<Comp::ProgressUpdate>();
-			newentity.assign<Comp::Login>(userid, password, success_callback);
+			newentity.assign<Comp::Login>(userid, password, [=](RequestStatus rs, std::string body)
+            {
+                //error handling done on next cocos update
+                cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this,rs,body,success_callback](){
+                    if ( rs.getStatus() == Status::REQUEST_TIMEOUT || rs.getStatus() == Status::REQUEST_ERROR )
+                    {
+                        this->event_manager->emit<Events::Error>(rs);
+                    }
+                    else if( rs.getStatus() == Status::REQUEST_SUCCESS)
+                    {
+                        success_callback(body);
+                    }
+                });
+            });
 		}
 
 		entityx::Entity::Id OnlineDataManager::save(const std::string& userid, const std::string& saveName, std::string docId, std::string user_data, std::function<void(std::string, std::string, std::string)> success_callback, std::string key)
@@ -76,7 +90,7 @@ namespace WkCocos
 			insertentity.assign < Comp::InsertUserData >(userid, saveName, user_data, success_callback);
 			return id;
 		}
-		
+
 		entityx::Entity::Id OnlineDataManager::load(const std::string& userid, const std::string& saveName, std::function<void(std::string, std::vector<std::string>)> callback, std::string key)
 		{
 			auto newentity = entity_manager->create();
