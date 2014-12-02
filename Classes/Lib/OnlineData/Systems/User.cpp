@@ -43,19 +43,11 @@ namespace WkCocos
 								{
 									entityx::ptr<Comp::Create> ecc = entity.component<Comp::Create>();
 									::App42::App42UserResponse* userdata = static_cast<::App42::App42UserResponse*>(data);
+									ImplError httpErr(userdata->httpErrorCode, userdata->errorMessage);
+                                    ImplError app42Err(userdata->appErrorCode, userdata->errorDetails);
+                                    RequestStatus rs(entity.id(), userdata->isSuccess? Status::REQUEST_SUCCESS : Status::REQUEST_ERROR, { {Impl::HTTP, httpErr}, {Impl::App42,app42Err} } );
 
-									if (userdata->isSuccess)
-									{
-										cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([ecc](){
-											ecc->m_cb();
-										});
-									}
-									else
-									{
-										cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([events, entity, userdata](){
-											events->emit<Events::Error>(entity.id(), userdata);
-										});
-									}
+									ecc->m_cb(rs);
 								}
 								CCLOG("Create User entity lived %f seconds", ecpu->life_time);
 								entity.destroy();
@@ -127,37 +119,31 @@ namespace WkCocos
 								{
 									entityx::ptr<Comp::LoadUserData> eclud = entity.component<Comp::LoadUserData>();
 									::App42::App42UserResponse* userdata = static_cast<::App42::App42UserResponse*>(data);
-									if (userdata->isSuccess)
-									{
-										std::vector<std::string> docs;
-										std::vector<::App42::JSONDocument> jsonDocArray = userdata->users.front().jsonDocArray;
-										std::string docId = "";
+                                    ImplError httpErr(userdata->httpErrorCode, userdata->errorMessage);
+                                    ImplError app42Err(userdata->appErrorCode, userdata->errorDetails);
+                                    RequestStatus rs(entity.id(), userdata->isSuccess? Status::REQUEST_SUCCESS : Status::REQUEST_ERROR, { {Impl::HTTP, httpErr}, {Impl::App42,app42Err} } );
 
-										if (!jsonDocArray.empty())
-										{
-											//id of last doc is the one we want to use ( others are discarded )
-											docId = jsonDocArray.back().getDocId();
+                                    std::vector<std::string> docs;
+                                    std::string docId = "";
 
-											for (std::vector<::App42::JSONDocument>::iterator it = jsonDocArray.begin(); it != jsonDocArray.end(); ++it)
-											{
-												rapidjson::Document doc;
-												rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
-												auto jsonDoc = it->getJsonDoc();
-												docs.push_back(jsonDoc.c_str());
-											}
-										}
-										cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([eclud, docId, docs]()
-										{
-											eclud->m_cb(docId, docs);
-										});
+                                    if (userdata && ! userdata->users.empty())
+                                    {
+                                        std::vector<::App42::JSONDocument> jsonDocArray = userdata->users.front().jsonDocArray;
+                                        if (!jsonDocArray.empty())
+                                        {
+                                            //id of last doc is the one we want to use ( others are discarded )
+                                            docId = jsonDocArray.back().getDocId();
 
-									}
-									else// if request failed,
-									{
-										cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([events, entity, userdata](){
-											events->emit<Events::Error>(entity.id(), userdata);
-										});
-									}
+                                            for (std::vector<::App42::JSONDocument>::iterator it = jsonDocArray.begin(); it != jsonDocArray.end(); ++it)
+                                            {
+                                                rapidjson::Document doc;
+                                                rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
+                                                auto jsonDoc = it->getJsonDoc();
+                                                docs.push_back(jsonDoc.c_str());
+                                            }
+                                        }
+                                    }
+                                    eclud->m_cb(rs, docId, docs);
 								}
 								CCLOG("Load User Data entity lived %f seconds", ecpu->life_time);
 								entity.destroy();

@@ -21,12 +21,12 @@ namespace WkCocos
 		{
 			struct Create : entityx::Component<Create>
 			{
-				Create(std::string userid, std::string passwd, std::string email, std::function<void(void)> cb);
+				Create(std::string userid, std::string passwd, std::string email, std::function<void(RequestStatus)> cb);
 
 				std::string m_userid;
 				std::string m_passwd;
 				std::string m_email;
-				std::function<void(void)> m_cb;
+				std::function<void(RequestStatus)> m_cb;
 
 			};
 
@@ -65,11 +65,11 @@ namespace WkCocos
 
 			struct LoadUserData : entityx::Component<LoadUserData>
 			{
-				LoadUserData(std::string userid, std::string m_collection, std::function<void(std::string, std::vector<std::string>)> cb);
+				LoadUserData(std::string userid, std::string m_collection, std::function<void(RequestStatus, std::string, std::vector<std::string>)> cb);
 
 				std::string m_userid;
 				std::string m_collection;
-				std::function<void(std::string, std::vector<std::string>)> m_cb;
+				std::function<void(RequestStatus, std::string, std::vector<std::string>)> m_cb;
 
 			};
 

@@ -46,10 +46,20 @@ namespace WkCocos
 			auto newentity = entity_manager->create();
 			auto id = newentity.id();
 			newentity.assign<Comp::ProgressUpdate>();
-			newentity.assign<Comp::Create>(userid, password, email, [=](){
-				login(userid, password, success_callback);
-			});
-
+			newentity.assign<Comp::Create>(userid, password, email, [=](RequestStatus rs){
+                //error handling done on next cocos update
+                cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this,rs,userid,password,success_callback](){
+                    if ( rs.getStatus() == Status::REQUEST_TIMEOUT || rs.getStatus() == Status::REQUEST_ERROR )
+                    {
+                        this->event_manager->emit<Events::Error>(rs);
+                    }
+                    else if( rs.getStatus() == Status::REQUEST_SUCCESS)
+                    {
+                        //potentially avoiding race condition by doing login from cocos thread as usual.
+                        login(userid, password, success_callback);
+                    }
+                });
+            });
 		}
 
 		void OnlineDataManager::login(std::string userid, std::string password, std::function<void(std::string)> success_callback)
@@ -57,8 +67,7 @@ namespace WkCocos
 			auto newentity = entity_manager->create();
 			auto id = newentity.id();
 			newentity.assign<Comp::ProgressUpdate>();
-			newentity.assign<Comp::Login>(userid, password, [=](RequestStatus rs, std::string body)
-            {
+			newentity.assign<Comp::Login>(userid, password, [=](RequestStatus rs, std::string body){
                 //error handling done on next cocos update
                 cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this,rs,body,success_callback](){
                     if ( rs.getStatus() == Status::REQUEST_TIMEOUT || rs.getStatus() == Status::REQUEST_ERROR )
@@ -96,7 +105,19 @@ namespace WkCocos
 			auto newentity = entity_manager->create();
 			auto id = newentity.id();
 			newentity.assign<Comp::ProgressUpdate>();
-			newentity.assign<Comp::LoadUserData>(userid, saveName, callback);
+			newentity.assign<Comp::LoadUserData>(userid, saveName, [=](RequestStatus rs, std::string docId, std::vector<std::string> docList){
+                //error handling done on next cocos update
+                cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this,rs,docId,docList,callback](){
+                    if ( rs.getStatus() == Status::REQUEST_TIMEOUT || rs.getStatus() == Status::REQUEST_ERROR )
+                    {
+                        this->event_manager->emit<Events::Error>(rs);
+                    }
+                    else if( rs.getStatus() == Status::REQUEST_SUCCESS )
+                    {
+                        callback(docId,docList);
+                    }
+                });
+            });
 			return id;
 		}
 

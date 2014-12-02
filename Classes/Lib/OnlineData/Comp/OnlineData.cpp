@@ -12,7 +12,7 @@ namespace WkCocos
 	{
 		namespace Comp
 		{
-			Create::Create(std::string userid, std::string passwd, std::string email, std::function<void(void)> cb)
+			Create::Create(std::string userid, std::string passwd, std::string email, std::function<void(RequestStatus rs)> cb)
 				: m_userid(userid)
 				, m_passwd(passwd)
 				, m_email(email)
@@ -48,7 +48,7 @@ namespace WkCocos
 
 			}
 
-			LoadUserData::LoadUserData(std::string userid, std::string collection, std::function<void(std::string, std::vector<std::string>)> cb)
+			LoadUserData::LoadUserData(std::string userid, std::string collection, std::function<void(RequestStatus rs,std::string, std::vector<std::string>)> cb)
 				: m_userid(userid)
 				, m_collection(collection)
 				, m_cb(cb)
