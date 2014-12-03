@@ -69,7 +69,7 @@ namespace WkCocos
 				CCLOG("GetParseError %s\n", json.GetParseError());
 			}
 
-			bool dlcEnable = cocostudio::DictionaryHelper::getInstance()->getBooleanValue_json(json, "dlcEnable", "error");
+			bool dlcEnable = cocostudio::DictionaryHelper::getInstance()->getBooleanValue_json(json, "dlcEnable", false);
 			std::string dlcUrl = cocostudio::DictionaryHelper::getInstance()->getStringValue_json(json, "dlcUrl", "error");
 			std::string dataVersion = cocostudio::DictionaryHelper::getInstance()->getStringValue_json(json, "dataVersion", "0");
 
@@ -84,7 +84,8 @@ namespace WkCocos
 #endif
 
 			CCLOG("dlcUrl : %s", dlcUrl.c_str());
-			CCLOG("dataVersion : %s",dataVersion.c_str());
+			CCLOG("dataVersion : %s", dataVersion.c_str());
+			CCLOG("dlcEnable : %s", dlcEnable ? "true" : "false");
 
             Version dver(dataVersion);
 
