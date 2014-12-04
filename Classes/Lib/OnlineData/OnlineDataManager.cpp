@@ -82,7 +82,7 @@ namespace WkCocos
 			});
 		}
 
-		entityx::Entity::Id OnlineDataManager::save(const std::string& userid, const std::string& saveName, std::string docId, std::string user_data, std::function<void(std::string, std::string, std::string)> success_callback, std::string key)
+		entityx::Entity::Id OnlineDataManager::save(const std::string& userid, const std::string& saveName, std::string docId, std::string user_data, std::function<void(const std::string&, const std::string&, const std::string&)> success_callback, std::string key)
 		{
 			auto updateentity = entity_manager->create();
 			auto id = updateentity.id();
@@ -105,7 +105,7 @@ namespace WkCocos
 			return id;
 		}
 
-		entityx::Entity::Id OnlineDataManager::saveNew(const std::string& userid, const std::string& saveName, std::string user_data, std::function<void(std::string, std::string, std::string)> success_callback, std::string key)
+		entityx::Entity::Id OnlineDataManager::saveNew(const std::string& userid, const std::string& saveName, std::string user_data, std::function<void(const std::string&, const std::string&, const std::string&)> success_callback, std::string key)
 		{
 			auto insertentity = entity_manager->create();
 			auto id = insertentity.id();

@@ -37,6 +37,7 @@ namespace WkCocos
 
 		if (isMode(Mode::ONLINE)) //no encryption online
 		{
+			events()->emit<Loading>(this->getId(), this->m_name, m_rawData);
 			if (m_onlinedata)
 			{
 				++m_loaded;
@@ -68,6 +69,7 @@ namespace WkCocos
 
 		if (isMode(Mode::OFFLINE))
 		{
+			events()->emit<Loading>(this->getId(), this->m_name, m_rawData);
 			if (m_localdata)
 			{
 				++m_loaded;
@@ -104,12 +106,13 @@ namespace WkCocos
 				++m_saved;
 				if (m_saved == 1) // we process first save only. others will be queued ( and intermediate will be skipped as useless )
 				{
+					events()->emit<Saving>(this->getId(), this->m_name, m_rawData);
 #ifdef _DEBUG
 					++m_saveRequest;
 #endif //_DEBUG
 					if (m_docId.size() > 0)
 					{
-						m_current_save = m_onlinedata->save(m_user, m_name, m_docId, m_rawData, [=](std::string saveName, std::string docId, std::string data)
+						m_current_save = m_onlinedata->save(m_user, m_name, m_docId, m_rawData, [=](const std::string& saveName, const std::string& docId, const std::string& data)
 						{
 #ifdef _DEBUG
 							++m_saveSuccess;
@@ -130,7 +133,7 @@ namespace WkCocos
 					}
 					else
 					{
-						m_current_save = m_onlinedata->saveNew(m_user, m_name, m_rawData, [=](std::string saveName, std::string docId, std::string data)
+						m_current_save = m_onlinedata->saveNew(m_user, m_name, m_rawData, [=](const std::string& saveName, const std::string& docId, const std::string& data)
 						{
 #ifdef _DEBUG
 							++m_saveSuccess;
@@ -162,6 +165,7 @@ namespace WkCocos
 		}
 		else if (isMode(Mode::OFFLINE))
 		{
+			events()->emit<Saving>(this->getId(), this->m_name, m_rawData);
 #ifdef _DEBUG
 			++m_saveRequest;
 #endif //_DEBUG

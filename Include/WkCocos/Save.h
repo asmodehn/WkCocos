@@ -73,14 +73,53 @@ namespace WkCocos
 			ErrorType error_type;
 		};
 
-		struct Loaded : Event < Loaded >
+		struct Loading : Event < Loading >
 		{
-			Loaded(ActorID senderId, std::string name, std::string data)
-				: Event(senderId)
-				, m_name(name)
-				, m_data(data)
+			Loading(ActorID senderId, const std::string& name, const std::string& data)
+			: Event(senderId)
+			, m_name(name)
+			, m_data(data)
 			{
 			}
+
+			std::string m_name;
+			std::string m_data;
+		};
+
+		struct Saving : Event < Saving >
+		{
+			Saving(ActorID id, const std::string& name, const std::string& data)
+			: Event(id)
+			, m_name(name)
+			, m_data(data)
+			{
+			}
+
+			std::string m_name;
+			std::string m_data;
+		};
+
+		struct Loaded : Event < Loaded >
+		{
+			Loaded(ActorID senderId, const std::string& name, const std::string& data)
+			: Event(senderId)
+			, m_name(name)
+			, m_data(data)
+			{
+			}
+
+			std::string m_name;
+			std::string m_data;
+		};
+
+
+		struct Saved : Event < Saved >
+		{
+			Saved(ActorID id, const std::string& name, const std::string& data)
+				: Event(id)
+				, m_name(name)
+				, m_data(data)
+			{}
 
 			std::string m_name;
 			std::string m_data;
@@ -91,19 +130,6 @@ namespace WkCocos
 		* Will trigger Loaded or Error Event
 		*/
 		bool requestLoadData();
-
-
-		struct Saved : Event < Saved >
-		{
-			Saved(ActorID id, std::string name, std::string data)
-				: Event(id)
-				, m_name(name)
-				, m_data(data)
-			{}
-
-			std::string m_name;
-			std::string m_data;
-		};
 
 		/**
 		* Request data to be saved.
