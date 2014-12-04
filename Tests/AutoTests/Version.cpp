@@ -11,19 +11,12 @@ SUITE(Version)
     TEST(default_null)
 	{
 	    WkCocos::Download::Version v1;
+	    std::vector<unsigned long> v1s = v1.split();
 
-        CHECK(v1[0].first == 0);
-        CHECK(v1[1].first == 0);
-        CHECK(v1[2].first == 0);
-        CHECK(v1[3].first == 0); //v1[3] is created here, set to 0 by default
-        //etc.
+		CHECK(v1s[0] == 0);
 
 		WkCocos::Download::Version v2("v0");
 
-        CHECK( v2[0].first == 0);
-        CHECK( v2[1].first == 0);
-        CHECK( v2[2].first == 0);
-        //etc.
 		CHECK( v2 == v1);
 
 		WkCocos::Download::Version v3("v0.0");
@@ -40,44 +33,46 @@ SUITE(Version)
 	TEST(symmetric_split_join_3)
 	{
 	    WkCocos::Download::Version v1("v0.1.2");
+	    std::vector<unsigned long> v1s = v1.split();
 
-		CHECK(v1[0].first == 0);
-		CHECK(v1[1].first == 1);
-		CHECK(v1[2].first == 2);
+		CHECK(v1s[0] == 0);
+		CHECK(v1s[1] == 1);
+		CHECK(v1s[2] == 2);
 
-		WkCocos::Download::Version v2(to_string(v1));
+		WkCocos::Download::Version v2(v1s);
 
-		CHECK( v2 == v1 );
+		CHECK( v2 == v1);
 
 	}
 
     TEST(symmetric_split_join_4)
 	{
 	    WkCocos::Download::Version v1("v0.1.2.3");
+	    std::vector<unsigned long> v1s = v1.split();
 
-		CHECK(v1[0].first == 0);
-		CHECK(v1[1].first == 1);
-		CHECK(v1[2].first == 2);
-		CHECK(v1[3].first == 3);
+		CHECK(v1s[0] == 0);
+		CHECK(v1s[1] == 1);
+		CHECK(v1s[2] == 2);
+		CHECK(v1s[3] == 3);
 
-		WkCocos::Download::Version v2(to_string(v1));
+		WkCocos::Download::Version v2(v1s);
 
-		CHECK( v2 == v1 );
+		CHECK( v2 == v1);
 	}
 
-    //to_string
+    //toString
     TEST(toString_3)
 	{
 	    WkCocos::Download::Version v1("v0.1.2");
 
-		CHECK( to_string(v1) == "v0.1.2" );
+		CHECK( v1.toString() == "v0.1.2");
 	}
 
     TEST(toString_4)
 	{
 	    WkCocos::Download::Version v1("v0.1.2.3");
 
-		CHECK( to_string(v1) == "v0.1.2.3" );
+		CHECK( v1.toString() == "v0.1.2.3");
 	}
 
     //equals
@@ -499,112 +494,4 @@ SUITE(Version)
         CHECK ( v1 < v2 );
         CHECK ( v2 > v1 );
     }
-
-    //Lexical comparison tests
-    //equals
-    TEST(Lexical_equals_3_case_1)
-    {
-        WkCocos::Download::Version v1("v128454779843704.1.2");
-        WkCocos::Download::Version v2("v128454779843704.1.2");
-
-        CHECK ( v1 == v2 );
-    }
-
-    TEST(Lexical_equals_3_case_2)
-    {
-        WkCocos::Download::Version v1("v0.128454779843708.2");
-        WkCocos::Download::Version v2("v0.128454779843708.2");
-
-        CHECK ( v1 == v2 );
-    }
-
-    TEST(Lexical_equals_3_case_3)
-    {
-        WkCocos::Download::Version v1("v0.1.128454779843716");
-        WkCocos::Download::Version v2("v0.1.128454779843716");
-
-        CHECK ( v1 == v2 );
-    }
-
-    TEST(Lexical_equals_3_case_4)
-    {
-        WkCocos::Download::Version v1("v0.128454779843708.128454779843716");
-        WkCocos::Download::Version v2("v0.128454779843708.128454779843716");
-
-        CHECK ( v1 == v2 );
-    }
-
-    TEST(Lexical_equals_3_case_5)
-    {
-        WkCocos::Download::Version v1("v128454779843704.128454779843708.2");
-        WkCocos::Download::Version v2("v128454779843704.128454779843708.2");
-
-        CHECK ( v1 == v2 );
-    }
-
-    TEST(Lexical_equals_3_case_6)
-    {
-        WkCocos::Download::Version v1("v128454779843704.1.128454779843716");
-        WkCocos::Download::Version v2("v128454779843704.1.128454779843716");
-
-        CHECK ( v1 == v2 );
-    }
-
-    TEST(Lexical_equals_3_case_7)
-    {
-        WkCocos::Download::Version v1("v128454779843704.128454779843708.128454779843716");
-        WkCocos::Download::Version v2("v128454779843704.128454779843708.128454779843716");
-
-        CHECK ( v1 == v2 );
-    }
-
-    //not equals
-    TEST(Lexical_not_equals_3_case_1)
-    {
-        WkCocos::Download::Version v1("v0.1.2");
-        WkCocos::Download::Version v2("v128454779843704.1.2");
-
-        CHECK ( v1 != v2 );
-    }
-
-    TEST(Lexical_not_equals_3_case_2)
-    {
-        WkCocos::Download::Version v1("v128454779843704.1.2");
-        WkCocos::Download::Version v2("v128454779843708.1.2");
-
-        CHECK ( v1 != v2 );
-    }
-
-    TEST(Lexical_not_equals_3_case_3)
-    {
-        WkCocos::Download::Version v1("v1.0.2");
-        WkCocos::Download::Version v2("v1.128454779843704.2");
-
-        CHECK ( v1 != v2 );
-    }
-
-    TEST(Lexical_not_equals_3_case_4)
-    {
-        WkCocos::Download::Version v1("v1.128454779843704.2");
-        WkCocos::Download::Version v2("v1.128454779843708.2");
-
-        CHECK ( v1 != v2 );
-    }
-
-    TEST(Lexical_not_equals_3_case_5)
-    {
-        WkCocos::Download::Version v1("v1.2.0");
-        WkCocos::Download::Version v2("v1.2.128454779843704");
-
-        CHECK ( v1 != v2 );
-    }
-
-    TEST(Lexical_not_equals_3_case_6)
-    {
-        WkCocos::Download::Version v1("v1.2.128454779843704");
-        WkCocos::Download::Version v2("v1.2.128454779843708");
-
-        CHECK ( v1 != v2 );
-    }
-
 }

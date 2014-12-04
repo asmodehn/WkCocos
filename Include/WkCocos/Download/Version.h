@@ -3,7 +3,6 @@
 
 #include <string>
 #include <vector>
-#include <limits>
 
 namespace WkCocos
 {
@@ -13,21 +12,14 @@ namespace WkCocos
 	    class Version
 	    {
 	        public:
-
-            static const unsigned long failed_conversion_num = std::numeric_limits<unsigned long>::max();
-            static const char  default_delim = '.';
-            static const std::pair<unsigned long,std::string> null_convert;
-
             //default version is just "v0" which should be equal to v0.0.0 and less than any version
             Version();
 
-	        Version(std::string vstr, char delim = default_delim);
+	        Version(std::string vstr);
 
 	        Version(std::vector<unsigned long> version);
 
-	        Version(std::vector<std::string> version);
-
-            Version(const Version& v);
+	        std::vector<unsigned long> split() const;
 
             bool operator ==(Version const& v) const;
             bool operator!=(Version const& v) const {return !( operator==(v) );}
@@ -38,40 +30,20 @@ namespace WkCocos
             bool operator>=(Version const& v)const {return !(operator<(v));}
 
             /**
-            * overloading subscript operator. increase the size of the vector if needed
-            * retrieve from integer version or from string version vector depending on the type needed
+            * @return true if the number at the same index is equal
             */
-            std::pair<unsigned long, std::string>& operator[](int i);
-
+            bool isSame(int index,Version const& v) const;
             /**
-            * return the size of the vectors ( must always be the same )
+            * @return true if the number at the same index is equal
             */
-            size_t size() const
+            bool isLess(int index,Version const& v) const;
+
+            std::string toString() const
             {
-                return m_version.size();
+                return m_version_str;
             }
-
-            /**
-            * Utility static function : Split a version string into a vector of unsigned long.
-            * we keep original string in case a conversion to long is not possible ( out of range )
-            */
-	        static std::vector< std::pair<unsigned long,std::string> > split(const std::string & version_str, char delim);
-	        static std::vector< std::pair<unsigned long,std::string> > split(const std::vector<std::string> & version_vec);
-	        static std::vector< std::pair<unsigned long,std::string> > split(const std::vector<unsigned long> & version_vec);
-
-            /**
-            * Casting to string operator
-            */
-            friend std::string to_string(Version v);
-
-            /**
-            * Outputting in ostream is a friend of us
-            */
-            friend std::ostream& operator<<(std::ostream& os, const Version& v);
-
             private:
-
-            std::vector< std::pair<unsigned long,std::string> > m_version = {null_convert};
+	        std::string m_version_str;
 	    };
 
 	} //namespace Download

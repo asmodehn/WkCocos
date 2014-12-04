@@ -1,58 +1,40 @@
 #include "WkCocos/Download/Version.h"
 
 #include "WkCocos/Utils/ToolBox.h"
-
-#include "WkCocos/Utils/log/logstream.h"
-
 #include <iostream>
-#include <sstream>
 
 namespace WkCocos
 {
 	namespace Download
 	{
-        const std::pair<unsigned long,std::string> Version::null_convert = {0UL,"0"};
-
 	    Version::Version()
+        : m_version_str("v0") // default version
         {
-            LogStream::create();
-            auto l = LogStream::get();
-            if ( l->getAppenders().size() == 0 ) l->addAppender(new LogAppender());
         }
 
-	    Version::Version(std::string vstr, char delim)
+	    Version::Version(std::string vstr)
+        : m_version_str(vstr)
         {
-            LogStream::create();
-            auto l = LogStream::get();
-            if ( l->getAppenders().size() == 0 ) l->addAppender(new LogAppender());
-            m_version = split(vstr,delim);
+            if (m_version_str[0] != 'v')
+            {
+                throw std::logic_error("This string is not a version string !");
+            }
         }
 
         Version::Version(std::vector<unsigned long> version)
+        : m_version_str("v")
         {
-            LogStream::create();
-            auto l = LogStream::get();
-            if ( l->getAppenders().size() == 0 ) l->addAppender(new LogAppender());
-            m_version = split(version);
+            for (unsigned long num : version)
+            {
+                m_version_str += WkCocos::ToolBox::to_string(num) + ".";
+            }
+            m_version_str.pop_back(); // removing trailing '.'
         }
 
-        Version::Version(std::vector<std::string> version)
+        std::vector<unsigned long> Version::split() const
         {
-            LogStream::create();
-            auto l = LogStream::get();
-            if ( l->getAppenders().size() == 0 ) l->addAppender(new LogAppender());
-            m_version = split(version);
-        }
-
-        Version::Version(const Version& v)
-        :m_version(v.m_version)
-        {
-        }
-
-        std::vector< std::pair<unsigned long,std::string> > Version::split(const std::string & version_str, char delim)
-        {
-            std::vector<std::string> sv;
-            std::string v = version_str;
+            std::vector<unsigned long> sv;
+            std::string v = m_version_str;
             if (v.length() > 0)
             {
                 if (v.at(0) == 'v')
@@ -61,134 +43,112 @@ namespace WkCocos
                     v = v.substr(1);
                 }
 
+                std::string delimiters = ".";
                 size_t current;
                 size_t next = -1;
                 do
                 {
                     current = next + 1;
-                    next = v.find_first_of(delim, current);
+                    next = v.find_first_of(delimiters, current);
                     //in case we do not find any delimiter
                     size_t endsub = (std::string::npos == next) ? next : next - current;
-                    LOG_DEBUG << v.substr(current, endsub) << std::endl;
-                    sv.push_back(v.substr(current, endsub));
+                    //std::cout << v.substr(current, next - current) << std::endl;
+                    unsigned long tmp = 0;
+                    try
+                    {
+                        tmp = ToolBox::stoul(v.substr(current, endsub));
+                    }
+                    catch (std::out_of_range oor)
+                    {
+                        tmp = ULONG_MAX;
+                    }
+                    sv.push_back(tmp);
                 } while (next != std::string::npos);
             }
-            return split(sv);
+            return sv;
         }
 
-        std::vector< std::pair<unsigned long,std::string> > Version::split(const std::vector<std::string> & version_vec)
+        bool Version::operator== (Version const& v) const
         {
-            std::vector< std::pair<unsigned long,std::string> > resv;
-            for ( std::string nstr : version_vec )
-            {
-                try
-                {
-                    unsigned long n = ToolBox::stoul(nstr);
-                    resv.push_back(std::make_pair(n,nstr));
-                }
-                catch (std::out_of_range oor)
-                {
-                    unsigned long n = failed_conversion_num;
-                    resv.push_back(std::make_pair(n,nstr)); // here we keep original str value. it might be needed for accurate comparison later.
-                }
-            }
-            return resv;
-        }
-
-	    std::vector< std::pair<unsigned long,std::string> > Version::split(const std::vector<unsigned long> & version_vec)
-	    {
-            std::vector< std::pair<unsigned long,std::string> > resv;
-            for ( unsigned long n : version_vec )
-            {
-                //std::ostringstream ss;
-                //ss << n;
-                //resv.push_back(std::make_pair(n,ss.str()));
-                resv.push_back(std::make_pair(n,std::to_string(n)));
-            }
-            return resv;
-	    }
-
-        std::pair<unsigned long, std::string>& Version::operator[](int i)
-        {
-            if ( i >= m_version.size())
-            {
-                m_version.resize(i+1,null_convert);
-            }
-            return m_version[i];
-        }
-
-        bool Version::operator== (const Version& v) const
-        {
-            Version mycopy(*this);
-            Version vcopy(v);
+            Version vcopy = v;
+            std::vector<unsigned long> v1l = split();
+            std::vector<unsigned long> v2l = vcopy.split();
             bool equals = true;
-            for (unsigned int i = 0; equals && i < vcopy.size(); ++i)
+            //getting all version to same size by assuming missing one is 0.
+            while (v1l.size() < v2l.size())
             {
-                //if we failed conversion to unsigned long ( for very long numbers ) we revert to lexical order
-                //TODO : double check and test if it is correct & appropriate behavior
-                if ( mycopy[i].first == failed_conversion_num || vcopy[i].first == failed_conversion_num)
-                {
-                    equals = ( mycopy[i].second == vcopy[i].second );
-                }
-                else
-                {
-                    equals = ( mycopy[i].first == vcopy[i].first );
-                }
+                v1l.push_back(0);
+            }
+            while (v1l.size() > v2l.size())
+            {
+                v2l.push_back(0);
             }
 
-            std::string rel = (equals)? " == " : " != " ;
-            LOG_DEBUG << "Version " << mycopy << rel << vcopy << std::endl;
-
+            for (unsigned int i = 0; i < v1l.size(); ++i)
+            {
+                if (v1l.at(i) != v2l.at(i))
+                {
+                    equals = false; break;
+                }
+            }
             return equals;
         }
 
         bool Version::operator< (Version const& v) const
         {
-            Version mycopy(*this);
-            Version vcopy(v);
-            bool thisIsSame = true;
-            bool thisIsMore = false;
-            //we need to keep checking numbers while we have equality.
-            for (unsigned int i = 0; thisIsSame && (!thisIsMore) && i < mycopy.size(); ++i)
+            Version vcopy = v;
+            std::vector<unsigned long> v1l = split();
+            std::vector<unsigned long> v2l = vcopy.split();
+            bool thisIsSameOrMore = true;
+            //getting all version to same size by assuming missing one is 0.
+            while (v1l.size() < v2l.size())
             {
-                //if we failed conversion to unsigned long ( for very long numbers ) we revert to lexical order
-                //TODO : double check and test if it is correct & appropriate behavior
-                if ( mycopy[i].first == failed_conversion_num || vcopy[i].first == failed_conversion_num)
-                {
-                    if ( ! (thisIsSame = (mycopy[i].second == vcopy[i].second) ) )
-                    {
-                        thisIsMore = ( mycopy[i].second > vcopy[i].second );
-                    }
-                }
-
-                if ( ! (thisIsSame = (mycopy[i].first == vcopy[i].first) ) )
-                {
-                    thisIsMore = ( mycopy[i].first > vcopy[i].first );
-                }
+                v1l.push_back(0);
+            }
+            while (v1l.size() > v2l.size())
+            {
+                v2l.push_back(0);
             }
 
-            std::string rel = (thisIsSame || thisIsMore)? " >= " : " < " ;
-            LOG_DEBUG << "Version " << mycopy << rel << vcopy << std::endl;
-
-            return !(thisIsSame || thisIsMore);
-        }
-
-        std::string to_string(Version v)
-        {
-            std::ostringstream oss;
-            oss << v;
-            return oss.str();
-        }
-
-        std::ostream& operator<<(std::ostream& os, const Version& v)
-        {
-            os << "v";
-            for ( auto idx = 0; idx < v.m_version.size(); ++idx )
+            for (unsigned int i = 0; i < v1l.size(); ++i)
             {
-                if ( idx ) os << Version::default_delim;
-                os << v.m_version[idx].second;
+                if (v1l.at(i) > v2l.at(i))
+                {
+                    break; // we already know we are (same or) more
+                }
+                else if (v1l.at(i) < v2l.at(i))
+                {
+                    thisIsSameOrMore = false; break;// if left number is less, we don't need to check right hand numbers. this version is less.
+                }
+                //else == we need to process next digit
             }
-            return os;
+#ifdef _DEBUG
+            if (thisIsSameOrMore)
+            {
+                std::cout << "Version " << m_version_str << " >= " << v.m_version_str << std::endl;
+            }
+            else
+            {
+                std::cout << "Version " << m_version_str << " < " << v.m_version_str << std::endl;
+            }
+#endif
+            return !thisIsSameOrMore;
+        }
+
+        bool Version::isSame(int index, Version const& v) const
+        {
+            Version vcopy = v;
+            std::vector<unsigned long> v1l = split();
+            std::vector<unsigned long> v2l = vcopy.split();
+            return v1l.at(index) == v2l.at(index);
+        }
+
+        bool Version::isLess(int index,Version const& v) const
+        {
+            Version vcopy = v;
+            std::vector<unsigned long> v1l = split();
+            std::vector<unsigned long> v2l = vcopy.split();
+            return v1l.at(index) <= v2l.at(index);
         }
 
 	} //namespace Download
