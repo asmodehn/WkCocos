@@ -115,7 +115,7 @@ namespace WkCocos
 
         std::pair<unsigned long, std::string>& Version::operator[](int i)
         {
-            if ( i >= m_version.size())
+            if ( i >= m_version.size() )
             {
                 m_version.resize(i+1,null_convert);
             }

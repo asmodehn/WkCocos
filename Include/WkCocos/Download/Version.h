@@ -3,7 +3,7 @@
 
 #include <string>
 #include <vector>
-#include <limits>
+//#include <limits>
 
 namespace WkCocos
 {
@@ -13,64 +13,64 @@ namespace WkCocos
 	    {
 	        public:
 
-            static const unsigned long failed_conversion_num = std::numeric_limits<unsigned long>::max();
-            static const char  default_delim = '.';
-            static const std::pair<unsigned long,std::string> null_convert;
+				static const unsigned long failed_conversion_num = /*std::numeric_limits<unsigned long>::max()*/ ULONG_MAX;
+				static const char default_delim = '.';
+				static const std::pair<unsigned long, std::string> null_convert;
 
-            //default version is just "v0" which should be equal to v0.0.0 and less than any version
-            Version();
+				//default version is just "v0" which should be equal to v0.0.0 and less than any version
+				Version();
 
-	        Version(std::string vstr, char delim = default_delim);
+				Version(std::string vstr, char delim = default_delim);
 
-	        Version(std::vector<unsigned long> version);
+				Version(std::vector<unsigned long> version);
 
-	        Version(std::vector<std::string> version);
+				Version(std::vector<std::string> version);
 
-            Version(const Version& v);
+				Version(const Version& v);
 
-            bool operator ==(Version const& v) const;
-            bool operator!=(Version const& v) const {return !( operator==(v) );}
+				bool operator ==(Version const& v) const;
+				bool operator!=(Version const& v) const {return !( operator==(v) );}
 
-            bool operator< (Version const& v) const;
-            bool operator> (Version const& v)const {return v.operator<(*this);}
-            bool operator<=(Version const& v)const {return !(operator>(v));}
-            bool operator>=(Version const& v)const {return !(operator<(v));}
+				bool operator< (Version const& v) const;
+				bool operator> (Version const& v)const {return v.operator<(*this);}
+				bool operator<=(Version const& v)const {return !(operator>(v));}
+				bool operator>=(Version const& v)const {return !(operator<(v));}
 
-            /**
-            * overloading subscript operator. increase the size of the vector if needed
-            * retrieve from integer version or from string version vector depending on the type needed
-            */
-            std::pair<unsigned long, std::string>& operator[](int i);
+				/**
+				* overloading subscript operator. increase the size of the vector if needed
+				* retrieve from integer version or from string version vector depending on the type needed
+				*/
+				std::pair<unsigned long, std::string>& operator[](int i);
 
-            /**
-            * return the size of the vectors ( must always be the same )
-            */
-            size_t size() const
-            {
-                return m_version.size();
-            }
+				/**
+				* return the size of the vectors ( must always be the same )
+				*/
+				size_t size() const
+				{
+					return m_version.size();
+				}
 
-            /**
-            * Utility static function : Split a version string into a vector of unsigned long.
-            * we keep original string in case a conversion to long is not possible ( out of range )
-            */
-	        static std::vector< std::pair<unsigned long,std::string> > split(const std::string & version_str, char delim);
-	        static std::vector< std::pair<unsigned long,std::string> > split(const std::vector<std::string> & version_vec);
-	        static std::vector< std::pair<unsigned long,std::string> > split(const std::vector<unsigned long> & version_vec);
+				/**
+				* Utility static function : Split a version string into a vector of unsigned long.
+				* we keep original string in case a conversion to long is not possible ( out of range )
+				*/
+				static std::vector< std::pair<unsigned long,std::string> > split(const std::string & version_str, char delim);
+				static std::vector< std::pair<unsigned long,std::string> > split(const std::vector<std::string> & version_vec);
+				static std::vector< std::pair<unsigned long,std::string> > split(const std::vector<unsigned long> & version_vec);
 
-            /**
-            * to_string is a friend of us
-            */
-            friend std::string to_string(Version v);
+				/**
+				* to_string is a friend of us
+				*/
+				friend std::string to_string(Version v);
 
-            /**
-            * operator<< is a friend of us
-            */
-            friend std::ostream& operator<<(std::ostream& os, const Version& v);
+				/**
+				* operator<< is a friend of us
+				*/
+				friend std::ostream& operator<<(std::ostream& os, const Version& v);
 
             private:
 
-            std::vector< std::pair<unsigned long,std::string> > m_version = {null_convert};
+				std::vector<std::pair<unsigned long, std::string>> m_version = {/*null_convert*/};
 	    };
 
 

@@ -25,4 +25,14 @@ public class AppActivity extends MainActivity {
         NotificationManager WKNM = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
         WKNM.cancelAll();
     }
+
+    public String getVersionName()
+    {
+        return "0";
+    }
+
+    public int getVersionCode()
+    {
+        return 0;
+    }
 }
