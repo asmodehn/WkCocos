@@ -100,10 +100,7 @@ namespace WkCocos
             std::vector< std::pair<unsigned long,std::string> > resv;
             for ( unsigned long n : version_vec )
             {
-                //std::ostringstream ss;
-                //ss << n;
-                //resv.push_back(std::make_pair(n,ss.str()));
-                resv.push_back(std::make_pair(n,std::to_string(n)));
+                resv.push_back(std::make_pair(n,ToolBox::to_string(n)));
             }
             return resv;
 	    }

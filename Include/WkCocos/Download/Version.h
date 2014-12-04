@@ -9,7 +9,6 @@ namespace WkCocos
 {
 	namespace Download
 	{
-
 	    class Version
 	    {
 	        public:
@@ -60,12 +59,12 @@ namespace WkCocos
 	        static std::vector< std::pair<unsigned long,std::string> > split(const std::vector<unsigned long> & version_vec);
 
             /**
-            * Casting to string operator
+            * to_string is a friend of us
             */
             friend std::string to_string(Version v);
 
             /**
-            * Outputting in ostream is a friend of us
+            * operator<< is a friend of us
             */
             friend std::ostream& operator<<(std::ostream& os, const Version& v);
 
@@ -73,6 +72,17 @@ namespace WkCocos
 
             std::vector< std::pair<unsigned long,std::string> > m_version = {null_convert};
 	    };
+
+
+        /**
+        * to_string operator overloaded for Version
+        */
+        std::string to_string(Version v);
+
+        /**
+        * operator<< to output to std::ostream
+        */
+        std::ostream& operator<<(std::ostream& os, const Version& v);
 
 	} //namespace Download
 } //namespace WkCocos
