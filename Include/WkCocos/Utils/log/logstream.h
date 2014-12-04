@@ -59,6 +59,11 @@ namespace WkCocos
 		*/
 		inline void addAppender(LogAppender* newAppender){ _appenders.push_back(newAppender); }
 
+        /**
+        * return the list of appenders
+        */
+        std::vector<LogAppender*>& getAppenders() { return _appenders; }
+
 		/**
 		* Remove an appender
 		* Iterate through appenders vector and remove if matching ptr found.
