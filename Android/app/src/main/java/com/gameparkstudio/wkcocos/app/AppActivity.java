@@ -3,7 +3,7 @@ package com.gameparkstudio.wkcocos.app;
 import android.app.NotificationManager;
 import android.os.Bundle;
 import com.gameparkstudio.wkcocos.lib.MainActivity;
-import com.gameparkstudio.wkcocos.lib.PushNotificationsManager;
+import com.gameparkstudio.wkcocos.lib.WkJniHelper;
 
 public class AppActivity extends MainActivity {
 
@@ -12,7 +12,7 @@ public class AppActivity extends MainActivity {
 
         super.onCreate(savedInstanceState);
         //TODO : can we do that in MainActivity in lib ??
-        PushNotificationsManager.getInstance().setActivity(this);
+        WkJniHelper.getInstance().setActivity(this);
     }
 
     @Override protected void onPause() {

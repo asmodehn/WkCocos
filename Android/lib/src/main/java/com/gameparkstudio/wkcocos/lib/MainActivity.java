@@ -61,7 +61,7 @@ public abstract class MainActivity extends Cocos2dxActivity {
      * needs to be implemented in the main package
      * @return string holding the main package app version Name
      */
-    public abstract String getVersionName();
+    //public abstract String getVersionName();
     //{
         //gradle
         //String version = BuildConfig.VERSION_NAME;
@@ -75,7 +75,7 @@ public abstract class MainActivity extends Cocos2dxActivity {
      * needs to be implemented in the main package
      * @return string holding the main package app version Code
      */
-    public abstract int getVersionCode();
+    //public abstract int getVersionCode();
     //{
         //gradle // careful : current package !
         //int vcode = BuildConfig.VERSION_CODE;

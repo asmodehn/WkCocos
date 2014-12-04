@@ -73,7 +73,8 @@ void DownloadingUI::DLCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::Tou
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32 || CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
 		WkCocos::Download::Version curVersion("v" + std::string(WK_WkCocos_VERSION));
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-        WkCocos::Download::Version curVersion("v" + WkCocos::Utils::jni::Utils::getVersionName());
+        WkCocos::Download::Version curVersion("v" + WkCocos::Utils::WkJniHelper::getVersionName());
+
 #endif
             m_dlmgr->addDataDownload(curVersion ,MANIFEST_FILENAME);
             m_dlStarted = true;
