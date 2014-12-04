@@ -86,14 +86,16 @@ namespace WkCocos
 					if (res != 0)
 					{
 
-						CCLOG("DLClisting can not read from %s, error code is %d", url.c_str(), res);
+						CCLOG("DLClisting can not read from %s, error code is %d - RETRYING", url.c_str(), res);
 
 						dllist->m_retries--;
 						if (0 == dllist->m_retries)
 						{
-							CCLOGERROR("DLClisting can not read from %s, error code is %d", url.c_str(), res);
+							CCLOGERROR("FATAL - DLClisting can not read from %s, error code is %d", url.c_str(), res);
 							//signal error
 							events->emit<Events::Error>(entity, "DLClisting system");
+							//destroying entity to not loop around...
+							entity.destroy();
 						}
 					}
 					else

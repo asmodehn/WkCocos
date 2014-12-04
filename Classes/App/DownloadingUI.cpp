@@ -12,7 +12,7 @@
 #include "WkPlatform_WkCocos.h"
 #endif
 
-#include "WkCocos/Utils/jni/Utils.h"
+#include "WkCocos/Utils/WkJniHelper.h"
 
 #define MANIFEST_FILENAME "manifest.json"
 

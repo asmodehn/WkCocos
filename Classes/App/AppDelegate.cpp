@@ -2,7 +2,7 @@
 #include "WkCocosApp/TestScene.h"
 #include "WkCocosApp/GameLogic.h"
 
-#include "WkCocos/Utils/jni/Utils.h"
+#include "WkCocos/Utils/WkJniHelper.h"
 #include "WkCocos/PushNotifications/PushNotifications.h"
 
 USING_NS_CC;
@@ -120,6 +120,6 @@ void AppDelegate::applicationWillEnterForeground() {
     // if you use SimpleAudioEngine, it must resume here
     // SimpleAudioEngine::getInstance()->resumeBackgroundMusic();
 
-	std::string vstring = WkCocos::Utils::jni::Utils::getVersionName();
+	std::string vstring = WkCocos::Utils::WkJniHelper::getVersionName();
 	CCLOG("Version string from app : %s",vstring.c_str());
 }
