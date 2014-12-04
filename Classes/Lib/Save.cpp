@@ -12,6 +12,11 @@ namespace WkCocos
 		, m_onSaving()
 		, m_loaded(0)
 		, m_saved(0)
+#ifdef _DEBUG
+		, m_saveRequest(0)
+		, m_saveSuccess(0)
+		, m_saveFail(0)
+#endif //_DEBUG
 	{
 		m_saveModes[static_cast<int>(mode)] = 1;
 
@@ -86,6 +91,7 @@ namespace WkCocos
 
 	bool Save::requestSaveData(std::string data)
 	{
+
 		bool saved = true;
 		m_rawData = data;
 
@@ -98,10 +104,16 @@ namespace WkCocos
 				++m_saved;
 				if (m_saved == 1) // we process first save only. others will be queued ( and intermediate will be skipped as useless )
 				{
+#ifdef _DEBUG
+					++m_saveRequest;
+#endif //_DEBUG
 					if (m_docId.size() > 0)
 					{
 						m_current_save = m_onlinedata->save(m_user, m_name, m_docId, m_rawData, [=](std::string saveName, std::string docId, std::string data)
 						{
+#ifdef _DEBUG
+							++m_saveSuccess;
+#endif //_DEBUG
 							m_current_save = entityx::Entity::Id();// save finished
 							//we do not modify local data to not lose more recent changes.
 							if (--(this->m_saved) == 0) // if last answer came back
@@ -120,6 +132,9 @@ namespace WkCocos
 					{
 						m_current_save = m_onlinedata->saveNew(m_user, m_name, m_rawData, [=](std::string saveName, std::string docId, std::string data)
 						{
+#ifdef _DEBUG
+							++m_saveSuccess;
+#endif //_DEBUG
 							m_current_save = entityx::Entity::Id();// save finished
 							//storing docId to mark creation of save
 							this->m_docId = docId;
@@ -147,8 +162,14 @@ namespace WkCocos
 		}
 		else if (isMode(Mode::OFFLINE))
 		{
+#ifdef _DEBUG
+			++m_saveRequest;
+#endif //_DEBUG
 			if (m_localdata)
 			{
+#ifdef _DEBUG
+				++m_saveSuccess;
+#endif //_DEBUG
 				//no queue for local save at the moment as local save is assumed (wrongly) synchronous for now.
 				++m_saved;
 				m_localdata->saveData(m_name, m_rawData, m_key);
@@ -239,6 +260,9 @@ namespace WkCocos
 
 		if (err.id == m_current_save)
 		{
+#ifdef _DEBUG
+			++m_saveFail;
+#endif //_DEBUG
 			if (!err.errorMessage.compare("timeout"))
 			{
 				events()->emit<Error>(this->getId(), ErrorType::SAVE_TIMEOUT_ERROR);

@@ -250,6 +250,23 @@ namespace WkCocos
 		*/
 		unsigned short m_saved;
 		entityx::Entity::Id m_current_save;
+
+#ifdef _DEBUG
+		/**
+		* Save request count
+		*/
+		int			m_saveRequest;
+
+		/**
+		* Save request success count
+		*/
+		int			m_saveSuccess;
+
+		/**
+		* Save request fail count
+		*/
+		int			m_saveFail;
+#endif //_DEBUG
 	};
 
 }// namespace WkCocos
