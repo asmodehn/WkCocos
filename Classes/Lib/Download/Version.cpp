@@ -18,6 +18,7 @@ namespace WkCocos
             LogStream::create();
             auto l = LogStream::get();
             if ( l->getAppenders().size() == 0 ) l->addAppender(new LogAppender());
+            LOG_DEBUG << "Version default constructor" << std::endl;
         }
 
 	    Version::Version(std::string vstr, char delim)
@@ -25,6 +26,7 @@ namespace WkCocos
             LogStream::create();
             auto l = LogStream::get();
             if ( l->getAppenders().size() == 0 ) l->addAppender(new LogAppender());
+            LOG_DEBUG << "Version constructor " << vstr << " delim : " << delim << std::endl;
             m_version = split(vstr,delim);
         }
 
@@ -33,6 +35,9 @@ namespace WkCocos
             LogStream::create();
             auto l = LogStream::get();
             if ( l->getAppenders().size() == 0 ) l->addAppender(new LogAppender());
+            LOG_DEBUG << "Version constructor : ";
+            for ( auto n : version) LOG_DEBUG << n;
+            LOG_DEBUG << std::endl;
             m_version = split(version);
         }
 
@@ -41,6 +46,9 @@ namespace WkCocos
             LogStream::create();
             auto l = LogStream::get();
             if ( l->getAppenders().size() == 0 ) l->addAppender(new LogAppender());
+            LOG_DEBUG << "Version constructor : ";
+            for ( auto n : version) LOG_DEBUG << n;
+            LOG_DEBUG << std::endl;
             m_version = split(version);
         }
 

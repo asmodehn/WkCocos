@@ -7,7 +7,7 @@
 #include "WkCocos/Download/Systems/DLvalidating.h"
 #include "WkCocos/Download/Systems/ProgressUpdate.h"
 
-#include "WkCocos/Utils/jni/Utils.h"
+#include "WkCocos/Utils/WkJniHelper.h"
 
 //#include "cocos2d.h"
 #include "cocostudio/CocoStudio.h"
@@ -62,6 +62,7 @@ namespace WkCocos
 		{
 			rapidjson::Document json;
 
+            CCLOG("Reading DLC Config file %s\n", json_manifest_filename.c_str());
 			std::string manifestStr = cocos2d::FileUtils::getInstance()->getStringFromFile(json_manifest_filename);
 
 			json.Parse<0>(manifestStr.c_str());
