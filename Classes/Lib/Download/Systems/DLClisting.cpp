@@ -86,14 +86,16 @@ namespace WkCocos
 					if (res != 0)
 					{
 
-						CCLOG("DLClisting can not read from %s, error code is %d", url.c_str(), res);
+						CCLOG("DLClisting can not read from %s, error code is %d - RETRYING", url.c_str(), res);
 
 						dllist->m_retries--;
 						if (0 == dllist->m_retries)
 						{
-							CCLOGERROR("DLClisting can not read from %s, error code is %d", url.c_str(), res);
+							CCLOGERROR("FATAL - DLClisting can not read from %s, error code is %d", url.c_str(), res);
 							//signal error
 							events->emit<Events::Error>(entity, "DLClisting system");
+							//destroying entity to not loop around...
+							entity.destroy();
 						}
 					}
 					else
@@ -171,7 +173,7 @@ namespace WkCocos
 
                             //TOFIx : BUG when index.html has versions that are not present on the server. -> we should check each of them before saying we can download them...
 
-                            //TOFIX : BUG when manifest have too high minimum required version. -> we should check each of them before saying we can download them...
+                            //TOFIX : BUG when manifest are missing or have syntax errors or too high minimum required version. -> we should check each of them before saying we can download them...
 
                             //this entity has now the list of data folders found on this URL.
                             entity.assign<Comp::DataVerCheck>(dllist->m_url, dllist->m_current_dataVersion, dllist->m_currentAppVersion, version_vec);

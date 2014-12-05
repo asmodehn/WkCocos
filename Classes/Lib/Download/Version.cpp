@@ -11,36 +11,49 @@ namespace WkCocos
 {
 	namespace Download
 	{
-        const std::pair<unsigned long,std::string> Version::null_convert = {0UL,"0"};
+		const unsigned long Version::failed_conversion_num = std::numeric_limits<unsigned long>::max();
+		const std::pair<unsigned long, std::string> Version::null_convert = { 0UL, "0" };
 
-	    Version::Version()
+		Version::Version()
+			:m_version({null_convert})
         {
             LogStream::create();
             auto l = LogStream::get();
             if ( l->getAppenders().size() == 0 ) l->addAppender(new LogAppender());
+            LOG_DEBUG << "Version default constructor" << std::endl;
         }
 
 	    Version::Version(std::string vstr, char delim)
+			:m_version({null_convert})
         {
             LogStream::create();
             auto l = LogStream::get();
             if ( l->getAppenders().size() == 0 ) l->addAppender(new LogAppender());
+            LOG_DEBUG << "Version constructor " << vstr << " delim : " << delim << std::endl;
             m_version = split(vstr,delim);
         }
 
         Version::Version(std::vector<unsigned long> version)
+			:m_version({null_convert})
         {
             LogStream::create();
             auto l = LogStream::get();
             if ( l->getAppenders().size() == 0 ) l->addAppender(new LogAppender());
+            LOG_DEBUG << "Version constructor : ";
+            for ( auto n : version) LOG_DEBUG << n;
+            LOG_DEBUG << std::endl;
             m_version = split(version);
         }
 
         Version::Version(std::vector<std::string> version)
+			:m_version({ null_convert })
         {
             LogStream::create();
             auto l = LogStream::get();
             if ( l->getAppenders().size() == 0 ) l->addAppender(new LogAppender());
+            LOG_DEBUG << "Version constructor : ";
+            for ( auto n : version) LOG_DEBUG << n;
+            LOG_DEBUG << std::endl;
             m_version = split(version);
         }
 
@@ -81,16 +94,20 @@ namespace WkCocos
             std::vector< std::pair<unsigned long,std::string> > resv;
             for ( std::string nstr : version_vec )
             {
+                unsigned long n;
                 try
                 {
-                    unsigned long n = ToolBox::stoul(nstr);
-                    resv.push_back(std::make_pair(n,nstr));
+                    n = ToolBox::stoul(nstr);
                 }
                 catch (std::out_of_range oor)
                 {
-                    unsigned long n = failed_conversion_num;
-                    resv.push_back(std::make_pair(n,nstr)); // here we keep original str value. it might be needed for accurate comparison later.
+                    n = failed_conversion_num;
                 }
+                catch (std::invalid_argument ia)
+                {
+                    n = 0;
+                }
+                resv.push_back(std::make_pair(n,nstr));// here we keep original str value. it might be needed for accurate comparison later.
             }
             return resv;
         }
@@ -100,17 +117,14 @@ namespace WkCocos
             std::vector< std::pair<unsigned long,std::string> > resv;
             for ( unsigned long n : version_vec )
             {
-                //std::ostringstream ss;
-                //ss << n;
-                //resv.push_back(std::make_pair(n,ss.str()));
-                resv.push_back(std::make_pair(n,std::to_string(n)));
+                resv.push_back(std::make_pair(n,ToolBox::to_string(n)));
             }
             return resv;
 	    }
 
         std::pair<unsigned long, std::string>& Version::operator[](int i)
         {
-            if ( i >= m_version.size())
+            if ( i >= m_version.size() )
             {
                 m_version.resize(i+1,null_convert);
             }

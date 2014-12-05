@@ -17,7 +17,7 @@ APP_CPPFLAGS += -DCC_ENABLE_CHIPMUNK_INTEGRATION=1
 
 #APP_DEBUG is set by using NDK_DEBUG command line option
 ifeq ($(APP_DEBUG),true)
-    APP_CPPFLAGS += -DCOCOS2D_DEBUG=1 -DSOOMLA_FAKE_BUY
+    APP_CPPFLAGS += -DCOCOS2D_DEBUG=1 -D_DEBUG -DSOOMLA_FAKE_BUY
 endif
 
 #soomla flags needs to be enabled in release mode to test real purchases

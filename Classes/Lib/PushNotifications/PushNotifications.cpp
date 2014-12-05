@@ -14,6 +14,8 @@
 #define  LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG,LOG_TAG,__VA_ARGS__)
 #endif
 
+#include "WkCocos/Utils/WkJniHelper.h"
+
 namespace WkCocos
 {
 	namespace PushNotifications
@@ -22,32 +24,24 @@ namespace WkCocos
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
 		void PushNotifications::schedule(int id, long when, std::string title, std::string message)
 		{
+			cocos2d::JniMethodInfo j_scheduleMI;
+			jobject instance = WkCocos::Utils::WkJniHelper::getPushNotificationManager();
+            CCLOG("Calling com/gameparkstudio/wkcocos/lib/PushNotificationsManager/schedule(JLjava/lang/String;Ljava/lang/String;)I");
+            if (instance && cocos2d::JniHelper::getMethodInfo(j_scheduleMI, "com/gameparkstudio/wkcocos/lib/PushNotificationsManager", "schedule", "(IJLjava/lang/String;Ljava/lang/String;)V"))
+            {
+                //building arguments
+                jint jid(id);
+                jlong jwhen(when);
+                jstring jtitle = cocos2d::JniHelper::string2jstring(title.c_str());
+                jstring jmessage = cocos2d::JniHelper::string2jstring(message.c_str());
 
-			cocos2d::JniMethodInfo j_getInstanceMI;
-			cocos2d::JniMethodInfo j_signInMI;
-			CCLOG("Calling com/gameparkstudio/wkcocos/lib/PushNotificationsManager/getInstance()Lcom/gameparkstudio/wkcocos/lib/PushNotificationsManager");
-			if (cocos2d::JniHelper::getStaticMethodInfo(j_getInstanceMI, "com/gameparkstudio/wkcocos/lib/PushNotificationsManager", "getInstance", "()Lcom/gameparkstudio/wkcocos/lib/PushNotificationsManager;"))
-			{
-				jobject instance = j_getInstanceMI.env->CallStaticObjectMethod(j_getInstanceMI.classID, j_getInstanceMI.methodID);
-				CCLOG("Calling com/gameparkstudio/wkcocos/lib/PushNotificationsManager/schedule(JLjava/lang/String;Ljava/lang/String;)I");
-				if (instance && cocos2d::JniHelper::getMethodInfo(j_signInMI, "com/gameparkstudio/wkcocos/lib/PushNotificationsManager", "schedule", "(IJLjava/lang/String;Ljava/lang/String;)V"))
-				{
-					//building arguments
-					jint jid(id);
-					jlong jwhen(when);
-					jstring jtitle = cocos2d::JniHelper::string2jstring(title.c_str());
-					jstring jmessage = cocos2d::JniHelper::string2jstring(message.c_str());
+                j_scheduleMI.env->CallIntMethod(instance, j_scheduleMI.methodID, jid, jwhen, jtitle, jmessage);
 
-					j_signInMI.env->CallIntMethod(instance, j_signInMI.methodID, jid, jwhen, jtitle, jmessage);
+                j_scheduleMI.env->DeleteLocalRef(jtitle);
+                j_scheduleMI.env->DeleteLocalRef(jmessage);
 
-					j_getInstanceMI.env->DeleteLocalRef(jtitle);
-					j_getInstanceMI.env->DeleteLocalRef(jmessage);
-
-				}
-				j_getInstanceMI.env->DeleteLocalRef(j_getInstanceMI.classID);
-				j_getInstanceMI.env->DeleteLocalRef(instance);
-			}
-
+            }
+            j_scheduleMI.env->DeleteLocalRef(instance);
 		}
 
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32 || CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
