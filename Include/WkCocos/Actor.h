@@ -36,7 +36,7 @@ namespace WkCocos
 		virtual ~Actor();
 
         //Getting the ID of this Actor
-		ActorID getId();
+		ActorID getId() const;
 
 	};
 

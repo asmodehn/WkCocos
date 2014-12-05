@@ -240,26 +240,26 @@ namespace WkCocos
 	{
 		if (err.id == m_current_load)
 		{
-			if (!err.errorMessage.compare("timeout"))
+			m_current_load = entityx::Entity::Id();// load finished
+			//current load requests has errored
+			if (--(m_loaded) == 0) // if last answer came back
 			{
-				events()->emit<Error>(this->getId(), ErrorType::LOAD_TIMEOUT_ERROR);
-			}
-			else
-			{
-				m_current_load = entityx::Entity::Id();// load finished
-				//current load requests has errored
-				if (--(m_loaded) == 0) // if last answer came back
+				//CCLOG("user data saved : %s", data.c_str());
+				if (!err.errorMessage.compare("timeout"))
 				{
-					//CCLOG("user data saved : %s", data.c_str());
+					events()->emit<Error>(this->getId(), ErrorType::LOAD_TIMEOUT_ERROR);
+				}
+				else
+				{
 					events()->emit<Error>(this->getId(), ErrorType::LOAD_UNKNOWN_ERROR); //TODO : check for and trigger more errors type
 				}
-				else //if we have many saves queued, we cancel all except last one, and we process it
-				{					// ^^^^^ maybe loads?
-					m_loaded = 0;
-					requestLoadData();
-					//no need to trigger errors here, if a saves succeed we are fine...
-				}										// ^^^^^ maybe loads?
 			}
+			else //if we have many saves queued, we cancel all except last one, and we process it
+			{					// ^^^^^ maybe loads?
+				m_loaded = 0;
+				requestLoadData();
+				//no need to trigger errors here, if a saves succeed we are fine...
+			}										// ^^^^^ maybe loads?
 		}
 
 		if (err.id == m_current_save)
@@ -267,25 +267,25 @@ namespace WkCocos
 #ifdef _DEBUG
 			++m_saveFail;
 #endif //_DEBUG
-			if (!err.errorMessage.compare("timeout"))
+			m_current_save = entityx::Entity::Id();// save finished
+			//current save requests has errored
+			if (--(m_saved) == 0) // if last answer came back
 			{
-				events()->emit<Error>(this->getId(), ErrorType::SAVE_TIMEOUT_ERROR);
-			}
-			else
-			{
-				m_current_save = entityx::Entity::Id();// save finished
-				//current save requests has errored
-				if (--(m_saved) == 0) // if last answer came back
+				//CCLOG("user data saved : %s", data.c_str());
+				if (!err.errorMessage.compare("timeout"))
 				{
-					//CCLOG("user data saved : %s", data.c_str());
+					events()->emit<Error>(this->getId(), ErrorType::SAVE_TIMEOUT_ERROR);
+				}
+				else
+				{
 					events()->emit<Error>(this->getId(), ErrorType::SAVE_UNKNOWN_ERROR); //TODO : check for and trigger more errors type
 				}
-				else //if we have many saves queued, we cancel all except last one, and we process it
-				{
-					m_saved = 0;
-					requestSaveData(m_rawData);
-					//no need to trigger errors here, if a saves succeed we are fine...
-				}
+			}
+			else //if we have many saves queued, we cancel all except last one, and we process it
+			{
+				m_saved = 0;
+				requestSaveData(m_rawData);
+				//no need to trigger errors here, if a saves succeed we are fine...
 			}
 		}
 	}

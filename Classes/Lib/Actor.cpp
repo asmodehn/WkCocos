@@ -42,7 +42,7 @@ namespace WkCocos
         }
 	}
 
-	ActorID Actor::getId()
+	ActorID Actor::getId() const
 	{
 		return m_id;
 	}
