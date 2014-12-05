@@ -92,7 +92,7 @@ void DownloadingUI::receive(const WkCocos::Download::Events::DownloadOptions &dl
     //title //ERROR Thonburi doesnt have => or ->
     auto verdlTitle = cocos2d::ui::Text::create(to_string(dlo.m_current_version) + " upgrade to " + dlo.m_url, "Thonburi", 21);
     cocos2d::Vec2 posanchor = cocos2d::Vec2(0, m_widget->getContentSize().height /2);
-    verdlTitle->setPosition(posanchor + cocos2d::Vec2((float)20, pos));
+    verdlTitle->setPosition(posanchor + cocos2d::Vec2(20.f, pos));
     m_widget->addChild(verdlTitle);
     pos+=posincr;
 
@@ -105,7 +105,7 @@ void DownloadingUI::receive(const WkCocos::Download::Events::DownloadOptions &dl
             verdlLabel->setColor(cocos2d::Color3B::RED);
             verdlLabel->setString(verdlLabel->getString() + " FORCE UPDATE");
 	    }
-        verdlLabel->setPosition(posanchor + cocos2d::Vec2((float)20, pos));
+        verdlLabel->setPosition(posanchor + cocos2d::Vec2(20.f, pos));
         m_widget->addChild(verdlLabel);
         pos += posincr;
 	}

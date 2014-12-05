@@ -3,7 +3,7 @@
 
 #include <string>
 #include <vector>
-//#include <limits>
+#include <limits>
 
 namespace WkCocos
 {
@@ -13,7 +13,7 @@ namespace WkCocos
 	    {
 	        public:
 
-				static const unsigned long failed_conversion_num = /*std::numeric_limits<unsigned long>::max()*/ ULONG_MAX;
+				static const unsigned long failed_conversion_num = std::numeric_limits<unsigned long>::max();
 				static const char default_delim = '.';
 				static const std::pair<unsigned long, std::string> null_convert;
 
@@ -70,7 +70,7 @@ namespace WkCocos
 
             private:
 
-				std::vector<std::pair<unsigned long, std::string>> m_version = {/*null_convert*/};
+				std::vector<std::pair<unsigned long, std::string>> m_version = {null_convert};
 	    };
 
 

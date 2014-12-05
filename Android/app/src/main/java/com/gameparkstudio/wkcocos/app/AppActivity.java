@@ -3,16 +3,12 @@ package com.gameparkstudio.wkcocos.app;
 import android.app.NotificationManager;
 import android.os.Bundle;
 import com.gameparkstudio.wkcocos.lib.MainActivity;
-import com.gameparkstudio.wkcocos.lib.WkJniHelper;
 
 public class AppActivity extends MainActivity {
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
-        //TODO : can we do that in MainActivity in lib ??
-        WkJniHelper.getInstance().setActivity(this);
     }
 
     @Override protected void onPause() {
@@ -28,11 +24,15 @@ public class AppActivity extends MainActivity {
 
     public String getVersionName()
     {
-        return "0";
+        //gradle
+        String versionName = BuildConfig.VERSION_NAME;
+        return versionName;
     }
 
     public int getVersionCode()
     {
-        return 0;
+        //gradle // careful : current package !
+        int versionCode = BuildConfig.VERSION_CODE;
+        return versionCode;
     }
 }

@@ -89,16 +89,20 @@ namespace WkCocos
             std::vector< std::pair<unsigned long,std::string> > resv;
             for ( std::string nstr : version_vec )
             {
+                unsigned long n;
                 try
                 {
-                    unsigned long n = ToolBox::stoul(nstr);
-                    resv.push_back(std::make_pair(n,nstr));
+                    n = ToolBox::stoul(nstr);
                 }
                 catch (std::out_of_range oor)
                 {
-                    unsigned long n = failed_conversion_num;
-                    resv.push_back(std::make_pair(n,nstr)); // here we keep original str value. it might be needed for accurate comparison later.
+                    n = failed_conversion_num;
                 }
+                catch (std::invalid_argument ia)
+                {
+                    n = 0;
+                }
+                resv.push_back(std::make_pair(n,nstr));// here we keep original str value. it might be needed for accurate comparison later.
             }
             return resv;
         }
