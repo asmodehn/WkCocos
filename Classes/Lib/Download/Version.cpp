@@ -11,9 +11,11 @@ namespace WkCocos
 {
 	namespace Download
 	{
-        const std::pair<unsigned long,std::string> Version::null_convert = {0UL,"0"};
+		const unsigned long Version::failed_conversion_num = std::numeric_limits<unsigned long>::max();
+		const std::pair<unsigned long, std::string> Version::null_convert = { 0UL, "0" };
 
-	    Version::Version()
+		Version::Version()
+			:m_version({null_convert})
         {
             LogStream::create();
             auto l = LogStream::get();
@@ -22,6 +24,7 @@ namespace WkCocos
         }
 
 	    Version::Version(std::string vstr, char delim)
+			:m_version({null_convert})
         {
             LogStream::create();
             auto l = LogStream::get();
@@ -31,6 +34,7 @@ namespace WkCocos
         }
 
         Version::Version(std::vector<unsigned long> version)
+			:m_version({null_convert})
         {
             LogStream::create();
             auto l = LogStream::get();
@@ -42,6 +46,7 @@ namespace WkCocos
         }
 
         Version::Version(std::vector<std::string> version)
+			:m_version({ null_convert })
         {
             LogStream::create();
             auto l = LogStream::get();
