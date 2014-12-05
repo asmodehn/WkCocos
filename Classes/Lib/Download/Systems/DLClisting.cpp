@@ -86,14 +86,16 @@ namespace WkCocos
 					if (res != 0)
 					{
 
-						CCLOG("DLClisting can not read from %s, error code is %d", url.c_str(), res);
+						CCLOG("DLClisting can not read from %s, error code is %d - RETRYING", url.c_str(), res);
 
 						dllist->m_retries--;
 						if (0 == dllist->m_retries)
 						{
-							CCLOGERROR("DLClisting can not read from %s, error code is %d", url.c_str(), res);
+							CCLOGERROR("FATAL - DLClisting can not read from %s, error code is %d", url.c_str(), res);
 							//signal error
 							events->emit<Events::Error>(entity, "DLClisting system");
+							//destroying entity to not loop around...
+							entity.destroy();
 						}
 					}
 					else
@@ -153,13 +155,17 @@ namespace WkCocos
                             // we will update to latest version available if and only if our current version is not under the minimum version of Downloadable content.
                             Version force_update_version;
 
-                            CCLOG("Checking for Force update required : %s < %s", dllist->m_current_dataVersion.toString().c_str() , version_vec.front().toString().c_str() );
+                            CCLOG("Checking for Force update required : %s < %s", to_string(dllist->m_current_dataVersion).c_str() , to_string(version_vec.front()).c_str() );
                             if ( dllist->m_current_dataVersion < version_vec.front() // if current data MAJOR.minor.build is lower than lowest data MAJOR.minor.build
-                                 || dllist->m_currentAppVersion < version_vec.front() && ( ! dllist->m_currentAppVersion.isSame(0, version_vec.front() ) || ! dllist->m_currentAppVersion.isSame(1, version_vec.front() )) // if current app MAJOR.minor is lower than lowest data MAJOR.minor
+                                 || ( dllist->m_currentAppVersion[0] < version_vec.front()[0] || dllist->m_currentAppVersion[1] < version_vec.front()[1] ) // if current app MAJOR.minor is lower than lowest data MAJOR.minor
                                )
                             {
                                 force_update_version = version_vec.back();
-                                CCLOG("Force update required detected : %s", force_update_version.toString().c_str());
+                                CCLOG("Force update required detected : %s", to_string(force_update_version).c_str());
+                            }
+                            else
+                            {
+                                CCLOG("Force update not required.");
                             }
 
                             //emit event
@@ -167,10 +173,12 @@ namespace WkCocos
 
                             //TOFIx : BUG when index.html has versions that are not present on the server. -> we should check each of them before saying we can download them...
 
-                            //TOFIX : BUG when manifest have too high minimum required version. -> we should check each of them before saying we can download them...
+                            //TOFIX : BUG when manifest are missing or have syntax errors or too high minimum required version. -> we should check each of them before saying we can download them...
 
                             //this entity has now the list of data folders found on this URL.
                             entity.assign<Comp::DataVerCheck>(dllist->m_url, dllist->m_current_dataVersion, dllist->m_currentAppVersion, version_vec);
+
+                            CCLOG("Comp::DataVerCheck assigned.");
                         }
                         else
                         {

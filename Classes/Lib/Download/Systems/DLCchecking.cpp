@@ -60,6 +60,7 @@ namespace WkCocos
 					entityx::ptr<Comp::DataVerCheck> dllist = entity.component<Comp::DataVerCheck>();
 					std::string url = dllist->m_url;
 
+                    CCLOG("Comp::DataVerCheck detected for %s", url.c_str());
 					if (!dllist->m_verlist.empty())
 					{
 						//order the list of versions ascendantly
@@ -68,7 +69,7 @@ namespace WkCocos
 
 						//we need to check if the version url is valid ( contains a manifest.json )
 						std::string manifest_path = "manifest.json";
-						url += "/" + dllist->m_verlist.back().toString() + "/" + manifest_path;
+						url += "/" + to_string(dllist->m_verlist.back()) + "/" + manifest_path;
 						m_manifest = "";
 						CCLOG("DLCchecking reading from %s", url.c_str());
 
@@ -127,7 +128,7 @@ namespace WkCocos
 								    Version version(dataVersionstr);
 								    Version maversion(minAppVersionstr);
 								    //guarantee same major + minor version number
-								    if (version.isSame(0,dllist->m_current_dataVersion) && version.isSame(1,dllist->m_current_dataVersion) )
+								    if (version[0] == dllist->m_current_dataVersion[0] && version[1] == dllist->m_current_dataVersion[1] )
                                     {
                                         if(dllist->m_current_dataVersion <= version) //if we have the exact same data version : developer update or current version hotfix.
                                         {
@@ -161,13 +162,13 @@ namespace WkCocos
 										entityx::Entity newentity = es->create();
 										newentity.assign<Comp::LocalFile>(filename);
 										newentity.assign<Comp::RemoteMD5>(filehash);
-										newentity.assign<Comp::RemoteFile>(dllist->m_url + "/" + dllist->m_verlist.back().toString(), filename);
+										newentity.assign<Comp::RemoteFile>(dllist->m_url + "/" + to_string(dllist->m_verlist.back()), filename);
 
 										newentity.assign<Comp::ProgressValue>(1);
 									}
 
 
-									//downloading only the last verison should always be enough ( avoiding too many downloads - keeping all data for one version in same place )
+									//downloading only the last version should always be enough ( avoiding too many downloads - keeping all data for one version in same place )
 									//if (dllist->m_verlist.empty()) //if we checked all versions
 									//{
 									entity.remove<Comp::DataVerCheck>();

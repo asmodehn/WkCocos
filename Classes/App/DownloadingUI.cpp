@@ -12,7 +12,7 @@
 #include "WkPlatform_WkCocos.h"
 #endif
 
-#include "WkCocos/Utils/jni/Utils.h"
+#include "WkCocos/Utils/WkJniHelper.h"
 
 #define MANIFEST_FILENAME "manifest.json"
 
@@ -73,7 +73,8 @@ void DownloadingUI::DLCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::Tou
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32 || CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
 		WkCocos::Download::Version curVersion("v" + std::string(WK_WkCocos_VERSION));
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-        WkCocos::Download::Version curVersion("v" + WkCocos::Utils::jni::Utils::getVersionName());
+        WkCocos::Download::Version curVersion("v" + WkCocos::Utils::WkJniHelper::getVersionName());
+
 #endif
             m_dlmgr->addDataDownload(curVersion ,MANIFEST_FILENAME);
             m_dlStarted = true;
@@ -85,26 +86,26 @@ void DownloadingUI::receive(const WkCocos::Download::Events::DownloadOptions &dl
 {
 	LOG_DEBUG << "Received DownloadOptions Event !" << std::endl;
 
-    int posincr = -40;
-    int pos = posincr;
+    float posincr = -40;
+    float pos = posincr;
 
     //title //ERROR Thonburi doesnt have => or ->
-    auto verdlTitle = cocos2d::ui::Text::create(dlo.m_current_version.toString() + " upgrade to " + dlo.m_url, "Thonburi", 21);
+    auto verdlTitle = cocos2d::ui::Text::create(to_string(dlo.m_current_version) + " upgrade to " + dlo.m_url, "Thonburi", 21);
     cocos2d::Vec2 posanchor = cocos2d::Vec2(0, m_widget->getContentSize().height /2);
-    verdlTitle->setPosition(posanchor + cocos2d::Vec2(20,pos));
+    verdlTitle->setPosition(posanchor + cocos2d::Vec2(20.f, pos));
     m_widget->addChild(verdlTitle);
     pos+=posincr;
 
 	//display the list of possible URL.
     for ( auto v : dlo.m_version_vec )
 	{
-	    auto verdlLabel = cocos2d::ui::Text::create(v.toString(), "Thonburi", 21);
+	    auto verdlLabel = cocos2d::ui::Text::create(to_string(v), "Thonburi", 21);
 	    if ( v == dlo.m_force_update)
 	    {
             verdlLabel->setColor(cocos2d::Color3B::RED);
             verdlLabel->setString(verdlLabel->getString() + " FORCE UPDATE");
 	    }
-        verdlLabel->setPosition(posanchor + cocos2d::Vec2(20,pos));
+        verdlLabel->setPosition(posanchor + cocos2d::Vec2(20.f, pos));
         m_widget->addChild(verdlLabel);
         pos += posincr;
 	}
@@ -112,13 +113,13 @@ void DownloadingUI::receive(const WkCocos::Download::Events::DownloadOptions &dl
 
 void DownloadingUI::receive(const WkCocos::Download::Events::DownloadAdvised &dla)
 {
-	LOG_DEBUG << "Received DownloadAdvised Event : " << dla.m_version.toString() << std::endl;
+	LOG_DEBUG << "Received DownloadAdvised Event : " << dla.m_version << std::endl;
 
 	//if we started the advised download already : display the url and version.
 	if ( dla.m_started)
     {
         auto lbar = getChildByName<cocos2d::ui::LoadingBar*>("LoadingBar");
-        auto verdlLabel = cocos2d::ui::Text::create(dla.m_version.toString(), "Thonburi", 21);
+        auto verdlLabel = cocos2d::ui::Text::create(to_string(dla.m_version), "Thonburi", 21);
         verdlLabel->setPosition(lbar->getPosition());
         m_widget->addChild(verdlLabel);
     }

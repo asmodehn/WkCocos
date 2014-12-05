@@ -50,7 +50,7 @@ namespace WkCocos
 		static std::string to_string(T value)
 		{
 			std::ostringstream os;
-			//os << value;
+			os << value;
 			return os.str();
 		}
 
