@@ -122,7 +122,7 @@ namespace WkCocos
             return resv;
 	    }
 
-        std::pair<unsigned long, std::string>& Version::operator[](int i)
+        std::pair<unsigned long, std::string>& Version::operator[](size_t i)
         {
             if ( i >= m_version.size() )
             {
@@ -197,7 +197,7 @@ namespace WkCocos
         std::ostream& operator<<(std::ostream& os, const Version& v)
         {
             os << "v";
-            for ( auto idx = 0; idx < v.m_version.size(); ++idx )
+            for ( size_t idx = 0; idx < v.m_version.size(); ++idx )
             {
                 if ( idx ) os << Version::default_delim;
                 os << v.m_version[idx].second;

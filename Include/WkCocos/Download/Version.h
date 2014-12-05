@@ -40,7 +40,7 @@ namespace WkCocos
 				* overloading subscript operator. increase the size of the vector if needed
 				* retrieve from integer version or from string version vector depending on the type needed
 				*/
-				std::pair<unsigned long, std::string>& operator[](int i);
+				std::pair<unsigned long, std::string>& operator[](size_t i);
 
 				/**
 				* return the size of the vectors ( must always be the same )
