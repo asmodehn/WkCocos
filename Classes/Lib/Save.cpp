@@ -93,6 +93,11 @@ namespace WkCocos
 
 	bool Save::requestSaveData(std::string data)
 	{
+		if (m_rawData == data)
+		{
+			LOG_DEBUG << "Save requested but data are similar, dropping..."<<std::endl;
+			return false;
+		}
 
 		bool saved = true;
 		m_rawData = data;
