@@ -80,6 +80,20 @@ SUITE(Version)
 		CHECK( to_string(v1) == "v0.1.2.3" );
 	}
 
+    TEST(toString_failconvert_3)
+	{
+	    WkCocos::Download::Version v1("v0.1.128454779843708");
+
+		CHECK( to_string(v1) == "v0.1.128454779843708" );
+	}
+
+    TEST(toString_failconvert_4)
+	{
+	    WkCocos::Download::Version v1("v0.1.2.128454779843708");
+
+		CHECK( to_string(v1) == "v0.1.2.128454779843708" );
+	}
+
     //equals
     TEST(equals_3_case_1)
     {
