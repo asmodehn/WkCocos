@@ -1,11 +1,17 @@
-#ifndef __SAVING_SCENE_H__
-#define __SAVING_SCENE_H__
+#ifndef __TEST_SCENE_H__
+#define __TEST_SCENE_H__
 
 #include "WkCocos/Scene.h"
 
 #include "entityx/entityx.h"
 
 #include "ui/CocosGUI.h"
+
+#include "WkCocos/Download/Download.h"
+#include "WkCocos/Download/Events/Error.h"
+
+#include "WkCocos/Preload/Preload.h"
+#include "WkCocos/Preload/Events/Error.h"
 
 #include "WkCocos/OnlineData/OnlineDataManager.h"
 #include "WkCocos/LocalData/LocalDataManager.h"
@@ -14,7 +20,7 @@
 class TestScene : public WkCocos::Scene, public entityx::Receiver<TestScene>
 {
 public:
-		
+
 	virtual bool init();
 
 	// implement the "static create()" method manually
@@ -39,9 +45,14 @@ public:
 	void receive(const WkCocos::LocalData::Events::Error &LD);
 	void receive(const MyPlayer::Error &PL);
 
-protected:
+	void receive(const WkCocos::Download::Events::Error &de);
+	void receive(const WkCocos::Preload::Events::Error &pe);
 
+protected:
 	TestScene();
+
+	WkCocos::Download::Download * m_downloadManager;
+	WkCocos::Preload::Preload * m_preloadManager;
 
 	std::string currentUI;
 
@@ -55,4 +66,4 @@ protected:
 
 };
 
-#endif // __SAVING_SCENE_H__
+#endif // __TEST_SCENE_H__

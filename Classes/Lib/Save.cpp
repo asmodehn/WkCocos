@@ -12,6 +12,11 @@ namespace WkCocos
 		, m_onSaving()
 		, m_loaded(0)
 		, m_saved(0)
+#ifdef _DEBUG
+		, m_saveRequest(0)
+		, m_saveSuccess(0)
+		, m_saveFail(0)
+#endif //_DEBUG
 	{
 		m_saveModes[static_cast<int>(mode)] = 1;
 
@@ -32,6 +37,7 @@ namespace WkCocos
 
 		if (isMode(Mode::ONLINE)) //no encryption online
 		{
+			events()->emit<Loading>(this->getId(), this->m_name, m_rawData);
 			if (m_onlinedata)
 			{
 				++m_loaded;
@@ -63,6 +69,7 @@ namespace WkCocos
 
 		if (isMode(Mode::OFFLINE))
 		{
+			events()->emit<Loading>(this->getId(), this->m_name, m_rawData);
 			if (m_localdata)
 			{
 				++m_loaded;
@@ -86,10 +93,16 @@ namespace WkCocos
 
 	bool Save::requestSaveData(std::string data)
 	{
+		if (m_rawData == data)
+		{
+			LOG_DEBUG << "Save requested but data are similar, dropping..."<<std::endl;
+			return false;
+		}
+
 		bool saved = true;
 		m_rawData = data;
 
-		LOG_WARNING << "requested save of " << m_rawData << std::endl;
+		LOG_DEBUG << "requested save of " << m_rawData << std::endl;
 
 		if (isMode(Mode::ONLINE)) //no encryption online
 		{
@@ -98,10 +111,17 @@ namespace WkCocos
 				++m_saved;
 				if (m_saved == 1) // we process first save only. others will be queued ( and intermediate will be skipped as useless )
 				{
+					events()->emit<Saving>(this->getId(), this->m_name, m_rawData);
+#ifdef _DEBUG
+					++m_saveRequest;
+#endif //_DEBUG
 					if (m_docId.size() > 0)
 					{
-						m_current_save = m_onlinedata->save(m_user, m_name, m_docId, m_rawData, [=](std::string saveName, std::string docId, std::string data)
+						m_current_save = m_onlinedata->save(m_user, m_name, m_docId, m_rawData, [=](const std::string& saveName, const std::string& docId, const std::string& data)
 						{
+#ifdef _DEBUG
+							++m_saveSuccess;
+#endif //_DEBUG
 							m_current_save = entityx::Entity::Id();// save finished
 							//we do not modify local data to not lose more recent changes.
 							if (--(this->m_saved) == 0) // if last answer came back
@@ -118,8 +138,11 @@ namespace WkCocos
 					}
 					else
 					{
-						m_current_save = m_onlinedata->saveNew(m_user, m_name, m_rawData, [=](std::string saveName, std::string docId, std::string data)
+						m_current_save = m_onlinedata->saveNew(m_user, m_name, m_rawData, [=](const std::string& saveName, const std::string& docId, const std::string& data)
 						{
+#ifdef _DEBUG
+							++m_saveSuccess;
+#endif //_DEBUG
 							m_current_save = entityx::Entity::Id();// save finished
 							//storing docId to mark creation of save
 							this->m_docId = docId;
@@ -147,8 +170,15 @@ namespace WkCocos
 		}
 		else if (isMode(Mode::OFFLINE))
 		{
+			events()->emit<Saving>(this->getId(), this->m_name, m_rawData);
+#ifdef _DEBUG
+			++m_saveRequest;
+#endif //_DEBUG
 			if (m_localdata)
 			{
+#ifdef _DEBUG
+				++m_saveSuccess;
+#endif //_DEBUG
 				//no queue for local save at the moment as local save is assumed (wrongly) synchronous for now.
 				++m_saved;
 				m_localdata->saveData(m_name, m_rawData, m_key);
@@ -215,49 +245,52 @@ namespace WkCocos
 	{
 		if (err.id == m_current_load)
 		{
-			if (!err.errorMessage.compare("timeout"))
+			m_current_load = entityx::Entity::Id();// load finished
+			//current load requests has errored
+			if (--(m_loaded) == 0) // if last answer came back
 			{
-				events()->emit<Error>(this->getId(), ErrorType::LOAD_TIMEOUT_ERROR);
-			}
-			else
-			{
-				m_current_load = entityx::Entity::Id();// load finished
-				//current load requests has errored
-				if (--(m_loaded) == 0) // if last answer came back
+				//CCLOG("user data saved : %s", data.c_str());
+				if (!err.errorMessage.compare("timeout"))
 				{
-					//CCLOG("user data saved : %s", data.c_str());
+					events()->emit<Error>(this->getId(), ErrorType::LOAD_TIMEOUT_ERROR);
+				}
+				else
+				{
 					events()->emit<Error>(this->getId(), ErrorType::LOAD_UNKNOWN_ERROR); //TODO : check for and trigger more errors type
 				}
-				else //if we have many saves queued, we cancel all except last one, and we process it
-				{					// ^^^^^ maybe loads?
-					m_loaded = 0;
-					requestLoadData();
-					//no need to trigger errors here, if a saves succeed we are fine...
-				}										// ^^^^^ maybe loads?
 			}
+			else //if we have many saves queued, we cancel all except last one, and we process it
+			{					// ^^^^^ maybe loads?
+				m_loaded = 0;
+				requestLoadData();
+				//no need to trigger errors here, if a saves succeed we are fine...
+			}										// ^^^^^ maybe loads?
 		}
 
 		if (err.id == m_current_save)
 		{
-			if (!err.errorMessage.compare("timeout"))
+#ifdef _DEBUG
+			++m_saveFail;
+#endif //_DEBUG
+			m_current_save = entityx::Entity::Id();// save finished
+			//current save requests has errored
+			if (--(m_saved) == 0) // if last answer came back
 			{
-				events()->emit<Error>(this->getId(), ErrorType::SAVE_TIMEOUT_ERROR);
-			}
-			else
-			{
-				m_current_save = entityx::Entity::Id();// save finished
-				//current save requests has errored
-				if (--(m_saved) == 0) // if last answer came back
+				//CCLOG("user data saved : %s", data.c_str());
+				if (!err.errorMessage.compare("timeout"))
 				{
-					//CCLOG("user data saved : %s", data.c_str());
+					events()->emit<Error>(this->getId(), ErrorType::SAVE_TIMEOUT_ERROR);
+				}
+				else
+				{
 					events()->emit<Error>(this->getId(), ErrorType::SAVE_UNKNOWN_ERROR); //TODO : check for and trigger more errors type
 				}
-				else //if we have many saves queued, we cancel all except last one, and we process it
-				{
-					m_saved = 0;
-					requestSaveData(m_rawData);
-					//no need to trigger errors here, if a saves succeed we are fine...
-				}
+			}
+			else //if we have many saves queued, we cancel all except last one, and we process it
+			{
+				m_saved = 0;
+				requestSaveData(m_rawData);
+				//no need to trigger errors here, if a saves succeed we are fine...
 			}
 		}
 	}

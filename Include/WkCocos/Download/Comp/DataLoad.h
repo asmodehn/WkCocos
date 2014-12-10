@@ -1,7 +1,9 @@
-#ifndef __DFGAME_DOWNLOAD_ENTITY_COMP_DATALOAD_H__
-#define __DFGAME_DOWNLOAD_ENTITY_COMP_DATALOAD_H__
+#ifndef __WKCOCOS_DOWNLOAD_ENTITY_COMP_DATALOAD_H__
+#define __WKCOCOS_DOWNLOAD_ENTITY_COMP_DATALOAD_H__
 
 #include "entityx/entityx.h"
+#include "WkCocos/Utils/ToolBox.h"
+#include "WkCocos/Download/Version.h"
 
 namespace WkCocos
 {
@@ -10,31 +12,31 @@ namespace WkCocos
 		namespace Comp
 		{
 			struct DataListDownload : entityx::Component<DataListDownload> {
-				DataListDownload(std::string url, std::string current_version, std::string minAppVersion, unsigned short retries = 3)
+				DataListDownload(std::string url, Version current_dataVersion, Version appVersion, unsigned short retries = 3)
 				: m_url(url)
-				, m_current_version(current_version)
-				, m_current_minAppVersion(minAppVersion)
+				, m_current_dataVersion(current_dataVersion)
+				, m_currentAppVersion(appVersion)
 				, m_retries(retries)
 				{}
 
-				std::string m_current_version;
-				std::string m_current_minAppVersion;
+				Version m_current_dataVersion;
+				Version m_currentAppVersion;
 				std::string m_url;
 				unsigned short m_retries;
 			};
 
 			struct DataVerCheck : entityx::Component<DataVerCheck> {
-				DataVerCheck(std::string url, std::string current_version, std::string minAppVersion, std::vector<std::string> verlist, unsigned short retries = 3)
+				DataVerCheck(std::string url, Version current_dataVersion, Version appVersion, std::vector<Version> verlist, unsigned short retries = 3)
 				: m_url(url)
-				, m_current_version(current_version)
-				, m_current_minAppVersion(minAppVersion)
+				, m_current_dataVersion(current_dataVersion)
+				, m_currentAppVersion(appVersion)
 				, m_verlist(verlist)
 				, m_retries(retries)
 				{}
 
-				std::vector<std::string> m_verlist;
-				std::string m_current_version;
-				std::string m_current_minAppVersion;
+				std::vector<Version> m_verlist;
+				Version m_current_dataVersion;
+				Version m_currentAppVersion;
 				std::string m_url;
 				unsigned short m_retries;
 			};
@@ -52,4 +54,4 @@ namespace WkCocos
 	}//namespace Download
 }//namespace WkCocos
 
-#endif // __DFGAME_DOWNLOAD_ENTITY_COMP_DATALOAD_H__
+#endif // __WKCOCOS_DOWNLOAD_ENTITY_COMP_DATALOAD_H__

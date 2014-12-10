@@ -25,6 +25,11 @@ public:
 
 	};
 
+	struct ShopInitialized : entityx::Event < ShopInitialized >
+	{
+
+	};
+
 	entityx::EventManager logic_events;
 
 	void localDataError()
@@ -41,7 +46,7 @@ public:
 	{
 		return *(m_options.get());
 	}
-	
+
 	WkCocos::Shop::Shop& getShop()
 	{
 		return *(m_shop.get());
@@ -61,17 +66,24 @@ public:
 public:
 	GameLogic(std::string app_access_key, std::string app_secret_key);
 	~GameLogic();
-	
+
 	//overall game concepts
 	std::unique_ptr<MyPlayer> m_player;
 	std::unique_ptr<WkCocos::Shop::Shop> m_shop;
 	std::unique_ptr<MyOptions> m_options;
 
+    void receive(WkCocos::Helper::GameLogic::TimerInit const & ti);
+
 	void receive(const MyPlayer::LoggedIn& player_loggedin)
 	{
 		logic_events.emit<Player_LoggedIn>();
 	}
-	
+
+	void receive(const WkCocos::Shop::Shop::StoreControllerInitialized& scInit)
+	{
+		logic_events.emit<ShopInitialized>();
+	}
+
 private:
 	//static utility method to run independently of when instance is constructed.
 	static std::unique_ptr<WkCocos::Shop::Assets> shopInit();

@@ -8,8 +8,7 @@ LOCAL_MODULE_FILENAME := libwkcocosapp
 
 LOCAL_SRC_FILES := main.cpp \
                    ../../../../../Classes/App/AppDelegate.cpp \
-                   ../../../../../Classes/App/LoadingScene.cpp \
-                   ../../../../../Classes/App/LoadingUI.cpp \
+                   ../../../../../Classes/App/DownloadingUI.cpp \
                    ../../../../../Classes/App/GameLogic.cpp \
                    ../../../../../Classes/App/MyPlayer.cpp \
                    ../../../../../Classes/App/MyOptions.cpp \
@@ -19,7 +18,7 @@ LOCAL_SRC_FILES := main.cpp \
                    ../../../../../Classes/App/ShopUI.cpp \
                    ../../../../../Classes/App/TimerUI.cpp \
                    ../../../../../Classes/App/PlayersListUI.cpp \
-                   ../../../../../Classes/App/DownloadUI.cpp \
+                   ../../../../../Classes/App/PreloadUI.cpp \
                    ../../../../../Classes/App/DocsListUI.cpp \
                    ../../../../../Classes/App/WebUI.cpp \
                    ../../../../../Classes/App/LogUI.cpp \

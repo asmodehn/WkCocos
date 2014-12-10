@@ -11,14 +11,14 @@ namespace WkCocos
 		, m_loggingin(0)
 		{
 		// Saves
-		Save* m_moreData = new Save(moreSaveName, Save::Mode::OFFLINE);
-		Save* m_timerData = new Save(timerSaveName, Save::Mode::OFFLINE);
-		m_moreData->setLocalDataMgr(m_localdata);
-		m_timerData->setLocalDataMgr(m_localdata);
-		m_save.insert(make_pair(moreSaveName, m_moreData));
-		m_save.insert(make_pair(timerSaveName, m_timerData));
-		Save::getEventManager()->subscribe<Save::Loaded>(*this);
-		Save::getEventManager()->subscribe<Save::Saved>(*this);
+		//Save* m_moreData = new Save(moreSaveName, Save::Mode::OFFLINE);
+		//Save* m_timerData = new Save(timerSaveName, Save::Mode::OFFLINE);
+		//m_moreData->setLocalDataMgr(m_localdata);
+		//m_timerData->setLocalDataMgr(m_localdata);
+		//m_save.insert(make_pair(moreSaveName, m_moreData));
+		//m_save.insert(make_pair(timerSaveName, m_timerData));
+		//Save::getEventManager()->subscribe<Save::Loaded>(*this);
+		//Save::getEventManager()->subscribe<Save::Saved>(*this);
 	}
 
 	Player::Player(std::shared_ptr<WkCocos::Timer::Timer> timer, std::shared_ptr<LocalData::LocalDataManager> localdata, std::function<std::string(std::string userid)> pw_gen_cb, std::shared_ptr<OnlineData::OnlineDataManager> onlinedata)
@@ -30,12 +30,12 @@ namespace WkCocos
 		, m_loggingin(0)
 	{
 		// Saves
-		Save* timerData = new Save(timerSaveName, Save::Mode::ONLINE);
-		timerData->setLocalDataMgr(m_localdata);
-		timerData->setOnlineDataMgr(m_onlinedata);
-		m_save.insert(make_pair(timerSaveName, timerData));
-		Save::getEventManager()->subscribe<Save::Loaded>(*this);
-		Save::getEventManager()->subscribe<Save::Saved>(*this);
+		//Save* timerData = new Save(timerSaveName, Save::Mode::ONLINE);
+		//timerData->setLocalDataMgr(m_localdata);
+		//timerData->setOnlineDataMgr(m_onlinedata);
+		//m_save.insert(make_pair(timerSaveName, timerData));
+		//Save::getEventManager()->subscribe<Save::Loaded>(*this);
+		//Save::getEventManager()->subscribe<Save::Saved>(*this);
 
 		//Exemple of additional save for player :
 		//Save* moreData = new Save(moreSaveName, Save::Mode::ONLINE);
@@ -314,9 +314,17 @@ namespace WkCocos
 	bool Player::loadData()
 	{
 		bool loaded = true;
-		for (auto save : m_save)
+		if (m_save.size() > 0)
 		{
-			loaded = save.second->requestLoadData() && loaded;
+			for (auto save : m_save)
+			{
+				loaded = save.second->requestLoadData() && loaded;
+			}
+		}
+		else
+		{
+			//no save, just log in
+			events()->emit<LoggedIn>(getId(), m_user);
 		}
 		return loaded;
 	}

@@ -12,12 +12,13 @@ LOCAL_SRC_FILES := jni.cpp \
                    ../../../../../Classes/Lib/Utils/sha1.cpp \
                    ../../../../../Classes/Lib/Utils/Crypto.cpp \
                    ../../../../../Classes/Lib/Utils/UUID.cpp \
-                   ../../../../../Classes/Lib/Utils/jni/Utils.cpp \
+                   ../../../../../Classes/Lib/Utils/WkJniHelper.cpp \
                    ../../../../../Classes/Lib/Options.cpp \
                    ../../../../../Classes/Lib/Player.cpp \
                    ../../../../../Classes/Lib/Scene.cpp \
                    ../../../../../Classes/Lib/Interface.cpp \
                    ../../../../../Classes/Lib/Download/Download.cpp \
+                   ../../../../../Classes/Lib/Download/Version.cpp \
                    ../../../../../Classes/Lib/Preload/Preload.cpp \
                    ../../../../../Classes/Lib/Utils/CocosAppender.cpp \
                    ../../../../../Classes/Lib/Utils/log/logappender.cpp \

@@ -7,6 +7,8 @@
 #include "WkCocos/Download/Systems/DLvalidating.h"
 #include "WkCocos/Download/Systems/ProgressUpdate.h"
 
+#include "WkCocos/Utils/WkJniHelper.h"
+
 //#include "cocos2d.h"
 #include "cocostudio/CocoStudio.h"
 
@@ -20,64 +22,16 @@ namespace WkCocos
 	{
 
 		Download::Download(unsigned short concurrent_downloads,
-			std::function<void(float)> progress_callback
+			std::function<void(float)> progress_callback //TODO : remove this
 			)
-			: m_concurrent_downloads(concurrent_downloads)
+			: event_manager(entityx::EventManager::make())
+            , entity_manager(entityx::EntityManager::make(event_manager))
+            , system_manager(entityx::SystemManager::make(entity_manager, event_manager))
+            , m_concurrent_downloads(concurrent_downloads)
 			, m_progress_callback(progress_callback)
 		{
 			curl_global_init(CURL_GLOBAL_DEFAULT);
-		}
 
-		Download::~Download()
-		{
-			curl_global_cleanup();
-		}
-
-		void Download::addDataDownload(const std::string json_manifest_filename)
-		{
-			rapidjson::Document json;
-
-			std::string manifestStr = cocos2d::FileUtils::getInstance()->getStringFromFile(json_manifest_filename);
-
-			json.Parse<0>(manifestStr.c_str());
-			if (json.HasParseError()) {
-				CCLOG("GetParseError %s\n", json.GetParseError());
-			}
-
-			bool dlcEnable = cocostudio::DictionaryHelper::getInstance()->getBooleanValue_json(json, "dlcEnable", "error");
-			std::string dlcUrl = cocostudio::DictionaryHelper::getInstance()->getStringValue_json(json, "dlcUrl", "error");
-			std::string minAppVersion = cocostudio::DictionaryHelper::getInstance()->getStringValue_json(json, "minAppVersion", "error");
-			std::string version = cocostudio::DictionaryHelper::getInstance()->getStringValue_json(json, "version", "0");
-
-//hack to override localhost DLC URL when we cross build for android
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-			auto locahost = dlcUrl.find("localhost");
-			if ( std::string::npos != locahost)
-			{
-				// If we can find "localhost". Replace it with emulator access to localhost.
-				dlcUrl.replace(locahost, 9, "10.0.2.2");
-			}
-#endif
-				
-			CCLOG("dlcUrl : %s", dlcUrl.c_str());
-			CCLOG("minAppVersion : %s", minAppVersion.c_str());
-			CCLOG("version : %s",version.c_str());
-
-			if (dlcEnable)
-			{
-				entityx::Entity entity = entity_manager->create();
-				entity.assign<Comp::DataListDownload>(dlcUrl, version , minAppVersion);
-				entity.assign<Comp::ProgressValue>(1);
-			}
-			else
-			{
-				CCLOG("Manifest IGNORED !");
-			}
-
-		}
-
-		void Download::configure()
-		{
 			auto dlc_list = system_manager->add<Systems::DLClisting>();
 			dlc_list->setConnectionTimeout(5);
 
@@ -88,11 +42,9 @@ namespace WkCocos
 			system_manager->add<Systems::CurlDL>(m_concurrent_downloads);
 			system_manager->add<Systems::DLvalidating>();
 			system_manager->add<Systems::ProgressUpdate>(m_progress_callback);
-		};
+            system_manager->configure();
 
-		void Download::initialize()
-		{
-			//adding writable path ( where DLC downloads) as search path. First in list
+            //adding writable path ( where DLC downloads) as search path. First in list
 			int i = 0;
 			cocos2d::FileUtils *fileUtils = cocos2d::FileUtils::getInstance();
 			std::vector<std::string> searchPaths = fileUtils->getSearchPaths();
@@ -101,7 +53,65 @@ namespace WkCocos
 			fileUtils->setSearchPaths(searchPaths);
 		}
 
-		void Download::update(double dt) 
+		Download::~Download()
+		{
+			curl_global_cleanup();
+		}
+
+		void Download::addDataDownload(Version currentVersion, const std::string json_manifest_filename)
+		{
+			rapidjson::Document json;
+
+            CCLOG("Reading DLC Config file %s\n", json_manifest_filename.c_str());
+			std::string manifestStr = cocos2d::FileUtils::getInstance()->getStringFromFile(json_manifest_filename);
+
+			json.Parse<0>(manifestStr.c_str());
+			if (json.HasParseError()) {
+				CCLOG("GetParseError %s\n", json.GetParseError());
+			}
+
+			bool dlcEnable = cocostudio::DictionaryHelper::getInstance()->getBooleanValue_json(json, "dlcEnable", false);
+			std::string dlcUrl = cocostudio::DictionaryHelper::getInstance()->getStringValue_json(json, "dlcUrl", "error");
+			std::string dataVersion = cocostudio::DictionaryHelper::getInstance()->getStringValue_json(json, "dataVersion", "0");
+
+//hack to override localhost DLC URL when we cross build for android
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+			auto locahost = dlcUrl.find("localhost");
+			if ( std::string::npos != locahost)
+			{
+				// If we can find "localhost". Replace it with emulator access to localhost.
+				dlcUrl.replace(locahost, 9, "10.0.2.2");
+			}
+#endif
+
+			CCLOG("dlcUrl : %s", dlcUrl.c_str());
+			CCLOG("dataVersion : %s", dataVersion.c_str());
+			CCLOG("dlcEnable : %s", dlcEnable ? "true" : "false");
+
+            Version dver(dataVersion);
+
+			if (dlcEnable)
+			{
+				entityx::Entity entity = entity_manager->create();
+				entity.assign<Comp::DataListDownload>(dlcUrl, dver , currentVersion);
+				entity.assign<Comp::ProgressValue>(1);
+			}
+			else
+			{
+				CCLOG("Manifest IGNORED !");
+			}
+
+		}
+
+		std::pair<int,int> Download::getCurrentProgress()
+		{
+            int downCurProgVal = system_manager->system<WkCocos::Download::Systems::ProgressUpdate>()->curProgVal;
+            int downTotProgVal = system_manager->system<WkCocos::Download::Systems::ProgressUpdate>()->totalProgValMax;
+
+            return std::make_pair(downCurProgVal,downTotProgVal);
+		}
+
+		void Download::update(double dt)
 		{
 			//listing versions avialable on DLC
 			system_manager->update<Systems::DLClisting>(dt);
@@ -109,7 +119,7 @@ namespace WkCocos
 			system_manager->update<Systems::DLCchecking>(dt);
 			//check MD5 of files existing and downloaded
 			system_manager->update<Systems::MD5checking>(dt);
-			
+
 			//do the curl calls when needed
 			system_manager->update<Systems::CurlDL>(dt);
 
@@ -120,6 +130,6 @@ namespace WkCocos
 			system_manager->update<Systems::ProgressUpdate>(dt);
 
 		}
-			
+
 	} // namespace Download
 }  // namespace WkCocos

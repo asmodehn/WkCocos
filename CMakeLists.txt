@@ -29,6 +29,7 @@
 
 #Mandatory commands to use wkcmake
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
+
 INCLUDE ( "CMake/WkCMake.cmake" )
 WkCMakeDir( "CMake" )
 
@@ -39,6 +40,18 @@ if (WIN32 AND MSVC)
 endif()
 
 #Project Declaration
+
+#getting BUILD_NUMBER
+SET(WKCOCOS_BUILD_NUMBER $ENV{BUILD_NUMBER})
+if ( NOT WKCOCOS_BUILD_NUMBER )
+    SET(WKCOCOS_BUILD_NUMBER 0)
+endif()
+message ( "build ${WKCOCOS_BUILD_NUMBER}")
+
+SET( WkCocos_VERSION "0.3.${WKCOCOS_BUILD_NUMBER}")
+
+#To change after WkCMake supports 3.0.2 as minimum required
+#WkProject( WkCocos VERSION 0.3.${WKCOCOS_BUILD_NUMBER} LANGUAGES CXX )
 WkProject( WkCocos CXX )
 
 #Configuration of custom directories
@@ -380,7 +393,7 @@ if ( ${PROJECT_NAME} STREQUAL ${CMAKE_PROJECT_NAME} )
 		# setting include directory for upper project to include it
 		set( WkCocos_INCLUDE_DIRS ${WkCocos_INCLUDE_DIRS} "depends/unittest-cpp")
 
-		WkTestBuild( autotest AutoTests/main.cpp AutoTests/Save.cpp AutoTests/StrongBox.cpp AutoTests/Actor.cpp)
+		WkTestBuild( autotest AutoTests/main.cpp AutoTests/Save.cpp AutoTests/StrongBox.cpp AutoTests/Version.cpp AutoTests/Actor.cpp)
 		target_link_libraries(autotest UnitTest++ )
 		WkTestRun( WkCocosApp autotest WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/${${PROJECT_NAME}_TEST_DIR}/${${PROJECT_NAME}_TEST_DATA_DIR} )
 

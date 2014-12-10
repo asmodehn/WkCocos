@@ -33,10 +33,10 @@ namespace WkCocos
         Actor(const Actor& );
 
         //destructor
-		~Actor();
+		virtual ~Actor();
 
         //Getting the ID of this Actor
-		ActorID getId();
+		ActorID getId() const;
 
 	};
 

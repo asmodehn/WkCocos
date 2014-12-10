@@ -12,20 +12,9 @@ import android.support.v4.app.NotificationCompat;
 
 import java.lang.System;
 
-//This is a singleton. ref : http://howtodoinjava.com/2012/10/22/singleton-design-pattern-in-java
-//when used via getInstance(), it will retrieve the context from the main activity
-//This context can be used to launch other activities
 public class PushNotificationsManager{
 
     public static final String WKCOCOS_ACTION_GENERIC_PN = "com.gameparkstudio.wkcocos.PN";
-
-    private static class LazyHolder {
-        private static final PushNotificationsManager INSTANCE = new PushNotificationsManager();
-    }
-
-    public static PushNotificationsManager getInstance() {
-        return LazyHolder.INSTANCE;
-    }
 
     //to manage alarms
     AlarmManager am;
@@ -36,11 +25,11 @@ public class PushNotificationsManager{
     BroadcastReceiver br;
 
     //Setting the Main Activity upon creation, for later revival via scheduled PN
-    public boolean setActivity(Activity pnClickActivity) {
+    public PushNotificationsManager(Activity pnClickActivity) {
         appPNClickActivity = pnClickActivity;
         am = (AlarmManager) appPNClickActivity.getSystemService(appPNClickActivity.ALARM_SERVICE);
 
-        //we have an activity, we can now respond whenreceiving alarm :
+        //we have an activity, we can now respond when receiving alarm :
         br = new BroadcastReceiver() {
             @Override
             public void onReceive(Context c, Intent i) {
@@ -66,8 +55,6 @@ public class PushNotificationsManager{
             }
 
         };
-
-        return true;
     }
 
     public void schedule(int id, long when, String title, String message) {

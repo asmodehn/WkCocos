@@ -3,7 +3,8 @@
 #include "WkCocosApp/SavingUI.h"
 #include "WkCocosApp/ShopUI.h"
 #include "WkCocosApp/TimerUI.h"
-#include "WkCocosApp/DownloadUI.h"
+#include "WkCocosApp/PreloadUI.h"
+#include "WkCocosApp/DownloadingUI.h"
 #include "WkCocosApp/ErrorUI.h"
 #include "WkCocosApp/PlayersListUI.h"
 #include "WkCocosApp/DocsListUI.h"
@@ -20,6 +21,7 @@
 TestScene::TestScene()
 : Scene()
 {
+
 }
 
 TestScene::~TestScene()
@@ -110,12 +112,22 @@ bool TestScene::init()
 	shopui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.67f));
 	//*/
 
-	//DownloadUI
-	DownloadUI* dlui = new DownloadUI();
+	//PreloadUI
+	PreloadUI* plui = new PreloadUI();
+	plui->setEnabled(false);
+	plui->setVisible(false);
+	addInterface(PreloadUI::id,plui);
+	plui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.5f));
+	plui->getPreloadManager()->getEventManager()->subscribe<WkCocos::Preload::Events::Error>(*this);
+	//*/
+
+	//DownloadingUI
+	DownloadingUI* dlui = new DownloadingUI();
 	dlui->setEnabled(false);
 	dlui->setVisible(false);
-	addInterface(DownloadUI::id, dlui);
+	addInterface(DownloadingUI::id,dlui);
 	dlui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.5f));
+	dlui->getDownloadManager()->getEventManager()->subscribe<WkCocos::Download::Events::Error>(*this);
 	//*/
 
 	//WebUI
@@ -142,12 +154,12 @@ bool TestScene::init()
 	gameui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.5f));
 	//*/
 
-	//activating first UI : 
+	//activating first UI :
 	saveui->setEnabled(true);
 	saveui->setVisible(true);
 	currentUI = SavingUI::id;
 	m_titleLabel->setString(currentUI);
-	
+
 	m_time = cocos2d::ui::Text::create("", "Thonburi", 20);
 	m_time->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, /*closeItem->getPositionY()*/ visibleSize.height - 20));
 	addChild(m_time);
@@ -155,7 +167,7 @@ bool TestScene::init()
 	g_gameLogic->getOnlineDataManager().getEventManager()->subscribe<WkCocos::OnlineData::Events::Error>(*this);
 	g_gameLogic->getLocalDataManager().getEventManager()->subscribe<WkCocos::LocalData::Events::Error>(*this);
 	g_gameLogic->getPlayer().getEventManager()->subscribe<MyPlayer::Error>(*this);
-	
+
 	return true;
 }
 
@@ -245,7 +257,7 @@ void TestScene::receive(const WkCocos::OnlineData::Events::Error &OD)
 	/**
 	* Handling all possible Online Errors here
 	*/
-	if (OD.httpErrorCode == -1 && OD.app42ErrorCode == 0) 
+	if (OD.httpErrorCode == -1 && OD.app42ErrorCode == 0)
 	{	// could not resolve host : api.shephertz.com; Host not found
 		// unknown SSL protocol error in connection to api.shephertz.com:443
 		error_CB(errormsg.str()
@@ -281,6 +293,28 @@ void TestScene::receive(const WkCocos::OnlineData::Events::Error &OD)
 	}
 }
 
+void TestScene::receive(const WkCocos::Preload::Events::Error &pe)
+{
+        error_CB(pe.msg
+			, [=](){
+
+		}
+			, [=](){
+
+		});
+}
+
+void TestScene::receive(const WkCocos::Download::Events::Error &de)
+{
+        error_CB(de.msg
+			, [=](){
+
+		}
+			, [=](){
+
+		});
+}
+
 void TestScene::receive(const MyPlayer::Error &player_error)
 {
 	std::stringstream errormsg;
@@ -295,7 +329,7 @@ void TestScene::receive(const MyPlayer::Error &player_error)
 		, [=](){
 
 	});
-	
+
 }
 
 void TestScene::error_CB(std::string msg, std::function<void()> retryCB, std::function<void()> skipCB)

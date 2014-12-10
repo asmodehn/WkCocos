@@ -4,6 +4,7 @@
 #include "WkCocos/LocalData/LocalDataManager.h"
 #include "WkCocos/OnlineData/OnlineDataManager.h"
 #include "WkCocos/Timer/Timer.h"
+#include "WkCocos/Actor.h"
 
 namespace WkCocos
 {
@@ -13,7 +14,7 @@ namespace WkCocos
 		* Hold the GameLogic information.
 		* The Game can delegate the process of updating all Managers to ONE instance of this class.
 		*/
-		class GameLogic
+		class GameLogic : WkCocos::Actor
 		{
 		public:
 
@@ -29,7 +30,7 @@ namespace WkCocos
 			{
 				return  m_gameclock;
 			}
-			
+
 			std::shared_ptr<WkCocos::LocalData::LocalDataManager> getLocalDataManager()
 			{
 				return m_localdatamngr;
@@ -40,21 +41,26 @@ namespace WkCocos
 				return m_onlinedatamngr;
 			}
 
-			/**
-			* Events manager to subscribe to to receive any GameLogic Events
-			*/
-			entityx::ptr<entityx::EventManager> gamelogic_events;
-			
+			struct TimerInit : public WkCocos::Event<TimerInit>
+			{
+			    TimerInit(WkCocos::ActorID id)
+			    : WkCocos::Event<TimerInit>(id)
+                {
+			    }
+			};
+
 			/**
 			* constructor for online game
+			* This will trigger TimerInit upon completion
 			*/
-			GameLogic(std::string app_access_key, std::string app_secret_key, std::function<void()> gameclock_init_cb);
+			GameLogic(std::string app_access_key, std::string app_secret_key);
 
 			/**
 			* constructor for local game
+			* This will trigger TimerInit upon completion
 			*/
-			GameLogic(std::function<void()> gameclock_init_cb);
-			
+			GameLogic();
+
 
 		protected:
 			std::shared_ptr<Timer::Timer> m_gameclock;

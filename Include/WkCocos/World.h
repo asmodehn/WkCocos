@@ -26,7 +26,7 @@ namespace WkCocos
 			: m_id(id)
 		{}
 
-		ActorID getSenderID() {
+		ActorID getSenderID() const {
 			return m_id;
 		}
 	};

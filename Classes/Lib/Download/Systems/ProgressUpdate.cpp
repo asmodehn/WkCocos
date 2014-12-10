@@ -15,10 +15,10 @@ namespace WkCocos
 			{
 			}
 
-			void ProgressUpdate::update(entityx::ptr<entityx::EntityManager> es, entityx::ptr<entityx::EventManager> events, double dt) 
+			void ProgressUpdate::update(entityx::ptr<entityx::EntityManager> es, entityx::ptr<entityx::EventManager> events, double dt)
 			{
 				unsigned int new_curProgVal = 0;
-				for (auto entity : es->entities_with_components<Comp::ProgressValue>()) 
+				for (auto entity : es->entities_with_components<Comp::ProgressValue>())
 				{
 					entityx::ptr<Comp::ProgressValue> pv = entity.component<Comp::ProgressValue>();
 					new_curProgVal += pv->progval;
@@ -31,13 +31,16 @@ namespace WkCocos
 				}
 
 				curProgVal = new_curProgVal;
-				if (totalProgValMax)
-					setProgressPercent(1.0f - (float)curProgVal / (float)totalProgValMax);
-				else //nothing to do
-					setProgressPercent(1.0f);
+				if ( setProgressPercent)
+                {
+                    if (totalProgValMax)
+                        setProgressPercent(1.0f - (float)curProgVal / (float)totalProgValMax);
+                    else //nothing to do
+                        setProgressPercent(1.0f);
+                }
 
 			};
-		
+
 		}//namespace Systems
 	}//namespace Download
 }//namespace WkCocos

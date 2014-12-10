@@ -24,7 +24,7 @@ namespace WkCocos
 		*/
 		static cocos2d::ui::Widget * load(std::string filepath, bool reuse_from_cache = true);
 		static void forget(std::string filepath);
-		
+
 		/**
 		* Constructor
 		* @param filepath the path of the file
@@ -46,7 +46,7 @@ namespace WkCocos
 		{
 			return m_widget;
 		}
-		
+
 		/**
 		* set the position of the widget
 		*/
@@ -66,12 +66,38 @@ namespace WkCocos
 		/**
 		* showing the widget ( and a webview if webview is in its children )
 		*/
-		void setVisible(bool visible);
+		virtual void setVisible(bool visible);
+
+		/**
+		* check if the widget is visible
+		*/
+		virtual bool isVisible() const;
 
 		/**
 		* Adds a child
 		*/
 		virtual void addChild(cocos2d::Node * child);
+
+        /**
+         * Gets a child from the container with its name
+         *
+         * @param name   An identifier to find the child node.
+         *
+         * @return a Node object whose name equals to the input parameter
+         *
+         * @since v3.2
+         */
+        virtual cocos2d::Node* getChildByName(const std::string& name) const;
+
+        /**
+         * Gets a child from the container with its name that can be cast to Type T
+         *
+         * @param name   An identifier to find the child node.
+         *
+         * @return a Node with the given name that can be cast to Type T
+        */
+        template <typename T>
+        inline T getChildByName(const std::string& name) const { return static_cast<T>(getChildByName(name)); }
 
 		/**
 		* Removes a child
@@ -102,7 +128,7 @@ namespace WkCocos
 		* it will generate an empty Interface
 		*/
 		Interface();
-	
+
 		/**
 		* Widget root
 		*/
@@ -131,7 +157,7 @@ namespace WkCocos
 
 		friend class Scene;
 	};
-	
+
 }//namespace dfgame
 
 #endif // __WKCOCOS_INTERFACE_H__

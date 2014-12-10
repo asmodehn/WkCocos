@@ -4,7 +4,8 @@
 #include "WkCocos/WkCocos.h"
 
 #include "GameLogic.h"
-#include "LoadingScene.h"
+
+#include "TestScene.h"
 
 /**
 @brief    The cocos2d Application.
@@ -18,7 +19,7 @@ public:
     virtual ~AppDelegate();
 
 	virtual void initGLContextAttrs();
-	
+
     /**
     @brief    Implement Director and Scene init code here.
     @return true    Initialize success, app continue.
@@ -48,7 +49,7 @@ private:
 	/**
 	* First Loading Scene
 	*/
-	LoadingScene* m_loadscene;
+	TestScene* m_testscene;
 
 	/**
 	* Log appender: Console
