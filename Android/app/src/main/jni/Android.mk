@@ -23,6 +23,8 @@ LOCAL_SRC_FILES := main.cpp \
                    ../../../../../Classes/App/WebUI.cpp \
                    ../../../../../Classes/App/LogUI.cpp \
 				   ../../../../../Classes/App/GameUI.cpp \
+				   ../../../../../Classes/App/GPGSManager.cpp \
+				   ../../../../../Classes/App/GPGameServicesUI.cpp \
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../../../../Include
 

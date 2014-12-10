@@ -41,5 +41,4 @@ android {
 dependencies {
     compile project(':cocos2dx')
     compile project(':cocos2dx-android-store')
-    compile 'com.android.support:appcompat-v7:19.+'
 }
