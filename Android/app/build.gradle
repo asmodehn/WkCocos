@@ -40,8 +40,8 @@ android {
         minSdkVersion 10
         targetSdkVersion 19
         //versionName can go up to "9.999.build"
-        versionName "0.999." + buildNumber
-        versionCode ((0*10000) + buildNumber) // max should be 2 147 483 647
+        versionName "0.3." + buildNumber
+        versionCode ((3*10000) + buildNumber) // max should be 2 147 483 647
     }
 
     flavorDimensions "api","abi"
