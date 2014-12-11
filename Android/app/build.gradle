@@ -138,7 +138,7 @@ android {
         }
 
         def file = variant.outputFile
-        variant.outputFile = new File(file.parent, file.name.replace("app-","wkcocos-").replace(".apk", "-" + defaultConfig.versionName + ".apk"))
+        variant.outputFile = new File(file.parent, file.name.replace("testapp-","wkcocos-").replace(".apk", "-" + defaultConfig.versionName + ".apk"))
 
         // get the version code of each flavor
         def apiVersion = variant.productFlavors.get(0).versionCode
@@ -194,7 +194,7 @@ import groovy.swing.SwingBuilder
 
 //handling keystore password input UI
 gradle.taskGraph.whenReady { taskGraph ->
-    if(taskGraph.hasTask(':app:validateReleaseSigning')) {
+    if(taskGraph.hasTask(':testapp:validateReleaseSigning')) {
         //supporting keystore in different location
         def keypath = System.getenv("KEYSTORE")
         if(keypath != null) {
