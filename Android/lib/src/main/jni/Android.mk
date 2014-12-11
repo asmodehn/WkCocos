@@ -12,14 +12,13 @@ LOCAL_SRC_FILES := jni.cpp \
                    ../../../../../Classes/Lib/Utils/sha1.cpp \
                    ../../../../../Classes/Lib/Utils/Crypto.cpp \
                    ../../../../../Classes/Lib/Utils/UUID.cpp \
-                   ../../../../../Classes/Lib/Utils/jni/Utils.cpp \
+                   ../../../../../Classes/Lib/Utils/WkJniHelper.cpp \
                    ../../../../../Classes/Lib/Options.cpp \
                    ../../../../../Classes/Lib/Player.cpp \
                    ../../../../../Classes/Lib/Scene.cpp \
                    ../../../../../Classes/Lib/Interface.cpp \
-                   ../../../../../Classes/Lib/App42/Setup.cpp \
-                   ../../../../../Classes/Lib/App42/Login.cpp \
                    ../../../../../Classes/Lib/Download/Download.cpp \
+                   ../../../../../Classes/Lib/Download/Version.cpp \
                    ../../../../../Classes/Lib/Preload/Preload.cpp \
                    ../../../../../Classes/Lib/Utils/CocosAppender.cpp \
                    ../../../../../Classes/Lib/Utils/log/logappender.cpp \
@@ -61,8 +60,12 @@ LOCAL_SRC_FILES := jni.cpp \
                    ../../../../../Classes/Lib/Timer/Systems/TimeUpdater.cpp \
                    ../../../../../Classes/Lib/StrongBox/StrongBox.cpp \
                    ../../../../../Classes/Lib/Save.cpp \
+				   ../../../../../Classes/Lib/Actor.cpp \
+				   ../../../../../Classes/Lib/World.cpp \
                    ../../../../../Classes/Lib/WebView/UIWebView.cpp \
-                   ../../../../../Classes/Lib/WebView/UIWebViewImpl-android.cpp
+                   ../../../../../Classes/Lib/WebView/UIWebViewImpl-android.cpp \
+                   ../../../../../Classes/Lib/Helper/GameLogic.cpp \
+                   ../../../../../Classes/Lib/PushNotifications/PushNotifications.cpp
 
 #do not include this file, it's already in libcurl
 #                   ../../../../../Classes/Lib/Utils/md5.c \

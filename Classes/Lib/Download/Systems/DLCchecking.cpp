@@ -1,5 +1,6 @@
 #include "WkCocos/Download/Systems/DLCchecking.h"
 #include "WkCocos/Download/Events/Error.h"
+#include "WkCocos/Download/Events/DownloadAdvised.h"
 
 #include "WkCocos/Download/Comp/DataLoad.h"
 #include "WkCocos/Download/Comp/ProgressValue.h"
@@ -52,43 +53,23 @@ namespace WkCocos
 				curl_easy_cleanup(_curl);
 			}
 
-			std::vector<unsigned long> DLCchecking::splitVersion(std::string vstr)
-			{
-				std::vector<unsigned long> sv;
-				std::string delimiters = ".";
-				size_t current;
-				size_t next = -1;
-				do
-				{
-					current = next + 1;
-					next = vstr.find_first_of(delimiters, current);
-					std::cout << vstr.substr(current, next - current) << std::endl;
-					unsigned long tmp = 0;
-					try
-					{
-						tmp = ToolBox::stoul(vstr.substr(current, next - current));
-					}
-					catch (std::out_of_range oor)
-					{
-						tmp = LONG_MAX;
-					}
-					sv.push_back(tmp);
-				} while (next != std::string::npos);
-				return sv;
-			}
-
-
-			void DLCchecking::update(entityx::ptr<entityx::EntityManager> es, entityx::ptr<entityx::EventManager> events, double dt)
+            void DLCchecking::update(entityx::ptr<entityx::EntityManager> es, entityx::ptr<entityx::EventManager> events, double dt)
 			{
 				for (auto entity : es->entities_with_components<Comp::DataVerCheck>())
 				{
 					entityx::ptr<Comp::DataVerCheck> dllist = entity.component<Comp::DataVerCheck>();
 					std::string url = dllist->m_url;
 
+                    CCLOG("Comp::DataVerCheck detected for %s", url.c_str());
 					if (!dllist->m_verlist.empty())
 					{
+						//order the list of versions ascendantly
+						std::sort(dllist->m_verlist.begin(), dllist->m_verlist.end());
+						//needed to make sure we should check from the last one first.
+
 						//we need to check if the version url is valid ( contains a manifest.json )
-						url += "/" + dllist->m_verlist.back() + "/manifest.json";
+						std::string manifest_path = "manifest.json";
+						url += "/" + to_string(dllist->m_verlist.back()) + "/" + manifest_path;
 						m_manifest = "";
 						CCLOG("DLCchecking reading from %s", url.c_str());
 
@@ -96,7 +77,7 @@ namespace WkCocos
 						CURLcode res;
 						curl_easy_setopt(_curl, CURLOPT_URL, url.c_str());
 #ifdef _DEBUG
-						curl_easy_setopt(_curl, CURLOPT_VERBOSE, 1L);
+						//curl_easy_setopt(_curl, CURLOPT_VERBOSE, 1L);
 #endif
 						curl_easy_setopt(_curl, CURLOPT_WRITEFUNCTION, write_data);
 						curl_easy_setopt(_curl, CURLOPT_WRITEDATA, &m_manifest);
@@ -125,7 +106,7 @@ namespace WkCocos
 						}
 						else
 						{
-							//read the downloaded manifest to compare md5
+							//read the downloaded manifest to compare versions
 							rapidjson::Document json;
 							json.Parse<0>(m_manifest.c_str());
 							if (json.HasParseError()) {
@@ -140,62 +121,30 @@ namespace WkCocos
 								//do we need to update ?
 								bool dlc_update_required = false;
 
-								std::string version = cocostudio::DictionaryHelper::getInstance()->getStringValue_json(json, "version", "");
-								if (version == dllist->m_current_version) //if we have the exact same string : developer update or current version hotfix.
+                                std::string minAppVersionstr = cocostudio::DictionaryHelper::getInstance()->getStringValue_json(json, "minAppVersion", "");
+								std::string dataVersionstr = cocostudio::DictionaryHelper::getInstance()->getStringValue_json(json, "dataVersion", "");
+								if ( minAppVersionstr != "" && dataVersionstr != "") //if we cannot read the version. we dont download. better safe than sorry.
 								{
-									dlc_update_required = true;
-								}
-								else if (version.length() > 0 )  //we need to compare string to find if the online version is more recent
+								    Version version(dataVersionstr);
+								    Version maversion(minAppVersionstr);
+								    //guarantee same major + minor version number
+								    if (version[0] == dllist->m_current_dataVersion[0] && version[1] == dllist->m_current_dataVersion[1] )
+                                    {
+                                        if(dllist->m_current_dataVersion <= version) //if we have the exact same data version : developer update or current version hotfix.
+                                        {
+                                            dlc_update_required = true;
+                                            if (maversion <= dllist->m_currentAppVersion) // instead of minAppVersion we could use the current app version name from APK
+                                            {
+                                                dlc_update_allowed = true;
+                                            }
+                                        }
+                                    }
+								} // ( version != "")
+
+								if (dlc_update_required && dlc_update_allowed)
 								{
-									unsigned long lver = 0;
-									try {
-										lver = ToolBox::stoul(version);
-										CCLOG("DLC at %s has Manifest version %lu", url.c_str(), lver);
-									}
-									catch (std::out_of_range oor)
-									{
-										lver = 0; //disabling update if online version is too high ( developer version )
-									}
-
-									unsigned long lcver = 0;
-									try {
-										lcver = ToolBox::stoul(dllist->m_current_version);
-										CCLOG("Local DLC has Manifest version %lu", url.c_str(), lcver);
-									}
-									catch (std::out_of_range oor)
-									{
-										lcver = LONG_MAX; // if local version is too high, update should have been done before
-									}
-
-									if (lver > lcver) //not == to prevent LONG_MAX == LONG_MAX
-									{
-										dlc_update_required = true;
-									}
-								}
-
-								std::string minAppVersion = cocostudio::DictionaryHelper::getInstance()->getStringValue_json(json, "minAppVersion", "error");
-								if (minAppVersion != "error" && dllist->m_current_minAppVersion != "" )
-								{
-									//CAREFUL HERE with version comparison
-									std::vector<unsigned long> mav = splitVersion(minAppVersion);
-									std::vector<unsigned long> cmav = splitVersion(dllist->m_current_minAppVersion);
-
-									dlc_update_allowed = true;
-									while ( mav.size() < cmav.size() )
-									{
-										mav.push_back(0);
-									}
-									for (unsigned int i = 0; i < cmav.size(); ++i)
-									{
-										if (mav.at(i) > cmav.at(i))
-										{
-											dlc_update_allowed = false; break;
-										}
-									}
-								}//if we cannot read the minimum app version. we dont download. better safe than sorry.
-
-								if (dlc_update_allowed && dlc_update_required)
-								{
+								    //We found the advised download. we emit event and start downloading already.
+								    events->emit<Events::DownloadAdvised>(dllist->m_url , dllist->m_verlist.back(), manifest_path , true);
 
 									//prepare the list of downloads
 									const rapidjson::Value & assets = cocostudio::DictionaryHelper::getInstance()->getSubDictionary_json(json, "assets");
@@ -213,19 +162,20 @@ namespace WkCocos
 										entityx::Entity newentity = es->create();
 										newentity.assign<Comp::LocalFile>(filename);
 										newentity.assign<Comp::RemoteMD5>(filehash);
-										newentity.assign<Comp::RemoteFile>(dllist->m_url + "/" + dllist->m_verlist.back(), filename);
-										
+										newentity.assign<Comp::RemoteFile>(dllist->m_url + "/" + to_string(dllist->m_verlist.back()), filename);
+
 										newentity.assign<Comp::ProgressValue>(1);
 									}
 
 
-									//downloading only the last verison should always be enough ( avoiding too many downloads - keeping all data for one version in same place )
+									//downloading only the last version should always be enough ( avoiding too many downloads - keeping all data for one version in same place )
 									//if (dllist->m_verlist.empty()) //if we checked all versions
 									//{
 									entity.remove<Comp::DataVerCheck>();
 									//}
 
 									//we dont need to do anything more with this entity
+									//updating from the latest data url is enough.
 									entity.destroy();
 								}
 
@@ -235,13 +185,13 @@ namespace WkCocos
 							dllist->m_verlist.pop_back();
 							//In case of error, we should check the next version in stack on next update.
 							//If success this will not be done ( entity destroyed )
-							//TODO : check behavior
 
 						}
 
-						//exit this loop. one per update is enough
+						//exit this loop. one per update is enough.
+						//The remaining versions will be checked on next update.
 						break;
-			
+
 					}
 					else //no version left to check
 					{
@@ -256,7 +206,7 @@ namespace WkCocos
 				_connectionTimeout = timeout;
 			}
 
-					
+
 		}//namespace Systems
 	}//namespace Download
 }//namespace WkCocos

@@ -1,34 +1,35 @@
-# 
+#
 # Copyright (c) 2009-2014, Asmodehn's Corp.
 # All rights reserved.
 #
-# Redistribution and use in source and binary forms, with or without 
+# Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
-# 
-#     * Redistributions of source code must retain the above copyright notice, 
+#
+#     * Redistributions of source code must retain the above copyright notice,
 #       this list of conditions and the following disclaimer.
 #     * Redistributions in binary form must reproduce the above copyright
-#       notice, this list of conditions and the following disclaimer in the 
+#       notice, this list of conditions and the following disclaimer in the
 #       documentation and/or other materials provided with the distribution.
-#     * Neither the name of the Asmodehn's Corp. nor the names of its 
+#     * Neither the name of the Asmodehn's Corp. nor the names of its
 #       contributors may be used to endorse or promote products derived
 #       from this software without specific prior written permission.
-# 
+#
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 # AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
 # THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
 # PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS
-# BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
+# BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
 # CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
-# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
-# CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+# CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
 # THE POSSIBILITY OF SUCH DAMAGE.
 #
 
 #Mandatory commands to use wkcmake
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
+
 INCLUDE ( "CMake/WkCMake.cmake" )
 WkCMakeDir( "CMake" )
 
@@ -39,6 +40,18 @@ if (WIN32 AND MSVC)
 endif()
 
 #Project Declaration
+
+#getting BUILD_NUMBER
+SET(WKCOCOS_BUILD_NUMBER $ENV{BUILD_NUMBER})
+if ( NOT WKCOCOS_BUILD_NUMBER )
+    SET(WKCOCOS_BUILD_NUMBER 0)
+endif()
+message ( "build ${WKCOCOS_BUILD_NUMBER}")
+
+SET( WkCocos_VERSION "0.3.${WKCOCOS_BUILD_NUMBER}")
+
+#To change after WkCMake supports 3.0.2 as minimum required
+#WkProject( WkCocos VERSION 0.3.${WKCOCOS_BUILD_NUMBER} LANGUAGES CXX )
 WkProject( WkCocos CXX )
 
 #Configuration of custom directories
@@ -49,6 +62,12 @@ WkDocDir ( "Docs" )
 
 add_subdirectory("depends/entityx")
 include_directories( "depends/entityx")
+
+add_subdirectory("depends/unittest-cpp")
+include_directories( "depends/unittest-cpp")
+
+# setting include directory for upper project to include it
+set( WkCocos_INCLUDE_DIRS ${WkCocos_INCLUDE_DIRS} "depends/unittest-cpp")
 
 # setting include directory for upper project to include it
 set( WkCocos_INCLUDE_DIRS ${WkCocos_INCLUDE_DIRS} "depends/entityx")
@@ -139,7 +158,7 @@ elseif(APPLE)
   	${COCOS2D_ROOT}/external-bin/curl/include/${PLATFORM_FOLDER}
   )
 elseif(UNIX AND NOT CMAKE_TOOLCHAIN_FILE) #assumed linux
-include_directories ( 
+include_directories (
     /usr/include
     /usr/include/GLFW
     /usr/local/include/GLFW
@@ -157,7 +176,7 @@ link_directories(
   )
 
 elseif(CMAKE_TOOLCHAIN_FILE) #assumed Android
-#include_directories ( 
+#include_directories (
 #  ${COCOS2D_ROOT}/cocos/audio/android
 #  ${COCOS2D_ROOT}/cocos/2d
 #  ${COCOS2D_ROOT}/cocos/2d/renderer
@@ -206,7 +225,7 @@ if(WIN32)
     WkAddCXXFlags( "-MP -Qpar" )
     WkAddCXXFlags( "-Zi" )
   else(MSVC)#MINGW
-  
+
   endif(MSVC)
 elseif(APPLE)
 
@@ -250,7 +269,7 @@ set( WkCocos_INCLUDE_DIRS ${WkCocos_INCLUDE_DIRS}
 	CACHE PATH "Headers Directories"
 )
 
-#Add WkCocosApp only if we are the top project  
+#Add WkCocosApp only if we are the top project
 if ( ${PROJECT_NAME} STREQUAL ${CMAKE_PROJECT_NAME} )
 	#The app. Interface to test the library.
 	WkLibraryBuild(WkCocosApp "Classes/App")
@@ -258,12 +277,16 @@ if ( ${PROJECT_NAME} STREQUAL ${CMAKE_PROJECT_NAME} )
 	  WkCocos
 	  entityx  # needed because entityx is not a wkcmake project
 	)
-	
+
 	if ( WIN32)
 	target_link_libraries(WkCocosApp
 	  Rpcrt4.lib #needed for UUID computation on Win32 only
 	)
-	endif(WIN32)
+	elseif (UNIX)
+	target_link_libraries(WkCocosApp
+	  uuid #needed for UUID computation on Linux only
+	)
+	endif()
 
 
 	#Linking with all libraries
@@ -303,8 +326,8 @@ if ( ${PROJECT_NAME} STREQUAL ${CMAKE_PROJECT_NAME} )
 
 	#Testing on by default.
 	set(WkCocos_ENABLE_TESTS ON CACHE BOOL "Wether or not you want the project to include the tests and enable automatic testing for WkCocos")
-	
-	
+
+
 	if ( ${PROJECT_NAME}_ENABLE_TESTS ) # if the target has been defined ( tests enabled )
 		#Main test
 		if(WIN32)
@@ -359,21 +382,18 @@ if ( ${PROJECT_NAME} STREQUAL ${CMAKE_PROJECT_NAME} )
 					COMMENT
 					"Copying ${COCOS2D_ROOT}/external-bin/websockets/prebuilt/win32/websockets.dll to $<TARGET_FILE_DIR:maintest>"
 					VERBATIM)
-					
+
 		elseif (UNIX AND NOT CMAKE_TOOLCHAIN_FILE) #assumed linux
 			WkTestBuild( maintest linux/main.cpp )
 			WkTestRun( WkCocosApp maintest WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/${${PROJECT_NAME}_TEST_DIR}/${${PROJECT_NAME}_TEST_DATA_DIR} )
 		endif()
 
 		#Auto tests
-		
-		add_subdirectory("depends/unittest-cpp")
-		include_directories( "depends/unittest-cpp")
 
 		# setting include directory for upper project to include it
 		set( WkCocos_INCLUDE_DIRS ${WkCocos_INCLUDE_DIRS} "depends/unittest-cpp")
-		
-		WkTestBuild( autotest AutoTests/autotest.cpp )
+
+		WkTestBuild( autotest AutoTests/main.cpp AutoTests/Save.cpp AutoTests/StrongBox.cpp AutoTests/Version.cpp AutoTests/Actor.cpp)
 		target_link_libraries(autotest UnitTest++ )
 		WkTestRun( WkCocosApp autotest WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/${${PROJECT_NAME}_TEST_DIR}/${${PROJECT_NAME}_TEST_DATA_DIR} )
 
@@ -429,6 +449,6 @@ if ( ${PROJECT_NAME} STREQUAL ${CMAKE_PROJECT_NAME} )
 					VERBATIM)
 		endif(WIN32)
 	endif ( ${PROJECT_NAME}_ENABLE_TESTS )
-	
+
 endif(${PROJECT_NAME} STREQUAL ${CMAKE_PROJECT_NAME})
 

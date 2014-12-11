@@ -1,4 +1,5 @@
 #include "WkCocos/LocalData/Systems/JSONLoginID.h"
+#include "WkCocos/LocalData/Events/Error.h"
 #include "WkCocos/LocalData/Comp/LocalData.h"
 
 //including json from cocos
@@ -30,6 +31,7 @@ namespace WkCocos
 						{
 							if (doc.HasParseError()) {
 								CCLOG("GetParseError %s\n", doc.GetParseError());
+								events->emit<Events::Error>(entity, "JSONLogin system parse error");
 								loginid->m_load_cb("","");
 							}
 							else

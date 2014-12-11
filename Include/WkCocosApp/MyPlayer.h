@@ -11,80 +11,128 @@
 /**
 * This is the game player
 */
-class MyPlayer : public WkCocos::Player
+class MyPlayer : public WkCocos::Actor
 {
+	//delegate
+	WkCocos::Player m_player;
+
 public:
+	
+	std::shared_ptr<entityx::EventManager> getEventManager()
+	{
+		return m_player.getEventManager();
+	}
 
 	/**
 	* Constructor
 	*/
-	MyPlayer(std::shared_ptr<WkCocos::LocalData::LocalDataManager> localdatamngr, std::function<std::string(std::string userid)> pw_gen_cb, std::shared_ptr<WkCocos::OnlineData::OnlineDataManager> onlinedatamgr, std::function<void()> online_init_cb);
+	MyPlayer(std::shared_ptr<WkCocos::Timer::Timer> gameclock, std::shared_ptr<WkCocos::LocalData::LocalDataManager> localdatamngr, std::function<std::string(std::string userid)> pw_gen_cb);
+	MyPlayer(std::shared_ptr<WkCocos::Timer::Timer> gameclock, std::shared_ptr<WkCocos::LocalData::LocalDataManager> localdatamngr, std::function<std::string(std::string userid)> pw_gen_cb, std::shared_ptr<WkCocos::OnlineData::OnlineDataManager> onlinedatamgr);
 	/**
 	* Destructor
 	*/
 	virtual ~MyPlayer();
-	
 
 	/**
-	* data accessor as json string
+	* event receivers
 	*/
-	std::string get_data_json();
-
-	/**
-	* data setter from json string
-	*/
-	void set_data_json(std::string data);
+	void receive(const WkCocos::Player::LoggedIn& constructed);
+	void receive(const WkCocos::Player::Error &PL);
+	void receive(const WkCocos::Save::Loaded& loaded);
+	void receive(const WkCocos::Save::Saved& saved);
+	void receive(const WkCocos::Save::Error & save_err);
 
 	//ingame currency
 	WkCocos::StrongBox::StrongBox m_gold;
 	//premium currency
 	WkCocos::StrongBox::StrongBox m_gem;
 
+	//login for test
+	void login();
+
 	//save Data for test
-	void saveData(std::function<void()> saved_cb)
-	{
-		m_playerData.requestSaveData(saved_cb);
-	}
+	void saveData();
 
 	//load Data for test
-	void loadData(std::function<void()> loaded_cb)
+	void loadData();
+
+
+	struct LoggedIn : public WkCocos::Event < LoggedIn >
 	{
-		m_playerData.requestLoadData(loaded_cb);
+		LoggedIn(WkCocos::ActorID id)
+			: WkCocos::Event< LoggedIn >(id)
+		{}
+	};
+
+	struct Loaded : public WkCocos::Event < Loaded >
+	{
+		Loaded(WkCocos::ActorID id)
+			: WkCocos::Event< Loaded >(id)
+		{}
+	};
+
+	struct Saved : public WkCocos::Event < Saved >
+	{
+		Saved(WkCocos::ActorID id)
+			: WkCocos::Event< Saved >(id)
+		{}
+	};
+
+	struct Error : public WkCocos::Event < Error >
+	{
+		Error(WkCocos::ActorID id, std::string msg)
+			: WkCocos::Event< Error >(id)
+			, message(msg)
+		{}
+
+		std::string message;
+	};
+
+	WkCocos::Shop::Inventory* getInventory()
+	{
+		return m_player.getInventory();
 	}
 
-	//load enemy for test
-	void loadEnemy(std::string enemy_name)
+	void setupInventory(std::shared_ptr<WkCocos::Shop::Inventory> invent)
 	{
-		requestEnemyData(enemy_name);
-	}
-	
-	//test for getting users with at least one saved doc
-	void getUsersWithDocs()
-	{
-		requestUsersWithDocs();
+		m_player.setupInventory(invent);
 	}
 
-	void getUsersKeyValue(std::string key, int value, int quantity, int offset)
+	bool getAllDocsPaging(int quantity, int offset);
+
+	bool getUsersKeyValue(std::string key, int value, int quantity, int offset);
+
+	bool getUsersFromTo(std::string key, int from, int to, int quantity, int offset);
+
+	std::shared_ptr<WkCocos::OnlineData::OnlineDataManager> getOnlineDatamgr()
 	{
-		requestUsersKeyValue(key, value, quantity, offset);
+		return m_player.getOnlineDatamgr();
 	}
 
-	void getUsersFromTo(std::string key, int from, int to, int quantity, int offset)
+	std::shared_ptr<WkCocos::Timer::Timer> getTimermgr()
 	{
-		requestUsersFromTo(key, from, to, quantity, offset);
+		return m_player.getTimermgr();
 	}
 
-	//test for getting server time
-	//void getServerTime()
-	//{
-	//	requestServerTime();
-	//}
+	bool setTimer(std::string id, unsigned long secs )
+	{
+		return m_player.setTimer(id, secs);
+	}
+
+	void stopTimer(std::string id)
+	{
+		m_player.stopTimer(id);
+	}
 
 private:
 
 	const char * sCurrency = "currency";
 	const char * sGem = "gem";
 	const char * sGold = "gold";
+
+	WkCocos::Save m_save;
 	
+	bool m_loggingIn;
+
 };
 #endif // __MYPLAYER_H__

@@ -21,8 +21,6 @@ namespace WkCocos
 
 				~DLCchecking();
 
-				std::vector<unsigned long> splitVersion(std::string vstr);
-
 				void update(entityx::ptr<entityx::EntityManager> es, entityx::ptr<entityx::EventManager> events, double dt) override;
 
 				void setConnectionTimeout(unsigned long timeout);
@@ -33,7 +31,7 @@ namespace WkCocos
 				std::string m_manifest;
 
 			};
-			
+
 		}//namespace Systems
 	}//namespace Download
 }//namespace WkCocos

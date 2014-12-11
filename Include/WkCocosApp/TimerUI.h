@@ -7,13 +7,15 @@
 
 #include "WkCocos/Timer/Timer.h"
 
+#include "WkCocosApp/GameLogic.h"
+
 /**
 * This UI is the main menu UI
 */
 class TimerUI : public WkCocos::Interface, public entityx::Receiver<TimerUI>
 {
 public:
-		
+
 	static const std::string id;
 
 	/**
@@ -25,7 +27,9 @@ public:
 	* Destructor
 	*/
 	virtual ~TimerUI();
-	
+
+	void receive(const GameLogic::Player_LoggedIn &pl);
+
 	void receive(const WkCocos::Timer::Events::TimerUpdate &tu);
 	void receive(const WkCocos::Timer::Events::AlarmOff &ao);
 

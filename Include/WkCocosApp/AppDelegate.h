@@ -3,19 +3,23 @@
 
 #include "WkCocos/WkCocos.h"
 
+#include "GameLogic.h"
+
+#include "TestScene.h"
+
 /**
 @brief    The cocos2d Application.
 
 The reason for implement as private inheritance is to hide some interface call by Director.
 */
-class  AppDelegate : private cocos2d::Application
+class  AppDelegate : private cocos2d::Application, public entityx::Receiver<AppDelegate>
 {
 public:
     AppDelegate();
     virtual ~AppDelegate();
 
 	virtual void initGLContextAttrs();
-	
+
     /**
     @brief    Implement Director and Scene init code here.
     @return true    Initialize success, app continue.
@@ -35,11 +39,22 @@ public:
     */
     virtual void applicationWillEnterForeground();
 
+	/**
+	* triggered after game logic is setup
+	*/
+	void receive(const GameLogic::Player_LoggedIn& player_loggedIn);
+
 private:
+
+	/**
+	* First Loading Scene
+	*/
+	TestScene* m_testscene;
+
 	/**
 	* Log appender: Console
 	*/
-	WkCocos::CLogAppender*		m_consoleApp;
+	WkCocos::CCocosLogAppender*	m_consoleApp;
 
 	/**
 	* Log appender: File

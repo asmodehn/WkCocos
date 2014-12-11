@@ -9,13 +9,15 @@
 #include "WkCocos/Shop/Assets.h"
 #include "WkCocos/Shop/Shop.h"
 
+#include "GameLogic.h"
+
 /**
 * This UI is the main menu UI
 */
 class ShopUI : public WkCocos::Interface, public entityx::Receiver<ShopUI>
 {
 public:
-		
+
 	static const std::string id;
 
 	/**
@@ -27,12 +29,13 @@ public:
 	* Destructor
 	*/
 	virtual ~ShopUI();
-	
+
 	void update(float delta);
 
 	void buyCallback(WkCocos::Shop::Assets::VirtualCurrencyPack vcp, cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input);
 	void refreshCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input);
 
+    void receive(const GameLogic::ShopInitialized& sci);
 	void receive(const WkCocos::Shop::Shop::CurrencyBalanceChanged& cbc);
 	void receive(const WkCocos::Shop::Shop::MarketItemsRefreshed& cbc);
 
@@ -42,7 +45,7 @@ protected:
 	std::map<std::string, cocos2d::ui::Text*> m_curPackLabel;
 	std::map<std::string, cocos2d::ui::Text*> m_curPriceLabel;
 	std::map<std::string, cocos2d::ui::Button*> m_buyCurButton;
-	
+
 	cocos2d::ui::Button* m_refreshButton;
 	cocos2d::ui::Text* m_refreshLabel;
 };

@@ -3,29 +3,67 @@
 namespace WkCocos
 {
 	//constructors
-	Player::Player(std::shared_ptr<LocalData::LocalDataManager> localdata, std::function<std::string(std::string userid)> pw_gen_cb)
-		: m_localdata(localdata)
-		, m_playerData("user_data", Save::Mode::OFFLINE)
-		, player_events(entityx::EventManager::make())
+	Player::Player(std::shared_ptr<WkCocos::Timer::Timer> timer,std::shared_ptr<LocalData::LocalDataManager> localdata, std::function<std::string(std::string userid)> pw_gen_cb)
+		: m_timer(timer)
+		, m_localdata(localdata)
+		, m_inventory(std::make_shared<WkCocos::Shop::Inventory>())
 		, m_pw_gen_cb(pw_gen_cb)
-	{//registering player class in cocos update loop
-		cocos2d::Director::getInstance()->getScheduler()->schedule(std::bind(&Player::Update, this, std::placeholders::_1), this, 1.f / 15, false, "player_update");
+		, m_loggingin(0)
+		{
+		// Saves
+		//Save* m_moreData = new Save(moreSaveName, Save::Mode::OFFLINE);
+		//Save* m_timerData = new Save(timerSaveName, Save::Mode::OFFLINE);
+		//m_moreData->setLocalDataMgr(m_localdata);
+		//m_timerData->setLocalDataMgr(m_localdata);
+		//m_save.insert(make_pair(moreSaveName, m_moreData));
+		//m_save.insert(make_pair(timerSaveName, m_timerData));
+		//Save::getEventManager()->subscribe<Save::Loaded>(*this);
+		//Save::getEventManager()->subscribe<Save::Saved>(*this);
+	}
 
-		m_timer.reset(new WkCocos::Timer::Timer());
+	Player::Player(std::shared_ptr<WkCocos::Timer::Timer> timer, std::shared_ptr<LocalData::LocalDataManager> localdata, std::function<std::string(std::string userid)> pw_gen_cb, std::shared_ptr<OnlineData::OnlineDataManager> onlinedata)
+		: m_timer(timer)
+		, m_localdata(localdata)
+		, m_onlinedata(onlinedata)
+		, m_inventory(std::make_shared<WkCocos::Shop::Inventory>())
+		, m_pw_gen_cb(pw_gen_cb)
+		, m_loggingin(0)
+	{
+		// Saves
+		//Save* timerData = new Save(timerSaveName, Save::Mode::ONLINE);
+		//timerData->setLocalDataMgr(m_localdata);
+		//timerData->setOnlineDataMgr(m_onlinedata);
+		//m_save.insert(make_pair(timerSaveName, timerData));
+		//Save::getEventManager()->subscribe<Save::Loaded>(*this);
+		//Save::getEventManager()->subscribe<Save::Saved>(*this);
 
-		// Init Save
-		m_playerData.registerLoadingCallback(std::bind(&Player::set_all_data_json, this, std::placeholders::_1));
-		m_playerData.registerSavingCallback(std::bind(&Player::get_all_data_json, this));
-		m_playerData.setLocalDataMgr(m_localdata);
+		//Exemple of additional save for player :
+		//Save* moreData = new Save(moreSaveName, Save::Mode::ONLINE);
+		//moreData->setLocalDataMgr(m_localdata);
+		//moreData->setOnlineDataMgr(m_onlinedata);
+		//m_save.insert(make_pair(moreSaveName, moreData));
+
+		Save::getEventManager()->subscribe<Save::Loaded>(*this);
+		Save::getEventManager()->subscribe<Save::Saved>(*this);
+
+		m_onlinedata->getEventManager()->subscribe<WkCocos::OnlineData::Events::Error>(*this);
+
+	}
+
+	Player::~Player()
+	{
+
+	}
+
+	void Player::autologin()
+	{
+		++m_loggingin;
 
 		//tried to read existing login data.
 		m_localdata->loadLoginID([=](std::string user, std::string passwd){
 			if (user != "" && passwd != "")
 			{
-				m_user = user;
-				m_passwd = passwd;
-				m_playerData.setUserName(m_user);
-
+				setUser(user, passwd);
 				newPlayer = false;
 			}
 			else
@@ -34,70 +72,16 @@ namespace WkCocos
 
 				if (user.length() > 0 && passwd.length() > 0)
 				{
-					m_user = user;
-					m_passwd = passwd;
-					m_playerData.setUserName(m_user);
-
+					setUser(user, passwd);
 					//store unique ID
 					m_localdata->saveLoginID(m_user, m_passwd, "l0g1nS3cr3tK3y"); //TODO : encyrpt this
 
 					newPlayer = true;
 				}
 			}
-			//in any case we have here m_user != "" after asynchronous callback is done.
-		});
-	}
-
-	Player::Player(std::shared_ptr<LocalData::LocalDataManager> localdata, std::function<std::string(std::string userid)> pw_gen_cb, std::shared_ptr<OnlineData::OnlineDataManager> onlinedata, std::function<void()> online_init_cb)
-		: m_localdata(localdata)
-		, m_onlinedata(onlinedata)
-		, m_playerData("user_data", Save::Mode::ONLINE)
-		, player_events(entityx::EventManager::make())
-		, m_pw_gen_cb(pw_gen_cb)
-		, m_onlineDataLoaded_callback(online_init_cb)
-	{
-		//registering player class in cocos update loop
-		cocos2d::Director::getInstance()->getScheduler()->schedule(std::bind(&Player::Update, this, std::placeholders::_1), this, 1.f / 15, false, "player_update");
-
-		m_timer.reset(new WkCocos::Timer::Timer());
-
-		// Init Save
-		m_playerData.registerLoadingCallback(std::bind(&Player::set_all_data_json, this, std::placeholders::_1));
-		m_playerData.registerSavingCallback(std::bind(&Player::get_all_data_json, this));
-		m_playerData.setLocalDataMgr(m_localdata);
-		m_playerData.setOnlineDataMgr(m_onlinedata);
-
-		m_onlinedata->getEventManager()->subscribe<WkCocos::OnlineData::Events::Error>(*this);
-
-		//tried to read existing login data.
-		m_localdata->loadLoginID([=](std::string user, std::string passwd){
-			if (user != "" && passwd != "")
-			{
-				m_user = user;
-				m_passwd = passwd;
-				m_playerData.setUserName(m_user);
-
-				newPlayer = false;
-			}
-			else
-			{
-				createNewUserID(user, passwd);
-
-				if (user.length() > 0 && passwd.length() > 0)
-				{
-					m_user = user;
-					m_passwd = passwd;
-					m_playerData.setUserName(m_user);
-
-					//store unique ID
-					m_localdata->saveLoginID(m_user, m_passwd, "l0g1nS3cr3tK3y" ); //TODO : encyrpt this
-
-					newPlayer = true;
-				}
-			}
 			//in any case we have here m_user != ""
 
-			if (m_onlinedata && m_onlineDataLoaded_callback) //in case online data is set while we re loading loginID
+			if (m_onlinedata) //in case online data is set while we re loading loginID
 			{
 				m_onlinedata->getServerTime([=](std::string s_iso8601){
 					m_timer->setTime(s_iso8601);
@@ -112,165 +96,237 @@ namespace WkCocos
 					//autologin
 					m_onlinedata->login(m_user, m_passwd, [=](std::string body){
 						CCLOG("login done !!!");
-						//loading again to get online value
-						m_playerData.requestLoadData(m_onlineDataLoaded_callback);
+						loadData();
 					});
 				}
 			}
 			else
 			{
-				m_playerData.requestLoadData(std::function<void()>()); //we assume no callback needed there. we re loading local save.
+				loadData();
 			}
 
 		}, "l0g1nS3cr3tK3y");
-
 	}
 
-	void Player::setupInventory(std::shared_ptr<WkCocos::Shop::Inventory> shopInventory)
+	void Player::receive(const WkCocos::Save::Saved& saved_evt)
 	{
-		m_inventory = shopInventory;
+		//checking if all saves are loaded
+		bool all_saved(true);
+		for (auto save : m_save)
+		{
+			if (!save.second->isSaved())
+			{
+				all_saved = false;
+				break;
+			}
+		}
+
+		//if all saves loaded, we can trigger loaded event.
+		if (all_saved)
+		{
+			events()->emit<Saved>(getId());
+		}
 	}
 
-	bool Player::requestUsersWithDocs()
+	void Player::receive(const WkCocos::Save::Loaded& loaded_evt)
 	{
-		if (m_onlinedata)
+		auto saveit = m_save.find(loaded_evt.m_name);
+		if (m_save.end() != saveit)
 		{
-			m_onlinedata->getUsersWithDocs(m_playerData.getSaveName());
-			return true;
-		}
-		else
-			return false;
-	}
+			auto save = saveit->second;
+			if (timerSaveName == save->getName())
+			{
+				rapidjson::Document doc;
 
-	bool Player::requestUsersKeyValue(std::string key, int value, int quantity, int offset)
-	{
-		if (m_onlinedata)
-		{
-			m_onlinedata->getUsersKeyValue(m_playerData.getSaveName(), key, value, quantity, offset);
-			return true;
-		}
-		else
-			return false;
-	}
-
-	bool Player::requestUsersFromTo(std::string key, int from, int to, int quantity, int offset)
-	{
-		if (m_onlinedata)
-		{
-			m_onlinedata->getUsersFromTo(m_playerData.getSaveName(), key, from, to, quantity, offset);
-			return true;
-		}
-		else
-			return false;
-	}
-	
-	std::string Player::get_all_data_json()
-	{
-		rapidjson::Document doc;
-		// must pass an allocator when the object may need to allocate memory
-		rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
-
-		//calling get_data_json to retrieve extra game data
-		std::string extra_data_json = get_data_json();
-
-		doc.Parse<0>(extra_data_json.c_str());
-		if (doc.HasParseError())
-		{
-			//if parse error (also empty string), we ignore existing data.
-			doc.SetObject();
-		}
-
-		rapidjson::Value alarms;
-		alarms.SetArray();
-
-		entityx::ptr<WkCocos::Timer::Comp::ID> id;
-		entityx::ptr<WkCocos::Timer::Comp::Alarm> alarm;
-		for (auto entity : m_timer->getEntityManager()->entities_with_components(id, alarm))
-		{
-			rapidjson::Value time;
-			time.SetObject();
-			time.AddMember(sID, id->m_id.c_str(), allocator);
-
-			time.AddMember(sSec, alarm->m_end.tm_sec, allocator);
-			time.AddMember(sMin, alarm->m_end.tm_min, allocator);
-			time.AddMember(sHour, alarm->m_end.tm_hour, allocator);
-			time.AddMember(sMday, alarm->m_end.tm_mday, allocator);
-			time.AddMember(sMon, alarm->m_end.tm_mon, allocator);
-			time.AddMember(sYear, alarm->m_end.tm_year, allocator);
-			time.AddMember(sWday, alarm->m_end.tm_wday, allocator);
-			time.AddMember(sYday, alarm->m_end.tm_yday, allocator);
-			time.AddMember(sIsdst, alarm->m_end.tm_isdst, allocator);
-
-			alarms.PushBack(time, allocator);
-		}
-		doc.AddMember(sAlarms, alarms, allocator);
-
-		rapidjson::StringBuffer strbuf;
-		rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
-		doc.Accept(writer);
-
-		std::string data = std::string(strbuf.GetString());
-
-		return data;
-
-	}
-
-	void Player::set_all_data_json(std::string data)
-	{
-		rapidjson::Document doc;
-		doc.Parse<0>(data.c_str());
-		if (doc.HasParseError())
-		{
-			//if parse error (also empty string), we ignore existing data.
-			doc.SetObject();
-		}
-
-		if (doc.HasMember(sAlarms))
-		{
-			rapidjson::Value& alarmsarray = doc[sAlarms];
-			if (alarmsarray.Size()){
-				for (rapidjson::SizeType i = 0; i < alarmsarray.Size(); i++)
+				//all string are supposed to contain similar data.
+				//we only care about last one ( most recent ? )
+				if (save->getData().empty())
 				{
-					rapidjson::Value& time = alarmsarray[i];
+					doc.SetObject();
+				}
+				else
+				{
+					doc.Parse<0>(save->getData().c_str());
+					if (doc.HasParseError())
+					{
+						//if parse error (also empty string), we ignore existing data.
+						doc.SetObject();
+					}
+				}
 
-					struct tm temptm;
-					temptm.tm_hour = time[sHour].GetInt();
-					temptm.tm_isdst = time[sIsdst].GetInt();
-					temptm.tm_mday = time[sMday].GetInt();
-					temptm.tm_min = time[sMin].GetInt();
-					temptm.tm_mon = time[sMon].GetInt();
-					temptm.tm_sec = time[sSec].GetInt();
-					temptm.tm_wday = time[sWday].GetInt();
-					temptm.tm_yday = time[sYday].GetInt();
-					temptm.tm_year = time[sYear].GetInt();
+				if (doc.HasMember(sAlarms))
+				{
+					rapidjson::Value& alarmsarray = doc[sAlarms];
+					if (alarmsarray.Size())
+					{
+						for (rapidjson::SizeType i = 0; i < alarmsarray.Size(); i++)
+						{
+							rapidjson::Value& time = alarmsarray[i];
 
-					m_timer->setAlarm(time[sID].GetString(), temptm);
+							struct tm temptm;
+							temptm.tm_hour = time[sHour].GetInt();
+							temptm.tm_isdst = time[sIsdst].GetInt();
+							temptm.tm_mday = time[sMday].GetInt();
+							temptm.tm_min = time[sMin].GetInt();
+							temptm.tm_mon = time[sMon].GetInt();
+							temptm.tm_sec = time[sSec].GetInt();
+							temptm.tm_wday = time[sWday].GetInt();
+							temptm.tm_yday = time[sYday].GetInt();
+							temptm.tm_year = time[sYear].GetInt();
+
+							m_timer->setAlarm(time[sID].GetString(), temptm);
+						}
+					}
+				}
+
+			}
+			else if (moreSaveName == save->getName())
+			{
+				//TODO : fill in with more useful data
+			}
+
+            //checking if all saves are loaded
+            bool all_loaded(true);
+			for ( auto save : m_save)
+			{
+				if (!save.second->isLoaded())
+				{
+					all_loaded = false;
+					break;
 				}
 			}
-			doc.RemoveMember(sAlarms);
+
+			//if all saves loaded, we can trigger loaded event.
+			if (all_loaded)
+			{
+				std::map<std::string, std::string> data;
+				for (auto save : m_save)
+				{
+					data.insert(make_pair(save.first, save.second->getData()));
+				}
+				events()->emit<Loaded>(getId());
+				if (0 == --m_loggingin)
+				{
+					//if all login requests have replied we are logged in.
+					events()->emit<LoggedIn>(getId(), m_user);
+				}
+			}
+
 		}
-
-		rapidjson::StringBuffer strbuf;
-		rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
-		doc.Accept(writer);
-
-		return set_data_json(strbuf.GetString());
 	}
 
-	void Player::Update(float deltatime)
+	bool Player::getUsersKeyValue(std::string saveName, std::string key, int value, int quantity, int offset)
 	{
-		if (m_timer)
-		{
-			m_timer->update(deltatime);
-		}
-		if (m_localdata)
-		{
-			m_localdata->update(deltatime);
-		}
 		if (m_onlinedata)
 		{
-			m_onlinedata->update(deltatime);
+			m_onlinedata->getUsersKeyValue(saveName, key, value, quantity, offset);
+			return true;
 		}
+		else
+			return false;
+	}
+
+	bool Player::getUsersFromTo(std::string saveName, std::string key, int from, int to, int quantity, int offset)
+	{
+		if (m_onlinedata)
+		{
+			m_onlinedata->getUsersFromTo(saveName, key, from, to, quantity, offset);
+			return true;
+		}
+		else
+			return false;
+	}
+
+	bool Player::getAllDocsPaging(std::string saveName, int quantity, int offset)
+	{
+		if (m_onlinedata)
+		{
+			m_onlinedata->getAllDocsPaging(saveName, quantity, offset);
+			return true;
+		}
+		else
+			return false;
+	}
+
+
+	/**
+	* request a Save
+	*/
+	bool Player::saveData()
+	{
+		bool saved = true;
+		for (auto save : m_save)
+		{
+			//init json doc
+			rapidjson::Document doc;
+			rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
+			doc.SetObject();
+			//prepare string buffer
+			rapidjson::StringBuffer strbuf;
+			rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
+
+			if (timerSaveName == save.first)
+			{
+				rapidjson::Value alarms;
+				alarms.SetArray();
+
+				entityx::ptr<WkCocos::Timer::Comp::ID> id;
+				entityx::ptr<WkCocos::Timer::Comp::Alarm> alarm;
+				for (auto entity : m_timer->getEntityManager()->entities_with_components(id, alarm))
+				{
+					rapidjson::Value time;
+					time.SetObject();
+					time.AddMember(sID, id->m_id.c_str(), allocator);
+
+					time.AddMember(sSec, alarm->m_end.tm_sec, allocator);
+					time.AddMember(sMin, alarm->m_end.tm_min, allocator);
+					time.AddMember(sHour, alarm->m_end.tm_hour, allocator);
+					time.AddMember(sMday, alarm->m_end.tm_mday, allocator);
+					time.AddMember(sMon, alarm->m_end.tm_mon, allocator);
+					time.AddMember(sYear, alarm->m_end.tm_year, allocator);
+					time.AddMember(sWday, alarm->m_end.tm_wday, allocator);
+					time.AddMember(sYday, alarm->m_end.tm_yday, allocator);
+					time.AddMember(sIsdst, alarm->m_end.tm_isdst, allocator);
+
+					alarms.PushBack(time, allocator);
+				}
+				doc.AddMember(sAlarms, alarms, allocator);
+				//doc.Accept(writer);
+
+				save.second->getEventManager()->subscribe<Save::Saved>(*this);
+				//save.second->requestSaveData(strbuf.GetString());
+			}
+			else if (moreSaveName == save.first)
+			{
+				//TODO : fill in with more useful data
+			}
+
+			//save json string
+			doc.Accept(writer);
+			saved = save.second->requestSaveData(strbuf.GetString()) && saved ; //keep saving even if one fails.
+		}
+		return saved;
+	}
+
+	/**
+	* request a Load
+	*/
+	bool Player::loadData()
+	{
+		bool loaded = true;
+		if (m_save.size() > 0)
+		{
+			for (auto save : m_save)
+			{
+				loaded = save.second->requestLoadData() && loaded;
+			}
+		}
+		else
+		{
+			//no save, just log in
+			events()->emit<LoggedIn>(getId(), m_user);
+		}
+		return loaded;
 	}
 
 	void Player::receive(const WkCocos::OnlineData::Events::Error& err)
@@ -281,7 +337,7 @@ namespace WkCocos
 			//Major error : we cannot do anything, just trigger an error event.
 			//IN COCOS THREAD !!!
 			cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, err](){
-				this->player_events->emit<Error>("app42", ToolBox::itoa(err.httpErrorCode), ToolBox::itoa(err.errorMessage));
+				this->events()->emit<Error>(getId(),"app42", ToolBox::itoa(err.httpErrorCode), ToolBox::itoa(err.errorMessage));
 			});
 
 		}
@@ -297,9 +353,7 @@ namespace WkCocos
 			//if new Id is aceptable we replace old one
 			if (m_user.length() > 0 && m_passwd.length() > 0)
 			{
-				m_user = newUser;
-				m_passwd = newPasswd;
-
+				setUser(newUser, newPasswd);
 				//store unique ID
 				m_localdata->saveLoginID(m_user, m_passwd, "l0g1nS3cr3tK3y");
 			}
@@ -319,9 +373,7 @@ namespace WkCocos
 			//if new Id is aceptable we replace old one
 			if (m_user.length() > 0 && m_passwd.length() > 0)
 			{
-				m_user = newUser;
-				m_passwd = newPasswd;
-
+				setUser(newUser, newPasswd);
 				//store unique ID
 				m_localdata->saveLoginID(m_user, m_passwd, "l0g1nS3cr3tK3y");
 			}

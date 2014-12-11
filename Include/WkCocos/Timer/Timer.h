@@ -25,13 +25,20 @@ namespace WkCocos
 			* Destructor
 			*/
 			~Timer();
-			
+
 			/**
 			* Setup Alarm
 			* @param id identifier of the alarm
 			* @param alarm_date date whent he alarm will be triggered
 			*/
 			bool setAlarm(std::string id, struct tm alarm_date);
+
+			/**
+			* Get Alarm time left.
+			* @param id identifier of the alarm
+			* @return struct of time left
+			*/
+			double getAlarmTimeLeft(std::string id);
 
 			/**
 			* Stops the Alarm

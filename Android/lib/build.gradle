@@ -1,18 +1,5 @@
 //reference : http://ph0b.com/android-studio-gradle-and-ndk-integration/
 
-import groovy.transform.Field
-
-@Field
-def buildNumber = System.getenv("BUILD_VERSION")
-if(buildNumber == null) {
-    //dev build is lower versionCode
-    // so there is no accident with accidentally uploading/downloading dev version.
-    buildNumber = 0
-}
-else {
-    buildNumber=buildNumber.toInteger()
-}
-
 apply plugin: 'android-library'
 
 android {
@@ -40,66 +27,7 @@ android {
     defaultConfig {
         minSdkVersion 10
         targetSdkVersion 19
-        //versionName can go up to "9.999.build"
-        versionName "0.1." + buildNumber
-        versionCode 10000 + buildNumber // max should be 2 147 483 647
     }
-
-/* TMP no need of flavors while cpp build is done by app and not by lib.
-    flavorDimensions "api","abi"
-    //api / abi versions will be on the top 10**8 units of versionCode. that is 20 units to share
-
-    productFlavors {
-        gingerbread {
-            flavorDimension "api"
-            minSdkVersion 10
-            versionCode = 0
-        }
-//TMP remove : we dont have need for ICS build
-//        icecreamSandwich {
-//            flavorDimension "api"
-//            minSdkVersion 14
-//            versionCode = 1
-//        }
-//        //there is space for another API specialization at versionCode 20
-//TMP remove : we dont have need for x86 only build
-//        x86 {
-//            flavorDimension "abi"
-//            ndk {
-//                abiFilter "x86"
-//            }
-//            // this is the flavor part of the version code.
-//            // It must be higher than the arm one for devices supporting
-//            // both, as x86 is preferred.
-//            versionCode = 3
-//        }
-//TMP remove : we dont have need for ARM only build
-//        arm {
-//            flavorDimension "abi"
-//            ndk {
-//                abiFilter "armeabi-v7a"
-//            }
-//            versionCode = 2
-//        }
-//        mips {
-//            flavorDimension "abi"
-//            ndk {
-//                abiFilter "mips"
-//            }
-//            versionCode = 1
-//        }
-        fat {
-            flavorDimension "abi"
-            //supported cocos ABI
-            ndk {
-                abiFilters "armeabi-v7a", "x86"
-            }
-            // fat binary, lowest version code to be
-            // the last option
-            versionCode = 0
-        }
-    }
-    */
 
     buildTypes {
         release {
@@ -109,51 +37,6 @@ android {
     }
 
 }
-
-/*
-THIS SHOULD BE DONE IN APP ONLY
-
-task copyAssets(type: Copy) {
-    from '../../Resources'
-    into 'assets'
-}
-
-task ndkBuild(type: Exec, dependsOn: 'copyAssets') {
-    //windows only
-    def dependsDir = file('../../depends').absolutePath
-    def cpus = Runtime.runtime.availableProcessors() / 2
-
-    if (System.properties['os.name'].toLowerCase().contains('windows')) {
-        //windows
-        commandLine 'cmd', '/c', 'ndk-build', 'NDK_DEBUG=1', '-j', cpus, '-C', file('src/main/jni').absolutePath, 'NDK_MODULE_PATH=' + dependsDir + ';' + dependsDir + '\\cocos2dx-store\\submodules;' + dependsDir + '\\cocos2dx-store\\submodules\\soomla-cocos2dx-core\\submodules;' + dependsDir + '\\cocos2d-x;' + dependsDir + '\\cocos2d-x\\external;' + dependsDir + '\\cocos2d-x\\external-bin;' + dependsDir + '\\cocos2d-x\\cocos'
-    } else {
-        commandLine 'ndk-build', 'NDK_DEBUG=1', '-j', cpus, '-C', file('src/main/jni').absolutePath, 'NDK_MODULE_PATH=' + dependsDir + ':' + dependsDir + '/cocos2dx-store/submodules:' + dependsDir + '/cocos2dx-store/submodules/soomla-cocos2dx-core/submodules:' + dependsDir + '/cocos2d-x:' + dependsDir + '/cocos2d-x/external:' + dependsDir + '/cocos2d-x/external-bin:' + dependsDir + '/cocos2d-x/cocos'
-    }
-}
-
-tasks.withType(JavaCompile) {
-    compileTask -> compileTask.dependsOn ndkBuild
-}
-
-task cleanAssets(type: Delete) {
-    delete 'assets'
-}
-
-task ndkClean(type: Exec, dependsOn: 'cleanAssets') {
-    //windows only
-    def dependsDir = file('../../depends').absolutePath
-    def cpus = Runtime.runtime.availableProcessors() / 2
-
-    if (System.properties['os.name'].toLowerCase().contains('windows')) {
-        //windows
-        commandLine 'cmd', '/c', 'ndk-build', 'clean', 'NDK_DEBUG=1', '-j', cpus, '-C', file('src/main/jni').absolutePath, 'NDK_MODULE_PATH=' + dependsDir + ';' + dependsDir + '\\cocos2dx-store\\submodules;' + dependsDir + '\\cocos2dx-store\\submodules\\soomla-cocos2dx-core\\submodules;' + dependsDir + '\\cocos2d-x;' + dependsDir + '\\cocos2d-x\\external;' + dependsDir + '\\cocos2d-x\\external-bin;' + dependsDir + '\\cocos2d-x\\cocos'
-    } else {
-        commandLine 'ndk-build', 'clean', 'NDK_DEBUG=1', '-j', cpus, '-C', file('src/main/jni').absolutePath, 'NDK_MODULE_PATH=' + dependsDir + ':' + dependsDir + '/cocos2dx-store/submodules:' + dependsDir + '/cocos2dx-store/submodules/soomla-cocos2dx-core/submodules:' + dependsDir + '/cocos2d-x:' + dependsDir + '/cocos2d-x/external:' + dependsDir + '/cocos2d-x/external-bin:' + dependsDir + '/cocos2d-x/cocos'
-    }
-}
-
-clean.dependsOn ndkClean
-*/
 
 dependencies {
     compile project(':cocos2dx')

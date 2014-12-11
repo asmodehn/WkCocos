@@ -1,8 +1,6 @@
 #include "WkCocos/OnlineData/Systems/Storage.h"
-
+#include "WkCocos/OnlineData/Events/Error.h"
 #include "WkCocos/OnlineData/Comp/OnlineData.h"
-
-#define DB_NAME "PUBLIC"
 
 namespace WkCocos
 {
@@ -29,12 +27,24 @@ namespace WkCocos
 				{
 					if (uud->done)
 					{
+						CCLOG("Update User Data entity lived %f seconds", uud->life_time);
 						entity.remove<Comp::UpdateUserData>();
+						if (entity.component_mask() == 0)
+							entity.destroy();
 					}
 					else if (!uud->in_progress)
 					{
 						m_stor_service->UpdateDocumentByDocId(DB_NAME, uud->m_collection.c_str(), uud->m_docid.c_str(), uud->m_user_data.c_str(), uud->m_cb);
 						uud->in_progress = true;
+					}
+					else
+					{
+						uud->life_time += dt;
+						if (uud->life_time > TIMEOUT && !uud->timeout) // make sure error is emitted only once before i find out how to stop entity
+						{
+							uud->timeout = true;
+							events->emit<Events::Error>(entity.id(), "update user data");
+						}
 					}
 
 				}
@@ -44,11 +54,10 @@ namespace WkCocos
 				{
 					if (iud->done)
 					{
+						CCLOG("Insert User Data entity lived %f seconds", iud->life_time);
 						entity.remove<Comp::InsertUserData>();
 						if (entity.component_mask() == 0)
-						{
 							entity.destroy();
-						}
 					}
 					else if (!iud->in_progress)
 					{
@@ -56,25 +65,14 @@ namespace WkCocos
 						m_stor_service->InsertJsonDocument(DB_NAME, iud->m_collection.c_str(), iud->m_user_data.c_str(), iud->m_cb);
 						iud->in_progress = true;
 					}
-
-				}
-
-				entityx::ptr<Comp::GetUsersWithDocs> guwd;
-				for (auto entity : entities->entities_with_components(guwd))
-				{
-					if (guwd->done)
+					else
 					{
-						entity.remove<Comp::GetUsersWithDocs>();
-						if (entity.component_mask() == 0)
+						iud->life_time += dt;
+						if (iud->life_time > TIMEOUT && !iud->timeout) // make sure error is emitted only once before i find out how to stop entity
 						{
-							entity.destroy();
+							iud->timeout = true;
+							events->emit<Events::Error>(entity.id(), "insert user data");
 						}
-					}
-					else if (!guwd->in_progress)
-					{
-						CCLOG("Requesting full list of documents and retrieving their owners");
-						m_stor_service->FindAllDocuments(DB_NAME, guwd->m_collection.c_str(), guwd->m_cb);
-						guwd->in_progress = true;
 					}
 
 				}
@@ -84,11 +82,10 @@ namespace WkCocos
 				{
 					if (gukv->done)
 					{
+						CCLOG("Get Data By Key Value entity lived %f seconds", gukv->life_time);
 						entity.remove<Comp::GetUsersKeyValue>();
 						if (entity.component_mask() == 0)
-						{
 							entity.destroy();
-						}
 					}
 					else if (!gukv->in_progress)
 					{
@@ -99,6 +96,15 @@ namespace WkCocos
 						m_stor_service->FindDocumentsByQueryWithPaging(DB_NAME, gukv->m_collection.c_str(), query, gukv->m_quantity, gukv->m_offset, gukv->m_cb);
 						gukv->in_progress = true;
 					}
+					else
+					{
+						gukv->life_time += dt;
+						if (gukv->life_time > TIMEOUT && !gukv->timeout) // make sure error is emitted only once before i find out how to stop entity
+						{
+							gukv->timeout = true;
+							events->emit<Events::Error>(entity.id(), "get data by key and value");
+						}
+					}
 
 				}
 
@@ -107,11 +113,10 @@ namespace WkCocos
 				{
 					if (guft->done)
 					{
+						CCLOG("Get Data By Query entity lived %f seconds", guft->life_time);
 						entity.remove<Comp::GetUsersFromTo>();
 						if (entity.component_mask() == 0)
-						{
 							entity.destroy();
-						}
 					}
 					else if (!guft->in_progress)
 					{
@@ -123,6 +128,43 @@ namespace WkCocos
 
 						m_stor_service->FindDocumentsByQueryWithPaging(DB_NAME, guft->m_collection.c_str(), queryCompound, guft->m_quantity, guft->m_offset, guft->m_cb);
 						guft->in_progress = true;
+					}
+					else
+					{
+						guft->life_time += dt;
+						if (guft->life_time > TIMEOUT && !guft->timeout) // make sure error is emitted only once before i find out how to stop entity
+						{
+							guft->timeout = true;
+							events->emit<Events::Error>(entity.id(), "get data by query");
+						}
+					}
+
+				}
+
+				entityx::ptr<Comp::AllDocsPaging> adp;
+				for (auto entity : entities->entities_with_components(adp))
+				{
+					if (adp->done)
+					{
+						CCLOG("Docs List Data entity lived %f seconds", adp->life_time);
+						entity.remove<Comp::AllDocsPaging>();
+						if (entity.component_mask() == 0)
+							entity.destroy();
+					}
+					else if (!adp->in_progress)
+					{
+						CCLOG("Requesting list of documents page by page");
+						m_stor_service->FindAllDocuments(DB_NAME, adp->m_collection.c_str(), adp->m_quantity, adp->m_offset, adp->m_cb);
+						adp->in_progress = true;
+					}
+					else
+					{
+						adp->life_time += dt;
+						if (adp->life_time > TIMEOUT && !adp->timeout) // make sure error is emitted only once before i find out how to stop entity
+						{
+							adp->timeout = true;
+							events->emit<Events::Error>(entity.id(), "docs list");
+						}
 					}
 
 				}

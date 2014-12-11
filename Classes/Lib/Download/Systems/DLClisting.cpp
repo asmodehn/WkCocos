@@ -4,6 +4,8 @@
 #include "WkCocos/Download/Comp/DataLoad.h"
 #include "WkCocos/Download/Comp/ProgressValue.h"
 
+#include "WkCocos/Download/Events/DownloadOptions.h"
+
 #include "cocos2d.h"
 
 #include <curl/curl.h>
@@ -60,12 +62,14 @@ namespace WkCocos
 
 					CCLOG("DLClisting reading from %s", url.c_str());
 
+                    //cleaning up dirlist data
+                    m_dirlist.clear();
 
 					//list all files at given url
 					CURLcode res;
 					curl_easy_setopt(_curl, CURLOPT_URL, url.c_str());
 #ifdef _DEBUG
-					curl_easy_setopt(_curl, CURLOPT_VERBOSE, 1L);
+					//curl_easy_setopt(_curl, CURLOPT_VERBOSE, 1L);
 #endif
 					curl_easy_setopt(_curl, CURLOPT_WRITEFUNCTION, write_data);
 					curl_easy_setopt(_curl, CURLOPT_WRITEDATA, &m_dirlist);
@@ -82,20 +86,22 @@ namespace WkCocos
 					if (res != 0)
 					{
 
-						CCLOG("DLClisting can not read from %s, error code is %d", url.c_str(), res);
-						
+						CCLOG("DLClisting can not read from %s, error code is %d - RETRYING", url.c_str(), res);
+
 						dllist->m_retries--;
 						if (0 == dllist->m_retries)
 						{
-							CCLOGERROR("DLClisting can not read from %s, error code is %d", url.c_str(), res);
+							CCLOGERROR("FATAL - DLClisting can not read from %s, error code is %d", url.c_str(), res);
 							//signal error
 							events->emit<Events::Error>(entity, "DLClisting system");
+							//destroying entity to not loop around...
+							entity.destroy();
 						}
 					}
 					else
 					{
 						// extract what we need from the listing
-						std::vector<std::string> m_version_vec;
+						std::vector<Version> version_vec;
 
 						CCLOG("DLClisting before versions retrieval");
 						//REGEX IMPLEMENTATION GCC 4.9 required
@@ -120,7 +126,7 @@ namespace WkCocos
 						//	s = m.suffix().str();
 						//	CCLOG("DLClisting next string regex search : %s", s.c_str());
 						//}
-						
+
 						//STRING FIND IMPLEMENTATION
 						std::string s = m_dirlist;
 						std::string atag = "<a href=\"v";
@@ -133,13 +139,54 @@ namespace WkCocos
 							{
 								std::string verstr = s.substr(pos , endpos - pos );
 								CCLOG("verstr = %s ", verstr.c_str());
-								m_version_vec.push_back(verstr);
+								version_vec.push_back(Version(verstr));
 							}
 							pos = s.find(atag, endpos);
 						}
 
 						entity.remove<Comp::DataListDownload>();
-						entity.assign<Comp::DataVerCheck>(dllist->m_url, dllist->m_current_version, dllist->m_current_minAppVersion, m_version_vec);
+
+                        if ( !version_vec.empty())
+                        {
+                            //TODO order the list of versions ascendantly ( using operator< )
+                            std::sort(version_vec.begin(), version_vec.end());
+
+                            //CHECK IF WE HAVE TO UPDATE BASED ON AVAILABLE DLC VERSIONS
+                            // we will update to latest version available if and only if our current version is not under the minimum version of Downloadable content.
+                            Version force_update_version;
+
+                            CCLOG("Checking for Force update required : %s < %s", to_string(dllist->m_current_dataVersion).c_str() , to_string(version_vec.front()).c_str() );
+                            if ( dllist->m_current_dataVersion < version_vec.front() // if current data MAJOR.minor.build is lower than lowest data MAJOR.minor.build
+                                 || ( dllist->m_currentAppVersion[0] < version_vec.front()[0] || dllist->m_currentAppVersion[1] < version_vec.front()[1] ) // if current app MAJOR.minor is lower than lowest data MAJOR.minor
+                               )
+                            {
+                                force_update_version = version_vec.back();
+                                CCLOG("Force update required detected : %s", to_string(force_update_version).c_str());
+                            }
+                            else
+                            {
+                                CCLOG("Force update not required.");
+                            }
+
+                            //emit event
+                            events->emit<Events::DownloadOptions>(dllist->m_url, dllist->m_current_dataVersion, version_vec, force_update_version);
+
+                            //TOFIx : BUG when index.html has versions that are not present on the server. -> we should check each of them before saying we can download them...
+
+                            //TOFIX : BUG when manifest are missing or have syntax errors or too high minimum required version. -> we should check each of them before saying we can download them...
+
+                            //this entity has now the list of data folders found on this URL.
+                            entity.assign<Comp::DataVerCheck>(dllist->m_url, dllist->m_current_dataVersion, dllist->m_currentAppVersion, version_vec);
+
+                            CCLOG("Comp::DataVerCheck assigned.");
+                        }
+                        else
+                        {
+                            //NOTHING TO DOWNLOAD
+                            CCLOGERROR("DLClisting can not find any version on %s. Please check DLC server", url.c_str());
+							//signal error
+							events->emit<Events::Error>(entity, "DLClisting system");
+                        }
 
 						CCLOG("DLClisting after versions retrieval");
 
@@ -153,9 +200,9 @@ namespace WkCocos
 			{
 				_connectionTimeout = timeout;
 			}
-					
 
-					
+
+
 		}//namespace Systems
 	}//namespace Download
 }//namespace WkCocos

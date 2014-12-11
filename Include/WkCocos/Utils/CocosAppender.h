@@ -53,7 +53,7 @@ namespace WkCocos
 		* @param fontName Name of the font to use (must be .fnt type)
 		* @param res Resource for checkbox used for toggling input on log
 		*/
-		CocosLogAppender(cocos2d::Node* root, const std::string& fontName, const CheckBoxRes& res);
+		CocosLogAppender(cocos2d::Node* root, const std::string& fontName, const CheckBoxRes& res, cocos2d::Size widgetSize);
 
 		/**
 		* Destructor
@@ -75,6 +75,11 @@ namespace WkCocos
 		* Toggle log scroll
 		*/
 		void toggleScroll(cocos2d::Ref*, cocos2d::ui::CheckBox::EventType);
+
+		/**
+		* Toggle log visibility
+		*/
+		void toggleVisibility(cocos2d::Ref*, cocos2d::ui::CheckBox::EventType);
 
 	private:
 

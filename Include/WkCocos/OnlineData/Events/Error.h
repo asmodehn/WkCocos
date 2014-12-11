@@ -2,7 +2,6 @@
 #define __DFGAME_ONLINEDATA_EVENTS_ERROR_H__
 
 #include "entityx/entityx.h"
-//#include "WkCocos/OnlineData/Comp/OnlineData.h"
 
 namespace WkCocos
 {
@@ -12,14 +11,25 @@ namespace WkCocos
 		{
 			struct Error : public entityx::Event<Error>
 			{
-				Error(::App42::App42Response* r)
-				: httpErrorCode(r->httpErrorCode)
-				, app42ErrorCode(r->appErrorCode)
-				, errorMessage(r->errorMessage)
-				, errorDetails(r->errorDetails)
+				Error(entityx::Entity::Id a_id, ::App42::App42Response* r)
+					: id(a_id)
+					, httpErrorCode(r->httpErrorCode)
+					, app42ErrorCode(r->appErrorCode)
+					, errorMessage(r->errorMessage)
+					, errorDetails(r->errorDetails)
 				{
 				}
 
+				Error(entityx::Entity::Id a_id, std::string r)
+					: id(a_id)
+					, httpErrorCode(0)
+					, app42ErrorCode(0)
+					, errorMessage("timeout")
+					, errorDetails(r)
+				{
+				}
+
+				entityx::Entity::Id id;
 				int httpErrorCode;
 				int app42ErrorCode;
 				std::string errorMessage;

@@ -10,6 +10,9 @@
 
 #include <fstream>
 
+#define DB_NAME "PUBLIC"
+#define TIMEOUT 10.0
+
 namespace WkCocos
 {
 	namespace OnlineData
@@ -22,6 +25,8 @@ namespace WkCocos
 				
 				bool in_progress;
 				bool done;
+				bool timeout;
+				double life_time;
 				std::string m_userid;
 				std::string m_passwd;
 				std::string m_email;
@@ -35,6 +40,8 @@ namespace WkCocos
 
 				bool in_progress;
 				bool done;
+				bool timeout;
+				double life_time;
 				std::string m_userid;
 				std::string m_passwd;
 				std::function<void(void*)> m_cb;
@@ -47,6 +54,8 @@ namespace WkCocos
 
 				bool in_progress;
 				bool done;
+				bool timeout;
+				double life_time;
 				std::string m_userid;
 				std::string m_collection;
 				std::string m_docid;
@@ -55,24 +64,14 @@ namespace WkCocos
 
 			};
 
-			struct FindUserData : entityx::Component<FindUserData>
-			{
-				FindUserData(std::string userid, std::string m_collection, std::function<void(std::string)> update_cb, std::function<void()> insert_cb);
-
-				bool in_progress;
-				bool done;
-				std::string m_userid;
-				std::string m_collection;
-				std::function<void(void*)> m_cb;
-
-			};
-			
 			struct InsertUserData : entityx::Component<InsertUserData>
 			{
 				InsertUserData(std::string userid, std::string m_collection, std::string user_data, std::function<void(::App42::App42StorageResponse*)> cb);
 
 				bool in_progress;
 				bool done;
+				bool timeout;
+				double life_time;
 				std::string m_userid;
 				std::string m_collection;
 				std::string m_user_data;
@@ -82,22 +81,13 @@ namespace WkCocos
 
 			struct LoadUserData : entityx::Component<LoadUserData>
 			{
-				LoadUserData(std::string userid, std::string m_collection, std::function<void(std::string)> cb);
+				LoadUserData(std::string userid, std::string m_collection, std::function<void(::App42::App42UserResponse*)> cb);
 
 				bool in_progress;
 				bool done;
+				bool timeout;
+				double life_time;
 				std::string m_userid;
-				std::string m_collection;
-				std::function<void(void*)> m_cb;
-
-			};
-
-			struct GetUsersWithDocs : entityx::Component<GetUsersWithDocs>
-			{
-				GetUsersWithDocs(std::string m_collection, std::function<void(std::string)> cb);
-
-				bool in_progress;
-				bool done;
 				std::string m_collection;
 				std::function<void(void*)> m_cb;
 
@@ -105,10 +95,12 @@ namespace WkCocos
 
 			struct GetUsersKeyValue : entityx::Component<GetUsersKeyValue>
 			{
-				GetUsersKeyValue(std::string collection, std::string key, int value, int quantity, int offset, std::function<void(std::string)> cb);
+				GetUsersKeyValue(std::string collection, std::string key, int value, int quantity, int offset, std::function<void(std::map<std::string, std::string>, int)> cb);
 
 				bool in_progress;
 				bool done;
+				bool timeout;
+				double life_time;
 				std::string m_collection;
 				std::string m_key;
 				int m_value;
@@ -120,10 +112,12 @@ namespace WkCocos
 
 			struct GetUsersFromTo : entityx::Component<GetUsersFromTo>
 			{
-				GetUsersFromTo(std::string collection, std::string key, int from, int to, int quantity, int offset, std::function<void(std::string)> cb);
+				GetUsersFromTo(std::string collection, std::string key, int from, int to, int quantity, int offset, std::function<void(std::map<std::string, std::string>, int)> cb);
 
 				bool in_progress;
 				bool done;
+				bool timeout;
+				double life_time;
 				std::string m_collection;
 				std::string m_key;
 				int m_from;
@@ -140,6 +134,23 @@ namespace WkCocos
 
 				bool in_progress;
 				bool done;
+				bool timeout;
+				double life_time;
+				std::function<void(void*)> m_cb;
+
+			};
+
+			struct AllDocsPaging : entityx::Component<AllDocsPaging>
+			{
+				AllDocsPaging(std::string collection, int quantity, int offset, std::function<void(std::vector<std::map<std::string, std::string>>)> cb);
+
+				bool in_progress;
+				bool done;
+				bool timeout;
+				double life_time;
+				std::string m_collection;
+				int m_quantity;
+				int m_offset;
 				std::function<void(void*)> m_cb;
 
 			};

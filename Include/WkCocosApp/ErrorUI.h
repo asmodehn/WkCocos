@@ -43,6 +43,7 @@ protected:
 	cocos2d::ui::Button* m_refreshButton;
 	cocos2d::ui::Button* m_skipButton;
 	cocos2d::ui::Text* m_label;
+	cocos2d::ui::Text* m_number;
 };
 
 #endif // __ERRORUI_H__

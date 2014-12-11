@@ -20,10 +20,8 @@ namespace WkCocos
 			cocos2d::__Dictionary *storeParams = cocos2d::__Dictionary::create();
 			storeParams->setObject(cocos2d::__String::create(googlePlayLicenseKey), "androidPublicKey");
 
-			soomla::CCStoreService::initShared(assets->assets.get(), storeParams);
-
 			soomla::CCStoreEventDispatcher::getInstance()->addEventHandler(handler.get());
-
+			soomla::CCStoreService::initShared(assets->assets.get(), storeParams);
 		}
 
 		void Shop::activate()

@@ -7,7 +7,7 @@
 
 #include "WkCocos/OnlineData/Events/Error.h"
 #include "WkCocos/OnlineData/Events/PlayersList.h"
-//#include "WkCocos/OnlineData/Events/ServerTime.h"
+#include "WkCocos/OnlineData/Events/DocsList.h"
 
 #define DEFAULT_SAVE_VERSION 1
 
@@ -40,25 +40,33 @@ namespace WkCocos
 
 			/**
 			* Save User Data
+			* callback will be passed saveName, docId and data
 			*/
-			void save(const std::string& userid, const std::string& saveName, std::string user_data, std::function<void(std::string)> callback);
+			entityx::Entity::Id save(const std::string& userid, const std::string& saveName, std::string docId, std::string data, std::function<void(const std::string&, const std::string&, const std::string&)> callback, std::string key = "");
+
+			/**
+			* Save New User Data
+			* callback will be passed saveName, docId and data.
+			*/
+			entityx::Entity::Id saveNew(const std::string& userid, const std::string& saveName, std::string data, std::function<void(const std::string&, const std::string&, const std::string&)> success_callback, std::string key = "");
 
 			/**
 			* Load User Data
 			*/
-			void load(const std::string& userid, const std::string& saveName, std::function<void(std::string)> callback);
+			entityx::Entity::Id load(const std::string& userid, const std::string& saveName, std::function<void(std::string, std::vector<std::string>)> callback, std::string key = "");
 
 			/**
 			* Get Selected Users
 			*/
-			void getUsersWithDocs(const std::string& saveName);
 			void getUsersKeyValue(const std::string& saveName, const std::string& key, int value, int quantity, int offset);
-			void getUsersFromTo(const std::string& saveName, const std::string& key, int from, const int to, int quantity, int offset);
+			void getUsersFromTo(const std::string& saveName, const std::string& key, int from, int to, int quantity, int offset);
 
 			/**
 			* Get Server Time
 			*/
 			void getServerTime(std::function<void(std::string)> callback);
+
+			void getAllDocsPaging(const std::string& saveName, int quantity, int offset);
 
 			void update(double dt);
 

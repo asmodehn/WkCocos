@@ -4,44 +4,61 @@
 
 namespace WkCocos
 {
-	Save::Save(const std::string& saveName, Mode mode)
+	Save::Save(const std::string& saveName, Mode mode, std::string key)
 		: m_name(saveName)
-		, m_onLoading(nullptr)
-		, m_onSaving(nullptr)
+		, m_key(key)
+		, m_rawData("")
+		, m_onLoading()
+		, m_onSaving()
+		, m_loaded(0)
+		, m_saved(0)
+#ifdef _DEBUG
+		, m_saveRequest(0)
+		, m_saveSuccess(0)
+		, m_saveFail(0)
+#endif //_DEBUG
 	{
 		m_saveModes[static_cast<int>(mode)] = 1;
+
+		//making sure logstream exists.
+		WkCocos::LogStream::create();
+
+		//hooking us up to detect errors
+
 	}
-	
+
 	Save::~Save()
-	{}
-
-	bool Save::requestLoadData(std::function<void()> loaded_cb, std::string key)
 	{
-		/*	m_localdata->loadPlayerData([=](std::string data)
-		{
-		rapidjson::Document doc;
-		doc.Parse<0>(data.c_str());
-		if (doc.HasParseError())
-		{
-		//if parse error (also empty string), we ignore existing data.
-		doc.SetObject();
-		}
-		set_data_json(doc);
-		});*/
+	}
 
+	bool Save::requestLoadData()
+	{
 		bool loaded = true;
 
 		if (isMode(Mode::ONLINE)) //no encryption online
 		{
+			events()->emit<Loading>(this->getId(), this->m_name, m_rawData);
 			if (m_onlinedata)
 			{
-				m_onlinedata->load(m_user, m_name, [=](std::string data)
+				++m_loaded;
+				m_current_load = m_onlinedata->load(m_user, m_name, [=](std::string docId, std::vector<std::string> data)
 				{
-					m_onLoading(data);
-					CCLOG("user data loaded : %s", data.c_str());
-
-					if (loaded_cb) loaded_cb();
-				});
+					m_current_load = entityx::Entity::Id(); // load finished
+					m_docId = docId;
+					if (!data.empty())
+					{
+						m_rawData = data.back();
+					}
+					else
+					{
+						m_rawData = "";
+					}
+					//deprecated
+					if ( m_onLoading) m_onLoading(m_rawData);
+					--m_loaded;
+					events()->emit<Loaded>(getId(),m_name, m_rawData);
+					//CCLOG("user data loaded : %s", data.c_str());
+				},m_key);
 			}
 			else
 			{
@@ -52,13 +69,17 @@ namespace WkCocos
 
 		if (isMode(Mode::OFFLINE))
 		{
+			events()->emit<Loading>(this->getId(), this->m_name, m_rawData);
 			if (m_localdata)
 			{
-				m_localdata->loadData(m_name, [=](std::string data){
-					m_onLoading(data);
-
-					if (loaded_cb) loaded_cb();
-				}, key);
+				++m_loaded;
+				m_localdata->loadData(m_name, [=](std::vector<std::string> data){
+					m_rawData = data.back(); // we only care about last doc ( most recent ? )
+					//deprecated
+					if (m_onLoading) m_onLoading(m_rawData);
+					--m_loaded;
+					events()->emit<Loaded>(getId(),m_name, m_rawData);
+				}, m_key);
 			}
 			else
 			{
@@ -70,73 +91,128 @@ namespace WkCocos
 		return loaded;
 	}
 
-	bool Save::requestSaveData(std::function<void()> saved_cb, std::string key)
+	bool Save::requestSaveData(std::string data)
 	{
-		/*	// create document
-		rapidjson::Document doc;
-		doc.SetObject();
-		// must pass an allocator when the object may need to allocate memory
-		rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
+		if (m_rawData == data)
+		{
+			LOG_DEBUG << "Save requested but data are similar, dropping..."<<std::endl;
+			return false;
+		}
 
-		get_data_json(doc, allocator);
+		bool saved = true;
+		m_rawData = data;
 
-		// Get the save string
-		rapidjson::StringBuffer strbuf;
-		rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
-		doc.Accept(writer);
-
-		std::string save = std::string(strbuf.GetString());
-
-		m_localdata->savePlayerData(save);*/
-		bool loaded = true;
+		LOG_DEBUG << "requested save of " << m_rawData << std::endl;
 
 		if (isMode(Mode::ONLINE)) //no encryption online
 		{
 			if (m_onlinedata)
 			{
-				m_onlinedata->save(m_user, m_name, m_onSaving(), [=](std::string data)
+				++m_saved;
+				if (m_saved == 1) // we process first save only. others will be queued ( and intermediate will be skipped as useless )
 				{
-					//CCLOG("user data saved : %s", data.c_str());
-					saved_cb();
-				});
+					events()->emit<Saving>(this->getId(), this->m_name, m_rawData);
+#ifdef _DEBUG
+					++m_saveRequest;
+#endif //_DEBUG
+					if (m_docId.size() > 0)
+					{
+						m_current_save = m_onlinedata->save(m_user, m_name, m_docId, m_rawData, [=](const std::string& saveName, const std::string& docId, const std::string& data)
+						{
+#ifdef _DEBUG
+							++m_saveSuccess;
+#endif //_DEBUG
+							m_current_save = entityx::Entity::Id();// save finished
+							//we do not modify local data to not lose more recent changes.
+							if (--(this->m_saved) == 0) // if last answer came back
+							{
+								//CCLOG("user data saved : %s", data.c_str());
+								this->events()->emit<Saved>(this->getId(), this->m_name, data);
+							}
+							else //if we have many saves queued, we cancel all except last one, and we process it
+							{
+								this->m_saved = 0;
+								this->requestSaveData(m_rawData);
+							}
+						}, m_key);
+					}
+					else
+					{
+						m_current_save = m_onlinedata->saveNew(m_user, m_name, m_rawData, [=](const std::string& saveName, const std::string& docId, const std::string& data)
+						{
+#ifdef _DEBUG
+							++m_saveSuccess;
+#endif //_DEBUG
+							m_current_save = entityx::Entity::Id();// save finished
+							//storing docId to mark creation of save
+							this->m_docId = docId;
+
+							//we do not modify local data to not lose more recent changes.
+							if (--(this->m_saved) == 0) // if last answer came back
+							{
+								//CCLOG("user data saved : %s", data.c_str());
+								this->events()->emit<Saved>(this->getId(), this->m_name, data);
+							}
+							else //if we have many saves queued, we cancel all except last one, and we process it
+							{
+								this->m_saved = 0;
+								this->requestSaveData(m_rawData);
+							}
+						}, m_key);
+					}
+				}
 			}
 			else
 			{
 				LOG_WARNING << "Online save requested but no online manager!" << std::endl;
-				loaded = false;
+				saved = false;
 			}
 		}
-
-		if (isMode(Mode::OFFLINE))
+		else if (isMode(Mode::OFFLINE))
 		{
+			events()->emit<Saving>(this->getId(), this->m_name, m_rawData);
+#ifdef _DEBUG
+			++m_saveRequest;
+#endif //_DEBUG
 			if (m_localdata)
 			{
-				m_localdata->saveData(m_name, m_onSaving(), key);
-				saved_cb();
+#ifdef _DEBUG
+				++m_saveSuccess;
+#endif //_DEBUG
+				//no queue for local save at the moment as local save is assumed (wrongly) synchronous for now.
+				++m_saved;
+				m_localdata->saveData(m_name, m_rawData, m_key);
+				//BUG : Save is not yet saved here...
+				events()->emit<Saved>(getId(), m_name, m_rawData);
+				--m_saved;
 			}
 			else
 			{
 				LOG_WARNING << "Offline save requested but no offline manager!" << std::endl;
-				loaded = false;
+				saved = false;
 			}
 		}
 
-		return loaded;
-		
+		return saved;
+
 	}
 
-	bool Save::requestDeleteData(std::function<void()> delete_cb)
+	bool Save::requestDeleteData()
 	{
 		bool deleteSave = true;
 		if (isMode(Mode::ONLINE))
 		{
+			//TODO
 			LOG_WARNING << "Online save deletion not supported!" << std::endl;
 		}
 		if (isMode(Mode::OFFLINE))
 		{
 			if (m_localdata)
 			{
-				m_localdata->deleteData(m_name, [](std::string){});
+				m_localdata->deleteData(m_name, [=](std::string data){
+					//ignoring data...
+					events()->emit<Deleted>(getId());
+				});
 			}
 			else
 			{
@@ -145,6 +221,78 @@ namespace WkCocos
 			}
 		}
 		return deleteSave;
+	}
+
+	/**
+	* Set local data manager
+	*/
+	void Save::setLocalDataMgr(std::shared_ptr<LocalData::LocalDataManager> localdata)
+	{
+		m_localdata = localdata;
+	}
+
+	/**
+	* Set online  data manager
+	*/
+	void Save::setOnlineDataMgr(std::shared_ptr<OnlineData::OnlineDataManager> onlinedata)
+	{
+		m_onlinedata = onlinedata;
+		//hoking us up to errors event
+		m_onlinedata->getEventManager()->subscribe<OnlineData::Events::Error>(*this);
+	}
+
+	void Save::receive(const OnlineData::Events::Error & err)
+	{
+		if (err.id == m_current_load)
+		{
+			m_current_load = entityx::Entity::Id();// load finished
+			//current load requests has errored
+			if (--(m_loaded) == 0) // if last answer came back
+			{
+				//CCLOG("user data saved : %s", data.c_str());
+				if (!err.errorMessage.compare("timeout"))
+				{
+					events()->emit<Error>(this->getId(), ErrorType::LOAD_TIMEOUT_ERROR);
+				}
+				else
+				{
+					events()->emit<Error>(this->getId(), ErrorType::LOAD_UNKNOWN_ERROR); //TODO : check for and trigger more errors type
+				}
+			}
+			else //if we have many saves queued, we cancel all except last one, and we process it
+			{					// ^^^^^ maybe loads?
+				m_loaded = 0;
+				requestLoadData();
+				//no need to trigger errors here, if a saves succeed we are fine...
+			}										// ^^^^^ maybe loads?
+		}
+
+		if (err.id == m_current_save)
+		{
+#ifdef _DEBUG
+			++m_saveFail;
+#endif //_DEBUG
+			m_current_save = entityx::Entity::Id();// save finished
+			//current save requests has errored
+			if (--(m_saved) == 0) // if last answer came back
+			{
+				//CCLOG("user data saved : %s", data.c_str());
+				if (!err.errorMessage.compare("timeout"))
+				{
+					events()->emit<Error>(this->getId(), ErrorType::SAVE_TIMEOUT_ERROR);
+				}
+				else
+				{
+					events()->emit<Error>(this->getId(), ErrorType::SAVE_UNKNOWN_ERROR); //TODO : check for and trigger more errors type
+				}
+			}
+			else //if we have many saves queued, we cancel all except last one, and we process it
+			{
+				m_saved = 0;
+				requestSaveData(m_rawData);
+				//no need to trigger errors here, if a saves succeed we are fine...
+			}
+		}
 	}
 
 }// namespace WkCocos

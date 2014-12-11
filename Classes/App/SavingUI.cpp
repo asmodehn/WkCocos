@@ -20,7 +20,7 @@ SavingUI::SavingUI()
 	{
 
 		cocos2d::Size visibleSize = cocos2d::Director::getInstance()->getVisibleSize();
-		m_widget->setContentSize(cocos2d::Size(visibleSize.width / 2, visibleSize.height / 2));
+		m_widget->setContentSize(cocos2d::Size(visibleSize.width, visibleSize.height - 80)); //upper + lower lines of buttons
 		cocos2d::Size widgetSize = m_widget->getContentSize();
 
 		m_saveButton = cocos2d::ui::Button::create("SkipNormal.png", "SkipSelected.png");
@@ -28,7 +28,7 @@ SavingUI::SavingUI()
 		m_saveButton->setPosition(cocos2d::Vec2(-widgetSize.width / 4, -widgetSize.height / 6));
 		m_widget->addChild(m_saveButton);
 
-		m_saveLabel = cocos2d::ui::Text::create("SAVE", "Arial", 21);
+		m_saveLabel = cocos2d::ui::Text::create("SAVE", "Thonburi", 21);
 		m_saveLabel->setPosition(m_saveButton->getPosition() + cocos2d::Vec2(0, m_saveButton->getContentSize().height));
 		m_widget->addChild(m_saveLabel);
 
@@ -37,15 +37,15 @@ SavingUI::SavingUI()
 		m_loadButton->setPosition(cocos2d::Vec2(-widgetSize.width / 4, widgetSize.height / 6));
 		m_widget->addChild(m_loadButton);
 
-		m_loadLabel = cocos2d::ui::Text::create("LOAD", "Arial", 21);
+		m_loadLabel = cocos2d::ui::Text::create("LOAD", "Thonburi", 21);
 		m_loadLabel->setPosition(m_loadButton->getPosition() + cocos2d::Vec2(0, m_loadButton->getContentSize().height));
 		m_widget->addChild(m_loadLabel);
 	
-		m_gemLabel = cocos2d::ui::Text::create("? GEM", "Arial", 21);
+		m_gemLabel = cocos2d::ui::Text::create("? GEM", "Thonburi", 21);
 		m_gemLabel->setPosition(cocos2d::Vec2(0, widgetSize.height / 6));
 		m_widget->addChild(m_gemLabel);
 
-		m_goldLabel = cocos2d::ui::Text::create("? GOLD", "Arial", 21);
+		m_goldLabel = cocos2d::ui::Text::create("? GOLD", "Thonburi", 21);
 		m_goldLabel->setPosition(cocos2d::Vec2(0, -widgetSize.height / 6));
 		m_widget->addChild(m_goldLabel);
 	
@@ -72,11 +72,11 @@ void SavingUI::update(float delta)
 {
 	if (m_gemLabel->isVisible())
 	{
-		m_gemLabel->setText(WkCocos::ToolBox::itoa(g_gameLogic->getPlayer().m_gem.get<int>()) + " GEM");
+		m_gemLabel->setString(WkCocos::ToolBox::itoa(g_gameLogic->getPlayer().m_gem.get<int>()) + " GEM");
 	}
 	if (m_goldLabel->isVisible())
 	{
-		m_goldLabel->setText(WkCocos::ToolBox::itoa(g_gameLogic->getPlayer().m_gold.get<int>()) + " GOLD");
+		m_goldLabel->setString(WkCocos::ToolBox::itoa(g_gameLogic->getPlayer().m_gold.get<int>()) + " GOLD");
 	}
 
 }
@@ -87,8 +87,7 @@ void SavingUI::saveCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchE
 	{
 		CCLOG("SAVE BUTTON CLICKED");
 
-		g_gameLogic->getPlayer().saveData([](){
-		});
+		g_gameLogic->getPlayer().saveData();
 
 	}
 }
@@ -100,8 +99,7 @@ void SavingUI::loadCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchE
 	{
 		CCLOG("LOAD BUTTON CLICKED");
 
-		g_gameLogic->getPlayer().loadData([](){
-		});
+		g_gameLogic->getPlayer().loadData();
 
 	}
 }

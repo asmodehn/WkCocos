@@ -1,0 +1,10 @@
+{
+    "assets": {
+        "HelloWorld.png": {
+            "md5": "73F58E6D92FAFDF31C8F195596ACD95C"
+        }
+    },
+    "minAppVersion": "v0.2.5",
+    "dataVersion": "v0.2.43",
+    "COMMENTS" : "should NOT be downloaded : older minor version than ours : 0.2 < 0.3, even if dataVersion superior to ours  : 43 > 42"
+}

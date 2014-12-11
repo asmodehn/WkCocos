@@ -64,29 +64,30 @@ namespace WkCocos
 		
 		bool LocalDataManager::saveData(const std::string& saveName, std::string data, std::string key, short version)
 		{
-			auto newentity = entity_manager->create();
-			//new File component for each request. The aggregator system will detect duplicates and group them
-			newentity.assign<Comp::File>(cocos2d::FileUtils::getInstance()->getWritablePath() + saveName, key);
-			newentity.assign<Comp::Read>();
+			auto systementity = entity_manager->create();
+			systementity.assign<Comp::File>(cocos2d::FileUtils::getInstance()->getWritablePath() + saveName, key);
+			systementity.assign<Comp::Read>();
 			if (1 == version)
 			{
-				newentity.assign<Comp::PlayerData_v1>(data);
+				systementity.assign<Comp::PlayerData_v1>(data);
 			}
+
 			return true;
 		}
 
-		bool LocalDataManager::loadData(const std::string& saveName, std::function<void(std::string data)> load_cb, std::string key, short version)
+		bool LocalDataManager::loadData(const std::string& saveName, std::function<void(std::vector<std::string>)> load_cb, std::string key, short version)
 		{
-			auto newentity = entity_manager->create();
+			auto systementity = entity_manager->create();
 			//new File component for each request. The aggregator system will detect duplicates and group them
-			newentity.assign<Comp::File>(cocos2d::FileUtils::getInstance()->getWritablePath() + saveName, key);
-			newentity.assign<Comp::Read>();
+			systementity.assign<Comp::File>(cocos2d::FileUtils::getInstance()->getWritablePath() + saveName, key);
+			systementity.assign<Comp::Read>();
 			if (1 == version)
 			{
-				newentity.assign<Comp::PlayerData_v1>([=](std::string data){
+				systementity.assign<Comp::PlayerData_v1>([=](std::string data){
 					//doing this in cocos thread to not mess up the current update pass
-					cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([=](){
-						load_cb(data);
+					cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([=]()
+					{
+						load_cb({ data });
 					});
 				});
 			}

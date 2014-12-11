@@ -20,12 +20,12 @@ LogUI::LogUI()
 	{
 
 		cocos2d::Size visibleSize = cocos2d::Director::getInstance()->getVisibleSize();
-		m_widget->setContentSize(cocos2d::Size(visibleSize.width / 2, visibleSize.height / 2));
+		m_widget->setContentSize(cocos2d::Size(visibleSize.width, visibleSize.height - 80)); //upper + lower lines of buttons
 		cocos2d::Size widgetSize = m_widget->getContentSize();
 
 		// Test for cocos log appender
 		WkCocos::CocosLogAppender::CheckBoxRes resource;
-		m_cocosAppnd = new WkCocos::CocosLogAppender(m_widget, "fonts/Text.fnt", resource);
+		m_cocosAppnd = new WkCocos::CocosLogAppender(m_widget, "fonts/Text.fnt", resource, m_widget->getContentSize());
 		WkCocos::LogStream::get()->addAppender(m_cocosAppnd);
 		LOG_INFO << "Add " << "cocos " << "appender" << std::endl;
 		LOG_INFO << "Next Line" << std::endl;

@@ -40,8 +40,8 @@ android {
         minSdkVersion 10
         targetSdkVersion 19
         //versionName can go up to "9.999.build"
-        versionName "0.2." + buildNumber
-        versionCode 20000 + buildNumber // max should be 2 147 483 647
+        versionName "0.999." + buildNumber
+        versionCode ((0*10000) + buildNumber) // max should be 2 147 483 647
     }
 
     flavorDimensions "api","abi"
@@ -138,7 +138,7 @@ android {
         }
 
         def file = variant.outputFile
-        variant.outputFile = new File(file.parent, file.name.replace("app-","wkcocos-").replace(".apk", "-" + defaultConfig.versionName + ".apk"))
+        variant.outputFile = new File(file.parent, file.name.replace("testapp-","wkcocos-").replace(".apk", "-" + defaultConfig.versionName + ".apk"))
 
         // get the version code of each flavor
         def apiVersion = variant.productFlavors.get(0).versionCode
@@ -159,7 +159,7 @@ task cleanNdkLibs(type: Delete) {
 task ndkCustomBuildDebug(type: Exec, dependsOn: ['cleanNdkLibs', 'copyAssets']) {
     //windows only
     def dependsDir = file('../../depends').absolutePath
-    def cpus = Runtime.runtime.availableProcessors() / 2
+    def cpus = Runtime.runtime.availableProcessors()
     if (System.properties['os.name'].toLowerCase().contains('windows')) {
         //windows
         commandLine 'cmd', '/c', 'ndk-build', 'NDK_DEBUG=1', 'V=1', '-j', cpus, '-C', file('src/main/jni').absolutePath, 'NDK_MODULE_PATH=' + file('..').absolutePath + ';' + dependsDir + ';' + dependsDir + '\\cocos2dx-store\\submodules;' + dependsDir + '\\cocos2dx-store\\submodules\\soomla-cocos2dx-core\\submodules;' + dependsDir + '\\cocos2d-x;' + dependsDir + '\\cocos2d-x\\external;' + dependsDir + '\\cocos2d-x\\external-bin;' + dependsDir + '\\cocos2d-x\\cocos'
@@ -176,7 +176,7 @@ task ndkCustomBuildDebug(type: Exec, dependsOn: ['cleanNdkLibs', 'copyAssets']) 
 task ndkCustomBuildRelease(type: Exec, dependsOn: ['cleanNdkLibs', 'copyAssets']) {
     //windows only
     def dependsDir = file('../../depends').absolutePath
-    def cpus = Runtime.runtime.availableProcessors() / 2
+    def cpus = Runtime.runtime.availableProcessors()
     if (System.properties['os.name'].toLowerCase().contains('windows')) {
         //windows
         commandLine 'cmd', '/c', 'ndk-build', 'NDK_DEBUG=0','V=1',  '-j', cpus, '-C', file('src/main/jni').absolutePath, 'NDK_MODULE_PATH=' + file('..').absolutePath + ';' + dependsDir + ';' + dependsDir + '\\cocos2dx-store\\submodules;' + dependsDir + '\\cocos2dx-store\\submodules\\soomla-cocos2dx-core\\submodules;' + dependsDir + '\\cocos2d-x;' + dependsDir + '\\cocos2d-x\\external;' + dependsDir + '\\cocos2d-x\\external-bin;' + dependsDir + '\\cocos2d-x\\cocos'
@@ -194,7 +194,7 @@ import groovy.swing.SwingBuilder
 
 //handling keystore password input UI
 gradle.taskGraph.whenReady { taskGraph ->
-    if(taskGraph.hasTask(':app:validateReleaseSigning')) {
+    if(taskGraph.hasTask(':testapp:validateReleaseSigning')) {
         //supporting keystore in different location
         def keypath = System.getenv("KEYSTORE")
         if(keypath != null) {
@@ -253,7 +253,7 @@ task cleanAssets(type: Delete) {
 task ndkCleanDebug(type: Exec, dependsOn: 'cleanAssets') {
     //windows only
     def dependsDir = file('../../depends').absolutePath
-    def cpus = Runtime.runtime.availableProcessors() / 2
+    def cpus = Runtime.runtime.availableProcessors()
 
     if (System.properties['os.name'].toLowerCase().contains('windows')) {
         //windows
@@ -271,7 +271,7 @@ task ndkCleanDebug(type: Exec, dependsOn: 'cleanAssets') {
 task ndkCleanRelease(type: Exec, dependsOn: 'cleanAssets') {
     //windows only
     def dependsDir = file('../../depends').absolutePath
-    def cpus = Runtime.runtime.availableProcessors() / 2
+    def cpus = Runtime.runtime.availableProcessors()
 
     if (System.properties['os.name'].toLowerCase().contains('windows')) {
         //windows
