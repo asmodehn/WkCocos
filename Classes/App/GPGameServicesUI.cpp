@@ -53,10 +53,13 @@ void GPGameServicesUI::signInCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widg
 	if (input == cocos2d::ui::Widget::TouchEventType::ENDED)
 	{
 		CCLOG("SIGNIN BUTTON CLICKED");
+
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
         if ( ! GPGSManager::IsSignedIn() )
         {
             GPGSManager::BeginUserInitiatedSignIn();
         }
+#endif
 	}
 }
 
@@ -66,10 +69,13 @@ void GPGameServicesUI::signOutCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Wid
 	if (input == cocos2d::ui::Widget::TouchEventType::ENDED)
 	{
 		CCLOG("SIGNOUT BUTTON CLICKED");
+
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
         if ( GPGSManager::IsSignedIn() )
         {
             GPGSManager::SignOut();
         }
+#endif
 	}
 }
 

@@ -13,13 +13,16 @@ const int32_t BUFFER_SIZE = 256;
     NSLog(str);\
     CFRelease(str);\
     }
-#else
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
 #include <android/log.h>
 #define DEBUG_TAG "main"
 #define LOGI(...) ((void)__android_log_print(ANDROID_LOG_INFO, DEBUG_TAG, __VA_ARGS__))
 #define LOGE(...) ((void)__android_log_print(ANDROID_LOG_ERROR, DEBUG_TAG, __VA_ARGS__))
 
 #endif
+
+//cocos style platform detection
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
 
 #include "cocos2d.h"
 #include "json/rapidjson.h"
@@ -99,3 +102,4 @@ void GPGSManager::InitServices(gpg::PlatformConfiguration &pc)
     LOGE("GameServices creation FAILED !");
   }
 }
+#endif // (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
