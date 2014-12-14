@@ -6,6 +6,9 @@
 #include "cocos2d.h"
 #include "cocos/ui/CocosGUI.h"
 
+//for quick OpenURL test
+//#include "WkCocos/Utils/WkJniHelper.h"
+
 const std::string TimerUI::id = "timer";
 
 TimerUI::TimerUI()
@@ -76,7 +79,7 @@ void TimerUI::startCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchE
 		CCLOG("START BUTTON CLICKED");
 
 		g_gameLogic->getPlayer().setTimer("testing", 65);
-
+        //WkCocos::Utils::WkJniHelper::openURL("market://details?id=com.supercell.boombeach");
 	}
 }
 
