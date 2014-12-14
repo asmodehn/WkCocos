@@ -1,5 +1,6 @@
 rootProject.name="WkCocos"
-include ':app'
+include ':testapp'
+project(':testapp').projectDir = new File('app')
 include ':wkcocos'
 project(':wkcocos').projectDir = new File('lib')
 include ':cocos2dx'
@@ -12,7 +13,8 @@ include(':SoomlaAndroidStore')
 project(':SoomlaAndroidStore').projectDir = new File('../depends/cocos2dx-store/submodules/android-store/SoomlaAndroidStore/')
 include ':SoomlaAndroidCore'
 project(':SoomlaAndroidCore').projectDir = new File('../depends/cocos2dx-store/submodules/android-store/submodules/soomla-android-core/')
-include(':AndroidStoreAmazon')
-project(':AndroidStoreAmazon').projectDir = new File('../depends/cocos2dx-store/submodules/android-store/submodules/android-store-amazon/')
+//not configured or used
+//include(':AndroidStoreAmazon')
+//project(':AndroidStoreAmazon').projectDir = new File('../depends/cocos2dx-store/submodules/android-store/submodules/android-store-amazon/')
 include(':AndroidStoreGooglePlay')
 project(':AndroidStoreGooglePlay').projectDir = new File('../depends/cocos2dx-store/submodules/android-store/submodules/android-store-google-play/')
