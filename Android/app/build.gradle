@@ -173,7 +173,7 @@ task ndkCustomBuildDebug(type: Exec, dependsOn: ['cleanNdkLibs', 'copyAssets']) 
     }
 }
 
-task ndkCustomBuildRelease(type: Exec, dependsOn: ['cleanNdkLibs', 'copyAssets']) {
+task ndkCustomBuildRelease(type: Exec, dependsOn: ['cleanNdkLibs', 'copyAssets', 'zipDLC' ]) { //we zip DLC for APK expansion only in release mode
     //windows only
     def dependsDir = file('../../depends').absolutePath
     def cpus = Runtime.runtime.availableProcessors()
@@ -244,6 +244,18 @@ gradle.taskGraph.whenReady { taskGraph ->
 task copyAssets(type: Copy) {
     from '../../Resources'
     into 'assets'
+}
+
+//cresating a zip for DLC content ( used for apk expansion test )
+task zipDLC(type: Zip) {
+    from '../../nginxDLC/html/v0.4.74'
+    into 'assets'
+    exclude { details -> details.file.name == 'manifest.json' } // not needed for apk expansion
+    destinationDir = file('build/outputs/dlc')
+    baseName ='nginxDLC'
+    appendix = ''
+    version = 'v0.4.74'
+    classifier = ''
 }
 
 task cleanAssets(type: Delete) {
