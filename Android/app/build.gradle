@@ -113,14 +113,14 @@ android {
             applicationIdSuffix ".debug"
             debuggable true
             //TODO : use versionNameSuffix
-            jniDebugBuild true
+            jniDebuggable true
         }
         release {
             debuggable false
             //TODO : use versionNameSuffix
-            jniDebugBuild false
+            jniDebuggable false
             signingConfig signingConfigs.release
-            runProguard false
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
@@ -128,18 +128,18 @@ android {
     // make per-variant version code
     applicationVariants.all { variant ->
         //TODO : different build settings for different variants
-        if ( variant.buildType.jniDebugBuild ) {
-            println variant.name + ' is jniDebugBuild '
+        if ( variant.buildType.jniDebuggable ) {
+            println variant.name + ' is jniDebuggable '
             variant.javaCompile.dependsOn ndkCustomBuildDebug
         } else {
             //making ndkbuild a release build
-            println variant.name + ' is NOT jniDebugBuild '
+            println variant.name + ' is NOT jniDebuggable '
             variant.javaCompile.dependsOn ndkCustomBuildRelease
         }
 
-        def file = variant.outputFile
-        variant.outputFile = new File(file.parent, file.name.replace("testapp-","wkcocos-").replace(".apk", "-" + defaultConfig.versionName + ".apk"))
-
+        variant.outputs.each { output ->
+            output.outputFile = new File(output.outputFile.parent, output.outputFile.name.replace("testapp-", "wkcocos-").replace(".apk", "-" + defaultConfig.versionName + ".apk"))
+        }
         // get the version code of each flavor
         def apiVersion = variant.productFlavors.get(0).versionCode
         def abiVersion = variant.productFlavors.get(1).versionCode
