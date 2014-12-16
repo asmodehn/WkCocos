@@ -10,7 +10,7 @@
       <configuration>
         <option name="SELECTED_BUILD_VARIANT" value="gingerbreadFatDebug" />
         <option name="ASSEMBLE_TASK_NAME" value="assembleGingerbreadFatDebug" />
-        <option name="COMPILE_JAVA_TASK_NAME" value="compileGingerbreadFatDebugJava" />
+        <option name="COMPILE_JAVA_TASK_NAME" value="compileGingerbreadFatDebugSources" />
         <option name="ASSEMBLE_TEST_TASK_NAME" value="assembleGingerbreadFatDebugTest" />
         <option name="SOURCE_GEN_TASK_NAME" value="generateGingerbreadFatDebugSources" />
         <option name="TEST_SOURCE_GEN_TASK_NAME" value="generateGingerbreadFatDebugTestSources" />
@@ -30,6 +30,7 @@
       <sourceFolder url="file://$MODULE_DIR$/build/generated/source/buildConfig/gingerbreadfat/debug" isTestSource="false" generated="true" />
       <sourceFolder url="file://$MODULE_DIR$/build/generated/source/rs/gingerbreadfat/debug" isTestSource="false" generated="true" />
       <sourceFolder url="file://$MODULE_DIR$/build/generated/res/rs/gingerbreadfat/debug" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/res/generated/gingerbreadfat/debug" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/gingerbreadFatDebug/res" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/gingerbreadFatDebug/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/gingerbreadFatDebug/assets" type="java-resource" />
@@ -49,6 +50,7 @@
       <sourceFolder url="file://$MODULE_DIR$/build/generated/source/buildConfig/test/gingerbreadfat/debug" isTestSource="true" generated="true" />
       <sourceFolder url="file://$MODULE_DIR$/build/generated/source/rs/test/gingerbreadfat/debug" isTestSource="true" generated="true" />
       <sourceFolder url="file://$MODULE_DIR$/build/generated/res/rs/test/gingerbreadfat/debug" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/res/generated/test/gingerbreadfat/debug" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/gingerbread/res" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/gingerbread/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/gingerbread/assets" type="java-resource" />
@@ -115,12 +117,11 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/rs" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/symbols" />
       <excludeFolder url="file://$MODULE_DIR$/build/outputs" />
+      <excludeFolder url="file://$MODULE_DIR$/build/tmp" />
     </content>
     <orderEntry type="jdk" jdkName="Android API 19 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="support-annotations-21.0.0" level="project" />
-    <orderEntry type="library" exported="" name="support-v4-21.0.0" level="project" />
-    <orderEntry type="library" exported="" name="appcompat-v7-19.1.0" level="project" />
     <orderEntry type="module" module-name="wkcocos" exported="" />
   </component>
 </module>
