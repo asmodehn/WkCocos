@@ -1,17 +1,41 @@
 package com.gameparkstudio.wkcocos.lib;
 
 import android.app.Activity;
+import android.app.PendingIntent;
+import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Messenger;
+import android.os.SystemClock;
+import android.provider.Settings;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
+import com.android.vending.expansion.zipfile.ZipResourceFile;
+import com.google.android.vending.expansion.downloader.Constants;
+import com.google.android.vending.expansion.downloader.DownloadProgressInfo;
+import com.google.android.vending.expansion.downloader.DownloaderClientMarshaller;
+import com.google.android.vending.expansion.downloader.DownloaderServiceMarshaller;
+import com.google.android.vending.expansion.downloader.Helpers;
+import com.google.android.vending.expansion.downloader.IDownloaderClient;
+import com.google.android.vending.expansion.downloader.IDownloaderService;
+import com.google.android.vending.expansion.downloader.IStub;
 import com.soomla.cocos2dx.common.ServiceManager;
 import com.soomla.cocos2dx.store.StoreService;
 
 import org.cocos2dx.lib.Cocos2dxActivity;
 import org.cocos2dx.lib.Cocos2dxGLSurfaceView;
 
-public abstract class MainActivity extends Cocos2dxActivity {
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.util.zip.CRC32;
+
+public abstract class MainActivity extends Cocos2dxActivity implements IDownloaderClient {
 
     private final static String TAG = MainActivity.class.getSimpleName();
 
@@ -19,8 +43,29 @@ public abstract class MainActivity extends Cocos2dxActivity {
 
     private static Activity me = null;
 
+    private static final String LOG_TAG = "MainActivity";
+
+    /**
+     * Determine if the files are present and match the requirements. Free
+     * applications should definitely consider doing this, as this allows the
+     * application to be launched for the first time without having a network
+     * connection present. Paid applications that use LVL should probably do at
+     * least one LVL check that requires the network to be present, so this is
+     * not as necessary.
+     *
+     * @return true if they are present.
+     */
+    abstract boolean expansionFilesDelivered();
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
+
+        //Needed before Cocos start to download all needed assets
+
+        WkDownloaderService.setPublicKey(getLVLKey());
+        WkDownloaderService.setSALT(new byte[] { 1, 42, -12, -1, 54, 98, -100, -12, 43, 2, -8, -4, 9, 5, -106, -42, -33, 45, -1, 84 });
+
+
         super.onCreate(savedInstanceState);
 
         me = this;
@@ -30,6 +75,7 @@ public abstract class MainActivity extends Cocos2dxActivity {
         }
 
         WkJniHelper.getInstance().setActivity(this);
+
     }
 
     @Override
@@ -83,6 +129,13 @@ public abstract class MainActivity extends Cocos2dxActivity {
         //int versionCode = getPackageManager().getPackageInfo(getPackageName(), 0).versionCode;
         //return versionCode;
     //}
+
+    /**
+     * returns the Google play license key
+     * needs to be implemented in the main package
+     * @return string holding the license key
+     */
+    public abstract String getLVLKey();
 
     //TODO : test it ! maybe use new JniHelper for this...
     public static void openURL(String url) {

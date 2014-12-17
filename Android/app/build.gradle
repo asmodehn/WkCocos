@@ -37,6 +37,7 @@ android {
     buildToolsVersion '19.1.0'
 
     defaultConfig {
+        applicationId "com.gameparkstudio.wkcocos.testapp"
         minSdkVersion 10
         targetSdkVersion 19
         //versionName can go up to "9.999.build"
@@ -156,7 +157,7 @@ task cleanNdkLibs(type: Delete) {
   delete fileTree(dir:"src/main/obj/local/").include("**/*.a").include("**/*.so")
 }
 
-task ndkCustomBuildDebug(type: Exec, dependsOn: ['cleanNdkLibs', 'copyAssets']) {
+task ndkCustomBuildDebug(type: Exec, dependsOn: ['cleanNdkLibs', 'copyAssets', 'zipDLC']) {
     //windows only
     def dependsDir = file('../../depends').absolutePath
     def cpus = Runtime.runtime.availableProcessors()
@@ -248,14 +249,19 @@ task copyAssets(type: Copy) {
 
 //cresating a zip for DLC content ( used for apk expansion test )
 task zipDLC(type: Zip) {
+
     from '../../nginxDLC/html/v0.4.74'
+    //matching versioncode
+    def ver = (4*10000 ) + 74
+
     into 'assets'
     exclude { details -> details.file.name == 'manifest.json' } // not needed for apk expansion
-    destinationDir = file('build/outputs/dlc')
-    baseName ='nginxDLC'
+    destinationDir = file('build/outputs/xapk')
+    baseName ='main.' + ver + '.' + android.defaultConfig.applicationId
     appendix = ''
-    version = 'v0.4.74'
+    version = ''
     classifier = ''
+    extension = 'obb'
 }
 
 task cleanAssets(type: Delete) {
