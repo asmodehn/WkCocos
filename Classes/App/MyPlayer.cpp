@@ -31,7 +31,7 @@ MyPlayer::MyPlayer(std::shared_ptr<WkCocos::Timer::Timer> timermgr, std::shared_
 {
 	m_gem.set(42);
 	m_gold.set(424242);
-	
+
 	m_save.setLocalDataMgr(m_player.getLocalDatamgr());
 	m_save.setOnlineDataMgr(m_player.getOnlineDatamgr());
 	WkCocos::Save::getEventManager()->subscribe<WkCocos::Save::Loaded>(*this);
@@ -54,8 +54,6 @@ void MyPlayer::login()
 //save Data for test
 void MyPlayer::saveData()
 {
-	m_player.saveData();
-
 	rapidjson::Document doc;
 	doc.SetObject();
 	// must pass an allocator when the object may need to allocate memory
@@ -78,7 +76,6 @@ void MyPlayer::saveData()
 //load Data for test
 void MyPlayer::loadData()
 {
-	m_player.loadData();
 	m_save.requestLoadData();
 }
 

@@ -14,7 +14,7 @@ namespace WkCocos
 		* Hold the GameLogic information.
 		* The Game can delegate the process of updating all Managers to ONE instance of this class.
 		*/
-		class GameLogic : WkCocos::Actor
+		class GameLogic : public WkCocos::Actor
 		{
 		public:
 

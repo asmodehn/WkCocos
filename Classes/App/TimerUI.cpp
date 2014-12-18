@@ -48,6 +48,8 @@ TimerUI::TimerUI()
 		m_widget->retain(); //we need to retain it in memory ( or cocos will drop it )
 		widget_cache.insert(std::pair<std::string, cocos2d::ui::Widget*>(id, m_widget));
 
+        g_gameLogic->getEventManager()->subscribe<GameLogic::Player_LoggedIn>(*this);
+
 	}
 }
 
@@ -58,8 +60,8 @@ void TimerUI::receive(const GameLogic::Player_LoggedIn &pl)
 {
     //we can get timermgr from player only after he has logged in
     //TODO : access timer without player ??
-	g_gameLogic->getPlayer().getTimermgr()->getEventManager()->subscribe<WkCocos::Timer::Events::TimerUpdate>(*this);
-	g_gameLogic->getPlayer().getTimermgr()->getEventManager()->subscribe<WkCocos::Timer::Events::AlarmOff>(*this);
+	g_gameLogic->getGameClock().getEventManager()->subscribe<WkCocos::Timer::Events::TimerUpdate>(*this);
+	g_gameLogic->getGameClock().getEventManager()->subscribe<WkCocos::Timer::Events::AlarmOff>(*this);
 }
 
 void TimerUI::receive(const WkCocos::Timer::Events::TimerUpdate &tu)
