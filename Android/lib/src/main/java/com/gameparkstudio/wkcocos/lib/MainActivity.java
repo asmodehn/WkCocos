@@ -44,52 +44,6 @@ public abstract class MainActivity extends Cocos2dxActivity {
 
     private static Activity me = null;
 
-    private ProgressBar mPB;
-
-    private TextView mStatusText;
-    private TextView mProgressFraction;
-    private TextView mProgressPercent;
-    private TextView mAverageSpeed;
-    private TextView mTimeRemaining;
-
-    private View mDashboard;
-    private View mCellMessage;
-
-    private Button mPauseButton;
-    private Button mWiFiSettingsButton;
-
-    private boolean mStatePaused;
-    private int mState;
-
-    private IDownloaderService mRemoteService;
-
-    private IStub mDownloaderClientStub;
-
-    /**
-     * Calculating a moving average for the validation speed so we don't get
-     * jumpy calculations for time etc.
-     */
-    static private final float SMOOTHING_FACTOR = 0.005f;
-
-    /**
-     * Used by the async task
-     */
-    private boolean mCancelValidation;
-
-
-    /**
-     * Determine if the files are present and match the requirements. Free
-     * applications should definitely consider doing this, as this allows the
-     * application to be launched for the first time without having a network
-     * connection present. Paid applications that use LVL should probably do at
-     * least one LVL check that requires the network to be present, so this is
-     * not as necessary.
-     *
-     * @return true if they are present.
-     */
-    protected abstract boolean expansionFilesDelivered();
-
-
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
 
@@ -108,11 +62,9 @@ public abstract class MainActivity extends Cocos2dxActivity {
 
         WkJniHelper.getInstance().setActivity(this);
 
-        if ( ! expansionFilesDelivered() ) {
-            // Fire the intent that launches the "About" screen.
-            Intent dl = new Intent(this, WkDownloaderActivity.class);
-            this.startActivity(dl);
-        }
+        // Fire the intent that launches the DL screen.
+        Intent dl = new Intent(this, WkDownloaderActivity.class);
+        this.startActivity(dl);
     }
 
     @Override
