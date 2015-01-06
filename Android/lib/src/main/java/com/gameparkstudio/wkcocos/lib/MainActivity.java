@@ -1,6 +1,7 @@
 package com.gameparkstudio.wkcocos.lib;
 
 import android.app.Activity;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
@@ -35,7 +36,7 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.zip.CRC32;
 
-public abstract class MainActivity extends Cocos2dxActivity implements IDownloaderClient {
+public abstract class MainActivity extends Cocos2dxActivity {
 
     private final static String TAG = MainActivity.class.getSimpleName();
 
@@ -43,7 +44,38 @@ public abstract class MainActivity extends Cocos2dxActivity implements IDownload
 
     private static Activity me = null;
 
-    private static final String LOG_TAG = "MainActivity";
+    private ProgressBar mPB;
+
+    private TextView mStatusText;
+    private TextView mProgressFraction;
+    private TextView mProgressPercent;
+    private TextView mAverageSpeed;
+    private TextView mTimeRemaining;
+
+    private View mDashboard;
+    private View mCellMessage;
+
+    private Button mPauseButton;
+    private Button mWiFiSettingsButton;
+
+    private boolean mStatePaused;
+    private int mState;
+
+    private IDownloaderService mRemoteService;
+
+    private IStub mDownloaderClientStub;
+
+    /**
+     * Calculating a moving average for the validation speed so we don't get
+     * jumpy calculations for time etc.
+     */
+    static private final float SMOOTHING_FACTOR = 0.005f;
+
+    /**
+     * Used by the async task
+     */
+    private boolean mCancelValidation;
+
 
     /**
      * Determine if the files are present and match the requirements. Free
@@ -55,7 +87,8 @@ public abstract class MainActivity extends Cocos2dxActivity implements IDownload
      *
      * @return true if they are present.
      */
-    abstract boolean expansionFilesDelivered();
+    protected abstract boolean expansionFilesDelivered();
+
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -63,19 +96,23 @@ public abstract class MainActivity extends Cocos2dxActivity implements IDownload
         //Needed before Cocos start to download all needed assets
 
         WkDownloaderService.setPublicKey(getLVLKey());
-        WkDownloaderService.setSALT(new byte[] { 1, 42, -12, -1, 54, 98, -100, -12, 43, 2, -8, -4, 9, 5, -106, -42, -33, 45, -1, 84 });
-
+        WkDownloaderService.setSALT(getSALT());
 
         super.onCreate(savedInstanceState);
 
         me = this;
 
-        if(mWebViewHelper == null) {
+        if (mWebViewHelper == null) {
             mWebViewHelper = new Cocos2dxWebViewHelper(mFrameLayout);
         }
 
         WkJniHelper.getInstance().setActivity(this);
 
+        if ( ! expansionFilesDelivered() ) {
+            // Fire the intent that launches the "About" screen.
+            Intent dl = new Intent(this, WkDownloaderActivity.class);
+            this.startActivity(dl);
+        }
     }
 
     @Override
@@ -94,11 +131,14 @@ public abstract class MainActivity extends Cocos2dxActivity implements IDownload
 
     @Override protected void onPause() {
         super.onPause();
-        ServiceManager.getInstance().onPause();
     }
 
     @Override protected void onResume() {
-        ServiceManager.getInstance().onResume();
+
+        //TODO : JNI binding to remove this from here and make it doable in C++ testapp
+        NotificationManager WKNM = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+        WKNM.cancelAll();
+
         super.onResume();
     }
 
@@ -136,6 +176,13 @@ public abstract class MainActivity extends Cocos2dxActivity implements IDownload
      * @return string holding the license key
      */
     public abstract String getLVLKey();
+
+    /**
+     * returns some SALT to mix with the license key
+     * needs to be implemented in the main package
+     * @return byte[] holding the salt
+     */
+    public abstract byte[] getSALT();
 
     //TODO : test it ! maybe use new JniHelper for this...
     public static void openURL(String url) {

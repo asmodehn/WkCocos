@@ -9,6 +9,9 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/google/play_apk_expansion/downloader_library" />
+            <option value="$PROJECT_DIR$/google/play_apk_expansion/zip_file" />
+            <option value="$PROJECT_DIR$/google/play_licensing/library" />
             <option value="$PROJECT_DIR$/lib" />
             <option value="$PROJECT_DIR$/../depends/cocos2d-x/cocos/platform/android/java" />
             <option value="$PROJECT_DIR$/../depends/cocos2dx-store/soomla-native/projects/cocos2dx-android-store" />
