@@ -72,7 +72,7 @@ public:
 	std::unique_ptr<WkCocos::Shop::Shop> m_shop;
 	std::unique_ptr<MyOptions> m_options;
 
-    void receive(WkCocos::Helper::GameLogic::TimerInit const & ti);
+    void receive(WkCocos::Timer::Events::TimerInit const & ti);
 
 	void receive(const MyPlayer::LoggedIn& player_loggedin)
 	{

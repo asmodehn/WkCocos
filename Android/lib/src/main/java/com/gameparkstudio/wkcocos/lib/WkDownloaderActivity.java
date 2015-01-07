@@ -201,7 +201,7 @@ public class WkDownloaderActivity extends Activity implements IDownloaderClient 
                             DataInputStream dis = null;
                             ZipInputStream zis = null;
                             try {
-                                Log.e(Constants.TAG, "uncompressing " + entry.mFileName + "...");
+                                Log.d(Constants.TAG, "uncompressing " + entry.mFileName + "...");
 
                                 //creating parent directories if needed
                                 File unziploc = new File(unzipLocation);
