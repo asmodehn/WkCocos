@@ -157,7 +157,7 @@ task cleanNdkLibs(type: Delete) {
   delete fileTree(dir:"src/main/obj/local/").include("**/*.a").include("**/*.so")
 }
 
-task ndkCustomBuildDebug(type: Exec, dependsOn: ['cleanNdkLibs', 'copyAssets', 'zipDLC']) {
+task ndkCustomBuildDebug(type: Exec, dependsOn: ['cleanNdkLibs', 'copyAssets', 'zipDLCdebug']) {
     //windows only
     def dependsDir = file('../../depends').absolutePath
     def cpus = Runtime.runtime.availableProcessors()
@@ -174,7 +174,7 @@ task ndkCustomBuildDebug(type: Exec, dependsOn: ['cleanNdkLibs', 'copyAssets', '
     }
 }
 
-task ndkCustomBuildRelease(type: Exec, dependsOn: ['cleanNdkLibs', 'copyAssets', 'zipDLC' ]) { //we zip DLC for APK expansion only in release mode
+task ndkCustomBuildRelease(type: Exec, dependsOn: ['cleanNdkLibs', 'copyAssets', 'zipDLCrelease' ]) { //we zip DLC for APK expansion only in release mode
     //windows only
     def dependsDir = file('../../depends').absolutePath
     def cpus = Runtime.runtime.availableProcessors()
@@ -247,21 +247,23 @@ task copyAssets(type: Copy) {
     into 'assets'
 }
 
-//cresating a zip for DLC content ( used for apk expansion test )
-task zipDLC(type: Zip) {
+//dynamically define a task depending on build type
+android.buildTypes.all { buildType ->
+    //creating a zip for DLC content ( used for apk expansion test )
+    task("zipDLC${buildType.name}",type: Zip) {
 
-    from '../../nginxDLC/html/v0.4.74'
-    //matching versioncode
-    def ver = (4*10000 ) + 74
+        from '../../nginxDLC/html/v0.4.74'
+        //matching versioncode
+        def ver = (4 * 10000) + 74
 
-    into 'assets'
-    exclude { details -> details.file.name == 'manifest.json' } // not needed for apk expansion
-    destinationDir = file('build/outputs/xapk')
-    baseName ='main.' + ver + '.' + android.defaultConfig.applicationId
-    appendix = ''
-    version = ''
-    classifier = ''
-    extension = 'obb'
+        exclude { details -> details.file.name == 'manifest.json' } // not needed for apk expansion
+        destinationDir = file('build/outputs/xapk')
+        baseName = 'main.' + ver + '.' + android.defaultConfig.applicationId + (buildType.applicationIdSuffix?buildType.applicationIdSuffix:'')
+        appendix = ''
+        version = ''
+        classifier = ''
+        extension = 'obb'
+    }
 }
 
 task cleanAssets(type: Delete) {
