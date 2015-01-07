@@ -148,7 +148,7 @@ public class WkDownloaderActivity extends Activity implements IDownloaderClient 
                 WkDownloaderInfo.XAPKFile mainXAPK = expansionFilePath(true);
                 if ( mainXAPK != null ) {
                     if (mainXAPK.getFilePath() != "") {
-                        mainXAPKextracted = bgExtract(mainXAPK.getFilePath(), Environment.getDataDirectory().getAbsolutePath(), mainXAPK.mCheckEnabled);
+                        mainXAPKextracted = bgExtract(mainXAPK.getFilePath(), WkDownloaderActivity.this.getFilesDir().getAbsolutePath(), mainXAPK.mCheckEnabled);
                     } // else extraction has failed
                 }
                 else
@@ -159,7 +159,7 @@ public class WkDownloaderActivity extends Activity implements IDownloaderClient 
                 WkDownloaderInfo.XAPKFile patchXAPK = expansionFilePath(false);
                 if ( patchXAPK != null ) {
                     if (patchXAPK.getFilePath() != "") {
-                        patchXAPKextracted = bgExtract(patchXAPK.getFilePath(), Environment.getDataDirectory().getAbsolutePath(), patchXAPK.mCheckEnabled);
+                        patchXAPKextracted = bgExtract(patchXAPK.getFilePath(), WkDownloaderActivity.this.getFilesDir().getAbsolutePath(), patchXAPK.mCheckEnabled);
                     } // else extraction has failed
                 }
                 else
@@ -204,9 +204,12 @@ public class WkDownloaderActivity extends Activity implements IDownloaderClient 
                                 Log.e(Constants.TAG, "uncompressing " + entry.mFileName + "...");
 
                                 //creating parent directories if needed
-                                File f = new File(unzipLocation + entry.mFileName);
-                                if ( !f.isDirectory()){
-                                    f.mkdirs();
+                                File unziploc = new File(unzipLocation);
+                                File f = new File(unziploc, entry.mFileName);
+                                File parent = f.getParentFile();
+                                if ( !parent.exists() && !parent.mkdirs())
+                                {
+                                    throw new IllegalStateException("Could not create dir : " + parent);
                                 }
 
                                 // write the inputStream to a FileOutputStream
