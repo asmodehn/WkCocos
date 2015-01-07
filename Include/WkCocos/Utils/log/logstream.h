@@ -123,10 +123,10 @@ namespace WkCocos
 #	define LOG_WARNING		(*WkCocos::LogStream::get()) << WkCocos::loglevel::Core_LogWarning
 #	define LOG_ERROR		(*WkCocos::LogStream::get()) << WkCocos::loglevel::Core_LogError
 #else //_DEBUG
-#	define LOG_DEBUG		std::clog
-#	define LOG_INFO			std::clog
-#	define LOG_WARNING		std::clog
-#	define LOG_ERROR		std::clog
+#	define LOG_DEBUG		 WkCocos::cnull
+#	define LOG_INFO			 WkCocos::cnull
+#	define LOG_WARNING		 WkCocos::cnull
+#	define LOG_ERROR		 WkCocos::cnull
 #endif //_DEBUG
 
 #endif // __WKCOCOS_UTILS_LOG_LOGSTREAM_H__

@@ -19,9 +19,9 @@ namespace WkCocos
 				for (auto entity : es->entities_with_components(id, alarm))
 				{
 					alarm->m_msecs += dt;
-					if (alarm->m_msecs > 1)
+					if (alarm->m_msecs > 1.0)
 					{
-						alarm->m_msecs -= 1;
+						alarm->m_msecs -= 1.0;
 						alarm->m_now.tm_sec += 1;
 
 						time_t now = mktime(&alarm->m_now);
