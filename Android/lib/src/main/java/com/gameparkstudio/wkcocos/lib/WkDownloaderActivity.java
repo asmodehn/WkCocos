@@ -209,11 +209,14 @@ public class WkDownloaderActivity extends Activity implements IDownloaderClient 
                                 File parent = f.getParentFile();
                                 if ( !parent.exists() && !parent.mkdirs())
                                 {
-                                    throw new IllegalStateException("Could not create dir : " + parent);
+                                    throw new IllegalStateException("Could not create required dir : " + parent);
                                 }
 
+                                FileOutputStream fos = null;
                                 // write the inputStream to a FileOutputStream
-                                FileOutputStream fos = new FileOutputStream(f);
+                                if ( ! f.isDirectory() ) {
+                                    fos = new FileOutputStream(f);
+                                }
 
                                 dis = new DataInputStream(zrf.getInputStream(entry.mFileName));
                                 long startTime = SystemClock.uptimeMillis();
@@ -221,7 +224,7 @@ public class WkDownloaderActivity extends Activity implements IDownloaderClient 
                                     int seek = (int) (length > buf.length ? buf.length : length);
                                     dis.readFully(buf, 0, seek);
                                     //write to file
-                                    fos.write(buf, 0, seek);
+                                    if (fos != null) fos.write(buf, 0, seek);
                                     if ( checkCRC ) {
                                         //check crc
                                         crc.update(buf, 0, seek);
