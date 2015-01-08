@@ -41,6 +41,8 @@ import com.google.android.vending.expansion.downloader.IDownloaderClient;
 import com.google.android.vending.expansion.downloader.IDownloaderService;
 import com.google.android.vending.expansion.downloader.IStub;
 
+import org.cocos2dx.lib.Cocos2dxHelper;
+
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -201,30 +203,30 @@ public class WkDownloaderActivity extends Activity implements IDownloaderClient 
                             DataInputStream dis = null;
                             ZipInputStream zis = null;
                             try {
-                                Log.d(Constants.TAG, "uncompressing " + entry.mFileName + "...");
+                                //Log.d(Constants.TAG, "uncompressing " + entry.mFileName + "...");
 
-                                //creating parent directories if needed
-                                File unziploc = new File(unzipLocation);
-                                File f = new File(unziploc, entry.mFileName);
-                                File parent = f.getParentFile();
-                                if ( !parent.exists() && !parent.mkdirs())
-                                {
-                                    throw new IllegalStateException("Could not create required dir : " + parent);
-                                }
+                                ////creating parent directories if needed
+                                //File unziploc = new File(unzipLocation);
+                                //File f = new File(unziploc, entry.mFileName);
+                                //File parent = f.getParentFile();
+                                //if ( !parent.exists() && !parent.mkdirs())
+                                //{
+                                //    throw new IllegalStateException("Could not create required dir : " + parent);
+                                //}
 
-                                FileOutputStream fos = null;
-                                // write the inputStream to a FileOutputStream
-                                if ( ! f.isDirectory() ) {
-                                    fos = new FileOutputStream(f);
-                                }
+                                //FileOutputStream fos = null;
+                                //// write the inputStream to a FileOutputStream
+                                //if ( ! f.isDirectory() ) {
+                                //    fos = new FileOutputStream(f);
+                                //}
 
                                 dis = new DataInputStream(zrf.getInputStream(entry.mFileName));
                                 long startTime = SystemClock.uptimeMillis();
                                 while (length > 0) {
                                     int seek = (int) (length > buf.length ? buf.length : length);
                                     dis.readFully(buf, 0, seek);
-                                    //write to file
-                                    if (fos != null) fos.write(buf, 0, seek);
+                                    ////write to file
+                                    //if (fos != null) fos.write(buf, 0, seek);
                                     if ( checkCRC ) {
                                         //check crc
                                         crc.update(buf, 0, seek);
@@ -373,7 +375,7 @@ public class WkDownloaderActivity extends Activity implements IDownloaderClient 
      * least one LVL check that requires the network to be present, so this is
      * not as necessary.
      *
-     * @return XAPKFile with its filepath set to proper path if it is present. it is set null if still missing, or default empty String if not needed.
+     * @return XAPKFile with its filepath set to proper path if it is present. it is set null if missing ( may be not needed ).
      */
     protected WkDownloaderInfo.XAPKFile expansionFilePath(boolean main) {
         try {
@@ -389,6 +391,16 @@ public class WkDownloaderActivity extends Activity implements IDownloaderClient 
                         || (!xf.mCheckEnabled && new File(expFilePath).exists()) )//if check disabled we only check it exists
                     {
                         xf.setFilePath(expFilePath);
+                        //Now setting XAPK path for cocos to find resources in it.
+                        if ( main )
+                        {
+                            Cocos2dxHelper.nativeSetMainXApkPath(expFilePath);
+                        }
+                        else
+                        {
+                            Cocos2dxHelper.nativeSetPatchXApkPath(expFilePath);
+                        }
+
                     }else{
                         Log.e(TAG, "Missing " + (main?"Main":"Patch") + " XAPK at : " + expFilePath );
                         if (xf.mCheckEnabled) Log.e(TAG, "Expected Size = " + xf.mFileSize);

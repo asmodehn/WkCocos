@@ -11,7 +11,7 @@ public class DLInfo implements WkDownloaderInfo {
                 // it should be the version code added to the obb filename
                 // so it s possible that it doesn't match current BuildConfig.VERSION_CODE
                 151536L, // the length of the file in bytes
-                true
+                false
         );
 
     }

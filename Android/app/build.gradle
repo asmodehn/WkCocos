@@ -256,6 +256,7 @@ android.buildTypes.all { buildType ->
         //matching versioncode
         def ver = (4 * 10000) + 74
 
+        into 'assets'
         exclude { details -> details.file.name == 'manifest.json' } // not needed for apk expansion
         destinationDir = file('build/outputs/xapk')
         baseName = 'main.' + ver + '.' + android.defaultConfig.applicationId + (buildType.applicationIdSuffix?buildType.applicationIdSuffix:'')
