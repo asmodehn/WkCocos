@@ -7,8 +7,7 @@ Android/lib/assets/
 Android/lib/src/main/libs/
 Android/local.properties
 nginxDLC/logs/
-Android/.gradle/1.12/taskArtifacts/
+Android/.gradle/
 proj.pc/
-Android/.idea/workspace.xml
-Android/.idea/libraries/
-Android/.idea/dictionaries/Ivan.xml
+**/.idea
+**/*.iml
