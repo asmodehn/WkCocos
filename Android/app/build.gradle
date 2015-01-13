@@ -157,7 +157,7 @@ task cleanNdkLibs(type: Delete) {
   delete fileTree(dir:"src/main/obj/local/").include("**/*.a").include("**/*.so")
 }
 
-task ndkCustomBuildDebug(type: Exec, dependsOn: ['cleanNdkLibs', 'copyAssets']) {
+task ndkCustomBuildDebug(type: Exec, dependsOn: ['cleanNdkLibs']) {
     //windows only
     def dependsDir = file('../../depends').absolutePath
     def cpus = Runtime.runtime.availableProcessors()
@@ -174,7 +174,7 @@ task ndkCustomBuildDebug(type: Exec, dependsOn: ['cleanNdkLibs', 'copyAssets']) 
     }
 }
 
-task cleanNdkCustomBuildDebug(type: Exec, dependsOn: 'cleanCopyAssets') {
+task cleanNdkCustomBuildDebug(type: Exec) {
     //windows only
     def dependsDir = file('../../depends').absolutePath
     def cpus = Runtime.runtime.availableProcessors()
@@ -192,7 +192,7 @@ task cleanNdkCustomBuildDebug(type: Exec, dependsOn: 'cleanCopyAssets') {
     }
 }
 
-task ndkCustomBuildRelease(type: Exec, dependsOn: ['cleanNdkLibs', 'copyAssets']) {
+task ndkCustomBuildRelease(type: Exec, dependsOn: ['cleanNdkLibs']) {
     //windows only
     def dependsDir = file('../../depends').absolutePath
     def cpus = Runtime.runtime.availableProcessors()
@@ -209,7 +209,7 @@ task ndkCustomBuildRelease(type: Exec, dependsOn: ['cleanNdkLibs', 'copyAssets']
     }
 }
 
-task cleanNdkCustomBuildRelease(type: Exec, dependsOn: 'cleanCopyAssets') {
+task cleanNdkCustomBuildRelease(type: Exec) {
     //windows only
     def dependsDir = file('../../depends').absolutePath
     def cpus = Runtime.runtime.availableProcessors()
@@ -283,7 +283,8 @@ task copyAssets(type: Copy) {
     into 'assets'
 }
 
-clean.dependsOn cleanNdkCustomBuildDebug, cleanNdkCustomBuildRelease
+preBuild.dependsOn copyAssets
+clean.dependsOn cleanNdkCustomBuildDebug, cleanNdkCustomBuildRelease, cleanCopyAssets
 
 dependencies {
     compile project(':wkcocos')
