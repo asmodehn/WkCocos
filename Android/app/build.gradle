@@ -110,6 +110,7 @@ android {
 
     buildTypes {
         debug {
+            //BEWARE : this changes package name as well ! comment it for testing anything related to google play.
             applicationIdSuffix ".debug"
             debuggable true
             //TODO : use versionNameSuffix
