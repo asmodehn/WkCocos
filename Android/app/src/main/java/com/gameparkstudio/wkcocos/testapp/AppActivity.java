@@ -4,14 +4,15 @@ import android.app.NotificationManager;
 import android.os.Bundle;
 import com.gameparkstudio.wkcocos.lib.MainActivity;
 import com.gameparkstudio.wkcocos.lib.WkDownloaderActivity;
+import com.gameparkstudio.wkcocos.lib.WkDownloaderInfo;
 import com.google.android.vending.expansion.downloader.Helpers;
 
-public class AppActivity extends MainActivity {
+public class AppActivity extends MainActivity implements WkDownloaderInfo {
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
 
-        WkDownloaderActivity.setInfo(new DLInfo());
+        this.setInfo(this);
 
         super.onCreate(savedInstanceState);
     }
@@ -38,6 +39,29 @@ public class AppActivity extends MainActivity {
         //gradle // careful : current package !
         int versionCode = BuildConfig.VERSION_CODE;
         return versionCode;
+    }
+
+    @Override
+    public XAPKFile getMainXAPK() {
+        return null;
+//
+//        To test this you need to put main.40074.com.gameparkstudio.wkcocos.testapp(.debug).obb
+//        containing zipped assets/ into Android/obb/com.gameparkstudio.wkcocos.testapp(.debug)/
+//
+/*        return new XAPKFile(
+                40074, // the version of the APK that the file was uploaded against
+                // it should be the version code added to the obb filename
+                // so it s possible that it doesn't match current BuildConfig.VERSION_CODE
+                151536L, // the length of the file in bytes
+                false
+        );
+*/
+    }
+
+    @Override
+    public XAPKFile getPatchXAPK() {
+        //return null if no XAPK is needed
+        return null;
     }
 
     @Override

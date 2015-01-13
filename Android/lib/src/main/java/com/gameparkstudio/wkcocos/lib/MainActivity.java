@@ -31,8 +31,10 @@ import com.soomla.cocos2dx.store.StoreService;
 
 import org.cocos2dx.lib.Cocos2dxActivity;
 import org.cocos2dx.lib.Cocos2dxGLSurfaceView;
+import org.cocos2dx.lib.Cocos2dxHelper;
 
 import java.io.DataInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.zip.CRC32;
 
@@ -44,14 +46,63 @@ public abstract class MainActivity extends Cocos2dxActivity {
 
     private static Activity me = null;
 
+    WkDownloaderInfo.XAPKFile mainXAPK = null;
+    WkDownloaderInfo.XAPKFile patchXAPK = null;
+
+    static Boolean mainXAPKValid = null;
+    static Boolean patchXAPKValid = null;
+
+    protected static WkDownloaderInfo DLinfo = null;
+
+    /**
+     * Associate the download Activity with an implementation of WkDownloaderInfo providing
+     * information by the client app required for this activity.
+     * @param i DownloaderInfo implementation
+     */
+    static public void setInfo(WkDownloaderInfo i){
+        DLinfo = i;
+    };
+
+    /**
+     * Check the main APK Expansion files and determine if the files are present and match the required size.
+     * Free applications should definitely consider doing this, as this allows the
+     * application to be launched for the first time without having a network
+     * connection present. Paid applications that use LVL should probably do at
+     * least one LVL check that requires the network to be present, so this is
+     * not as necessary.
+     *
+     * @return XAPKFile with its filepath set to proper path if it is present. it is set null if missing ( may be not needed ).
+     */
+    protected WkDownloaderInfo.XAPKFile expansionFilePath(boolean main) {
+        try {
+            if ( DLinfo == null ) {
+                throw new NullPointerException(" ERROR : DLinfo is not set ! ");
+            }
+            else {
+                WkDownloaderInfo.XAPKFile xf = main? DLinfo.getMainXAPK() : DLinfo.getPatchXAPK();
+                if (xf != null) {
+                    String expFileName = Helpers.getExpansionAPKFileName(this, true, xf.mFileVersion); //only filename
+                    String expFilePath = Helpers.generateSaveFileName(this, expFileName); //with directory added
+                    if ( (xf.mCheckEnabled && Helpers.doesFileExist(this, expFileName, xf.mFileSize, false)) //if check enabled we check for size
+                            || (!xf.mCheckEnabled && new File(expFilePath).exists()) )//if check disabled we only check it exists
+                    {
+                        xf.setFilePath(expFilePath);
+                    }else{
+                        Log.e(TAG, "Missing " + (main?"Main":"Patch") + " XAPK at : " + expFilePath );
+                        if (xf.mCheckEnabled) Log.e(TAG, "Expected Size = " + xf.mFileSize);
+                    }
+                }
+                return xf; // we return null if no XAPK file needed ( null returned by app DLinfo implementation ).
+            }
+        } catch (NullPointerException e) {
+            Log.e(TAG, "NullPointerException in WkDownloaderActivity.expansionFileDelivered()");
+            e.printStackTrace();
+        }
+        return null; //we reach here only if error
+    }
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
-
-        //Needed before Cocos start to download all needed assets
-
-        WkDownloaderService.setPublicKey(getLVLKey());
-        WkDownloaderService.setSALT(getSALT());
-
         super.onCreate(savedInstanceState);
 
         me = this;
@@ -62,9 +113,28 @@ public abstract class MainActivity extends Cocos2dxActivity {
 
         WkJniHelper.getInstance().setActivity(this);
 
-        // Fire the intent that launches the DL screen.
-        Intent dl = new Intent(this, WkDownloaderActivity.class);
-        this.startActivity(dl);
+        //Needed for download XAPK
+        WkDownloaderService.setPublicKey(getLVLKey());
+        WkDownloaderService.setSALT(getSALT());
+        //this will call Cocos2dxHelper.nativeSetMainXApkPath and Cocos2dxHelper.nativeSetPatchXApkPath
+        //needs to be done after cocos2d-x app creation
+        if ( mainXAPK == null ) mainXAPK = expansionFilePath(true);
+        if ( patchXAPK == null ) patchXAPK = expansionFilePath(false);
+
+        // we activate download only if one XAPK is needed and DL hasn't been validated yet.
+        if ( ( mainXAPK != null && mainXAPKValid == null)
+          || ( patchXAPK != null && patchXAPKValid == null)
+        ) {
+            //setup cocos values to access resources from XAPK
+            if ( mainXAPK != null ) Cocos2dxHelper.nativeSetMainXApkPath(mainXAPK.getFilePath());
+            if ( patchXAPK != null) Cocos2dxHelper.nativeSetPatchXApkPath(patchXAPK.getFilePath());
+
+            // Fire the intent that launches the DL screen.
+            Intent dl = new Intent(this, WkDownloaderActivity.class);
+            dl.putExtra("mainXAPK",mainXAPK);
+            dl.putExtra("patchXAPK",patchXAPK);
+            this.startActivity(dl);
+        }
     }
 
     @Override
@@ -88,10 +158,18 @@ public abstract class MainActivity extends Cocos2dxActivity {
     @Override protected void onResume() {
 
         //TODO : JNI binding to remove this from here and make it doable in C++ testapp
-        NotificationManager WKNM = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+        NotificationManager WKNM = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         WKNM.cancelAll();
 
         super.onResume();
+
+        //if XAPK are not valid when we resume, we  just exit.
+        if ( ( mainXAPK != null && mainXAPKValid != null && ! mainXAPKValid)
+            || ( patchXAPK != null && patchXAPKValid != null && ! patchXAPKValid)
+        ) {
+            finish();
+        }
+
     }
 
     /**

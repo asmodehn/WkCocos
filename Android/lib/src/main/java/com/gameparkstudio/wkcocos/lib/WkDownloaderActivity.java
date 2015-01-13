@@ -77,6 +77,9 @@ public class WkDownloaderActivity extends Activity implements IDownloaderClient 
     private boolean mStatePaused;
     private int mState;
 
+    private WkDownloaderInfo.XAPKFile mainXAPK = null;
+    private WkDownloaderInfo.XAPKFile patchXAPK = null;
+
     private IDownloaderService mRemoteService;
 
     private IStub mDownloaderClientStub;
@@ -94,17 +97,6 @@ public class WkDownloaderActivity extends Activity implements IDownloaderClient 
                 R.string.text_button_pause;
         mPauseButton.setText(stringResourceID);
     }
-
-    private static WkDownloaderInfo DLinfo = null;
-
-    /**
-     * Associate the download Activity with an implementation of WkDownloaderInfo providing
-     * information by the client app required for this activity.
-     * @param i DownloaderInfo implementation
-     */
-    static public void setInfo(WkDownloaderInfo i){
-        DLinfo = i;
-    };
 
     /**
      * Calculating a moving average for the validation speed so we don't get
@@ -147,10 +139,10 @@ public class WkDownloaderActivity extends Activity implements IDownloaderClient 
                 boolean mainXAPKextracted = false;
                 boolean patchXAPKextracted = false;
 
-                WkDownloaderInfo.XAPKFile mainXAPK = expansionFilePath(true);
                 if ( mainXAPK != null ) {
                     if (mainXAPK.getFilePath() != "") {
                         mainXAPKextracted = bgExtract(mainXAPK.getFilePath(), WkDownloaderActivity.this.getFilesDir().getAbsolutePath(), mainXAPK.mCheckEnabled);
+                        MainActivity.mainXAPKValid = mainXAPKextracted;
                     } // else extraction has failed
                 }
                 else
@@ -158,10 +150,10 @@ public class WkDownloaderActivity extends Activity implements IDownloaderClient 
                     mainXAPKextracted = true;
                 }
 
-                WkDownloaderInfo.XAPKFile patchXAPK = expansionFilePath(false);
                 if ( patchXAPK != null ) {
                     if (patchXAPK.getFilePath() != "") {
                         patchXAPKextracted = bgExtract(patchXAPK.getFilePath(), WkDownloaderActivity.this.getFilesDir().getAbsolutePath(), patchXAPK.mCheckEnabled);
+                        MainActivity.patchXAPKValid = patchXAPKextracted;
                     } // else extraction has failed
                 }
                 else
@@ -172,6 +164,10 @@ public class WkDownloaderActivity extends Activity implements IDownloaderClient 
                 return mainXAPKextracted && patchXAPKextracted;
             }
 
+            /**
+             * note this should always return true if checkCRC is disabled
+             * However we test the unzipping process, since checkCRC is supposed to be disabled only debug.
+             */
             protected Boolean bgExtract(String fileName, String unzipLocation, boolean checkCRC)
             {
                 ZipResourceFile zrf;
@@ -368,54 +364,6 @@ public class WkDownloaderActivity extends Activity implements IDownloaderClient 
     }
 
     /**
-     * Check the main APK Expansion files and determine if the files are present and match the required size.
-     * Free applications should definitely consider doing this, as this allows the
-     * application to be launched for the first time without having a network
-     * connection present. Paid applications that use LVL should probably do at
-     * least one LVL check that requires the network to be present, so this is
-     * not as necessary.
-     *
-     * @return XAPKFile with its filepath set to proper path if it is present. it is set null if missing ( may be not needed ).
-     */
-    protected WkDownloaderInfo.XAPKFile expansionFilePath(boolean main) {
-        try {
-            if ( DLinfo == null ) {
-                throw new NullPointerException(" ERROR : DLinfo is not set ! ");
-            }
-            else {
-                WkDownloaderInfo.XAPKFile xf = main? DLinfo.getMainXAPK() : DLinfo.getPatchXAPK();
-                if (xf != null) {
-                    String expFileName = Helpers.getExpansionAPKFileName(WkDownloaderActivity.this, true, xf.mFileVersion); //only filename
-                    String expFilePath = Helpers.generateSaveFileName(WkDownloaderActivity.this, expFileName); //with directory added
-                    if ( (xf.mCheckEnabled && Helpers.doesFileExist(WkDownloaderActivity.this, expFileName, xf.mFileSize, false)) //if check enabled we check for size
-                        || (!xf.mCheckEnabled && new File(expFilePath).exists()) )//if check disabled we only check it exists
-                    {
-                        xf.setFilePath(expFilePath);
-                        //Now setting XAPK path for cocos to find resources in it.
-                        if ( main )
-                        {
-                            Cocos2dxHelper.nativeSetMainXApkPath(expFilePath);
-                        }
-                        else
-                        {
-                            Cocos2dxHelper.nativeSetPatchXApkPath(expFilePath);
-                        }
-
-                    }else{
-                        Log.e(TAG, "Missing " + (main?"Main":"Patch") + " XAPK at : " + expFilePath );
-                        if (xf.mCheckEnabled) Log.e(TAG, "Expected Size = " + xf.mFileSize);
-                    }
-                }
-                return xf; // we return null if no XAPK file needed ( null returned by app DLinfo implementation.
-            }
-        } catch (NullPointerException e) {
-            Log.e(TAG, "NullPointerException in WkDownloaderActivity.expansionFileDelivered()");
-            e.printStackTrace();
-        }
-        return null; //we reach here only if error
-    }
-
-    /**
      * Called when the activity is first create; we wouldn't create a layout in
      * the case where we have the file and are moving to another activity
      * without downloading.
@@ -424,13 +372,17 @@ public class WkDownloaderActivity extends Activity implements IDownloaderClient 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Intent i = getIntent();
+        mainXAPK = (WkDownloaderInfo.XAPKFile) i.getParcelableExtra("mainXAPK");
+        patchXAPK = (WkDownloaderInfo.XAPKFile) i.getParcelableExtra("patchXAPK");
+
         /**
          * Before we do anything, are the files we expect already here and
          * delivered (presumably by Market) For free titles, this is probably
          * worth doing. (so no Market request is necessary)
          */
-        if ( (expansionFilePath(true) != null && expansionFilePath(true).getFilePath() == "")
-          || (expansionFilePath(false) != null && expansionFilePath(false).getFilePath() == "")
+        if ( (mainXAPK != null && mainXAPK.getFilePath() == "")
+          || (patchXAPK != null && patchXAPK.getFilePath() == "")
         ) { // we download only if one XAPK is needed but missing
 
             try {
@@ -464,7 +416,7 @@ public class WkDownloaderActivity extends Activity implements IDownloaderClient 
             }
 
         } else {
-        // Both downloading and validation make use of the "download" UI
+            // Both downloading and validation make use of the "download" UI
             initializeDownloadUI();
             validateXAPKZipFiles();
         }
