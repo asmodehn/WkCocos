@@ -121,6 +121,7 @@ android {
             //TODO : use versionNameSuffix
             jniDebuggable false
             signingConfig signingConfigs.release
+            //TODO : Enable it and test everything still works as expected.
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
