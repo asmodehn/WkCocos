@@ -43,19 +43,18 @@ public class AppActivity extends MainActivity implements WkDownloaderInfo {
 
     @Override
     public XAPKFile getMainXAPK() {
-        return null;
+//        return null;
 //
-//        To test this you need to put main.40074.com.gameparkstudio.wkcocos.testapp(.debug).obb
+//        To test this you need to put main.<versionCode>.com.gameparkstudio.wkcocos.testapp(.debug).obb
 //        containing zipped assets/ into Android/obb/com.gameparkstudio.wkcocos.testapp(.debug)/
 //
-/*        return new XAPKFile(
-                40074, // the version of the APK that the file was uploaded against
+        return new XAPKFile(
+                BuildConfig.VERSION_CODE, // the version of the APK that the file was uploaded against
                 // it should be the version code added to the obb filename
-                // so it s possible that it doesn't match current BuildConfig.VERSION_CODE
-                151536L, // the length of the file in bytes
-                false
+                // TODO : CHECK => so it s possible that it doesn't match current BuildConfig.VERSION_CODE ?
+                654654L,//BuildConfig.OBB_SIZE, // the length of the file in bytes
+                false //false ignores the size check and the zip CRC checks.
         );
-*/
     }
 
     @Override
