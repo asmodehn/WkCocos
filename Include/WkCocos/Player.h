@@ -26,7 +26,7 @@ namespace WkCocos
 	class Player : public Actor
 	{
 	public:
-		
+
 		/**
 		* Settingup the Inventory of the player
 		*/
@@ -42,13 +42,13 @@ namespace WkCocos
 			struct tm timeinfo = m_timer->getServerUTCTime();
 			//CCLOG(asctime(&timeinfo));
 			timeinfo.tm_sec += secs;
-			
+
 			mktime(&timeinfo);
 
 			//CCLOG(asctime(&timeinfo));
 			return m_timer->setAlarm(id, timeinfo);
 		}
-		
+
 		/**
 		* stops Timer
 		*/
@@ -100,30 +100,6 @@ namespace WkCocos
 			std::string m_username;
 		};
 
-		struct Loaded : public Event < Loaded >
-		{
-			Loaded(ActorID id)
-				: Event(id)
-			{}
-		};
-
-		struct Saved : public Event < Saved >
-		{
-			Saved(ActorID id)
-				: Event(id)
-			{}
-		};
-
-		bool isSaved() const
-		{
-			bool allsaved = true;
-			for (auto s : m_save)
-			{
-				allsaved = allsaved && s.second->isSaved();
-			}
-			return allsaved;
-		}
-		
 		inline const std::string& getUser() const { return m_user; }
 
 		bool getUsersKeyValue(std::string saveName, std::string key, int value, int quantity, int offset);
@@ -131,7 +107,7 @@ namespace WkCocos
 		bool getUsersFromTo(std::string saveName, std::string key, int from, int to, int quantity, int offset);
 
 		bool getAllDocsPaging(std::string saveName, int quantity, int offset);
-				
+
 		/**
 		* constructor for a local player. This will manage local saved data only
 		*/
@@ -160,24 +136,6 @@ namespace WkCocos
 			return 0 == m_loggingin;
 		}
 
-		/**
-		* request a Save
-		*/
-		bool saveData();
-		/**
-		* request a Load
-		*/
-		bool loadData();
-		/**
-		* Receive data loaded
-		*/
-		void receive(const WkCocos::Save::Loaded& constructed_evt);
-
-		/**
-		* Receive data saved
-		*/
-		void receive(const WkCocos::Save::Saved& saved_evt);
-
 	protected:
 		bool newPlayer;
 		std::string m_user;
@@ -186,11 +144,8 @@ namespace WkCocos
 		std::shared_ptr<LocalData::LocalDataManager> m_localdata;
 		std::shared_ptr<OnlineData::OnlineDataManager> m_onlinedata;
 		std::shared_ptr<Timer::Timer> m_timer;
-		
-		std::shared_ptr<WkCocos::Shop::Inventory> m_inventory;
 
-		//map of saves indexed based on name.
-		std::map<std::string,Save*> m_save;
+		std::shared_ptr<WkCocos::Shop::Inventory> m_inventory;
 
 	private:
 
@@ -217,28 +172,12 @@ namespace WkCocos
 			//autologin. create user and login
 			m_onlinedata->loginNew(m_user, m_passwd, email, [=](std::string body){
 				CCLOG("login done !!!");
-				loadData();
+                events()->emit<LoggedIn>(getId(), m_user);
 			});
 		}
 
 		//synchronous callbacks
 		std::function<std::string(std::string userid)> m_pw_gen_cb;
-
-		const char * sAlarms = "alarms";
-		const char * sID = "id";
-
-		const char * sSec = "sec";
-		const char * sMin = "min";
-		const char * sHour = "hour";
-		const char * sMday = "mday";
-		const char * sMon = "mon";
-		const char * sYear = "year";
-		const char * sWday = "wday";
-		const char * sYday = "yday";
-		const char * sIsdst = "isdst";
-
-		const std::string timerSaveName = "timer";
-		const std::string moreSaveName = "more";
 
 		//requests for logging in
 		unsigned short m_loggingin;
@@ -247,10 +186,6 @@ namespace WkCocos
 		{
 			m_user = user;
 			m_passwd = passwd;
-			for (auto save : m_save)
-			{
-				save.second->setUserName(m_user);
-			}
 		}
 
 	};

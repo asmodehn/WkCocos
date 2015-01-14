@@ -11,7 +11,7 @@
 
 //#include "cocos2d.h"
 
-//TODO : This used ot be a singleton. but it is not needed, it can be just a global variable.
+//TODO : This used to be a singleton. but it is not needed, it can be just a global variable.
 // => We should review design in order to include GameLogic as a Helper in Lib ( providing easy access to all managers. )
 class GameLogic : public entityx::Receiver<GameLogic>
 {
@@ -30,7 +30,10 @@ public:
 
 	};
 
-	entityx::EventManager logic_events;
+    std::shared_ptr<entityx::EventManager> getEventManager()
+    {
+        return m_logic->events();
+    }
 
 	void localDataError()
 	{
@@ -51,6 +54,11 @@ public:
 	{
 		return *(m_shop.get());
 	}
+
+    WkCocos::Timer::Timer& getGameClock()
+    {
+        return *(m_logic->getGameClock());
+    }
 
 	WkCocos::LocalData::LocalDataManager& getLocalDataManager()
 	{
@@ -76,12 +84,12 @@ public:
 
 	void receive(const MyPlayer::LoggedIn& player_loggedin)
 	{
-		logic_events.emit<Player_LoggedIn>();
+		getEventManager()->emit<Player_LoggedIn>();
 	}
 
 	void receive(const WkCocos::Shop::Shop::StoreControllerInitialized& scInit)
 	{
-		logic_events.emit<ShopInitialized>();
+		getEventManager()->emit<ShopInitialized>();
 	}
 
 private:

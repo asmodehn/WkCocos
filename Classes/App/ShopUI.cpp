@@ -30,7 +30,7 @@ ShopUI::ShopUI()
 	}
 
 	//ENTITYX WAY
-	g_gameLogic->logic_events.subscribe<GameLogic::ShopInitialized>(*this);
+	g_gameLogic->getEventManager()->subscribe<GameLogic::ShopInitialized>(*this);
 
 }
 
