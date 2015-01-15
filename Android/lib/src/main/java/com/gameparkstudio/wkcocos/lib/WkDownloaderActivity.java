@@ -252,6 +252,7 @@ public class WkDownloaderActivity extends Activity implements IDownloaderClient 
                                         return true;
                                     }
                                 }
+                                //detecting CRC errors
                                 if (checkCRC && crc.getValue() != entry.mCRC32) {
                                     Log.e(Constants.TAG, "CRC does not match for entry: " + entry.mFileName);
                                     Log.e(Constants.TAG, "In file: " + entry.getZipFileName());
@@ -264,6 +265,14 @@ public class WkDownloaderActivity extends Activity implements IDownloaderClient 
                             }
                         }
                     }
+                    //to get to 100% at the end
+                    this.publishProgress(
+                            new DownloadProgressInfo(
+                                    totalCompressedLength,
+                                    totalCompressedLength,
+                                    0,
+                                    averageVerifySpeed)
+                    );
                 } catch (IOException e) {
                     e.printStackTrace();
                     return false;

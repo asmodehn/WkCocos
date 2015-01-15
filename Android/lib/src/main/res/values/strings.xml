@@ -13,5 +13,6 @@
     <string name="text_button_resume">Resume Download</string>
     <string name="text_button_cancel">Cancel</string>
     <string name="text_button_cancel_verify">Cancel Verification</string>
+    <string name="bg_image_desc">Download background image</string>
 
 </resources>
