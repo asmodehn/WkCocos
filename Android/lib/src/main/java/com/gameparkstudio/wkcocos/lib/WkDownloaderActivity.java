@@ -303,6 +303,10 @@ public class WkDownloaderActivity extends Activity implements IDownloaderClient 
                     mPauseButton.setText(android.R.string.cancel);
                 }
                 super.onPostExecute(result);
+                if(result) {
+                    //finishing automatically
+                    finish();
+                }
             }
 
         };
