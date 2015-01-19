@@ -1,5 +1,6 @@
 package com.gameparkstudio.wkcocos.lib;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -13,9 +14,12 @@ import android.os.SystemClock;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.vending.expansion.zipfile.ZipResourceFile;
 import com.google.android.vending.expansion.downloader.Constants;
@@ -38,7 +42,15 @@ import java.io.File;
 import java.io.IOException;
 import java.util.zip.CRC32;
 
-public abstract class MainActivity extends Cocos2dxActivity {
+import com.igaworks.IgawCommon;
+import com.igaworks.displayad.IgawDisplayAd;
+import com.igaworks.displayad.common.DAErrorCode;
+import com.igaworks.displayad.interfaces.IBannerEventCallbackListener;
+import com.igaworks.displayad.interfaces.IInterstitialEventCallbackListener;
+import com.igaworks.displayad.interfaces.IPopupEventCallbackListener;
+import com.igaworks.displayad.view.BannerContainerView;
+
+public abstract class MainActivity extends Cocos2dxActivity implements IBannerEventCallbackListener{
 
     private final static String TAG = MainActivity.class.getSimpleName();
 
@@ -54,6 +66,11 @@ public abstract class MainActivity extends Cocos2dxActivity {
 
     protected static WkDownloaderInfo DLinfo = null;
 
+	private final String BANNER_ID_2 = "fa910d896f";
+	private String bannerKey;
+
+    private BannerContainerView bannerView;
+	
     /**
      * Associate the download Activity with an implementation of WkDownloaderInfo providing
      * information by the client app required for this activity.
@@ -104,8 +121,27 @@ public abstract class MainActivity extends Cocos2dxActivity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+		bannerKey = BANNER_ID_2;
 
+        //setContentView(R.layout.ad, ViewGroup.LayoutParams.WRAP_CONTENT);
         me = this;
+
+        android.widget.LinearLayout layout = new android.widget.LinearLayout(me);
+        layout.setOrientation(LinearLayout.VERTICAL);
+        layout.setLayoutParams(new android.view.ViewGroup.LayoutParams(android.view.ViewGroup.LayoutParams.WRAP_CONTENT, android.view.ViewGroup.LayoutParams.WRAP_CONTENT));
+
+        bannerView = new BannerContainerView(me);
+        layout.addView(bannerView);
+        TextView title = new TextView(this);
+        title.setText("test text");
+        layout.addView(title);
+        //setContentView(layout);
+        mFrameLayout.addView(layout);
+
+        // Ad init
+		IgawCommon.startApplication(me);
+        IgawDisplayAd.init(me);
+        IgawDisplayAd.setBannerEventCallbackListener(me, bannerKey, this);
 
         if (mWebViewHelper == null) {
             mWebViewHelper = new Cocos2dxWebViewHelper(mFrameLayout);
@@ -148,11 +184,14 @@ public abstract class MainActivity extends Cocos2dxActivity {
         serviceManager.setGlSurfaceView(glSurfaceView);
         serviceManager.registerService(StoreService.getInstance());
 
+        //setContentView(R.layout.ad);
         return glSurfaceView;
     }
 
     @Override protected void onPause() {
         super.onPause();
+		IgawCommon.endSession();
+		IgawDisplayAd.pauseBannerAd(me, bannerKey);
     }
 
     @Override protected void onResume() {
@@ -169,6 +208,9 @@ public abstract class MainActivity extends Cocos2dxActivity {
         ) {
             finish();
         }
+		
+		IgawCommon.startSession(me);
+		IgawDisplayAd.startBannerAd(me, bannerKey, bannerView);
 
     }
 
@@ -219,6 +261,18 @@ public abstract class MainActivity extends Cocos2dxActivity {
         Intent i = new Intent(Intent.ACTION_VIEW);
         i.setData(Uri.parse(url));
         me.startActivity(i);
+    }
+
+    @Override
+    public void OnBannerAdReceiveSuccess() {
+        // TODO Auto-generated method stub
+        Toast.makeText(me, "OnBannerAdReceiveSuccess", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void OnBannerAdReceiveFailed(DAErrorCode errorCode) {
+        // TODO Auto-generated method stub
+        Toast.makeText(me, "OnBannerAdReceiveFailed: " + errorCode.getErrorMessage(), Toast.LENGTH_SHORT).show();
     }
 
 }

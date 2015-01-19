@@ -19,6 +19,17 @@
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
             android:configChanges="orientation">
         </activity>
+		
+		<!-- AD BEGIN -->
+		<!-- need to double check this information-->
+		<meta-data android:name="igaworks_market_info" android:value="google"/>
+		
+		<receiver android:name="com.igaworks.IgawReceiver" android:exported="true">
+			<intent-filter>
+			<action android:name="com.android.vending.INSTALL_REFERRER" />
+			</intent-filter>
+		</receiver> 
+		<!-- AD END -->
 
     </application>
 
@@ -29,5 +40,9 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
+	<!-- AD BEGIN -->
+	<uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+	<!-- AD END -->
 
 </manifest>
