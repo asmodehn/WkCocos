@@ -2,6 +2,9 @@ package com.gameparkstudio.wkcocos.lib;
 
 
 import android.app.Activity;
+import android.util.Log;
+
+import com.gameparkstudio.wkcocos.lib.MainActivity;
 
 
 //This is a singleton. ref : http://howtodoinjava.com/2012/10/22/singleton-design-pattern-in-java
@@ -17,13 +20,13 @@ public class WkJniHelper {
             return LazyHolder.INSTANCE;
         }
 
-        public Activity appMainActivity;
+        public MainActivity appMainActivity;
 
         //to receive alarm intents
         PushNotificationsManager pnMgr;
 
         //Setting the Main Activity upon creation, for later revival via scheduled PN
-        public boolean setActivity(Activity mainActivity) {
+        public boolean setActivity(MainActivity mainActivity) {
             appMainActivity = mainActivity;
 
             pnMgr = new PushNotificationsManager(appMainActivity);
@@ -39,4 +42,12 @@ public class WkJniHelper {
             return pnMgr;
         }
 
+        public void showAdBanner(int x, int y)
+        {
+            appMainActivity.getAd().showAdBanner(x, y);
+        }
+        public void hideAdBanner()
+        {
+            appMainActivity.getAd().hideAdBanner();
+        }
 }

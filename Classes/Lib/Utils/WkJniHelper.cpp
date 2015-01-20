@@ -102,24 +102,64 @@ namespace WkCocos
 #endif
             CCLOG("Version detected : %s", version.c_str());
             return version;
-        }
+		}
 
-        void WkJniHelper::openURL(std::string url)
-        {
-            //TODO : change to match design using WkJniHelpers
+		void WkJniHelper::openURL(std::string url)
+		{
+			//TODO : change to match design using WkJniHelpers
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-            cocos2d::JniMethodInfo minfo;
+			cocos2d::JniMethodInfo minfo;
 
-            if (cocos2d::JniHelper::getStaticMethodInfo(minfo, "com/gameparkstudio/wkcocos/lib/MainActivity", "openURL", "(Ljava/lang/String;)V")) {
-                jstring StringArg1 = minfo.env->NewStringUTF(url.c_str());
-                minfo.env->CallStaticVoidMethod(minfo.classID, minfo.methodID, StringArg1);
-                minfo.env->DeleteLocalRef(StringArg1);
-                minfo.env->DeleteLocalRef(minfo.classID);
-            }
+			if (cocos2d::JniHelper::getStaticMethodInfo(minfo, "com/gameparkstudio/wkcocos/lib/MainActivity", "openURL", "(Ljava/lang/String;)V")) {
+				jstring StringArg1 = minfo.env->NewStringUTF(url.c_str());
+				minfo.env->CallStaticVoidMethod(minfo.classID, minfo.methodID, StringArg1);
+				minfo.env->DeleteLocalRef(StringArg1);
+				minfo.env->DeleteLocalRef(minfo.classID);
+			}
 #else
-            //TODO
+			//TODO
 #endif
-        }
+		}
+
+		void WkJniHelper::showAd(cocos2d::Vec2 pos)
+		{
+			//TODO : change to match design using WkJniHelpers
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+			cocos2d::JniMethodInfo j_getMainActivityMI;
+
+			jobject helperinst = WkJniHelper::getInstance();
+
+			CCLOG("Calling com/gameparkstudio/wkcocos/lib/WkJniHelper/showAdBanner(II)V");
+			if (helperinst && cocos2d::JniHelper::getMethodInfo(j_getMainActivityMI, "com/gameparkstudio/wkcocos/lib/WkJniHelper", "showAdBanner", "(II)V"))
+			{
+				jint x = static_cast<int>(pos.x);
+				jint y = static_cast<int>(pos.y);
+				j_getMainActivityMI.env->CallVoidMethod(helperinst, j_getMainActivityMI.methodID, x, y);
+			}
+			j_getMainActivityMI.env->DeleteLocalRef(helperinst);
+#else
+			//TODO
+#endif
+		}
+
+		void WkJniHelper::hideAd()
+		{
+			//TODO : change to match design using WkJniHelpers
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+			cocos2d::JniMethodInfo j_getMainActivityMI;
+
+			jobject helperinst = WkJniHelper::getInstance();
+
+			CCLOG("Calling com/gameparkstudio/wkcocos/lib/WkJniHelper/hideAdBanner()");
+			if (helperinst && cocos2d::JniHelper::getMethodInfo(j_getMainActivityMI, "com/gameparkstudio/wkcocos/lib/WkJniHelper", "hideAdBanner", "()V"))
+			{
+				j_getMainActivityMI.env->CallVoidMethod(helperinst, j_getMainActivityMI.methodID);
+			}
+			j_getMainActivityMI.env->DeleteLocalRef(helperinst);
+#else
+			//TODO
+#endif
+		}
 
 	}
 }

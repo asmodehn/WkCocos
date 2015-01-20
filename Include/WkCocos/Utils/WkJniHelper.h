@@ -38,7 +38,9 @@ namespace WkCocos
 
             static std::string getVersionName();
 
-            static void openURL(std::string url);
+			static void openURL(std::string url);
+			static void showAd(cocos2d::Vec2 pos);
+			static void hideAd();
 
         private:
             friend class WkCocos::PushNotifications::PushNotifications;
