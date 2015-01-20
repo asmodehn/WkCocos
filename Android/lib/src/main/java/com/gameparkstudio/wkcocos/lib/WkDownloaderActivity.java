@@ -77,8 +77,8 @@ public class WkDownloaderActivity extends Activity implements IDownloaderClient 
     private boolean mStatePaused;
     private int mState;
 
-    private WkDownloaderInfo.XAPKFile mainXAPK = null;
-    private WkDownloaderInfo.XAPKFile patchXAPK = null;
+    private XAPKFile mainXAPK = null;
+    private XAPKFile patchXAPK = null;
 
     private IDownloaderService mRemoteService;
 
@@ -386,18 +386,19 @@ public class WkDownloaderActivity extends Activity implements IDownloaderClient 
         super.onCreate(savedInstanceState);
 
         Intent i = getIntent();
-        mainXAPK = (WkDownloaderInfo.XAPKFile) i.getParcelableExtra("mainXAPK");
-        patchXAPK = (WkDownloaderInfo.XAPKFile) i.getParcelableExtra("patchXAPK");
+        mainXAPK = i.getParcelableExtra("mainXAPK");
+        patchXAPK = i.getParcelableExtra("patchXAPK");
 
         /**
          * Before we do anything, are the files we expect already here and
          * delivered (presumably by Market) For free titles, this is probably
          * worth doing. (so no Market request is necessary)
          */
-        if ( (mainXAPK != null && mainXAPK.getFilePath() == "")
-          || (patchXAPK != null && patchXAPK.getFilePath() == "")
+        if ( (mainXAPK != null && mainXAPK.getFilePath().equals(""))
+          || (patchXAPK != null && patchXAPK.getFilePath().equals(""))
         ) { // we download only if one XAPK is needed but missing
 
+            Log.e(TAG, "XAPKs Missing. Attempting Download ...");
             try {
                 Intent launchIntent = WkDownloaderActivity.this.getIntent();
                 Intent intentToLaunchThisActivityFromNotification = new Intent(WkDownloaderActivity.this, WkDownloaderActivity.this.getClass());
@@ -410,19 +411,22 @@ public class WkDownloaderActivity extends Activity implements IDownloaderClient 
                     }
                 }
 
-                // Build PendingIntent used to open this activity from
-                // Notification
+                // Build PendingIntent used to open this activity from Notification
                 PendingIntent pendingIntent = PendingIntent.getActivity(WkDownloaderActivity.this,0, intentToLaunchThisActivityFromNotification,PendingIntent.FLAG_UPDATE_CURRENT);
                 // Request to start the download
                 int startResult = DownloaderClientMarshaller.startDownloadServiceIfRequired(this,pendingIntent, WkDownloaderService.class);
 
                 if (startResult != DownloaderClientMarshaller.NO_DOWNLOAD_REQUIRED) {
+                    Log.e(TAG, "XAPK Download started.");
                     // The DownloaderService has started downloading the files,
                     // show progress
                     initializeDownloadUI();
                     return;
-                } // otherwise, download not needed so we fall through to
-                // starting the movie
+                } else {
+                    // otherwise, download not needed so we fall through to
+                    // starting the movie
+                    Log.e(TAG, "XAPK Download not required.");
+                }
             } catch (PackageManager.NameNotFoundException e) {
                 Log.e(TAG, "Cannot find own package! MAYDAY!");
                 e.printStackTrace();

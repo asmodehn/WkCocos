@@ -1,11 +1,9 @@
 package com.gameparkstudio.wkcocos.testapp;
 
-import android.app.NotificationManager;
 import android.os.Bundle;
 import com.gameparkstudio.wkcocos.lib.MainActivity;
-import com.gameparkstudio.wkcocos.lib.WkDownloaderActivity;
 import com.gameparkstudio.wkcocos.lib.WkDownloaderInfo;
-import com.google.android.vending.expansion.downloader.Helpers;
+import com.gameparkstudio.wkcocos.lib.XAPKFile;
 
 public class AppActivity extends MainActivity implements WkDownloaderInfo {
 
