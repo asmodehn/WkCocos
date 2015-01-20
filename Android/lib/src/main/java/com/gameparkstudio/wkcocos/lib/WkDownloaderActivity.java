@@ -394,10 +394,11 @@ public class WkDownloaderActivity extends Activity implements IDownloaderClient 
          * delivered (presumably by Market) For free titles, this is probably
          * worth doing. (so no Market request is necessary)
          */
-        if ( (mainXAPK != null && mainXAPK.getFilePath() == "")
-          || (patchXAPK != null && patchXAPK.getFilePath() == "")
+        if ( (mainXAPK != null && mainXAPK.getFilePath().equals(""))
+          || (patchXAPK != null && patchXAPK.getFilePath().equals(""))
         ) { // we download only if one XAPK is needed but missing
 
+            Log.e(TAG, "XAPKs Missing. Attempting Download ...");
             try {
                 Intent launchIntent = WkDownloaderActivity.this.getIntent();
                 Intent intentToLaunchThisActivityFromNotification = new Intent(WkDownloaderActivity.this, WkDownloaderActivity.this.getClass());
@@ -410,19 +411,22 @@ public class WkDownloaderActivity extends Activity implements IDownloaderClient 
                     }
                 }
 
-                // Build PendingIntent used to open this activity from
-                // Notification
+                // Build PendingIntent used to open this activity from Notification
                 PendingIntent pendingIntent = PendingIntent.getActivity(WkDownloaderActivity.this,0, intentToLaunchThisActivityFromNotification,PendingIntent.FLAG_UPDATE_CURRENT);
                 // Request to start the download
                 int startResult = DownloaderClientMarshaller.startDownloadServiceIfRequired(this,pendingIntent, WkDownloaderService.class);
 
                 if (startResult != DownloaderClientMarshaller.NO_DOWNLOAD_REQUIRED) {
+                    Log.e(TAG, "XAPK Download started.");
                     // The DownloaderService has started downloading the files,
                     // show progress
                     initializeDownloadUI();
                     return;
-                } // otherwise, download not needed so we fall through to
-                // starting the movie
+                } else {
+                    // otherwise, download not needed so we fall through to
+                    // starting the movie
+                    Log.e(TAG, "XAPK Download not required.");
+                }
             } catch (PackageManager.NameNotFoundException e) {
                 Log.e(TAG, "Cannot find own package! MAYDAY!");
                 e.printStackTrace();
