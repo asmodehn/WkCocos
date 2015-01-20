@@ -77,8 +77,8 @@ public class WkDownloaderActivity extends Activity implements IDownloaderClient 
     private boolean mStatePaused;
     private int mState;
 
-    private WkDownloaderInfo.XAPKFile mainXAPK = null;
-    private WkDownloaderInfo.XAPKFile patchXAPK = null;
+    private XAPKFile mainXAPK = null;
+    private XAPKFile patchXAPK = null;
 
     private IDownloaderService mRemoteService;
 
@@ -386,8 +386,8 @@ public class WkDownloaderActivity extends Activity implements IDownloaderClient 
         super.onCreate(savedInstanceState);
 
         Intent i = getIntent();
-        mainXAPK = (WkDownloaderInfo.XAPKFile) i.getParcelableExtra("mainXAPK");
-        patchXAPK = (WkDownloaderInfo.XAPKFile) i.getParcelableExtra("patchXAPK");
+        mainXAPK = i.getParcelableExtra("mainXAPK");
+        patchXAPK = i.getParcelableExtra("patchXAPK");
 
         /**
          * Before we do anything, are the files we expect already here and

@@ -46,8 +46,8 @@ public abstract class MainActivity extends Cocos2dxActivity {
 
     private static Activity me = null;
 
-    WkDownloaderInfo.XAPKFile mainXAPK = null;
-    WkDownloaderInfo.XAPKFile patchXAPK = null;
+    XAPKFile mainXAPK = null;
+    XAPKFile patchXAPK = null;
 
     static Boolean mainXAPKValid = null;
     static Boolean patchXAPKValid = null;
@@ -73,13 +73,13 @@ public abstract class MainActivity extends Cocos2dxActivity {
      *
      * @return XAPKFile with its filepath set to proper path if it is present. it is set null if missing ( may be not needed ).
      */
-    protected WkDownloaderInfo.XAPKFile expansionFilePath(boolean main) {
+    protected XAPKFile expansionFilePath(boolean main) {
         try {
             if ( DLinfo == null ) {
                 throw new NullPointerException(" ERROR : DLinfo is not set ! ");
             }
             else {
-                WkDownloaderInfo.XAPKFile xf = main? DLinfo.getMainXAPK() : DLinfo.getPatchXAPK();
+                XAPKFile xf = main? DLinfo.getMainXAPK() : DLinfo.getPatchXAPK();
                 if (xf != null) {
                     String expFileName = Helpers.getExpansionAPKFileName(this, true, xf.mFileVersion); //only filename
                     String expFilePath = Helpers.generateSaveFileName(this, expFileName); //with directory added
