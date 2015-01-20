@@ -116,6 +116,30 @@ public class WkDownloaderActivity extends Activity implements IDownloaderClient 
      * @return true if XAPKZipFile is successful
      */
     void validateXAPKZipFiles() {
+
+        if ( mainXAPK != null ) { //if we expect an APK
+            //fill in information before attempting validation.
+            String mexpFileName = Helpers.getExpansionAPKFileName(this, true, mainXAPK.mFileVersion); //only filename
+            String mexpFilePath = Helpers.generateSaveFileName(this, mexpFileName); //with directory added
+            if ((mainXAPK.mCheckEnabled && Helpers.doesFileExist(this, mexpFileName, mainXAPK.mFileSize, false)) //if check enabled we check for size
+                    || (!mainXAPK.mCheckEnabled && new File(mexpFilePath).exists()))//if check disabled we only check it exists
+            {
+                mainXAPK.setFilePath(mexpFilePath);
+                Cocos2dxHelper.nativeSetMainXApkPath(mainXAPK.getFilePath());
+            }
+        }
+
+        if (patchXAPK != null ) {
+            String pexpFileName = Helpers.getExpansionAPKFileName(this, true, patchXAPK.mFileVersion); //only filename
+            String pexpFilePath = Helpers.generateSaveFileName(this, pexpFileName); //with directory added
+            if ((patchXAPK.mCheckEnabled && Helpers.doesFileExist(this, pexpFileName, patchXAPK.mFileSize, false)) //if check enabled we check for size
+                    || (!patchXAPK.mCheckEnabled && new File(pexpFilePath).exists()))//if check disabled we only check it exists
+            {
+                patchXAPK.setFilePath(pexpFilePath);
+                Cocos2dxHelper.nativeSetPatchXApkPath(patchXAPK.getFilePath());
+            }
+        }
+
         AsyncTask<Object, DownloadProgressInfo, Boolean> validationTask = new AsyncTask<Object, DownloadProgressInfo, Boolean>() {
 
             @Override
@@ -139,11 +163,11 @@ public class WkDownloaderActivity extends Activity implements IDownloaderClient 
                 boolean mainXAPKextracted = false;
                 boolean patchXAPKextracted = false;
 
-                if ( mainXAPK != null ) {
+                if ( mainXAPK != null ) { //if we expect an APK
                     if (mainXAPK.getFilePath() != "") {
                         mainXAPKextracted = bgExtract(mainXAPK.getFilePath(), WkDownloaderActivity.this.getFilesDir().getAbsolutePath(), mainXAPK.mCheckEnabled);
                         MainActivity.mainXAPKValid = mainXAPKextracted;
-                    } // else extraction has failed
+                    } // else looking for XAPK has failed.
                 }
                 else
                 {  //no expansion file : no extract same as extract empty patch file
@@ -154,7 +178,7 @@ public class WkDownloaderActivity extends Activity implements IDownloaderClient 
                     if (patchXAPK.getFilePath() != "") {
                         patchXAPKextracted = bgExtract(patchXAPK.getFilePath(), WkDownloaderActivity.this.getFilesDir().getAbsolutePath(), patchXAPK.mCheckEnabled);
                         MainActivity.patchXAPKValid = patchXAPKextracted;
-                    } // else extraction has failed
+                    } // else  looking for XAPK has failed
                 }
                 else
                 {  //no expansion file : no extract same as extract empty patch file

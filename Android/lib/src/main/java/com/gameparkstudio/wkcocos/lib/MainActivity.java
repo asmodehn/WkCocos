@@ -121,14 +121,14 @@ public abstract class MainActivity extends Cocos2dxActivity {
         if ( mainXAPK == null ) mainXAPK = expansionFilePath(true);
         if ( patchXAPK == null ) patchXAPK = expansionFilePath(false);
 
-        // we activate download only if one XAPK is needed and DL hasn't been validated yet.
-        if ( ( mainXAPK != null && mainXAPKValid == null)
-          || ( patchXAPK != null && patchXAPKValid == null)
-        ) {
-            //setup cocos values to access resources from XAPK
-            if ( mainXAPK != null ) Cocos2dxHelper.nativeSetMainXApkPath(mainXAPK.getFilePath());
-            if ( patchXAPK != null) Cocos2dxHelper.nativeSetPatchXApkPath(patchXAPK.getFilePath());
+        //setup cocos values to access resources from XAPK
+        if ( mainXAPK != null && !mainXAPK.getFilePath().isEmpty() ) Cocos2dxHelper.nativeSetMainXApkPath(mainXAPK.getFilePath());
+        if ( patchXAPK != null && !patchXAPK.getFilePath().isEmpty() ) Cocos2dxHelper.nativeSetPatchXApkPath(patchXAPK.getFilePath());
 
+        // we activate download only if one XAPK is needed and file hasn't been found.
+        if ( ( mainXAPK != null && mainXAPK.getFilePath().isEmpty())
+          || ( patchXAPK != null && mainXAPK.getFilePath().isEmpty())
+        ) {
             // Fire the intent that launches the DL screen.
             Intent dl = new Intent(this, WkDownloaderActivity.class);
             dl.putExtra("mainXAPK",mainXAPK);
