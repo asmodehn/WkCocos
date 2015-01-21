@@ -26,8 +26,10 @@ namespace WkCocos
         {
             jobject instance;
             cocos2d::JniMethodInfo j_getInstanceMI;
-			CCLOG("Calling com/gameparkstudio/wkcocos/lib/WkJniHelper/getInstance()Lcom/gameparkstudio/wkcocos/lib/WkJniHelper;");
-			if (cocos2d::JniHelper::getStaticMethodInfo(j_getInstanceMI, "com/gameparkstudio/wkcocos/lib/WkJniHelper", "getInstance", "()Lcom/gameparkstudio/wkcocos/lib/WkJniHelper;"))
+            std::string clss = std::string(JAVA_PACKAGE) + "/WkJniHelper";
+            std::string clss_prm = "()L" + clss + ";";
+			CCLOG("Calling %s/getInstance%s", clss.c_str(), clss_prm.c_str());
+			if (cocos2d::JniHelper::getStaticMethodInfo(j_getInstanceMI, clss.c_str(), "getInstance", clss_prm.c_str()))
 			{
 				instance = j_getInstanceMI.env->CallStaticObjectMethod(j_getInstanceMI.classID, j_getInstanceMI.methodID);
 			}
@@ -41,9 +43,11 @@ namespace WkCocos
             cocos2d::JniMethodInfo j_getPNMgrMI;
 
 			jobject helperinst = WkJniHelper::getInstance();
-
-			CCLOG("Calling com/gameparkstudio/wkcocos/lib/WkJniHelper/getPNMgr()Lcom/gameparkstudio/wkcocos/lib/PushNotificationsManager;");
-			if (helperinst && cocos2d::JniHelper::getMethodInfo(j_getPNMgrMI, "com/gameparkstudio/wkcocos/lib/WkJniHelper", "getPNMgr", "()Lcom/gameparkstudio/wkcocos/lib/PushNotificationsManager;"))
+			std::string hclss = std::string(JAVA_PACKAGE) + "/WkJniHelper";
+            std::string pnclss = std::string(JAVA_PACKAGE) + "/PushNotificationsManager";
+            std::string pnclss_prm = "()L" + pnclss + ";";
+			CCLOG("Calling %s/getPNMgr%s", hclss.c_str(), pnclss_prm.c_str());
+			if (helperinst && cocos2d::JniHelper::getMethodInfo(j_getPNMgrMI, hclss.c_str(), "getPNMgr", pnclss_prm.c_str()))
             {
                 instance = j_getPNMgrMI.env->CallObjectMethod(helperinst, j_getPNMgrMI.methodID);
             }
@@ -58,9 +62,9 @@ namespace WkCocos
             cocos2d::JniMethodInfo j_getMainActivityMI;
 
 			jobject helperinst = WkJniHelper::getInstance();
-
-			CCLOG("Calling com/gameparkstudio/wkcocos/lib/WkJniHelper/getAppMainActivity()Landroid/app/Activity;");
-			if (helperinst && cocos2d::JniHelper::getMethodInfo(j_getMainActivityMI, "com/gameparkstudio/wkcocos/lib/WkJniHelper", "getAppMainActivity", "()Landroid/app/Activity;"))
+            std::string clss = std::string(JAVA_PACKAGE) + "/WkJniHelper";
+			CCLOG("Calling %s/getAppMainActivity()Landroid/app/Activity;",clss.c_str());
+			if (helperinst && cocos2d::JniHelper::getMethodInfo(j_getMainActivityMI, clss.c_str(), "getAppMainActivity", "()Landroid/app/Activity;"))
             {
                 instance = j_getMainActivityMI.env->CallObjectMethod(helperinst, j_getMainActivityMI.methodID);
             }
@@ -109,13 +113,14 @@ namespace WkCocos
 			//TODO : change to match design using WkJniHelpers
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
 			cocos2d::JniMethodInfo minfo;
+			std::string clss = std::string(JAVA_PACKAGE) + "/MainActivity";
 
-			if (cocos2d::JniHelper::getStaticMethodInfo(minfo, "com/gameparkstudio/wkcocos/lib/MainActivity", "openURL", "(Ljava/lang/String;)V")) {
-				jstring StringArg1 = minfo.env->NewStringUTF(url.c_str());
-				minfo.env->CallStaticVoidMethod(minfo.classID, minfo.methodID, StringArg1);
-				minfo.env->DeleteLocalRef(StringArg1);
-				minfo.env->DeleteLocalRef(minfo.classID);
-			}
+            if (cocos2d::JniHelper::getStaticMethodInfo(minfo, clss.c_str(), "openURL", "(Ljava/lang/String;)V")) {
+                jstring StringArg1 = minfo.env->NewStringUTF(url.c_str());
+                minfo.env->CallStaticVoidMethod(minfo.classID, minfo.methodID, StringArg1);
+                minfo.env->DeleteLocalRef(StringArg1);
+                minfo.env->DeleteLocalRef(minfo.classID);
+            }
 #else
 			//TODO
 #endif
@@ -128,9 +133,9 @@ namespace WkCocos
 			cocos2d::JniMethodInfo j_getMainActivityMI;
 
 			jobject helperinst = WkJniHelper::getInstance();
-
-			CCLOG("Calling com/gameparkstudio/wkcocos/lib/WkJniHelper/showAdBanner(II)V");
-			if (helperinst && cocos2d::JniHelper::getMethodInfo(j_getMainActivityMI, "com/gameparkstudio/wkcocos/lib/WkJniHelper", "showAdBanner", "(II)V"))
+            std::string clss = std::string(JAVA_PACKAGE) + "/WkJniHelper";
+			CCLOG("Calling %s/showAdBanner(II)V", clss.c_str());
+			if (helperinst && cocos2d::JniHelper::getMethodInfo(j_getMainActivityMI, clss.c_str(), "showAdBanner", "(II)V"))
 			{
 				jint x = static_cast<int>(pos.x);
 				jint y = static_cast<int>(pos.y);
@@ -149,9 +154,9 @@ namespace WkCocos
 			cocos2d::JniMethodInfo j_getMainActivityMI;
 
 			jobject helperinst = WkJniHelper::getInstance();
-
-			CCLOG("Calling com/gameparkstudio/wkcocos/lib/WkJniHelper/hideAdBanner()");
-			if (helperinst && cocos2d::JniHelper::getMethodInfo(j_getMainActivityMI, "com/gameparkstudio/wkcocos/lib/WkJniHelper", "hideAdBanner", "()V"))
+            std::string clss = std::string(JAVA_PACKAGE) + "/WkJniHelper";
+			CCLOG("Calling %s/hideAdBanner()V", clss.c_str());
+			if (helperinst && cocos2d::JniHelper::getMethodInfo(j_getMainActivityMI, clss.c_str(), "hideAdBanner", "()V"))
 			{
 				j_getMainActivityMI.env->CallVoidMethod(helperinst, j_getMainActivityMI.methodID);
 			}
@@ -168,9 +173,9 @@ namespace WkCocos
 			cocos2d::JniMethodInfo j_getMainActivityMI;
 
 			jobject helperinst = WkJniHelper::getInstance();
-
-			CCLOG("Calling com/gameparkstudio/wkcocos/lib/WkJniHelper/showInterstitialAd()");
-			if (helperinst && cocos2d::JniHelper::getMethodInfo(j_getMainActivityMI, "com/gameparkstudio/wkcocos/lib/WkJniHelper", "showInterstitialAd", "()V"))
+            std::string clss = std::string(JAVA_PACKAGE) + "/WkJniHelper";
+			CCLOG("Calling %sshowInterstitialAd()", clss.c_str());
+			if (helperinst && cocos2d::JniHelper::getMethodInfo(j_getMainActivityMI, clss.c_str(), "showInterstitialAd", "()V"))
 			{
 				j_getMainActivityMI.env->CallVoidMethod(helperinst, j_getMainActivityMI.methodID);
 			}

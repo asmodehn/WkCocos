@@ -1,4 +1,4 @@
-package com.gameparkstudio.wkcocos.lib;
+package com.asmodehn.wkcocos.lib;
 
 import android.os.Parcel;
 import android.os.Parcelable;

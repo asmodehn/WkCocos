@@ -1,9 +1,11 @@
-package com.gameparkstudio.wkcocos.testapp;
+package com.asmodehn.wkcocos.testapp;
 
 import android.os.Bundle;
-import com.gameparkstudio.wkcocos.lib.MainActivity;
-import com.gameparkstudio.wkcocos.lib.WkDownloaderInfo;
-import com.gameparkstudio.wkcocos.lib.XAPKFile;
+import com.asmodehn.wkcocos.lib.MainActivity;
+import com.asmodehn.wkcocos.lib.WkDownloaderActivity;
+import com.asmodehn.wkcocos.lib.WkDownloaderInfo;
+import com.asmodehn.wkcocos.lib.XAPKFile;
+import com.google.android.vending.expansion.downloader.Helpers;
 
 public class AppActivity extends MainActivity implements WkDownloaderInfo {
 
@@ -41,18 +43,18 @@ public class AppActivity extends MainActivity implements WkDownloaderInfo {
 
     @Override
     public XAPKFile getMainXAPK() {
-//        return null;
+        return null;
 //
-//        To test this you need to put main.<versionCode>.com.gameparkstudio.wkcocos.testapp(.debug).obb
-//        containing zipped assets/ into Android/obb/com.gameparkstudio.wkcocos.testapp(.debug)/
+//        To test this you need to put main.<versionCode>.com.asmodehn.wkcocos.testapp(.debug).obb
+//        containing zipped assets/ into Android/obb/com.asmodehn.wkcocos.testapp(.debug)/
 //
-        return new XAPKFile(
-                BuildConfig.VERSION_CODE, // the version of the APK that the file was uploaded against
-                // it should be the version code added to the obb filename
-                // TODO : CHECK => so it s possible that it doesn't match current BuildConfig.VERSION_CODE ?
-                654654L,//BuildConfig.OBB_SIZE, // the length of the file in bytes
-                false //false ignores the size check and the zip CRC checks.
-        );
+//        return new XAPKFile(
+//                BuildConfig.VERSION_CODE, // the version of the APK that the file was uploaded against
+//                // it should be the version code added to the obb filename
+//                // TODO : CHECK => so it s possible that it doesn't match current BuildConfig.VERSION_CODE ?
+//                654654L,//BuildConfig.OBB_SIZE, // the length of the file in bytes
+//                false //false ignores the size check and the zip CRC checks.
+//        );
     }
 
     @Override
