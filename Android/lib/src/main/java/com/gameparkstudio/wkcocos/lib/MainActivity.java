@@ -8,14 +8,11 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Handler;
 import android.os.Messenger;
 import android.os.SystemClock;
 import android.provider.Settings;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.android.vending.expansion.zipfile.ZipResourceFile;
 import com.google.android.vending.expansion.downloader.Constants;
@@ -46,14 +43,16 @@ public abstract class MainActivity extends Cocos2dxActivity {
 
     private static Activity me = null;
 
-    WkDownloaderInfo.XAPKFile mainXAPK = null;
-    WkDownloaderInfo.XAPKFile patchXAPK = null;
+    XAPKFile mainXAPK = null;
+    XAPKFile patchXAPK = null;
 
     static Boolean mainXAPKValid = null;
     static Boolean patchXAPKValid = null;
 
-    protected static WkDownloaderInfo DLinfo = null;
+    WkAd ad;
 
+    protected static WkDownloaderInfo DLinfo = null;
+	
     /**
      * Associate the download Activity with an implementation of WkDownloaderInfo providing
      * information by the client app required for this activity.
@@ -73,13 +72,13 @@ public abstract class MainActivity extends Cocos2dxActivity {
      *
      * @return XAPKFile with its filepath set to proper path if it is present. it is set null if missing ( may be not needed ).
      */
-    protected WkDownloaderInfo.XAPKFile expansionFilePath(boolean main) {
+    protected XAPKFile expansionFilePath(boolean main) {
         try {
             if ( DLinfo == null ) {
                 throw new NullPointerException(" ERROR : DLinfo is not set ! ");
             }
             else {
-                WkDownloaderInfo.XAPKFile xf = main? DLinfo.getMainXAPK() : DLinfo.getPatchXAPK();
+                XAPKFile xf = main? DLinfo.getMainXAPK() : DLinfo.getPatchXAPK();
                 if (xf != null) {
                     String expFileName = Helpers.getExpansionAPKFileName(this, true, xf.mFileVersion); //only filename
                     String expFilePath = Helpers.generateSaveFileName(this, expFileName); //with directory added
@@ -111,6 +110,9 @@ public abstract class MainActivity extends Cocos2dxActivity {
             mWebViewHelper = new Cocos2dxWebViewHelper(mFrameLayout);
         }
 
+        ad = new WkAd(this);
+        mFrameLayout.addView(ad.getUI());
+
         WkJniHelper.getInstance().setActivity(this);
 
         //Needed for download XAPK
@@ -121,14 +123,14 @@ public abstract class MainActivity extends Cocos2dxActivity {
         if ( mainXAPK == null ) mainXAPK = expansionFilePath(true);
         if ( patchXAPK == null ) patchXAPK = expansionFilePath(false);
 
-        // we activate download only if one XAPK is needed and DL hasn't been validated yet.
-        if ( ( mainXAPK != null && mainXAPKValid == null)
-          || ( patchXAPK != null && patchXAPKValid == null)
-        ) {
-            //setup cocos values to access resources from XAPK
-            if ( mainXAPK != null ) Cocos2dxHelper.nativeSetMainXApkPath(mainXAPK.getFilePath());
-            if ( patchXAPK != null) Cocos2dxHelper.nativeSetPatchXApkPath(patchXAPK.getFilePath());
+        //setup cocos values to access resources from XAPK
+        if ( mainXAPK != null && !mainXAPK.getFilePath().isEmpty() ) Cocos2dxHelper.nativeSetMainXApkPath(mainXAPK.getFilePath());
+        if ( patchXAPK != null && !patchXAPK.getFilePath().isEmpty() ) Cocos2dxHelper.nativeSetPatchXApkPath(patchXAPK.getFilePath());
 
+        // we activate download only if one XAPK is needed and file hasn't been found.
+        if ( ( mainXAPK != null && mainXAPK.getFilePath().isEmpty())
+          || ( patchXAPK != null && mainXAPK.getFilePath().isEmpty())
+        ) {
             // Fire the intent that launches the DL screen.
             Intent dl = new Intent(this, WkDownloaderActivity.class);
             dl.putExtra("mainXAPK",mainXAPK);
@@ -153,6 +155,7 @@ public abstract class MainActivity extends Cocos2dxActivity {
 
     @Override protected void onPause() {
         super.onPause();
+        ad.pause();
     }
 
     @Override protected void onResume() {
@@ -170,6 +173,7 @@ public abstract class MainActivity extends Cocos2dxActivity {
             finish();
         }
 
+        ad.resume();
     }
 
     /**
@@ -221,4 +225,8 @@ public abstract class MainActivity extends Cocos2dxActivity {
         me.startActivity(i);
     }
 
+    public WkAd getAd()
+    {
+        return ad;
+    }
 }

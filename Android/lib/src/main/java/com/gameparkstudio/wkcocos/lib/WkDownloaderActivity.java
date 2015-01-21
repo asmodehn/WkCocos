@@ -77,8 +77,8 @@ public class WkDownloaderActivity extends Activity implements IDownloaderClient 
     private boolean mStatePaused;
     private int mState;
 
-    private WkDownloaderInfo.XAPKFile mainXAPK = null;
-    private WkDownloaderInfo.XAPKFile patchXAPK = null;
+    private XAPKFile mainXAPK = null;
+    private XAPKFile patchXAPK = null;
 
     private IDownloaderService mRemoteService;
 
@@ -116,6 +116,30 @@ public class WkDownloaderActivity extends Activity implements IDownloaderClient 
      * @return true if XAPKZipFile is successful
      */
     void validateXAPKZipFiles() {
+
+        if ( mainXAPK != null ) { //if we expect an APK
+            //fill in information before attempting validation.
+            String mexpFileName = Helpers.getExpansionAPKFileName(this, true, mainXAPK.mFileVersion); //only filename
+            String mexpFilePath = Helpers.generateSaveFileName(this, mexpFileName); //with directory added
+            if ((mainXAPK.mCheckEnabled && Helpers.doesFileExist(this, mexpFileName, mainXAPK.mFileSize, false)) //if check enabled we check for size
+                    || (!mainXAPK.mCheckEnabled && new File(mexpFilePath).exists()))//if check disabled we only check it exists
+            {
+                mainXAPK.setFilePath(mexpFilePath);
+                Cocos2dxHelper.nativeSetMainXApkPath(mainXAPK.getFilePath());
+            }
+        }
+
+        if (patchXAPK != null ) {
+            String pexpFileName = Helpers.getExpansionAPKFileName(this, true, patchXAPK.mFileVersion); //only filename
+            String pexpFilePath = Helpers.generateSaveFileName(this, pexpFileName); //with directory added
+            if ((patchXAPK.mCheckEnabled && Helpers.doesFileExist(this, pexpFileName, patchXAPK.mFileSize, false)) //if check enabled we check for size
+                    || (!patchXAPK.mCheckEnabled && new File(pexpFilePath).exists()))//if check disabled we only check it exists
+            {
+                patchXAPK.setFilePath(pexpFilePath);
+                Cocos2dxHelper.nativeSetPatchXApkPath(patchXAPK.getFilePath());
+            }
+        }
+
         AsyncTask<Object, DownloadProgressInfo, Boolean> validationTask = new AsyncTask<Object, DownloadProgressInfo, Boolean>() {
 
             @Override
@@ -139,11 +163,11 @@ public class WkDownloaderActivity extends Activity implements IDownloaderClient 
                 boolean mainXAPKextracted = false;
                 boolean patchXAPKextracted = false;
 
-                if ( mainXAPK != null ) {
+                if ( mainXAPK != null ) { //if we expect an APK
                     if (mainXAPK.getFilePath() != "") {
                         mainXAPKextracted = bgExtract(mainXAPK.getFilePath(), WkDownloaderActivity.this.getFilesDir().getAbsolutePath(), mainXAPK.mCheckEnabled);
                         MainActivity.mainXAPKValid = mainXAPKextracted;
-                    } // else extraction has failed
+                    } // else looking for XAPK has failed.
                 }
                 else
                 {  //no expansion file : no extract same as extract empty patch file
@@ -154,7 +178,7 @@ public class WkDownloaderActivity extends Activity implements IDownloaderClient 
                     if (patchXAPK.getFilePath() != "") {
                         patchXAPKextracted = bgExtract(patchXAPK.getFilePath(), WkDownloaderActivity.this.getFilesDir().getAbsolutePath(), patchXAPK.mCheckEnabled);
                         MainActivity.patchXAPKValid = patchXAPKextracted;
-                    } // else extraction has failed
+                    } // else  looking for XAPK has failed
                 }
                 else
                 {  //no expansion file : no extract same as extract empty patch file
@@ -252,6 +276,7 @@ public class WkDownloaderActivity extends Activity implements IDownloaderClient 
                                         return true;
                                     }
                                 }
+                                //detecting CRC errors
                                 if (checkCRC && crc.getValue() != entry.mCRC32) {
                                     Log.e(Constants.TAG, "CRC does not match for entry: " + entry.mFileName);
                                     Log.e(Constants.TAG, "In file: " + entry.getZipFileName());
@@ -264,6 +289,14 @@ public class WkDownloaderActivity extends Activity implements IDownloaderClient 
                             }
                         }
                     }
+                    //to get to 100% at the end
+                    this.publishProgress(
+                            new DownloadProgressInfo(
+                                    totalCompressedLength,
+                                    totalCompressedLength,
+                                    0,
+                                    averageVerifySpeed)
+                    );
                 } catch (IOException e) {
                     e.printStackTrace();
                     return false;
@@ -303,6 +336,10 @@ public class WkDownloaderActivity extends Activity implements IDownloaderClient 
                     mPauseButton.setText(android.R.string.cancel);
                 }
                 super.onPostExecute(result);
+                if(result) {
+                    //finishing automatically
+                    finish();
+                }
             }
 
         };
@@ -373,18 +410,19 @@ public class WkDownloaderActivity extends Activity implements IDownloaderClient 
         super.onCreate(savedInstanceState);
 
         Intent i = getIntent();
-        mainXAPK = (WkDownloaderInfo.XAPKFile) i.getParcelableExtra("mainXAPK");
-        patchXAPK = (WkDownloaderInfo.XAPKFile) i.getParcelableExtra("patchXAPK");
+        mainXAPK = i.getParcelableExtra("mainXAPK");
+        patchXAPK = i.getParcelableExtra("patchXAPK");
 
         /**
          * Before we do anything, are the files we expect already here and
          * delivered (presumably by Market) For free titles, this is probably
          * worth doing. (so no Market request is necessary)
          */
-        if ( (mainXAPK != null && mainXAPK.getFilePath() == "")
-          || (patchXAPK != null && patchXAPK.getFilePath() == "")
+        if ( (mainXAPK != null && mainXAPK.getFilePath().equals(""))
+          || (patchXAPK != null && patchXAPK.getFilePath().equals(""))
         ) { // we download only if one XAPK is needed but missing
 
+            Log.e(TAG, "XAPKs Missing. Attempting Download ...");
             try {
                 Intent launchIntent = WkDownloaderActivity.this.getIntent();
                 Intent intentToLaunchThisActivityFromNotification = new Intent(WkDownloaderActivity.this, WkDownloaderActivity.this.getClass());
@@ -397,19 +435,22 @@ public class WkDownloaderActivity extends Activity implements IDownloaderClient 
                     }
                 }
 
-                // Build PendingIntent used to open this activity from
-                // Notification
+                // Build PendingIntent used to open this activity from Notification
                 PendingIntent pendingIntent = PendingIntent.getActivity(WkDownloaderActivity.this,0, intentToLaunchThisActivityFromNotification,PendingIntent.FLAG_UPDATE_CURRENT);
                 // Request to start the download
                 int startResult = DownloaderClientMarshaller.startDownloadServiceIfRequired(this,pendingIntent, WkDownloaderService.class);
 
                 if (startResult != DownloaderClientMarshaller.NO_DOWNLOAD_REQUIRED) {
+                    Log.e(TAG, "XAPK Download started.");
                     // The DownloaderService has started downloading the files,
                     // show progress
                     initializeDownloadUI();
                     return;
-                } // otherwise, download not needed so we fall through to
-                // starting the movie
+                } else {
+                    // otherwise, download not needed so we fall through to
+                    // starting the movie
+                    Log.e(TAG, "XAPK Download not required.");
+                }
             } catch (PackageManager.NameNotFoundException e) {
                 Log.e(TAG, "Cannot find own package! MAYDAY!");
                 e.printStackTrace();

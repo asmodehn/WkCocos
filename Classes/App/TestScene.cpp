@@ -6,12 +6,14 @@
 #include "WkCocosApp/PreloadUI.h"
 #include "WkCocosApp/DownloadingUI.h"
 #include "WkCocosApp/ErrorUI.h"
+#include "WkCocosApp/AdUI.h"
 #include "WkCocosApp/PlayersListUI.h"
 #include "WkCocosApp/DocsListUI.h"
 #include "WkCocosApp/WebUI.h"
 #include "WkCocosApp/LogUI.h"
 #include "WkCocosApp/GameUI.h"
 #include "WkCocosApp/GameLogic.h"
+#include "WkCocosApp/AppInterface.h"
 
 #include "ui/CocosGUI.h"
 
@@ -146,6 +148,14 @@ bool TestScene::init()
 	logui->setPosition(cocos2d::Vec2(0, 40));
 	//*/
 
+	//AdUI
+	AdUI* adui = new AdUI();
+	adui->setEnabled(false);
+	adui->setVisible(false);
+	addInterface(AdUI::id, adui);
+	adui->setPosition(cocos2d::Vec2(0, 40));
+	//*/
+
 	/*//GameUI
 	GameUI* gameui = new GameUI();
 	gameui->setEnabled(false);
@@ -198,12 +208,22 @@ void TestScene::nextCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::Touch
 
 		cur->second->setEnabled(false);
 		cur->second->setVisible(false);
+		AppInterface* appUI = dynamic_cast<AppInterface*>(cur->second);
+		if (appUI)
+		{
+			appUI->onHide();
+		}
 
 		if (++cur == m_ui.end())
 			cur = m_ui.begin();
 
 		cur->second->setEnabled(true);
 		cur->second->setVisible(true);
+		appUI = dynamic_cast<AppInterface*>(cur->second);
+		if (appUI)
+		{
+			appUI->onShow();
+		}
 		currentUI = cur->first;
 		m_titleLabel->setString(currentUI);
 	}
@@ -218,6 +238,12 @@ void TestScene::prevCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::Touch
 		cur->second->setEnabled(false);
 		cur->second->setVisible(false);
 
+		AppInterface* appUI = dynamic_cast<AppInterface*>(cur->second);
+		if (appUI)
+		{
+			appUI->onHide();
+		}
+
 		if (cur == m_ui.begin())
 			cur = m_ui.end();
 
@@ -225,6 +251,11 @@ void TestScene::prevCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::Touch
 
 		cur->second->setEnabled(true);
 		cur->second->setVisible(true);
+		appUI = dynamic_cast<AppInterface*>(cur->second);
+		if (appUI)
+		{
+			appUI->onShow();
+		}
 		currentUI = cur->first;
 		m_titleLabel->setString(currentUI);
 	}

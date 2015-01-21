@@ -111,6 +111,7 @@ android {
 
     buildTypes {
         debug {
+            //BEWARE : this changes package name as well ! comment it for testing anything related to google play.
             applicationIdSuffix ".debug"
             debuggable true
             //TODO : use versionNameSuffix
@@ -121,6 +122,7 @@ android {
             //TODO : use versionNameSuffix
             jniDebuggable false
             signingConfig signingConfigs.release
+            //TODO : Enable it and test everything still works as expected.
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
@@ -130,11 +132,11 @@ android {
     applicationVariants.all { variant ->
         //TODO : different build settings for different variants
         if ( variant.buildType.jniDebuggable ) {
-            println variant.name + ' is jniDebuggable '
+            //println variant.name + ' is jniDebuggable '
             variant.javaCompile.dependsOn ndkCustomBuildDebug
         } else {
             //making ndkbuild a release build
-            println variant.name + ' is NOT jniDebuggable '
+            //println variant.name + ' is NOT jniDebuggable '
             variant.javaCompile.dependsOn ndkCustomBuildRelease
         }
 
@@ -154,11 +156,11 @@ android {
 
 task cleanNdkLibs(type: Delete) {
   //we need to manually delete the binary produced by NDK because they are not cleaned by NDK, and debug and release override each other
+  //TODO : check : maybe not true since it was probably a NDK/build-tools bug in a previous version...
   delete fileTree(dir:"src/main/obj/local/").include("**/*.a").include("**/*.so")
 }
 
-task ndkCustomBuildDebug(type: Exec, dependsOn: ['cleanNdkLibs', 'copyAssets', 'zipDLCdebug']) {
-    //windows only
+task ndkCustomBuildDebug(type: Exec, dependsOn: ['cleanNdkLibs', 'zipDLCdebug']) {
     def dependsDir = file('../../depends').absolutePath
     def cpus = Runtime.runtime.availableProcessors()
     if (System.properties['os.name'].toLowerCase().contains('windows')) {
@@ -174,8 +176,25 @@ task ndkCustomBuildDebug(type: Exec, dependsOn: ['cleanNdkLibs', 'copyAssets', '
     }
 }
 
-task ndkCustomBuildRelease(type: Exec, dependsOn: ['cleanNdkLibs', 'copyAssets', 'zipDLCrelease' ]) { //we zip DLC for APK expansion only in release mode
+task cleanNdkCustomBuildDebug(type: Exec) {
     //windows only
+    def dependsDir = file('../../depends').absolutePath
+    def cpus = Runtime.runtime.availableProcessors()
+
+    if (System.properties['os.name'].toLowerCase().contains('windows')) {
+        //windows
+        commandLine 'cmd', '/c', 'ndk-build', 'NDK_DEBUG=1', 'clean', '-j', cpus, '-C', file('src/main/jni').absolutePath, 'NDK_MODULE_PATH=' + file('..').absolutePath + ';' + dependsDir + ';' + dependsDir + '\\cocos2dx-store\\submodules;' + dependsDir + '\\cocos2dx-store\\submodules\\soomla-cocos2dx-core\\submodules;' + dependsDir + '\\cocos2d-x;' + dependsDir + '\\cocos2d-x\\external;' + dependsDir + '\\cocos2d-x\\external-bin;' + dependsDir + '\\cocos2d-x\\cocos'
+    } else {
+        commandLine 'ndk-build', 'NDK_DEBUG=1', 'clean', '-j', cpus, '-C', file('src/main/jni').absolutePath, 'NDK_MODULE_PATH=' + file('..').absolutePath + ':' + dependsDir + ':' + dependsDir + '/cocos2dx-store/submodules:' + dependsDir + '/cocos2dx-store/submodules/soomla-cocos2dx-core/submodules:' + dependsDir + '/cocos2d-x:' + dependsDir + '/cocos2d-x/external:' + dependsDir + '/cocos2d-x/external-bin:' + dependsDir + '/cocos2d-x/cocos'
+    }
+
+    //run after commandLine executes
+    doLast{
+
+    }
+}
+
+task ndkCustomBuildRelease(type: Exec, dependsOn: ['cleanNdkLibs', 'zipDLCrelease']) {
     def dependsDir = file('../../depends').absolutePath
     def cpus = Runtime.runtime.availableProcessors()
     if (System.properties['os.name'].toLowerCase().contains('windows')) {
@@ -183,6 +202,24 @@ task ndkCustomBuildRelease(type: Exec, dependsOn: ['cleanNdkLibs', 'copyAssets',
         commandLine 'cmd', '/c', 'ndk-build', 'NDK_DEBUG=0','V=1',  '-j', cpus, '-C', file('src/main/jni').absolutePath, 'NDK_MODULE_PATH=' + file('..').absolutePath + ';' + dependsDir + ';' + dependsDir + '\\cocos2dx-store\\submodules;' + dependsDir + '\\cocos2dx-store\\submodules\\soomla-cocos2dx-core\\submodules;' + dependsDir + '\\cocos2d-x;' + dependsDir + '\\cocos2d-x\\external;' + dependsDir + '\\cocos2d-x\\external-bin;' + dependsDir + '\\cocos2d-x\\cocos'
     } else {
         commandLine 'ndk-build', 'NDK_DEBUG=0','V=1',  '-j', cpus, '-C', file('src/main/jni').absolutePath, 'NDK_MODULE_PATH=' + file('..').absolutePath + ':' + dependsDir + ':' + dependsDir + '/cocos2dx-store/submodules:' + dependsDir + '/cocos2dx-store/submodules/soomla-cocos2dx-core/submodules:' + dependsDir + '/cocos2d-x:' + dependsDir + '/cocos2d-x/external:' + dependsDir + '/cocos2d-x/external-bin:' + dependsDir + '/cocos2d-x/cocos'
+    }
+
+    //run after commandLine executes
+    doLast {
+
+    }
+}
+
+task cleanNdkCustomBuildRelease(type: Exec) {
+    //windows only
+    def dependsDir = file('../../depends').absolutePath
+    def cpus = Runtime.runtime.availableProcessors()
+
+    if (System.properties['os.name'].toLowerCase().contains('windows')) {
+        //windows
+        commandLine 'cmd', '/c', 'ndk-build', 'NDK_DEBUG=0', 'clean', '-j', cpus, '-C', file('src/main/jni').absolutePath, 'NDK_MODULE_PATH=' + file('..').absolutePath + ';' + dependsDir + ';' + dependsDir + '\\cocos2dx-store\\submodules;' + dependsDir + '\\cocos2dx-store\\submodules\\soomla-cocos2dx-core\\submodules;' + dependsDir + '\\cocos2d-x;' + dependsDir + '\\cocos2d-x\\external;' + dependsDir + '\\cocos2d-x\\external-bin;' + dependsDir + '\\cocos2d-x\\cocos'
+    } else {
+        commandLine 'ndk-build', 'NDK_DEBUG=0', 'clean', '-j', cpus, '-C', file('src/main/jni').absolutePath, 'NDK_MODULE_PATH=' + file('..').absolutePath + ':' + dependsDir + ':' + dependsDir + '/cocos2dx-store/submodules:' + dependsDir + '/cocos2dx-store/submodules/soomla-cocos2dx-core/submodules:' + dependsDir + '/cocos2d-x:' + dependsDir + '/cocos2d-x/external:' + dependsDir + '/cocos2d-x/external-bin:' + dependsDir + '/cocos2d-x/cocos'
     }
 
     //run after commandLine executes
@@ -249,65 +286,57 @@ task copyAssets(type: Copy) {
 
 //dynamically define a task depending on build type
 android.buildTypes.all { buildType ->
+
+    String obbFilePath;
+    String obbFileName;
+    long obbFileSize;
+
+
     //creating a zip for DLC content ( used for apk expansion test )
     task("zipDLC${buildType.name}",type: Zip) {
 
         from '../../nginxDLC/html/v0.4.74'
-        //matching versioncode
-        def ver = (4 * 10000) + 74
 
         into 'assets'
         exclude { details -> details.file.name == 'manifest.json' } // not needed for apk expansion
         destinationDir = file('build/outputs/xapk')
-        baseName = 'main.' + ver + '.' + android.defaultConfig.applicationId + (buildType.applicationIdSuffix?buildType.applicationIdSuffix:'')
+        baseName = 'main.' + android.defaultConfig.versionCode + '.' + android.defaultConfig.applicationId + (buildType.applicationIdSuffix?buildType.applicationIdSuffix:'')
         appendix = ''
         version = ''
         classifier = ''
         extension = 'obb'
+
+        obbFileName = baseName + '.' + extension
+        obbFilePath = destinationDir.getPath() + '/' + obbFileName
+
+        doLast {
+            obbFileSize = file(obbFilePath).size()
+            buildType.buildConfigField "long", "OBB_SIZE", "${obbFileSize}L"
+            println "Created XAPK file " + obbFilePath + " size " + obbFileSize + " bytes."
+        }
+    }
+
+    //custom free task to deploy obb
+    task("deployObb${buildType.name}",type:Exec, dependsOn:"zipDLC${buildType.name}") {
+        def sourceObb = file(obbFilePath).absolutePath
+        def targetObb = '/mnt/sdcard/Android/obb/' + android.defaultConfig.applicationId + (buildType.applicationIdSuffix?buildType.applicationIdSuffix:'') + '/' + obbFileName
+
+        if (System.properties['os.name'].toLowerCase().contains('windows')) {
+            //windows
+            commandLine 'cmd', '/c', 'adb', 'push', sourceObb, targetObb
+        } else {
+            commandLine 'adb', 'push', sourceObb, targetObb
+        }
+
+        //run after commandLine executes
+        doLast {
+            println "Deploying XAPK file " + sourceObb + " to " + targetObb
+        }
     }
 }
 
-task cleanAssets(type: Delete) {
-    delete 'assets'
-}
-
-task ndkCleanDebug(type: Exec, dependsOn: 'cleanAssets') {
-    //windows only
-    def dependsDir = file('../../depends').absolutePath
-    def cpus = Runtime.runtime.availableProcessors()
-
-    if (System.properties['os.name'].toLowerCase().contains('windows')) {
-        //windows
-        commandLine 'cmd', '/c', 'ndk-build', 'NDK_DEBUG=1', 'clean', '-j', cpus, '-C', file('src/main/jni').absolutePath, 'NDK_MODULE_PATH=' + file('..').absolutePath + ';' + dependsDir + ';' + dependsDir + '\\cocos2dx-store\\submodules;' + dependsDir + '\\cocos2dx-store\\submodules\\soomla-cocos2dx-core\\submodules;' + dependsDir + '\\cocos2d-x;' + dependsDir + '\\cocos2d-x\\external;' + dependsDir + '\\cocos2d-x\\external-bin;' + dependsDir + '\\cocos2d-x\\cocos'
-    } else {
-        commandLine 'ndk-build', 'NDK_DEBUG=1', 'clean', '-j', cpus, '-C', file('src/main/jni').absolutePath, 'NDK_MODULE_PATH=' + file('..').absolutePath + ':' + dependsDir + ':' + dependsDir + '/cocos2dx-store/submodules:' + dependsDir + '/cocos2dx-store/submodules/soomla-cocos2dx-core/submodules:' + dependsDir + '/cocos2d-x:' + dependsDir + '/cocos2d-x/external:' + dependsDir + '/cocos2d-x/external-bin:' + dependsDir + '/cocos2d-x/cocos'
-    }
-
-    //run after commandLine executes
-    doLast{
-
-    }
-}
-
-task ndkCleanRelease(type: Exec, dependsOn: 'cleanAssets') {
-    //windows only
-    def dependsDir = file('../../depends').absolutePath
-    def cpus = Runtime.runtime.availableProcessors()
-
-    if (System.properties['os.name'].toLowerCase().contains('windows')) {
-        //windows
-        commandLine 'cmd', '/c', 'ndk-build', 'NDK_DEBUG=0', 'clean', '-j', cpus, '-C', file('src/main/jni').absolutePath, 'NDK_MODULE_PATH=' + file('..').absolutePath + ';' + dependsDir + ';' + dependsDir + '\\cocos2dx-store\\submodules;' + dependsDir + '\\cocos2dx-store\\submodules\\soomla-cocos2dx-core\\submodules;' + dependsDir + '\\cocos2d-x;' + dependsDir + '\\cocos2d-x\\external;' + dependsDir + '\\cocos2d-x\\external-bin;' + dependsDir + '\\cocos2d-x\\cocos'
-    } else {
-        commandLine 'ndk-build', 'NDK_DEBUG=0', 'clean', '-j', cpus, '-C', file('src/main/jni').absolutePath, 'NDK_MODULE_PATH=' + file('..').absolutePath + ':' + dependsDir + ':' + dependsDir + '/cocos2dx-store/submodules:' + dependsDir + '/cocos2dx-store/submodules/soomla-cocos2dx-core/submodules:' + dependsDir + '/cocos2d-x:' + dependsDir + '/cocos2d-x/external:' + dependsDir + '/cocos2d-x/external-bin:' + dependsDir + '/cocos2d-x/cocos'
-    }
-
-    //run after commandLine executes
-    doLast {
-
-    }
-}
-
-clean.dependsOn ndkCleanDebug, ndkCleanRelease
+preBuild.dependsOn copyAssets
+clean.dependsOn cleanNdkCustomBuildDebug, cleanNdkCustomBuildRelease, cleanCopyAssets
 
 dependencies {
     compile project(':wkcocos')
