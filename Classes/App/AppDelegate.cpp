@@ -12,6 +12,8 @@ AppDelegate::AppDelegate()
 , m_fileApp(nullptr)
 , m_cocosApp(nullptr)
 {
+    //WARNING : On Android, XAPK files are not loaded yet here. Do not use any resource from them.
+
 	//initializing search paths for different platforms
 #if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
 	cocos2d::FileUtils::getInstance()->addSearchPath("Resources");
@@ -71,6 +73,8 @@ AppDelegate::~AppDelegate()
 }
 
 bool AppDelegate::applicationDidFinishLaunching() {
+
+    CCLOG ("AppDelegate::applicationDidFinishLaunching()");
 
     // initialize director
     auto director = Director::getInstance();

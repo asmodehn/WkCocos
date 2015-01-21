@@ -14,7 +14,7 @@ namespace WkCocos
 		* Hold the GameLogic information.
 		* The Game can delegate the process of updating all Managers to ONE instance of this class.
 		*/
-		class GameLogic : WkCocos::Actor
+		class GameLogic : public WkCocos::Actor
 		{
 		public:
 
@@ -40,14 +40,6 @@ namespace WkCocos
 			{
 				return m_onlinedatamngr;
 			}
-
-			struct TimerInit : public WkCocos::Event<TimerInit>
-			{
-			    TimerInit(WkCocos::ActorID id)
-			    : WkCocos::Event<TimerInit>(id)
-                {
-			    }
-			};
 
 			/**
 			* constructor for online game
