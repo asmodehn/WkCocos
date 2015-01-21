@@ -8,14 +8,11 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Handler;
 import android.os.Messenger;
 import android.os.SystemClock;
 import android.provider.Settings;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.android.vending.expansion.zipfile.ZipResourceFile;
 import com.google.android.vending.expansion.downloader.Constants;
@@ -52,8 +49,10 @@ public abstract class MainActivity extends Cocos2dxActivity {
     static Boolean mainXAPKValid = null;
     static Boolean patchXAPKValid = null;
 
-    protected static WkDownloaderInfo DLinfo = null;
+    WkAd ad;
 
+    protected static WkDownloaderInfo DLinfo = null;
+	
     /**
      * Associate the download Activity with an implementation of WkDownloaderInfo providing
      * information by the client app required for this activity.
@@ -111,6 +110,9 @@ public abstract class MainActivity extends Cocos2dxActivity {
             mWebViewHelper = new Cocos2dxWebViewHelper(mFrameLayout);
         }
 
+        ad = new WkAd(this);
+        mFrameLayout.addView(ad.getUI());
+
         WkJniHelper.getInstance().setActivity(this);
 
         //Needed for download XAPK
@@ -153,6 +155,7 @@ public abstract class MainActivity extends Cocos2dxActivity {
 
     @Override protected void onPause() {
         super.onPause();
+        ad.pause();
     }
 
     @Override protected void onResume() {
@@ -170,6 +173,7 @@ public abstract class MainActivity extends Cocos2dxActivity {
             finish();
         }
 
+        ad.resume();
     }
 
     /**
@@ -221,4 +225,8 @@ public abstract class MainActivity extends Cocos2dxActivity {
         me.startActivity(i);
     }
 
+    public WkAd getAd()
+    {
+        return ad;
+    }
 }

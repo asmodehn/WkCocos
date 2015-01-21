@@ -46,4 +46,14 @@ dependencies {
     compile project(':cocos2dx-android-store')
     compile 'com.android.support:appcompat-v7:19.0.1'
     compile 'com.google.android.gms:play-services:6.5.87'
+    // compile files('src/main/libs/android-support-v4.jar')
+    compile files('src/main/libs/IgawCommon_v4.0.0a.jar')
+    compile files('src/main/libs/IgawDisplayAd_v1.2.6a.jar')
+    compile files('src/main/libs/AdamPublisherSDK-2.3.4.jar')
+    compile files('src/main/libs/CaulySDK-3.3.3.jar')
+    compile files('src/main/libs/MMSDK.jar')
+    compile files('src/main/libs/ShallWeAd_AndroidSDK_2.5.jar')
+    compile files('src/main/libs/TadSDK_3.8.1.jar')
+    compile files('src/main/libs/nbpmobilead_1.3.0.jar')
+    compile files('src/main/libs/SamsungAdHub_AndroidSDK_v3.0.0_global.jar')
 }
