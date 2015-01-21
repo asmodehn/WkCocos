@@ -3,6 +3,7 @@ package com.gameparkstudio.wkcocos.lib;
 import android.app.Activity;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -109,8 +110,16 @@ public abstract class MainActivity extends Cocos2dxActivity {
         if (mWebViewHelper == null) {
             mWebViewHelper = new Cocos2dxWebViewHelper(mFrameLayout);
         }
-
-        ad = new WkAd(this);
+        try {
+            ApplicationInfo ai = me.getPackageManager().getApplicationInfo(me.getPackageName(), PackageManager.GET_META_DATA);
+            Object bannerKey = (Object) ai.metaData.get("ad_banner_key");
+            Object interstitialKey = (Object) ai.metaData.get("ad_interstitial_key");
+            ad = new WkAd(this, bannerKey.toString(), interstitialKey.toString());
+        }
+        catch (PackageManager.NameNotFoundException e)
+        {
+            Log.e("WkCocos", e.getMessage());
+        }
         mFrameLayout.addView(ad.getUI());
 
         WkJniHelper.getInstance().setActivity(this);
