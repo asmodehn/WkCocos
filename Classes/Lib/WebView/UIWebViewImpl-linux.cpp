@@ -36,7 +36,7 @@
 #include "cocos/base/CCDirector.h"
 #include "cocos/platform/CCFileUtils.h"
 
-#define CLASS_NAME "com/gameparkstudio/wkcocos/lib/Cocos2dxWebViewHelper"
+#define CLASS_NAME "com/asmodehn/wkcocos/lib/Cocos2dxWebViewHelper"
 
 #define  LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG,"",__VA_ARGS__)
 

@@ -22,6 +22,8 @@ namespace WkCocos
 			system_manager->add<Systems::AlarmRinger>();
 			system_manager->add<Systems::AlarmDestructor>();
 			system_manager->configure();
+
+			event_manager->subscribe<WkCocos::Timer::Events::TimerInit>(*this);
 		}
 
 		Timer::~Timer()
@@ -124,6 +126,17 @@ namespace WkCocos
 
 			//Copy of POD tm
 			return *ptm;
+		}
+
+		void Timer::receive(WkCocos::Timer::Events::TimerInit const & ti)
+		{
+			entityx::ptr<Comp::ID> id;
+			entityx::ptr<Comp::Alarm> alarm;
+			for (auto entity : entity_manager->entities_with_components(id, alarm))
+			{
+				alarm->m_now= m_time.m_server_time;
+			}
+		
 		}
 
 	} //namespace Timer

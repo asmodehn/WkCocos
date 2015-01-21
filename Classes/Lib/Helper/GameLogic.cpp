@@ -13,7 +13,7 @@ namespace WkCocos
 
 			m_gameclock.reset(new WkCocos::Timer::Timer());
 
-            getEventManager()->emit<TimerInit>(getId());
+            m_gameclock->getEventManager()->emit<Timer::Events::TimerInit>();
 		}
 
 		GameLogic::GameLogic(std::string app_access_key, std::string app_secret_key)
@@ -30,7 +30,7 @@ namespace WkCocos
 			m_onlinedatamngr->getServerTime([=](std::string s_iso8601){
 				m_gameclock->setTime(s_iso8601);
 
-				getEventManager()->emit<TimerInit>(this->getId());
+				m_gameclock->getEventManager()->emit<Timer::Events::TimerInit>();
 			});
 		}
 

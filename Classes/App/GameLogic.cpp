@@ -5,8 +5,8 @@ GameLogic::GameLogic(std::string app_access_key, std::string app_secret_key)
 : m_player()
 , m_shop()
 {
-    WkCocos::Actor::getEventManager()->subscribe<WkCocos::Helper::GameLogic::TimerInit>(*this);
 	m_logic.reset(new WkCocos::Helper::GameLogic(app_access_key, app_secret_key));
+	m_logic->getGameClock()->getEventManager()->subscribe<WkCocos::Timer::Events::TimerInit>(*this);
 
 	//Player should be constructible independently of time based objects.
 	m_player.reset(new MyPlayer(m_logic->getGameClock()
@@ -30,7 +30,7 @@ GameLogic::GameLogic(std::string app_access_key, std::string app_secret_key)
 GameLogic::~GameLogic()
 {}
 
-void GameLogic::receive(WkCocos::Helper::GameLogic::TimerInit const & ti)
+void GameLogic::receive(WkCocos::Timer::Events::TimerInit const & ti)
 {
     //setting up shop after logic initialized
     //careful : delayed initialization

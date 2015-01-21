@@ -3,6 +3,12 @@ include ':testapp'
 project(':testapp').projectDir = new File('app')
 include ':wkcocos'
 project(':wkcocos').projectDir = new File('lib')
+include ':licensing'
+project(':licensing').projectDir = new File('google/play_licensing/library')
+include ':expansion'
+project(':expansion').projectDir = new File('google/play_apk_expansion/downloader_library')
+include ':expansion.zip'
+project(':expansion.zip').projectDir = new File('google/play_apk_expansion/zip_file')
 include ':cocos2dx'
 project(':cocos2dx').projectDir = new File('../depends/cocos2d-x/cocos/platform/android/java')
 include(':cocos2dx-android-store')
