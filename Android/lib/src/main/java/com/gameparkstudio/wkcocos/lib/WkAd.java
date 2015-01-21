@@ -20,8 +20,6 @@ import com.igaworks.displayad.view.BannerContainerView;
 public class WkAd implements IBannerEventCallbackListener, IInterstitialEventCallbackListener {
 
     private MainActivity mainActivity;
-    private final String BANNER_ID_2 = "fa910d896f";
-    private final String INTERSTITIAL_ID = "36d1a6f381";
     private String bannerKey;
     private String interstitialKey;
 
@@ -49,11 +47,11 @@ public class WkAd implements IBannerEventCallbackListener, IInterstitialEventCal
         }
     };
 
-    public WkAd(MainActivity activity)
+    public WkAd(MainActivity activity, String bannerID, String interstitialID)
     {
         mainActivity = activity;
-        bannerKey = BANNER_ID_2;
-        interstitialKey = INTERSTITIAL_ID;
+        bannerKey = bannerID;
+        interstitialKey = interstitialID;
 
         adLayout = new android.widget.LinearLayout(mainActivity);
         //adLayout.setOrientation(LinearLayout.VERTICAL);
