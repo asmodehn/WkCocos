@@ -1,8 +1,8 @@
-package com.gameparkstudio.wkcocos.testapp;
+package com.asmodehn.wkcocos.testapp;
 
 import android.app.NotificationManager;
 import android.os.Bundle;
-import com.gameparkstudio.wkcocos.lib.MainActivity;
+import com.asmodehn.wkcocos.lib.MainActivity;
 
 public class AppActivity extends MainActivity {
 

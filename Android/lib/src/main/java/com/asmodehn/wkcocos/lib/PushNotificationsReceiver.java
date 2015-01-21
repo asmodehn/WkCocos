@@ -1,4 +1,4 @@
-package com.gameparkstudio.wkcocos.lib;
+package com.asmodehn.wkcocos.lib;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

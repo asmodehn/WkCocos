@@ -16,7 +16,7 @@
 
 #endif
 
-#define JAVA_PACKAGE "com/gameparkstudio/wkcocos/lib"
+#define JAVA_PACKAGE "com/asmodehn/wkcocos/lib"
 
 #include <string>
 

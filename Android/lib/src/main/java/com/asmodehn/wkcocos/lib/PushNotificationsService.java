@@ -1,4 +1,4 @@
-package com.gameparkstudio.wkcocos.lib;
+package com.asmodehn.wkcocos.lib;
 
 import android.app.IntentService;
 import android.app.NotificationManager;

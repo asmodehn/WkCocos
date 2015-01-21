@@ -1,4 +1,4 @@
-package com.gameparkstudio.wkcocos.lib;
+package com.asmodehn.wkcocos.lib;
 
 import java.lang.reflect.Method;
 import java.net.URI;

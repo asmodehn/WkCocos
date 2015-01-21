@@ -2,6 +2,7 @@
 #define __WKCOCOS_PUSHNOTIFICATIONS_PUSHNOTIFICATIONS_H__
 
 #include <string>
+#define PACKAGE_NAME_JNI "com/asmodehn/wkcocos/lib"
 
 namespace WkCocos
 {
