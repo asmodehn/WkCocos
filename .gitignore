@@ -4,7 +4,6 @@ Android/app/assets/
 Android/app/src/main/libs/
 Android/lib/src/main/obj/local/
 Android/lib/assets/
-Android/lib/src/main/libs/
 Android/local.properties
 nginxDLC/logs/
 Android/.gradle/
