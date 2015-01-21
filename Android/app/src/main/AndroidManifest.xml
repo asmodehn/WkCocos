@@ -38,8 +38,8 @@
 
         <meta-data android:name="billing.service" android:value="google.GooglePlayIabService" />
 
-		<meta-data android:name="igaworks_app_key" android:value="800296516"/><!-- 160127861 -->
-		<meta-data android:name="igaworks_hash_key" android:value="0ff2d9874a7f4cca"/><!-- 059c2cd94d114625 -->
+		<meta-data android:name="igaworks_app_key" android:value="160127861"/><!-- 160127861 -->
+		<meta-data android:name="igaworks_hash_key" android:value="059c2cd94d114625"/><!-- 059c2cd94d114625 -->
 <!--         <meta-data
             android:name="igaworks_app_key"
             android:value="800296516"/>
