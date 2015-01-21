@@ -11,16 +11,19 @@ import com.igaworks.IgawCommon;
 import com.igaworks.displayad.IgawDisplayAd;
 import com.igaworks.displayad.common.DAErrorCode;
 import com.igaworks.displayad.interfaces.IBannerEventCallbackListener;
+import com.igaworks.displayad.interfaces.IInterstitialEventCallbackListener;
 import com.igaworks.displayad.view.BannerContainerView;
 
 /**
  * Manage Advertisement library
  */
-public class WkAd implements IBannerEventCallbackListener {
+public class WkAd implements IBannerEventCallbackListener, IInterstitialEventCallbackListener {
 
     private MainActivity mainActivity;
     private final String BANNER_ID_2 = "fa910d896f";
+    private final String INTERSTITIAL_ID = "36d1a6f381";
     private String bannerKey;
+    private String interstitialKey;
 
     private android.widget.LinearLayout adLayout;
     private BannerContainerView bannerView;
@@ -40,11 +43,17 @@ public class WkAd implements IBannerEventCallbackListener {
             adLayout.requestLayout();
         }
     };
+    final Runnable adInterstitialShow = new Runnable() {
+        public void run() {
+            IgawDisplayAd.showInterstitialAd(mainActivity, interstitialKey);
+        }
+    };
 
     public WkAd(MainActivity activity)
     {
         mainActivity = activity;
         bannerKey = BANNER_ID_2;
+        interstitialKey = INTERSTITIAL_ID;
 
         adLayout = new android.widget.LinearLayout(mainActivity);
         //adLayout.setOrientation(LinearLayout.VERTICAL);
@@ -62,6 +71,7 @@ public class WkAd implements IBannerEventCallbackListener {
         IgawCommon.startApplication(mainActivity);
         IgawDisplayAd.init(mainActivity);
         IgawDisplayAd.setBannerEventCallbackListener(mainActivity, bannerKey, this);
+        IgawDisplayAd.setInterstitialEventCallbackListener(mainActivity, interstitialKey, this);
     }
 
     public View getUI()
@@ -81,18 +91,6 @@ public class WkAd implements IBannerEventCallbackListener {
 
     }
 
-    @Override
-    public void OnBannerAdReceiveSuccess() {
-        // TODO Auto-generated method stub
-        Toast.makeText(mainActivity, "OnBannerAdReceiveSuccess", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void OnBannerAdReceiveFailed(DAErrorCode errorCode) {
-        // TODO Auto-generated method stub
-        Toast.makeText(mainActivity, "OnBannerAdReceiveFailed: " + errorCode.getErrorMessage(), Toast.LENGTH_SHORT).show();
-    }
-
     public void showAdBanner(int x, int y) {
         adLayout.layout(
                 x - adLayout.getWidth() / 2,
@@ -105,6 +103,41 @@ public class WkAd implements IBannerEventCallbackListener {
 
     public void hideAdBanner() {
         mHandler.post(adBannerHide);
+    }
+
+    public void showInterstitialAd()
+    {
+        mHandler.post(adInterstitialShow);
+    }
+
+    @Override
+    public void OnBannerAdReceiveSuccess() {
+        // TODO Auto-generated method stub
+        //Toast.makeText(mainActivity, "OnBannerAdReceiveSuccess", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void OnBannerAdReceiveFailed(DAErrorCode errorCode) {
+        // TODO Auto-generated method stub
+        //Toast.makeText(mainActivity, "OnBannerAdReceiveFailed: " + errorCode.getErrorMessage(), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void OnInterstitialReceiveSuccess() {
+        // TODO Auto-generated method stub
+        //Toast.makeText(mainActivity, "OnInterstitialReceiveSuccess", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void OnInterstitialReceiveFailed(DAErrorCode errorCode) {
+        // TODO Auto-generated method stub
+        //Toast.makeText(mainActivity, "OnInterstitialReceiveFailed", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void OnInterstitialClosed() {
+        // TODO Auto-generated method stub
+        //Toast.makeText(mainActivity, "OnInterstitialClosed", Toast.LENGTH_SHORT).show();
     }
 
 }

@@ -161,6 +161,25 @@ namespace WkCocos
 #endif
 		}
 
+		void WkJniHelper::showInterstitialAd()
+		{
+			//TODO : change to match design using WkJniHelpers
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+			cocos2d::JniMethodInfo j_getMainActivityMI;
+
+			jobject helperinst = WkJniHelper::getInstance();
+
+			CCLOG("Calling com/gameparkstudio/wkcocos/lib/WkJniHelper/showInterstitialAd()");
+			if (helperinst && cocos2d::JniHelper::getMethodInfo(j_getMainActivityMI, "com/gameparkstudio/wkcocos/lib/WkJniHelper", "showInterstitialAd", "()V"))
+			{
+				j_getMainActivityMI.env->CallVoidMethod(helperinst, j_getMainActivityMI.methodID);
+			}
+			j_getMainActivityMI.env->DeleteLocalRef(helperinst);
+#else
+			//TODO
+#endif
+		}
+
 	}
 }
 

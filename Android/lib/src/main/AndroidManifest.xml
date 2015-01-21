@@ -21,6 +21,10 @@
         </activity>
 		
 		<!-- AD BEGIN -->
+        <activity
+            android:name="com.igaworks.displayad.activity.InterstitialActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:theme="@android:style/Theme.NoTitleBar" /> 
 		<!-- need to double check this information-->
 		<meta-data android:name="igaworks_market_info" android:value="google"/>
 		

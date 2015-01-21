@@ -41,6 +41,7 @@ namespace WkCocos
 			static void openURL(std::string url);
 			static void showAd(cocos2d::Vec2 pos);
 			static void hideAd();
+			static void showInterstitialAd();
 
         private:
             friend class WkCocos::PushNotifications::PushNotifications;

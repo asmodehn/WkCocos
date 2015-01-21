@@ -50,4 +50,8 @@ public class WkJniHelper {
         {
             appMainActivity.getAd().hideAdBanner();
         }
+        public void showInterstitialAd()
+    {
+        appMainActivity.getAd().showInterstitialAd();
+    }
 }

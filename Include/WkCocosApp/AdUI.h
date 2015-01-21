@@ -33,7 +33,8 @@ public:
 	* Event hide
 	*/
 	virtual void onHide() override;
-	
+
+	void showInterstitialAd(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input);
 protected:
 
 
