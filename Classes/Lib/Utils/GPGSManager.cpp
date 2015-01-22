@@ -1,4 +1,4 @@
-#include "WkCocosApp/GPGSManager.h"
+#include "WkCocos/Utils/GPGSManager.h"
 
 #ifdef __APPLE__
 //

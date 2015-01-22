@@ -1,6 +1,6 @@
 #include "WkCocosApp/GPGameServicesUI.h"
 
-#include "WkCocosApp/GPGSManager.h"
+#include "WkCocos/Utils/GPGSManager.h"
 #include "WkCocos/Utils/ToolBox.h"
 
 #include "cocos2d.h"

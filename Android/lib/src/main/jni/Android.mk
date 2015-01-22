@@ -13,6 +13,7 @@ LOCAL_SRC_FILES := jni.cpp \
                    ../../../../../Classes/Lib/Utils/Crypto.cpp \
                    ../../../../../Classes/Lib/Utils/UUID.cpp \
                    ../../../../../Classes/Lib/Utils/WkJniHelper.cpp \
+				   ../../../../../Classes/Lib/Utils/GPGSManager.cpp \
                    ../../../../../Classes/Lib/Options.cpp \
                    ../../../../../Classes/Lib/Player.cpp \
                    ../../../../../Classes/Lib/Scene.cpp \

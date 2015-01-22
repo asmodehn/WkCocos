@@ -117,15 +117,11 @@ android {
 
     buildTypes {
         debug {
-            //BEWARE : this changes package name as well ! comment it for testing anything related to google play.
-            applicationIdSuffix ".debug"
             debuggable true
-            //TODO : use versionNameSuffix
             jniDebuggable true
         }
         release {
             debuggable false
-            //TODO : use versionNameSuffix
             jniDebuggable false
             signingConfig signingConfigs.release
             //TODO : Enable it and test everything still works as expected.

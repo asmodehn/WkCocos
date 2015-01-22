@@ -13,86 +13,14 @@ import com.google.android.vending.expansion.downloader.Helpers;
 
 public class AppActivity extends MainActivity implements WkDownloaderInfo {
 
-    // Implemented in C++.
-
-    private static native void nativeInitGPGS(AppActivity act);
-
-    public static native void nativeOnActivityResult(Activity activity, int requestCode, int resultCode, Intent data);
-
-    public static native void nativeOnActivityCreated(Activity activity, Bundle savedInstanceState);
-
-    private static native void nativeOnActivityDestroyed(Activity activity);
-
-    private static native void nativeOnActivityPaused(Activity activity);
-
-    private static native void nativeOnActivityResumed(Activity activity);
-
-    private static native void nativeOnActivitySaveInstanceState(Activity activity, Bundle outState);
-
-    private static native void nativeOnActivityStarted(Activity activity);
-
-    private static native void nativeOnActivityStopped(Activity activity);
-
     private final static String TAG = AppActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
-
         this.setInfo(this);
-
         super.onCreate(savedInstanceState);
-
-        nativeInitGPGS(this);
-        nativeOnActivityCreated(this, savedInstanceState);
     }
 
-    @Override protected void onPause() {
-        super.onPause();
-        nativeOnActivityPaused(this);
-    }
-
-    @Override protected void onResume() {
-        super.onResume();
-        nativeOnActivityResumed(this);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        nativeOnActivityDestroyed(this);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        nativeOnActivityStarted(this);
-    }
-
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        nativeOnActivityStopped(this);
-    }
-
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        nativeOnActivitySaveInstanceState(this, outState);
-    }
-
-    protected void onActivityResult(int requestCode, int resultCode, Intent result) {
-        super.onActivityResult(requestCode, resultCode, result);
-        Log.i(TAG, "OnActivityResult: " + requestCode);
-
-        // Pass the activity result to the C++ SDK so that it can resolve any
-        // errors related
-        // to Google Play Games. The C++ SDK only acts on Activity results that
-        // contain the
-        // unique request code.
-        nativeOnActivityResult(this, requestCode, resultCode, result);
-    }
 
     @Override
     public String getVersionName()
