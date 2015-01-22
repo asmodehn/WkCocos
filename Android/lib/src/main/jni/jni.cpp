@@ -27,7 +27,7 @@ Java_com_asmodehn_wkcocos_lib_MainActivity_nativeInitGPGS(JNIEnv*  env, jobject 
 {
     gpg::AndroidPlatformConfiguration platform_configuration;
     platform_configuration.SetActivity(activity);
-    GPGSManager::InitServices(platform_configuration);
+    GPGSManager::getInstance()->InitServices(platform_configuration);
 
 }
 

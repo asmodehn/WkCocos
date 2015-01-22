@@ -21,17 +21,15 @@ const int32_t BUFFER_SIZE = 256;
 
 #endif
 
-//cocos style platform detection
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-
 #include "cocos2d.h"
 #include "json/rapidjson.h"
 #include "json/document.h"
 
-bool GPGSManager::isSignedIn = false;
-std::unique_ptr<gpg::GameServices> GPGSManager::gameServices;
+GPGSManager* GPGSManager::instance = nullptr;
 
-void OnAuthActionStarted(gpg::AuthOperation op) {
+//cocos style platform detection
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+void GPGSManager::OnAuthActionStarted(gpg::AuthOperation op) {
   LOGI("OnAuthActionStarted");
   switch ( op ) {
   case gpg::AuthOperation::SIGN_IN:
@@ -43,18 +41,27 @@ void OnAuthActionStarted(gpg::AuthOperation op) {
   }
 }
 
-void OnAuthActionFinished(gpg::AuthOperation op, gpg::AuthStatus status) {
+void GPGSManager::OnAuthActionFinished(gpg::AuthOperation op, gpg::AuthStatus status) {
     LOGI("OnAuthActionFinished");
     if (op == gpg::AuthOperation::SIGN_IN){
         LOGI("Signing In.");
+        CCLOGERROR("EMITTING");
+        event_manager->emit<GPGSManager::SignedIn>();
     }
     else{
         LOGI("Signing Out.");
+        CCLOGERROR("EMITTING");
+        event_manager->emit<GPGSManager::SignedOut>();
     }
 }
 
 gpg::GameServices *GPGSManager::GetGameServices() {
   return gameServices.get();
+}
+
+bool GPGSManager::IsSignedIn()
+{
+    return isSignedIn;
 }
 
 void GPGSManager::BeginUserInitiatedSignIn() {
@@ -81,16 +88,16 @@ void GPGSManager::InitServices(gpg::PlatformConfiguration &pc)
       // Add a test scope (we don't actually use this).
       //    .AddOauthScope("https://www.googleapis.com/auth/appstate")
       //    .InternalSetRootURL("https://www-googleapis-staging.sandbox.google.com/")
-      .SetOnAuthActionStarted([](gpg::AuthOperation op){
-          OnAuthActionStarted(op);
+      .SetOnAuthActionStarted([this](gpg::AuthOperation op){
+          this->OnAuthActionStarted(op);
       })
-      .SetOnAuthActionFinished([](gpg::AuthOperation op, gpg::AuthStatus status){
+      .SetOnAuthActionFinished([this](gpg::AuthOperation op, gpg::AuthStatus status){
           LOGI("Sign in finished with a result of %d", status);
           if( status == gpg::AuthStatus::VALID )
               isSignedIn = true;
           else
               isSignedIn = false;
-          OnAuthActionFinished( op, status);
+          this->OnAuthActionFinished( op, status);
       }).Create(pc);
   }
   if (gameServices)
@@ -102,4 +109,17 @@ void GPGSManager::InitServices(gpg::PlatformConfiguration &pc)
     LOGE("GameServices creation FAILED !");
   }
 }
+
+void GPGSManager::unlockAchievement(const std::string & achievement_id)
+{
+    if ( gameServices )
+    {
+        gameServices->Achievements().Unlock(achievement_id);
+    }
+}
+
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32 || CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
+
+//TODO
+#else
 #endif // (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
