@@ -1,4 +1,4 @@
-package com.gameparkstudio.wkcocos.lib;
+package com.asmodehn.wkcocos.lib;
 
 import android.app.Activity;
 import android.app.PendingIntent;
@@ -9,7 +9,7 @@ import java.lang.System;
 
 public class PushNotificationsManager{
 
-    public static final String WKCOCOS_ACTION_GENERIC_PN = "com.gameparkstudio.wkcocos.PN";
+    public static final String WKCOCOS_ACTION_GENERIC_PN = "com.asmodehn.wkcocos.PN";
 
     //to manage alarms
     AlarmManager am;
@@ -37,5 +37,5 @@ public class PushNotificationsManager{
         am.set(AlarmManager.RTC, time, PNPI);
 
     }
-	
+
 }

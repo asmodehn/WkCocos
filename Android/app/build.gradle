@@ -7,6 +7,7 @@ if(buildNumber == null) {
     //dev build is lower versionCode
     // so there is no accident with accidentally uploading/downloading dev version.
     buildNumber = 0
+    //change this to 1 to be able to build the first release apk that can go to the google play store.
 }
 else {
     buildNumber=buildNumber.toInteger()
@@ -37,7 +38,7 @@ android {
     buildToolsVersion '19.1.0'
 
     defaultConfig {
-        applicationId "com.gameparkstudio.wkcocos.testapp"
+        applicationId "com.asmodehn.wkcocos.testapp"
         minSdkVersion 10
         targetSdkVersion 19
         //versionName can go up to "9.999.build"
@@ -102,7 +103,9 @@ android {
 
     signingConfigs {
         release {
-            storeFile file("mykeystore") //replaced if validateReleaseSigning is in task graph
+            //replaced by KEYSTORE env variable if it exists
+            // when validateReleaseSigning is in task graph
+            storeFile file("asmodehn.keystore")
             storePassword "" //interactive prompt will fill this up
             keyAlias "wkcocos"
             keyPassword "" //interactive prompt will fill this up
@@ -234,13 +237,13 @@ import groovy.swing.SwingBuilder
 gradle.taskGraph.whenReady { taskGraph ->
     if(taskGraph.hasTask(':testapp:validateReleaseSigning')) {
         //supporting keystore in different location
-        def keypath = System.getenv("KEYSTORE")
+        def keypath = System.getenv("ASMODEHN_KEYSTORE")
         if(keypath != null) {
             android.signingConfigs.release.storeFile = file(keypath)
         }
 
         //environment or interactive input of password
-        def pass = System.getenv("KEYSTORE_PASSWORD")
+        def pass = System.getenv("ASMODEHN_KEYSTORE_PASSWORD")
         if(pass == null) {
 
             if (System.console() == null) {

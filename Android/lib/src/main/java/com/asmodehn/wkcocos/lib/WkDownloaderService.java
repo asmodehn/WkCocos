@@ -1,4 +1,4 @@
-package com.gameparkstudio.wkcocos.lib;
+package com.asmodehn.wkcocos.lib;
 
 import com.google.android.vending.expansion.downloader.impl.DownloaderService;
 

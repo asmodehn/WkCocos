@@ -1,4 +1,4 @@
-package com.gameparkstudio.wkcocos.lib;
+package com.asmodehn.wkcocos.lib;
 /*
  * Copyright (C) 2012 The Android Open Source Project
  *

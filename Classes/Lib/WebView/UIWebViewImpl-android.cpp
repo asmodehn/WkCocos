@@ -1,18 +1,18 @@
 /****************************************************************************
  Copyright (c) 2014 Chukong Technologies Inc.
- 
+
  http://www.cocos2d-x.org
- 
+
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
  in the Software without restriction, including without limitation the rights
  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  copies of the Software, and to permit persons to whom the Software is
  furnished to do so, subject to the following conditions:
- 
+
  The above copyright notice and this permission notice shall be included in
  all copies or substantial portions of the Software.
- 
+
  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -37,17 +37,17 @@
 #include "cocos/base/CCDirector.h"
 #include "cocos/platform/CCFileUtils.h"
 
-#define CLASS_NAME "com/gameparkstudio/wkcocos/lib/Cocos2dxWebViewHelper"
+#define CLASS_NAME "com/asmodehn/wkcocos/lib/Cocos2dxWebViewHelper"
 
 #define  LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG,"",__VA_ARGS__)
 
 extern "C" {
     /*
-     * Class:     com_gameparkstudio_wkcocos_lib_Cocos2dxWebViewHelper
+     * Class:     com_asmodehn_wkcocos_lib_Cocos2dxWebViewHelper
      * Method:    shouldStartLoading
      * Signature: (ILjava/lang/String;)Z
      */
-    JNIEXPORT jboolean JNICALL Java_com_gameparkstudio_wkcocos_lib_Cocos2dxWebViewHelper_shouldStartLoading(JNIEnv *env, jclass, jint index, jstring jurl) {
+    JNIEXPORT jboolean JNICALL Java_com_asmodehn_wkcocos_lib_Cocos2dxWebViewHelper_shouldStartLoading(JNIEnv *env, jclass, jint index, jstring jurl) {
         auto charUrl = env->GetStringUTFChars(jurl, NULL);
         std::string url = charUrl;
         env->ReleaseStringUTFChars(jurl, charUrl);
@@ -55,11 +55,11 @@ extern "C" {
     }
 
     /*
-     * Class:     com_gameparkstudio_wkcocos_lib_Cocos2dxWebViewHelper
+     * Class:     com_asmodehn_wkcocos_lib_Cocos2dxWebViewHelper
      * Method:    didFinishLoading
      * Signature: (ILjava/lang/String;)V
      */
-    JNIEXPORT void JNICALL Java_com_gameparkstudio_wkcocos_lib_Cocos2dxWebViewHelper_didFinishLoading(JNIEnv *env, jclass, jint index, jstring jurl) {
+    JNIEXPORT void JNICALL Java_com_asmodehn_wkcocos_lib_Cocos2dxWebViewHelper_didFinishLoading(JNIEnv *env, jclass, jint index, jstring jurl) {
         // LOGD("didFinishLoading");
         auto charUrl = env->GetStringUTFChars(jurl, NULL);
         std::string url = charUrl;
@@ -68,11 +68,11 @@ extern "C" {
     }
 
     /*
-     * Class:     com_gameparkstudio_wkcocos_lib_Cocos2dxWebViewHelper
+     * Class:     com_asmodehn_wkcocos_lib_Cocos2dxWebViewHelper
      * Method:    didFailLoading
      * Signature: (ILjava/lang/String;)V
      */
-    JNIEXPORT void JNICALL Java_com_gameparkstudio_wkcocos_lib_Cocos2dxWebViewHelper_didFailLoading(JNIEnv *env, jclass, jint index, jstring jurl) {
+    JNIEXPORT void JNICALL Java_com_asmodehn_wkcocos_lib_Cocos2dxWebViewHelper_didFailLoading(JNIEnv *env, jclass, jint index, jstring jurl) {
         // LOGD("didFailLoading");
         auto charUrl = env->GetStringUTFChars(jurl, NULL);
         std::string url = charUrl;
@@ -81,11 +81,11 @@ extern "C" {
     }
 
     /*
-     * Class:     com_gameparkstudio_wkcocos_lib_Cocos2dxWebViewHelper
+     * Class:     com_asmodehn_wkcocos_lib_Cocos2dxWebViewHelper
      * Method:    onJsCallback
      * Signature: (ILjava/lang/String;)V
      */
-    JNIEXPORT void JNICALL Java_com_gameparkstudio_wkcocos_lib_Cocos2dxWebViewHelper_onJsCallback(JNIEnv *env, jclass, jint index, jstring jmessage) {
+    JNIEXPORT void JNICALL Java_com_asmodehn_wkcocos_lib_Cocos2dxWebViewHelper_onJsCallback(JNIEnv *env, jclass, jint index, jstring jmessage) {
         // LOGD("jsCallback");
         auto charMessage = env->GetStringUTFChars(jmessage, NULL);
         std::string message = charMessage;

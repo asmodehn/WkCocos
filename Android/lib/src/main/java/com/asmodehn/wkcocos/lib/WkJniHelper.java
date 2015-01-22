@@ -1,11 +1,8 @@
-package com.gameparkstudio.wkcocos.lib;
+package com.asmodehn.wkcocos.lib;
 
 
 import android.app.Activity;
 import android.util.Log;
-
-import com.gameparkstudio.wkcocos.lib.MainActivity;
-
 
 //This is a singleton. ref : http://howtodoinjava.com/2012/10/22/singleton-design-pattern-in-java
 //when used via getInstance(), it will retrieve the context from the main activity
