@@ -11,6 +11,7 @@
 #include "WkCocosApp/WebUI.h"
 #include "WkCocosApp/LogUI.h"
 #include "WkCocosApp/GameUI.h"
+#include "WkCocosApp/GPGameServicesUI.h"
 #include "WkCocosApp/GameLogic.h"
 
 #include "ui/CocosGUI.h"
@@ -146,12 +147,12 @@ bool TestScene::init()
 	logui->setPosition(cocos2d::Vec2(0, 40));
 	//*/
 
-	/*//GameUI
-	GameUI* gameui = new GameUI();
-	gameui->setEnabled(false);
-	gameui->setVisible(false);
-	addInterface(GameUI::id, gameui);
-	gameui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.5f));
+	//GPGameServicesUI
+	GPGameServicesUI* gpgsui = new GPGameServicesUI();
+	gpgsui->setEnabled(false);
+	gpgsui->setVisible(false);
+	addInterface(GPGameServicesUI::id, gpgsui);
+	gpgsui->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, visibleSize.height * 0.67f));
 	//*/
 
 	//activating first UI :

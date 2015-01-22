@@ -1,7 +1,11 @@
 package com.asmodehn.wkcocos.testapp;
 
+import android.app.Activity;
 import android.app.NotificationManager;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+
 import com.asmodehn.wkcocos.lib.MainActivity;
 import com.asmodehn.wkcocos.lib.WkDownloaderActivity;
 import com.asmodehn.wkcocos.lib.WkDownloaderInfo;
@@ -9,21 +13,14 @@ import com.google.android.vending.expansion.downloader.Helpers;
 
 public class AppActivity extends MainActivity implements WkDownloaderInfo {
 
+    private final static String TAG = AppActivity.class.getSimpleName();
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
-
         this.setInfo(this);
-
         super.onCreate(savedInstanceState);
     }
 
-    @Override protected void onPause() {
-        super.onPause();
-    }
-
-    @Override protected void onResume() {
-        super.onResume();
-    }
 
     @Override
     public String getVersionName()

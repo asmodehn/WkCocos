@@ -28,6 +28,9 @@ android {
             jniLibs.srcDirs = ['src/main/libs'] // use the jni .so compiled from the manual ndk-build command
             jni.srcDirs = [] //disable automatic ndk-build call
         }
+        release {
+            res.srcDirs = ['src/release/res']
+        }
         test {
 
         }
@@ -114,15 +117,11 @@ android {
 
     buildTypes {
         debug {
-            //BEWARE : this changes package name as well ! comment it for testing anything related to google play.
-            applicationIdSuffix ".debug"
             debuggable true
-            //TODO : use versionNameSuffix
             jniDebuggable true
         }
         release {
             debuggable false
-            //TODO : use versionNameSuffix
             jniDebuggable false
             signingConfig signingConfigs.release
             //TODO : Enable it and test everything still works as expected.
@@ -343,5 +342,4 @@ clean.dependsOn cleanNdkCustomBuildDebug, cleanNdkCustomBuildRelease, cleanCopyA
 
 dependencies {
     compile project(':wkcocos')
-    compile 'com.android.support:appcompat-v7:19.+'
 }
