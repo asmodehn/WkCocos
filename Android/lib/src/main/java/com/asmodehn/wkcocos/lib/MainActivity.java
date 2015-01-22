@@ -38,6 +38,28 @@ import java.util.zip.CRC32;
 
 public abstract class MainActivity extends Cocos2dxActivity {
 
+    //// Needed to use Google Play Game Services C++ SDK
+
+    private static native void nativeInitGPGS(Activity act);
+
+    public static native void nativeOnActivityResult(Activity activity, int requestCode, int resultCode, Intent data);
+
+    public static native void nativeOnActivityCreated(Activity activity, Bundle savedInstanceState);
+
+    private static native void nativeOnActivityDestroyed(Activity activity);
+
+    private static native void nativeOnActivityPaused(Activity activity);
+
+    private static native void nativeOnActivityResumed(Activity activity);
+
+    private static native void nativeOnActivitySaveInstanceState(Activity activity, Bundle outState);
+
+    private static native void nativeOnActivityStarted(Activity activity);
+
+    private static native void nativeOnActivityStopped(Activity activity);
+
+    ////
+
     private final static String TAG = MainActivity.class.getSimpleName();
 
     private Cocos2dxWebViewHelper mWebViewHelper = null;
@@ -105,6 +127,9 @@ public abstract class MainActivity extends Cocos2dxActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        nativeInitGPGS(this);
+        nativeOnActivityCreated(this, savedInstanceState);
+
         me = this;
 
         if (mWebViewHelper == null) {
@@ -165,6 +190,7 @@ public abstract class MainActivity extends Cocos2dxActivity {
     @Override protected void onPause() {
         super.onPause();
         ad.pause();
+        nativeOnActivityPaused(this);
     }
 
     @Override protected void onResume() {
@@ -180,9 +206,48 @@ public abstract class MainActivity extends Cocos2dxActivity {
             || ( patchXAPK != null && patchXAPKValid != null && ! patchXAPKValid)
         ) {
             finish();
+        } else {
+            nativeOnActivityResumed(this);
+			ad.resume();
         }
+    }
 
-        ad.resume();
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        nativeOnActivityDestroyed(this);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        nativeOnActivityStarted(this);
+    }
+
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        nativeOnActivityStopped(this);
+    }
+
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        nativeOnActivitySaveInstanceState(this, outState);
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent result) {
+        super.onActivityResult(requestCode, resultCode, result);
+        Log.i(TAG, "OnActivityResult: " + requestCode);
+
+        // Pass the activity result to the C++ SDK so that it can resolve any
+        // errors related
+        // to Google Play Games. The C++ SDK only acts on Activity results that
+        // contain the
+        // unique request code.
+        nativeOnActivityResult(this, requestCode, resultCode, result);
     }
 
     /**

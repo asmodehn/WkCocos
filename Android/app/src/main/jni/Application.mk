@@ -4,7 +4,7 @@ NDK_TOOLCHAIN_VERSION := 4.8
 #NDK_TOOLCHAIN_VERSION := clang
 
 #This is needed to get GLES2 working
-APP_PLATFORM := android-9
+APP_PLATFORM := android-10
 
 #building for all platforms but our minimal supported ABI is ARMv7A
 APP_ABI := armeabi-v7a x86
@@ -14,6 +14,9 @@ APP_CPPFLAGS :=  -std=c++11 -fsigned-char -frtti -fexceptions
 
 #cocos flags
 APP_CPPFLAGS += -DCC_ENABLE_CHIPMUNK_INTEGRATION=1
+
+#GPG flags for cocos
+APP_CPPFLAGS += -DCC_USE_GOOGLE_PLAY_GAME_SERVICES
 
 #APP_DEBUG is set by using NDK_DEBUG command line option
 ifeq ($(APP_DEBUG),true)
