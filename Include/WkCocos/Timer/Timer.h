@@ -6,6 +6,7 @@
 //needed for classes using Timer.
 #include "WkCocos/Timer/Events/TimerUpdate.h"
 #include "WkCocos/Timer/Events/AlarmOff.h"
+#include "WkCocos/Timer/Events/TimerInit.h"
 
 #include <ctime>
 
@@ -13,7 +14,7 @@ namespace WkCocos
 {
 	namespace Timer
 	{
-		class Timer
+		class Timer : public entityx::Receiver<Timer>
 		{
 		public:
 			/**
@@ -126,6 +127,11 @@ namespace WkCocos
 			///Get Current Time
 			static struct tm getDeviceUTCTime();
 
+			/**
+			* to receive timer initialized event
+			* this will setup the shop
+			*/
+			void receive(WkCocos::Timer::Events::TimerInit const & ti);
 
 		protected:
 

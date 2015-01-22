@@ -13,7 +13,7 @@ namespace WkCocos
 		namespace Systems
 		{
 			/**
-			* 
+			*
 			*/
 			void DataEval::chooseLoader(entityx::Entity entity, std::string datafile, bool force, entityx::ptr<entityx::EventManager> events)
 			{
@@ -28,8 +28,12 @@ namespace WkCocos
 					}
 
 					//assigning the proper loadfunc component
-					entity.assign<Comp::LoadASyncFunc>(datafile, 0, [datafile](std::function<void(cocos2d::Texture2D*)> endcb){
-						cocos2d::Director::getInstance()->getTextureCache()->addImageAsync(datafile, endcb);
+					//ASYNC ( doesnt work when reading from ZIP )
+					//entity.assign<Comp::LoadASyncFunc>(datafile, 0, [datafile](std::function<void(cocos2d::Texture2D*)> endcb){
+					//	cocos2d::Director::getInstance()->getTextureCache()->addImageAsync(datafile, endcb);
+					//SYNC
+					entity.assign<Comp::LoadSyncFunc>(datafile, 0, [datafile](){
+						cocos2d::Director::getInstance()->getTextureCache()->addImage(datafile);
 					});
 				}
 				//but plist has to be loaded synchronously
@@ -50,7 +54,7 @@ namespace WkCocos
 				//and json needs to be loaded with specific loader.
 				else if (datafile.compare(datafile.size() - 8, 8, ".ui.json") == 0)
 				{
-					//TODO : force needed ? 
+					//TODO : force needed ?
 
 					entityx::ptr<Comp::DataLoad> dataload = entity.component<Comp::DataLoad>();
 					std::string file = dataload->getFilepath();
@@ -128,7 +132,7 @@ namespace WkCocos
 				}
 
 			}
-					
+
 		}//namespace Systems
 	}//namespace Preload
 }//namespace WkCocos

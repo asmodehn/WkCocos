@@ -26,8 +26,9 @@ namespace WkCocos
 		{
 			cocos2d::JniMethodInfo j_scheduleMI;
 			jobject instance = WkCocos::Utils::WkJniHelper::getPushNotificationManager();
-            CCLOG("Calling com/gameparkstudio/wkcocos/lib/PushNotificationsManager/schedule(JLjava/lang/String;Ljava/lang/String;)I");
-            if (instance && cocos2d::JniHelper::getMethodInfo(j_scheduleMI, "com/gameparkstudio/wkcocos/lib/PushNotificationsManager", "schedule", "(IJLjava/lang/String;Ljava/lang/String;)V"))
+			std::string clss = std::string(PACKAGE_NAME_JNI) + "/PushNotificationsManager";
+            CCLOG("Calling %s/schedule(JLjava/lang/String;Ljava/lang/String;)I", clss.c_str());
+            if (instance && cocos2d::JniHelper::getMethodInfo(j_scheduleMI, clss.c_str(), "schedule", "(IJLjava/lang/String;Ljava/lang/String;)V"))
             {
                 //building arguments
                 jint jid(id);
