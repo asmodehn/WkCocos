@@ -112,10 +112,18 @@ void GPGSManager::InitServices(gpg::PlatformConfiguration &pc)
 
 void GPGSManager::unlockAchievement(const std::string & achievement_id)
 {
-    if ( gameServices )
-    {
-        gameServices->Achievements().Unlock(achievement_id);
-    }
+	if ( gameServices )
+	{
+		gameServices->Achievements().Unlock(achievement_id);
+	}
+}
+
+void GPGSManager::incrementAchievement(const std::string & achievement_id, int step)
+{
+	if (gameServices)
+	{
+		gameServices->Achievements().Increment(achievement_id, step);
+	}
 }
 
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32 || CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)

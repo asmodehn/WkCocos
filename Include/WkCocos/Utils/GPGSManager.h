@@ -57,7 +57,8 @@ public:
     void SignOut();
     bool IsSignedIn();
 
-    void unlockAchievement(const std::string & achievement_id);
+	void unlockAchievement(const std::string & achievement_id);
+	void incrementAchievement(const std::string & achievement_id, int step);
 
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32 || CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
 
