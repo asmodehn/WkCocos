@@ -126,6 +126,21 @@ void GPGSManager::incrementAchievement(const std::string & achievement_id, int s
 	}
 }
 
+void GPGSManager::showAchievements()
+{
+	if (gameServices)
+	{
+		if(!isSignedIn)
+		{
+			BeginUserInitiatedSignIn();
+		}
+		else
+		{
+			gameServices->Achievements().ShowAllUIBlocking();
+		}
+	}
+}
+
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32 || CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
 
 //TODO

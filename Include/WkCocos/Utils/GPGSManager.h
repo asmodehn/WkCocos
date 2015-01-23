@@ -59,6 +59,7 @@ public:
 
 	void unlockAchievement(const std::string & achievement_id);
 	void incrementAchievement(const std::string & achievement_id, int step);
+	void showAchievements();
 
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32 || CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
 
