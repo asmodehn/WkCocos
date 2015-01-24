@@ -275,6 +275,7 @@ public abstract class MainActivity extends Cocos2dxActivity {
     protected void onDestroy() {
         super.onDestroy();
         nativeOnActivityDestroyed(this);
+        ad.destroy();
     }
 
     @Override

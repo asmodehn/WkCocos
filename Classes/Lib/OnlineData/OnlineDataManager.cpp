@@ -195,12 +195,12 @@ namespace WkCocos
 			});
 		}
 
-		void OnlineDataManager::getServerTime(std::function<void(std::string)> callback)
+		void OnlineDataManager::getServerTime(std::function<void(std::string, bool)> callback)
 		{
 			auto newentity = entity_manager->create();
-			newentity.assign<Comp::ServerTime>([=](std::string s_iso8601){
-				cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, callback, s_iso8601](){
-					callback(s_iso8601);
+			newentity.assign<Comp::ServerTime>([=](std::string s_iso8601, bool serverTimeValid){
+				cocos2d::Director::getInstance()->getScheduler()->performFunctionInCocosThread([this, callback, s_iso8601, serverTimeValid](){
+					callback(s_iso8601, serverTimeValid);
 				});
 			});
 		}

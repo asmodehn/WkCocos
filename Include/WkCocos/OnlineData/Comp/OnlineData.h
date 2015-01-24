@@ -130,7 +130,7 @@ namespace WkCocos
 
 			struct ServerTime : entityx::Component<ServerTime>
 			{
-				ServerTime(std::function<void(std::string)> callback);
+				ServerTime(std::function<void(std::string, bool)> callback);
 
 				bool in_progress;
 				bool done;
