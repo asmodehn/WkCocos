@@ -1,5 +1,10 @@
 package com.asmodehn.wkcocos.lib;
 
+import android.content.Context;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,6 +75,30 @@ public class WkAd implements IBannerEventCallbackListener, IInterstitialEventCal
         IgawDisplayAd.init(mainActivity);
         IgawDisplayAd.setBannerEventCallbackListener(mainActivity, bannerKey, this);
         IgawDisplayAd.setInterstitialEventCallbackListener(mainActivity, interstitialKey, this);
+
+        // setup location
+        // Acquire a reference to the system Location Manager
+        LocationManager locationManager = (LocationManager) mainActivity.getSystemService(Context.LOCATION_SERVICE);
+
+        // Define a listener that responds to location updates
+        LocationListener locationListener = new LocationListener() {
+            public void onLocationChanged(Location location) {
+                IgawDisplayAd.setLocation(location.getLatitude(), location.getLongitude());
+            }
+
+            public void onStatusChanged(String provider, int status, Bundle extras) {}
+
+            public void onProviderEnabled(String provider) {}
+
+            public void onProviderDisabled(String provider) {}
+        };
+
+        // Register the listener with the Location Manager to receive location updates
+        // we dont want to be accurate, its just for damn advertising.
+        // so just make an update every 30 minute
+        // if there is at least a kilometer difference
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 30*60*1000, 1000, locationListener);
+
     }
 
     public View getUI()
@@ -87,6 +116,11 @@ public class WkAd implements IBannerEventCallbackListener, IInterstitialEventCal
         IgawCommon.startSession(mainActivity);
         IgawDisplayAd.startBannerAd(mainActivity, bannerKey, bannerView);
 
+    }
+
+    public void destroy(){
+        IgawDisplayAd.stopBannerAd(mainActivity);
+        IgawDisplayAd.destroy();
     }
 
     public void showAdBanner(int x, int y) {
