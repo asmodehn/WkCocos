@@ -126,7 +126,11 @@ public class WkDownloaderActivity extends Activity implements IDownloaderClient 
             {
                 mainXAPK.setFilePath(mexpFilePath);
                 Cocos2dxHelper.nativeSetMainXApkPath(mainXAPK.getFilePath());
+            }else{
+                //we fail to find the file ( after download ), no point in attempting to validate
+                MainActivity.mainXAPKValid = false;
             }
+
         }
 
         if (patchXAPK != null ) {
@@ -137,213 +141,213 @@ public class WkDownloaderActivity extends Activity implements IDownloaderClient 
             {
                 patchXAPK.setFilePath(pexpFilePath);
                 Cocos2dxHelper.nativeSetPatchXApkPath(patchXAPK.getFilePath());
+            }else {
+                //we fail to find the file( after download ), no point in attempting to validate
+                MainActivity.patchXAPKValid = false;
             }
         }
 
-        AsyncTask<Object, DownloadProgressInfo, Boolean> validationTask = new AsyncTask<Object, DownloadProgressInfo, Boolean>() {
+        if (patchXAPK != null || mainXAPK != null) { //if we need to download any XAPK
+            AsyncTask<Object, DownloadProgressInfo, Boolean> validationTask = new AsyncTask<Object, DownloadProgressInfo, Boolean>() {
 
-            @Override
-            protected void onPreExecute() {
-                mDashboard.setVisibility(View.VISIBLE);
-                mCellMessage.setVisibility(View.GONE);
-                mStatusText.setText(R.string.text_verifying_download);
-                mPauseButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        mCancelValidation = true;
+                @Override
+                protected void onPreExecute() {
+                    mDashboard.setVisibility(View.VISIBLE);
+                    mCellMessage.setVisibility(View.GONE);
+                    mStatusText.setText(R.string.text_verifying_download);
+                    mPauseButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            mCancelValidation = true;
+                        }
+                    });
+                    mPauseButton.setText(R.string.text_button_cancel_verify);
+                    super.onPreExecute();
+                }
+
+                @Override
+                protected Boolean doInBackground(Object... params) {
+
+                    boolean mainXAPKextracted = false;
+                    boolean patchXAPKextracted = false;
+
+                    if (mainXAPK != null) { //if we expect an APK
+                        if (mainXAPK.getFilePath() != "") {
+                            mainXAPKextracted = bgExtract(mainXAPK.getFilePath(), WkDownloaderActivity.this.getFilesDir().getAbsolutePath(), mainXAPK.mCheckEnabled);
+                            MainActivity.mainXAPKValid = mainXAPKextracted;
+                        } // else looking for XAPK has failed.
+                    } else {  //no expansion file : no extract same as extract empty patch file
+                        mainXAPKextracted = true;
                     }
-                });
-                mPauseButton.setText(R.string.text_button_cancel_verify);
-                super.onPreExecute();
-            }
 
-            @Override
-            protected Boolean doInBackground(Object... params) {
-
-                boolean mainXAPKextracted = false;
-                boolean patchXAPKextracted = false;
-
-                if ( mainXAPK != null ) { //if we expect an APK
-                    if (mainXAPK.getFilePath() != "") {
-                        mainXAPKextracted = bgExtract(mainXAPK.getFilePath(), WkDownloaderActivity.this.getFilesDir().getAbsolutePath(), mainXAPK.mCheckEnabled);
-                        MainActivity.mainXAPKValid = mainXAPKextracted;
-                    } // else looking for XAPK has failed.
-                }
-                else
-                {  //no expansion file : no extract same as extract empty patch file
-                    mainXAPKextracted = true;
-                }
-
-                if ( patchXAPK != null ) {
-                    if (patchXAPK.getFilePath() != "") {
-                        patchXAPKextracted = bgExtract(patchXAPK.getFilePath(), WkDownloaderActivity.this.getFilesDir().getAbsolutePath(), patchXAPK.mCheckEnabled);
-                        MainActivity.patchXAPKValid = patchXAPKextracted;
-                    } // else  looking for XAPK has failed
-                }
-                else
-                {  //no expansion file : no extract same as extract empty patch file
-                    patchXAPKextracted = true;
-                }
-
-                return mainXAPKextracted && patchXAPKextracted;
-            }
-
-            /**
-             * note this should always return true if checkCRC is disabled
-             * However we test the unzipping process, since checkCRC is supposed to be disabled only debug.
-             */
-            protected Boolean bgExtract(String fileName, String unzipLocation, boolean checkCRC)
-            {
-                ZipResourceFile zrf;
-                byte[] buf = new byte[1024 * 256];
-                try {
-                    //To access Zip files directly
-                    zrf = new ZipResourceFile(fileName);
-                    ZipResourceFile.ZipEntryRO[] entries = zrf.getAllEntries();
-                    /**
-                     * First calculate the total compressed length
-                     */
-                    long totalCompressedLength = 0;
-                    for (ZipResourceFile.ZipEntryRO entry : entries) {
-                        totalCompressedLength += entry.mCompressedLength;
+                    if (patchXAPK != null) {
+                        if (patchXAPK.getFilePath() != "") {
+                            patchXAPKextracted = bgExtract(patchXAPK.getFilePath(), WkDownloaderActivity.this.getFilesDir().getAbsolutePath(), patchXAPK.mCheckEnabled);
+                            MainActivity.patchXAPKValid = patchXAPKextracted;
+                        } // else  looking for XAPK has failed
+                    } else {  //no expansion file : no extract same as extract empty patch file
+                        patchXAPKextracted = true;
                     }
-                    float averageVerifySpeed = 0;
-                    long totalBytesRemaining = totalCompressedLength;
-                    long timeRemaining;
-                    /**
-                     * Then calculate a CRC for every file in the Zip file,
-                     * comparing it to what is stored in the Zip directory.
-                     * Note that for compressed Zip files we must extract
-                     * the contents to do this comparison.
-                     */
-                    for (ZipResourceFile.ZipEntryRO entry : entries) {
-                        if (-1 != entry.mCRC32) {
-                            long length = entry.mUncompressedLength;
-                            CRC32 crc = new CRC32();
-                            DataInputStream dis = null;
-                            ZipInputStream zis = null;
-                            try {
-                                //Log.d(Constants.TAG, "uncompressing " + entry.mFileName + "...");
 
-                                ////creating parent directories if needed
-                                //File unziploc = new File(unzipLocation);
-                                //File f = new File(unziploc, entry.mFileName);
-                                //File parent = f.getParentFile();
-                                //if ( !parent.exists() && !parent.mkdirs())
-                                //{
-                                //    throw new IllegalStateException("Could not create required dir : " + parent);
-                                //}
+                    return mainXAPKextracted && patchXAPKextracted;
+                }
 
-                                //FileOutputStream fos = null;
-                                //// write the inputStream to a FileOutputStream
-                                //if ( ! f.isDirectory() ) {
-                                //    fos = new FileOutputStream(f);
-                                //}
+                /**
+                 * note this should always return true if checkCRC is disabled
+                 * However we test the unzipping process, since checkCRC is supposed to be disabled only debug.
+                 */
+                protected Boolean bgExtract(String fileName, String unzipLocation, boolean checkCRC) {
+                    ZipResourceFile zrf;
+                    byte[] buf = new byte[1024 * 256];
+                    try {
+                        //To access Zip files directly
+                        zrf = new ZipResourceFile(fileName);
+                        ZipResourceFile.ZipEntryRO[] entries = zrf.getAllEntries();
+                        /**
+                         * First calculate the total compressed length
+                         */
+                        long totalCompressedLength = 0;
+                        for (ZipResourceFile.ZipEntryRO entry : entries) {
+                            totalCompressedLength += entry.mCompressedLength;
+                        }
+                        float averageVerifySpeed = 0;
+                        long totalBytesRemaining = totalCompressedLength;
+                        long timeRemaining;
+                        /**
+                         * Then calculate a CRC for every file in the Zip file,
+                         * comparing it to what is stored in the Zip directory.
+                         * Note that for compressed Zip files we must extract
+                         * the contents to do this comparison.
+                         */
+                        for (ZipResourceFile.ZipEntryRO entry : entries) {
+                            if (-1 != entry.mCRC32) {
+                                long length = entry.mUncompressedLength;
+                                CRC32 crc = new CRC32();
+                                DataInputStream dis = null;
+                                ZipInputStream zis = null;
+                                try {
+                                    //Log.d(Constants.TAG, "uncompressing " + entry.mFileName + "...");
 
-                                dis = new DataInputStream(zrf.getInputStream(entry.mFileName));
-                                long startTime = SystemClock.uptimeMillis();
-                                while (length > 0) {
-                                    int seek = (int) (length > buf.length ? buf.length : length);
-                                    dis.readFully(buf, 0, seek);
-                                    ////write to file
-                                    //if (fos != null) fos.write(buf, 0, seek);
-                                    if ( checkCRC ) {
-                                        //check crc
-                                        crc.update(buf, 0, seek);
-                                    }
-                                    length -= seek;
-                                    long currentTime = SystemClock.uptimeMillis();
-                                    long timePassed = currentTime - startTime;
-                                    if (timePassed > 0) {
-                                        float currentSpeedSample = (float) seek / (float) timePassed;
-                                        if (0 != averageVerifySpeed) {
-                                            averageVerifySpeed = SMOOTHING_FACTOR * currentSpeedSample + (1 - SMOOTHING_FACTOR) * averageVerifySpeed;
-                                        } else {
-                                            averageVerifySpeed = currentSpeedSample;
+                                    ////creating parent directories if needed
+                                    //File unziploc = new File(unzipLocation);
+                                    //File f = new File(unziploc, entry.mFileName);
+                                    //File parent = f.getParentFile();
+                                    //if ( !parent.exists() && !parent.mkdirs())
+                                    //{
+                                    //    throw new IllegalStateException("Could not create required dir : " + parent);
+                                    //}
+
+                                    //FileOutputStream fos = null;
+                                    //// write the inputStream to a FileOutputStream
+                                    //if ( ! f.isDirectory() ) {
+                                    //    fos = new FileOutputStream(f);
+                                    //}
+
+                                    dis = new DataInputStream(zrf.getInputStream(entry.mFileName));
+                                    long startTime = SystemClock.uptimeMillis();
+                                    while (length > 0) {
+                                        int seek = (int) (length > buf.length ? buf.length : length);
+                                        dis.readFully(buf, 0, seek);
+                                        ////write to file
+                                        //if (fos != null) fos.write(buf, 0, seek);
+                                        if (checkCRC) {
+                                            //check crc
+                                            crc.update(buf, 0, seek);
                                         }
-                                        totalBytesRemaining -= seek;
-                                        timeRemaining = (long) (totalBytesRemaining / averageVerifySpeed);
-                                        this.publishProgress(
-                                                new DownloadProgressInfo(
-                                                        totalCompressedLength,
-                                                        totalCompressedLength - totalBytesRemaining,
-                                                        timeRemaining,
-                                                        averageVerifySpeed)
-                                        );
+                                        length -= seek;
+                                        long currentTime = SystemClock.uptimeMillis();
+                                        long timePassed = currentTime - startTime;
+                                        if (timePassed > 0) {
+                                            float currentSpeedSample = (float) seek / (float) timePassed;
+                                            if (0 != averageVerifySpeed) {
+                                                averageVerifySpeed = SMOOTHING_FACTOR * currentSpeedSample + (1 - SMOOTHING_FACTOR) * averageVerifySpeed;
+                                            } else {
+                                                averageVerifySpeed = currentSpeedSample;
+                                            }
+                                            totalBytesRemaining -= seek;
+                                            timeRemaining = (long) (totalBytesRemaining / averageVerifySpeed);
+                                            this.publishProgress(
+                                                    new DownloadProgressInfo(
+                                                            totalCompressedLength,
+                                                            totalCompressedLength - totalBytesRemaining,
+                                                            timeRemaining,
+                                                            averageVerifySpeed)
+                                            );
+                                        }
+                                        startTime = currentTime;
+                                        if (mCancelValidation) {
+                                            return true;
+                                        }
                                     }
-                                    startTime = currentTime;
-                                    if (mCancelValidation) {
-                                        return true;
+                                    //detecting CRC errors
+                                    if (checkCRC && crc.getValue() != entry.mCRC32) {
+                                        Log.e(Constants.TAG, "CRC does not match for entry: " + entry.mFileName);
+                                        Log.e(Constants.TAG, "In file: " + entry.getZipFileName());
+                                        return false;
                                     }
-                                }
-                                //detecting CRC errors
-                                if (checkCRC && crc.getValue() != entry.mCRC32) {
-                                    Log.e(Constants.TAG, "CRC does not match for entry: " + entry.mFileName);
-                                    Log.e(Constants.TAG, "In file: " + entry.getZipFileName());
-                                    return false;
-                                }
-                            } finally {
-                                if (null != dis) {
-                                    dis.close();
+                                } finally {
+                                    if (null != dis) {
+                                        dis.close();
+                                    }
                                 }
                             }
                         }
+                        //to get to 100% at the end
+                        this.publishProgress(
+                                new DownloadProgressInfo(
+                                        totalCompressedLength,
+                                        totalCompressedLength,
+                                        0,
+                                        averageVerifySpeed)
+                        );
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        return false;
                     }
-                    //to get to 100% at the end
-                    this.publishProgress(
-                            new DownloadProgressInfo(
-                                    totalCompressedLength,
-                                    totalCompressedLength,
-                                    0,
-                                    averageVerifySpeed)
-                    );
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    return false;
+                    return true;
                 }
-                return true;
-            }
 
-            @Override
-            protected void onProgressUpdate(DownloadProgressInfo... values) {
-                onDownloadProgress(values[0]);
-                super.onProgressUpdate(values);
-            }
-
-            @Override
-            protected void onPostExecute(Boolean result) {
-                if (result) {
-                    mDashboard.setVisibility(View.VISIBLE);
-                    mCellMessage.setVisibility(View.GONE);
-                    mStatusText.setText(R.string.text_validation_complete);
-                    mPauseButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            finish();
-                        }
-                    });
-                    mPauseButton.setText(android.R.string.ok);
-                } else {
-                    mDashboard.setVisibility(View.VISIBLE);
-                    mCellMessage.setVisibility(View.GONE);
-                    mStatusText.setText(R.string.text_validation_failed);
-                    mPauseButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            finish();
-                        }
-                    });
-                    mPauseButton.setText(android.R.string.cancel);
+                @Override
+                protected void onProgressUpdate(DownloadProgressInfo... values) {
+                    onDownloadProgress(values[0]);
+                    super.onProgressUpdate(values);
                 }
-                super.onPostExecute(result);
-                if(result) {
-                    //finishing automatically
-                    finish();
-                }
-            }
 
-        };
-        validationTask.execute(new Object());
+                @Override
+                protected void onPostExecute(Boolean result) {
+                    if (result) {
+                        mDashboard.setVisibility(View.VISIBLE);
+                        mCellMessage.setVisibility(View.GONE);
+                        mStatusText.setText(R.string.text_validation_complete);
+                        mPauseButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                finish();
+                            }
+                        });
+                        mPauseButton.setText(android.R.string.ok);
+                    } else {
+                        mDashboard.setVisibility(View.VISIBLE);
+                        mCellMessage.setVisibility(View.GONE);
+                        mStatusText.setText(R.string.text_validation_failed);
+                        mPauseButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                finish();
+                            }
+                        });
+                        mPauseButton.setText(android.R.string.cancel);
+                    }
+                    super.onPostExecute(result);
+                    if (result) {
+                        //finishing automatically
+                        finish();
+                    }
+                }
+
+            };
+            validationTask.execute(new Object());
+        }
     }
 
     /**
@@ -449,7 +453,11 @@ public class WkDownloaderActivity extends Activity implements IDownloaderClient 
                 } else {
                     // otherwise, download not needed so we fall through to
                     // starting the movie
-                    Log.e(TAG, "XAPK Download not required.");
+                    Log.e(TAG, "XAPK Download not required ( already started, or files already exists ).");
+                    //break out of starting flow. it will remove broken files on exit.
+                    MainActivity.mainXAPKValid = false;
+                    MainActivity.patchXAPKValid = false;
+                    finish();
                 }
             } catch (PackageManager.NameNotFoundException e) {
                 Log.e(TAG, "Cannot find own package! MAYDAY!");

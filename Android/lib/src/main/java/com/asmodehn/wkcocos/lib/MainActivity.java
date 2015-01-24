@@ -152,7 +152,7 @@ public abstract class MainActivity extends Cocos2dxActivity {
         //Needed for download XAPK
         WkDownloaderService.setPublicKey(getLVLKey());
         WkDownloaderService.setSALT(getSALT());
-        //this will call Cocos2dxHelper.nativeSetMainXApkPath and Cocos2dxHelper.nativeSetPatchXApkPath
+
         //needs to be done after cocos2d-x app creation
         if ( mainXAPK == null ) mainXAPK = expansionFilePath(true);
         if ( patchXAPK == null ) patchXAPK = expansionFilePath(false);
@@ -161,15 +161,19 @@ public abstract class MainActivity extends Cocos2dxActivity {
         if ( mainXAPK != null && !mainXAPK.getFilePath().isEmpty() ) Cocos2dxHelper.nativeSetMainXApkPath(mainXAPK.getFilePath());
         if ( patchXAPK != null && !patchXAPK.getFilePath().isEmpty() ) Cocos2dxHelper.nativeSetPatchXApkPath(patchXAPK.getFilePath());
 
-        // we activate download only if one XAPK is needed and file hasn't been found.
-        if ( ( mainXAPK != null && mainXAPK.getFilePath().isEmpty())
-          || ( patchXAPK != null && mainXAPK.getFilePath().isEmpty())
-        ) {
-            // Fire the intent that launches the DL screen.
-            Intent dl = new Intent(this, WkDownloaderActivity.class);
-            dl.putExtra("mainXAPK",mainXAPK);
-            dl.putExtra("patchXAPK",patchXAPK);
-            this.startActivity(dl);
+        if ( mainXAPKValid == null && patchXAPKValid == null) // we attempt download only if file hasn't been validated yet
+        {
+            // we activate download only if one XAPK is needed and file hasn't been found.
+            if ((mainXAPK != null && mainXAPK.getFilePath().isEmpty())
+                    || (patchXAPK != null && mainXAPK.getFilePath().isEmpty())
+                    ) {
+                Log.e(TAG,"XAPK files are missing or have different sizes. Attempting Download.");
+                // Fire the intent that launches the DL screen.
+                Intent dl = new Intent(this, WkDownloaderActivity.class);
+                dl.putExtra("mainXAPK", mainXAPK);
+                dl.putExtra("patchXAPK", patchXAPK);
+                this.startActivity(dl);
+            }
         }
     }
 
@@ -193,6 +197,46 @@ public abstract class MainActivity extends Cocos2dxActivity {
         nativeOnActivityPaused(this);
     }
 
+    public static void delete(File file)
+            throws IOException{
+
+        if(file.isDirectory()){
+
+            //directory is empty, then delete it
+            if(file.list().length==0){
+
+                file.delete();
+                System.out.println("Directory is deleted : "
+                        + file.getAbsolutePath());
+
+            }else{
+
+                //list all the directory contents
+                String files[] = file.list();
+
+                for (String temp : files) {
+                    //construct the file structure
+                    File fileDelete = new File(file, temp);
+
+                    //recursive delete
+                    delete(fileDelete);
+                }
+
+                //check the directory again, if empty then delete it
+                if(file.list().length==0){
+                    file.delete();
+                    System.out.println("Directory deleted : " + file.getAbsolutePath());
+                }
+            }
+
+        }else{
+            //if file, then delete it
+            file.delete();
+            System.out.println("File deleted : " + file.getAbsolutePath());
+        }
+    }
+
+
     @Override protected void onResume() {
 
         //TODO : JNI binding to remove this from here and make it doable in C++ testapp
@@ -201,10 +245,25 @@ public abstract class MainActivity extends Cocos2dxActivity {
 
         super.onResume();
 
-        //if XAPK are not valid when we resume, we  just exit.
+        //if XAPK are not valid when we resume, we remove the files and exit.
         if ( ( mainXAPK != null && mainXAPKValid != null && ! mainXAPKValid)
             || ( patchXAPK != null && patchXAPKValid != null && ! patchXAPKValid)
         ) {
+            String expFilePath = Helpers.getSaveFilePath(this);
+            File directory = new File(expFilePath);
+
+            //make sure directory exists
+            if(directory.exists()){
+                try{
+                    Log.e(TAG,"Invalid OBB Files. Deleting " + expFilePath + "...");
+                    delete(directory);
+                    System.out.println("Done");
+                }catch(IOException e){
+                    e.printStackTrace();
+                }
+            }
+
+
             finish();
         } else {
             nativeOnActivityResumed(this);
