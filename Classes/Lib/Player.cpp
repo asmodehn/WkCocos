@@ -83,8 +83,8 @@ namespace WkCocos
 
 			if (m_onlinedata) //in case online data is set while we re loading loginID
 			{
-				m_onlinedata->getServerTime([=](std::string s_iso8601){
-					m_timer->setTime(s_iso8601);
+				m_onlinedata->getServerTime([=](std::string s_iso8601, bool serverTimeValid){
+					m_timer->setTime(s_iso8601, serverTimeValid);
 				});
 				//we need to do login here
 				if (newPlayer)

@@ -250,7 +250,7 @@ namespace WkCocos
 				};
 			}
 
-			ServerTime::ServerTime(std::function<void(std::string)> callback)
+			ServerTime::ServerTime(std::function<void(std::string, bool)> callback)
 				: in_progress(false)
 				, done(false)
 				, timeout(false)
@@ -262,10 +262,10 @@ namespace WkCocos
 					{
 						::App42::App42TimerResponse* userdata = static_cast<::App42::App42TimerResponse*>(data);
 
-						if (userdata->isSuccess)
+						//if (userdata->isSuccess)
 						{
 							//event_emitter->emit<Events::ServerTime>(userdata->app42Timer.currentTime);
-							callback(userdata->app42Timer.currentTime);
+							callback(userdata->app42Timer.currentTime, userdata->isSuccess);
 						}
 					}
 					done = true;

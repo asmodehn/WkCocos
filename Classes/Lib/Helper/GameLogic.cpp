@@ -27,8 +27,8 @@ namespace WkCocos
 
 			m_gameclock.reset(new WkCocos::Timer::Timer());
 
-			m_onlinedatamngr->getServerTime([=](std::string s_iso8601){
-				m_gameclock->setTime(s_iso8601);
+			m_onlinedatamngr->getServerTime([=](std::string s_iso8601, bool sertimeTimeValid){
+				m_gameclock->setTime(s_iso8601, sertimeTimeValid);
 
 				m_gameclock->getEventManager()->emit<Timer::Events::TimerInit>();
 			});

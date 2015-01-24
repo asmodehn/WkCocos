@@ -99,25 +99,34 @@ namespace WkCocos
 				return m_time.m_local_time;
 			}
 
-			void setTime(std::string s_iso8601)
+			void setTime(std::string s_iso8601, bool serverTimeValid)
 			{
-				char* pos;
-				m_time.m_server_time.tm_year = strtoul(s_iso8601.c_str(), &pos, 10) - 1900;
-				m_time.m_server_time.tm_mon = strtoul(++pos, &pos, 10) - 1;
-				m_time.m_server_time.tm_mday = strtoul(++pos, &pos, 10);
-				m_time.m_server_time.tm_hour = strtoul(++pos, &pos, 10);
-				m_time.m_server_time.tm_min = strtoul(++pos, &pos, 10);
-				m_time.m_server_time.tm_sec = strtoul(++pos, &pos, 10);
-				m_time.m_msecs = double(strtoul(++pos, &pos, 10)) / 1000;
-				
 				tm localtm = getDeviceLocalTime();
 				tm UTCtm = getDeviceUTCTime();
 				time_t localtime_t = mktime(&localtm);
 				time_t UTCtime_t = mktime(&UTCtm);
-				m_time.m_delta = (int)difftime(localtime_t, UTCtime_t);
-				m_time.m_local_time = m_time.m_server_time;
-				m_time.m_local_time.tm_sec += m_time.m_delta;
-				mktime(&m_time.m_local_time);
+				if (serverTimeValid)
+				{
+					char* pos;
+					m_time.m_server_time.tm_year = strtoul(s_iso8601.c_str(), &pos, 10) - 1900;
+					m_time.m_server_time.tm_mon = strtoul(++pos, &pos, 10) - 1;
+					m_time.m_server_time.tm_mday = strtoul(++pos, &pos, 10);
+					m_time.m_server_time.tm_hour = strtoul(++pos, &pos, 10);
+					m_time.m_server_time.tm_min = strtoul(++pos, &pos, 10);
+					m_time.m_server_time.tm_sec = strtoul(++pos, &pos, 10);
+					m_time.m_msecs = double(strtoul(++pos, &pos, 10)) / 1000;
+
+					m_time.m_delta = (int)difftime(localtime_t, UTCtime_t);
+					m_time.m_local_time = m_time.m_server_time;
+					m_time.m_local_time.tm_sec += m_time.m_delta;
+					mktime(&m_time.m_local_time);
+				}
+				else
+				{
+					m_time.m_server_time = UTCtm;
+					m_time.m_local_time = localtm;
+				}
+
 			}
 
 

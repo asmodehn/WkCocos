@@ -64,7 +64,7 @@ namespace WkCocos
 			/**
 			* Get Server Time
 			*/
-			void getServerTime(std::function<void(std::string)> callback);
+			void getServerTime(std::function<void(std::string, bool)> callback);
 
 			void getAllDocsPaging(const std::string& saveName, int quantity, int offset);
 
