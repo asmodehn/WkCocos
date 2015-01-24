@@ -26,6 +26,8 @@ namespace WkCocos
 		Assets::Assets()
 			: assets(new SOOMLA::ShopAssets())
 		{
+            soomla::CCStoreUtils::logDebug(TAG, "creating Shop::Assets. Adding CustomEventListener for onMarketItemRefreshed.");
+
 			//HACK to fix soomla refresh prices
 			cocos2d::Director::getInstance()->getEventDispatcher()->addCustomEventListener(EVENT_ON_MARKET_ITEM_REFRESHED, [=](cocos2d::EventCustom* ec){
 
