@@ -6,9 +6,11 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,12 +25,12 @@ import com.igaworks.displayad.view.BannerContainerView;
  * Manage Advertisement library
  */
 public class WkAd implements IBannerEventCallbackListener, IInterstitialEventCallbackListener {
-
     private MainActivity mainActivity;
     private String bannerKey;
     private String interstitialKey;
 
-    private android.widget.LinearLayout adLayout;
+    android.widget.LinearLayout bannerLayout;
+    private android.widget.RelativeLayout adTopLayout;
     private BannerContainerView bannerView;
     // Need handler for callbacks to the UI thread
     final Handler mHandler = new Handler();
@@ -36,14 +38,14 @@ public class WkAd implements IBannerEventCallbackListener, IInterstitialEventCal
     // Create runnable for posting
     final Runnable adBannerShow = new Runnable() {
         public void run() {
-            adLayout.setVisibility(View.VISIBLE);
-            adLayout.requestLayout();
+            adTopLayout.setVisibility(View.VISIBLE);
+            adTopLayout.requestLayout();
         }
     };
     final Runnable adBannerHide = new Runnable() {
         public void run() {
-            adLayout.setVisibility(View.INVISIBLE);
-            adLayout.requestLayout();
+            adTopLayout.setVisibility(View.INVISIBLE);
+            adTopLayout.requestLayout();
         }
     };
     final Runnable adInterstitialShow = new Runnable() {
@@ -58,17 +60,20 @@ public class WkAd implements IBannerEventCallbackListener, IInterstitialEventCal
         bannerKey = bannerID;
         interstitialKey = interstitialID;
 
-        adLayout = new android.widget.LinearLayout(mainActivity);
-        //adLayout.setOrientation(LinearLayout.VERTICAL);
-        adLayout.setLayoutParams(new android.widget.LinearLayout.LayoutParams(android.widget.LinearLayout.LayoutParams.MATCH_PARENT, android.widget.LinearLayout.LayoutParams.MATCH_PARENT));
 
+        adTopLayout = new android.widget.RelativeLayout(mainActivity);
+        android.widget.RelativeLayout.LayoutParams param = new android.widget.RelativeLayout.LayoutParams(android.widget.RelativeLayout.LayoutParams.MATCH_PARENT, android.widget.RelativeLayout.LayoutParams.MATCH_PARENT);
+        adTopLayout.setLayoutParams(param);
+        bannerLayout = new android.widget.LinearLayout(mainActivity);
+        param = new android.widget.RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        param.addRule(android.widget.RelativeLayout.ALIGN_PARENT_BOTTOM);
+        param.addRule(RelativeLayout.CENTER_HORIZONTAL);
+        bannerLayout.setLayoutParams(param);
+        adTopLayout.addView(bannerLayout);
 
         bannerView = new BannerContainerView(mainActivity);
-        adLayout.addView(bannerView);
-        TextView title = new TextView(mainActivity);
-        title.setText("test text");
-        adLayout.addView(title);
-        adLayout.setVisibility(View.INVISIBLE);
+        adTopLayout.setVisibility(View.INVISIBLE);
+        bannerLayout.addView(bannerView);
 
         // Ad init
         IgawCommon.startApplication(mainActivity);
@@ -103,7 +108,7 @@ public class WkAd implements IBannerEventCallbackListener, IInterstitialEventCal
 
     public View getUI()
     {
-        return adLayout;
+        return adTopLayout;
     }
 
     public void pause(){
@@ -124,11 +129,11 @@ public class WkAd implements IBannerEventCallbackListener, IInterstitialEventCal
     }
 
     public void showAdBanner(int x, int y) {
-        adLayout.layout(
-                x - adLayout.getWidth() / 2,
-                y - adLayout.getHeight() / 2,
-                x + adLayout.getWidth() / 2,
-                y + adLayout.getHeight() / 2
+        adTopLayout.layout(
+                x - adTopLayout.getWidth() / 2,
+                y - adTopLayout.getHeight() / 2,
+                x + adTopLayout.getWidth() / 2,
+                y + adTopLayout.getHeight() / 2
         );
         mHandler.post(adBannerShow);
     }
