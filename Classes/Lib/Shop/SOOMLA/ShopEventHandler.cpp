@@ -115,10 +115,13 @@ void ShopEventHandler::onMarketItemRefreshed(soomla::CCMarketItem *mi)
 	// TO DO: store productID and marketPrice into a std::map<string, string> to use in your app
 
 	std::ostringstream logmsg;
-	logmsg << "[SOOMLA MARKET onMarketItemRefreshed] product:[" << productID << "] market price: [" << marketPrice << std::endl;
-
+	logmsg << "[SOOMLA MARKET onMarketItemRefreshed product:[" << productID << "] market price: [" << marketPrice << std::endl;
 	soomla::CCStoreUtils::logDebug(TAG, logmsg.str().c_str());
 
+
+	logmsg << "[SOOMLA MARKET onMarketItemRefreshed calling " << cocos2d::Director::getInstance()->getEventDispatcher() <<"->dispatchCustomEvent(EVENT_ON_MARKET_ITEM_REFRESHED)" << std::endl;
+	soomla::CCStoreUtils::logDebug(TAG, logmsg.str().c_str());
+    //BUG : sometimes this doesnt get called
 	cocos2d::Director::getInstance()->getEventDispatcher()->dispatchCustomEvent(EVENT_ON_MARKET_ITEM_REFRESHED, mi);
 
 	events()->emit(WkCocos::Shop::Shop::MarketItemRefreshed(mi));

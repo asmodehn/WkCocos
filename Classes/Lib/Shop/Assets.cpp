@@ -26,12 +26,16 @@ namespace WkCocos
 		Assets::Assets()
 			: assets(new SOOMLA::ShopAssets())
 		{
-            soomla::CCStoreUtils::logDebug(TAG, "creating Shop::Assets. Adding CustomEventListener for onMarketItemRefreshed.");
+		    std::ostringstream msg;
+			msg << "creating Shop::Assets. Adding CustomEventListener for onMarketItemRefreshed onto " << cocos2d::Director::getInstance()->getEventDispatcher() << std::endl;
+        	soomla::CCStoreUtils::logDebug(TAG, msg.str().c_str());
 
 			//HACK to fix soomla refresh prices
+			//CCSoomlaEventDispatcher::getInstance() ??
 			cocos2d::Director::getInstance()->getEventDispatcher()->addCustomEventListener(EVENT_ON_MARKET_ITEM_REFRESHED, [=](cocos2d::EventCustom* ec){
 
 				//we cannot dynamic cast on void*
+				soomla::CCStoreUtils::logDebug(TAG, "[SOOMLA MARKET onMarketItemRefreshed Listener]");
 				soomla::CCMarketItem* mi = static_cast<soomla::CCMarketItem*>(ec->getUserData());
 				if (mi)
 				{
