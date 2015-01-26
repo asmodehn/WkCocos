@@ -12,7 +12,6 @@ namespace WkCocos
 		{
 		public:
 
-			//It is not advised to have the googlePlayLicenseKey in clear in the code.
 			Assets();
 
 			struct VirtualCurrency{

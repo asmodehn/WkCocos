@@ -10,6 +10,7 @@
 #include "WkCocos/Shop/Assets.h"
 #include "WkCocos/Shop/SOOMLA/ShopEventHandler.h"
 
+#define TAG "Shop"
 namespace WkCocos
 {
 	namespace Shop
@@ -161,6 +162,9 @@ namespace WkCocos
 			struct IabServiceStopped : public entityx::Event<IabServiceStopped>{
 			};
 #endif
+
+            //hack to get item prices
+            void receive(const MarketItemRefreshed&);
 
 		protected:
 			std::unique_ptr<ShopEventHandler> handler;

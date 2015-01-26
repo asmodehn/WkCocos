@@ -110,7 +110,11 @@ void ShopEventHandler::onMarketItemsRefreshStarted() {
 void ShopEventHandler::onMarketItemRefreshed(soomla::CCMarketItem *mi)
 {
 	std::string productID = mi->getProductId()->getCString();
-	std::string marketPrice = mi->getMarketPrice()->getCString();
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32 || CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
+                std::string marketPrice = "test";
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID || CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+                std::string marketPrice = mi->getMarketPrice()->getCString();
+#endif
 
 	// TO DO: store productID and marketPrice into a std::map<string, string> to use in your app
 

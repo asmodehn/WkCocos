@@ -26,37 +26,6 @@ namespace WkCocos
 		Assets::Assets()
 			: assets(new SOOMLA::ShopAssets())
 		{
-		    std::ostringstream msg;
-			msg << "creating Shop::Assets. Adding CustomEventListener for onMarketItemRefreshed onto " << cocos2d::Director::getInstance()->getEventDispatcher() << std::endl;
-        	soomla::CCStoreUtils::logDebug(TAG, msg.str().c_str());
-
-			//HACK to fix soomla refresh prices
-			//CCSoomlaEventDispatcher::getInstance() ??
-			cocos2d::Director::getInstance()->getEventDispatcher()->addCustomEventListener(EVENT_ON_MARKET_ITEM_REFRESHED, [=](cocos2d::EventCustom* ec){
-
-				//we cannot dynamic cast on void*
-				soomla::CCStoreUtils::logDebug(TAG, "[SOOMLA MARKET onMarketItemRefreshed Listener]");
-				soomla::CCMarketItem* mi = static_cast<soomla::CCMarketItem*>(ec->getUserData());
-				if (mi)
-				{
-					std::string productID = mi->getProductId()->getCString();
-					std::string marketPrice = mi->getMarketPrice()->getCString();
-
-					std::ostringstream logmsg;
-					logmsg << "[SOOMLA MARKET onMarketItemRefreshed Listener] product:[" << productID << "] market price: [" << marketPrice << std::endl;
-					soomla::CCStoreUtils::logDebug(TAG, logmsg.str().c_str());
-
-					if (marketPrices.end() == marketPrices.find(productID))
-					{
-						marketPrices.insert(make_pair(productID, marketPrice));
-					}
-					else
-					{
-						marketPrices.at(productID) = marketPrice;
-					}
-				}
-			});
-
 		}
 
 		Assets::~Assets()
