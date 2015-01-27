@@ -3,6 +3,9 @@ package com.asmodehn.wkcocos.lib;
 import android.app.Activity;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
@@ -11,6 +14,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Messenger;
+import android.os.PowerManager;
 import android.os.SystemClock;
 import android.provider.Settings;
 import android.util.Log;
@@ -61,6 +65,8 @@ public abstract class MainActivity extends Cocos2dxActivity {
     ////
 
     private final static String TAG = MainActivity.class.getSimpleName();
+
+    private BroadcastReceiver mReceiver = null;
 
     private Cocos2dxWebViewHelper mWebViewHelper = null;
 
@@ -125,33 +131,60 @@ public abstract class MainActivity extends Cocos2dxActivity {
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
+        // initialize receiver
+        final IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
+        filter.addAction(Intent.ACTION_SCREEN_OFF);
+        mReceiver = new ScreenReceiver();
+        registerReceiver(mReceiver, filter);
+        //
         super.onCreate(savedInstanceState);
+
+        //NEW
+        //pm =(PowerManager) getSystemService(Context.POWER_SERVICE);
+
+        me = this;
+
+        if (ScreenReceiver.wasScreenOn) {
+            Log.e(TAG, "Create : SCREEN STATE WAS ON");
+        }
+        //when the screen didnt change state ( and is off )
+        else
+        {
+            Log.e(TAG, "Create : SCREEN STATE WAS OFF");
+        }
+        if (pm.isScreenOn()) {
+            // this is the case when onPause() is called while keeping screen on.
+            Log.e(TAG, "Create : SCREEN STATE IS ON");
+        } else {
+            // this is when onPause() is called when the screen goes black
+            Log.e(TAG, "Create : SCREEN STATE IS OFF");
+        }
 
         nativeInitGPGS(this);
         nativeOnActivityCreated(this, savedInstanceState);
 
-        me = this;
+        //We dont want to run this while screen is off. pm is available only after calling super.onCreate
+        if(! mHiddenCycle) {
+            try {
+                ApplicationInfo ai = me.getPackageManager().getApplicationInfo(me.getPackageName(), PackageManager.GET_META_DATA);
+                Object bannerKey = (Object) ai.metaData.get("ad_banner_key");
+                Object interstitialKey = (Object) ai.metaData.get("ad_interstitial_key");
+                ad = new WkAd(this, bannerKey.toString(), interstitialKey.toString());
+            } catch (PackageManager.NameNotFoundException e) {
+                Log.e("WkCocos", e.getMessage());
+            }
 
-        if (mWebViewHelper == null) {
-            mWebViewHelper = new Cocos2dxWebViewHelper(mFrameLayout);
+            if (mWebViewHelper == null) {
+                mWebViewHelper = new Cocos2dxWebViewHelper(mFrameLayout);
+            }
+            mFrameLayout.addView(ad.getUI());
         }
-        try {
-            ApplicationInfo ai = me.getPackageManager().getApplicationInfo(me.getPackageName(), PackageManager.GET_META_DATA);
-            Object bannerKey = (Object) ai.metaData.get("ad_banner_key");
-            Object interstitialKey = (Object) ai.metaData.get("ad_interstitial_key");
-            ad = new WkAd(this, bannerKey.toString(), interstitialKey.toString());
-        }
-        catch (PackageManager.NameNotFoundException e)
-        {
-            Log.e("WkCocos", e.getMessage());
-        }
-        mFrameLayout.addView(ad.getUI());
+            WkJniHelper.getInstance().setActivity(this);
 
-        WkJniHelper.getInstance().setActivity(this);
-
-        //Needed for download XAPK
-        WkDownloaderService.setPublicKey(getLVLKey());
-        WkDownloaderService.setSALT(getSALT());
+            //Needed for download XAPK
+            WkDownloaderService.setPublicKey(getLVLKey());
+            WkDownloaderService.setSALT(getSALT());
+        //}
 
         //needs to be done after cocos2d-x app creation
         if ( mainXAPK == null ) mainXAPK = expansionFilePath(true);
@@ -192,9 +225,32 @@ public abstract class MainActivity extends Cocos2dxActivity {
     }
 
     @Override protected void onPause() {
-        super.onPause();
-        ad.pause();
+
         nativeOnActivityPaused(this);
+
+        if (pm.isScreenOn()) {
+            // this is the case when onPause() is called while keeping screen on.
+            Log.e(TAG, "Pause : SCREEN STATE IS ON");
+        } else {
+            // this is when onPause() is called when the screen goes black
+            Log.e(TAG, "Pause : SCREEN STATE IS OFF");
+        }
+
+        // when the screen is about to turn off this is still true ( power button press ).
+        // also true when the screen stays on ( home button press )
+        if (! mHiddenCycle) {
+            Log.e(TAG, "Pause : SCREEN STATE WAS ON");
+
+            ad.pause();
+        }
+        //when the screen didnt change state ( and is off )
+        else
+        {
+            Log.e(TAG, "Pause : SCREEN STATE WAS OFF");
+        }
+
+
+        super.onPause();
     }
 
     public static void delete(File file)
@@ -239,11 +295,9 @@ public abstract class MainActivity extends Cocos2dxActivity {
 
     @Override protected void onResume() {
 
-        //TODO : JNI binding to remove this from here and make it doable in C++ testapp
-        NotificationManager WKNM = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        WKNM.cancelAll();
-
         super.onResume();
+
+        nativeOnActivityResumed(this);
 
         //if XAPK are not valid when we resume, we remove the files and exit.
         if ( ( mainXAPK != null && mainXAPKValid != null && ! mainXAPKValid)
@@ -263,32 +317,112 @@ public abstract class MainActivity extends Cocos2dxActivity {
                 }
             }
 
-
             finish();
         } else {
-            nativeOnActivityResumed(this);
-			ad.resume();
+
+            if (! mHiddenCycle) {
+                //TODO : JNI binding to remove this from here and make it doable in C++ testapp
+                NotificationManager WKNM = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                WKNM.cancelAll();
+                ad.resume();
+            }
+
+
+            //We want to run this only while screen is on.
+            if(pm.isScreenOn()) {
+
+
+                // this is the case when onPause() is called while keeping screen on.
+                Log.e(TAG, "Resume : SCREEN STATE IS ON");
+            } else {
+                // this is when onPause() is called when the screen goes black
+                Log.e(TAG, "Resume : SCREEN STATE IS OFF");
+            }
+            // only when screen turns on
+            if (!ScreenReceiver.wasScreenOn) {
+                // this is when onResume() is called due to a screen state change
+                Log.e(TAG, "Resume : SCREEN STATE WAS OFF");
+            } else {
+                // this is when onResume() is called when the screen state has not changed
+                Log.e(TAG, "Resume : SCREEN STATE WAS ON");
+
+            }
+
         }
     }
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
+        if (mReceiver != null) {
+            unregisterReceiver(mReceiver);
+            mReceiver = null;
+        }
         nativeOnActivityDestroyed(this);
-        ad.destroy();
+        if ( ad != null ) ad.destroy();
+
+        if(pm.isScreenOn()) {
+            Log.e(TAG, "Destroy : SCREEN STATE IS ON");
+        } else {
+            // this is when onPause() is called when the screen goes black
+            Log.e(TAG, "Destroy : SCREEN STATE IS OFF");
+        }
+        // only when screen turns on
+        if (!ScreenReceiver.wasScreenOn) {
+            // this is when onResume() is called due to a screen state change
+            Log.e(TAG, "Destroy : SCREEN STATE WAS OFF");
+        } else {
+            // this is when onResume() is called when the screen state has not changed
+            Log.e(TAG, "Destroy : SCREEN STATE WAS ON");
+
+        }
+
+        super.onDestroy();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+
+        if(pm.isScreenOn()) {
+            Log.e(TAG, "Start : SCREEN STATE IS ON");
+        } else {
+            // this is when onPause() is called when the screen goes black
+            Log.e(TAG, "Start : SCREEN STATE IS OFF");
+        }
+        // only when screen turns on
+        if (!ScreenReceiver.wasScreenOn) {
+            // this is when onResume() is called due to a screen state change
+            Log.e(TAG, "Start : SCREEN STATE WAS OFF");
+        } else {
+            // this is when onResume() is called when the screen state has not changed
+            Log.e(TAG, "Start : SCREEN STATE WAS ON");
+
+        }
+
         nativeOnActivityStarted(this);
     }
 
 
     @Override
     protected void onStop() {
-        super.onStop();
         nativeOnActivityStopped(this);
+        if(pm.isScreenOn()) {
+            Log.e(TAG, "Stop : SCREEN STATE IS ON");
+        } else {
+            // this is when onPause() is called when the screen goes black
+            Log.e(TAG, "Stop : SCREEN STATE IS OFF");
+        }
+        // only when screen turns on
+        if (!ScreenReceiver.wasScreenOn) {
+            // this is when onResume() is called due to a screen state change
+            Log.e(TAG, "Stop : SCREEN STATE WAS OFF");
+        } else {
+            // this is when onResume() is called when the screen state has not changed
+            Log.e(TAG, "Stop : SCREEN STATE WAS ON");
+
+        }
+
+        super.onStop();
     }
 
 
