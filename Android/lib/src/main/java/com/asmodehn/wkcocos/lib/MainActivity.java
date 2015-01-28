@@ -2,32 +2,14 @@ package com.asmodehn.wkcocos.lib;
 
 import android.app.Activity;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Handler;
-import android.os.Messenger;
-import android.os.PowerManager;
-import android.os.SystemClock;
-import android.provider.Settings;
 import android.util.Log;
 
-import com.android.vending.expansion.zipfile.ZipResourceFile;
-import com.google.android.vending.expansion.downloader.Constants;
-import com.google.android.vending.expansion.downloader.DownloadProgressInfo;
-import com.google.android.vending.expansion.downloader.DownloaderClientMarshaller;
-import com.google.android.vending.expansion.downloader.DownloaderServiceMarshaller;
 import com.google.android.vending.expansion.downloader.Helpers;
-import com.google.android.vending.expansion.downloader.IDownloaderClient;
-import com.google.android.vending.expansion.downloader.IDownloaderService;
-import com.google.android.vending.expansion.downloader.IStub;
 import com.soomla.cocos2dx.common.ServiceManager;
 import com.soomla.cocos2dx.store.StoreService;
 
@@ -35,10 +17,8 @@ import org.cocos2dx.lib.Cocos2dxActivity;
 import org.cocos2dx.lib.Cocos2dxGLSurfaceView;
 import org.cocos2dx.lib.Cocos2dxHelper;
 
-import java.io.DataInputStream;
 import java.io.File;
 import java.io.IOException;
-import java.util.zip.CRC32;
 
 public abstract class MainActivity extends Cocos2dxActivity {
 
@@ -65,8 +45,6 @@ public abstract class MainActivity extends Cocos2dxActivity {
     ////
 
     private final static String TAG = MainActivity.class.getSimpleName();
-
-    private BroadcastReceiver mReceiver = null;
 
     private Cocos2dxWebViewHelper mWebViewHelper = null;
 
@@ -131,11 +109,6 @@ public abstract class MainActivity extends Cocos2dxActivity {
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
-        // initialize receiver
-        final IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
-        filter.addAction(Intent.ACTION_SCREEN_OFF);
-        mReceiver = new ScreenReceiver();
-        registerReceiver(mReceiver, filter);
         //
         super.onCreate(savedInstanceState);
 
@@ -144,7 +117,7 @@ public abstract class MainActivity extends Cocos2dxActivity {
 
         me = this;
 
-        if (ScreenReceiver.wasScreenOn) {
+        if (mScreenWasOn) {
             Log.e(TAG, "Create : SCREEN STATE WAS ON");
         }
         //when the screen didnt change state ( and is off )
@@ -339,7 +312,7 @@ public abstract class MainActivity extends Cocos2dxActivity {
                 Log.e(TAG, "Resume : SCREEN STATE IS OFF");
             }
             // only when screen turns on
-            if (!ScreenReceiver.wasScreenOn) {
+            if (!mScreenWasOn) {
                 // this is when onResume() is called due to a screen state change
                 Log.e(TAG, "Resume : SCREEN STATE WAS OFF");
             } else {
@@ -353,9 +326,9 @@ public abstract class MainActivity extends Cocos2dxActivity {
 
     @Override
     protected void onDestroy() {
-        if (mReceiver != null) {
-            unregisterReceiver(mReceiver);
-            mReceiver = null;
+        if (mScreenReceiver != null) {
+            unregisterReceiver(mScreenReceiver);
+            mScreenReceiver = null;
         }
         nativeOnActivityDestroyed(this);
         if ( ad != null ) ad.destroy();
@@ -367,7 +340,7 @@ public abstract class MainActivity extends Cocos2dxActivity {
             Log.e(TAG, "Destroy : SCREEN STATE IS OFF");
         }
         // only when screen turns on
-        if (!ScreenReceiver.wasScreenOn) {
+        if (!mScreenWasOn) {
             // this is when onResume() is called due to a screen state change
             Log.e(TAG, "Destroy : SCREEN STATE WAS OFF");
         } else {
@@ -390,7 +363,7 @@ public abstract class MainActivity extends Cocos2dxActivity {
             Log.e(TAG, "Start : SCREEN STATE IS OFF");
         }
         // only when screen turns on
-        if (!ScreenReceiver.wasScreenOn) {
+        if (!mScreenWasOn) {
             // this is when onResume() is called due to a screen state change
             Log.e(TAG, "Start : SCREEN STATE WAS OFF");
         } else {
@@ -413,7 +386,7 @@ public abstract class MainActivity extends Cocos2dxActivity {
             Log.e(TAG, "Stop : SCREEN STATE IS OFF");
         }
         // only when screen turns on
-        if (!ScreenReceiver.wasScreenOn) {
+        if (!mScreenWasOn) {
             // this is when onResume() is called due to a screen state change
             Log.e(TAG, "Stop : SCREEN STATE WAS OFF");
         } else {
