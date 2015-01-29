@@ -48,6 +48,9 @@ public:
     void receive(const GPGSManager::SignedIn&);
     void receive(const GPGSManager::SignedOut&);
 
+    void receive(const GPGSManager::SnapshotSaveRequested&);
+    void receive(const GPGSManager::SnapshotLoaded&);
+
 protected:
 
     GPGSManager* gpgs;

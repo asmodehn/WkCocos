@@ -263,46 +263,54 @@ void GPGSManager::selectedSnapshot(gpg::SnapshotManager::SnapshotSelectUIRespons
     if (response.status == gpg::UIStatus::VALID)
     {
         LOGI("Snapshot SelectUIResponse VALID");
-        cocos2d::Director* d = cocos2d::Director::getInstance();
-        if ( d )
+
+        if ( response.data.Valid() )
         {
-            cocos2d::Scheduler* s = d->getScheduler();
-            if (s)
+            loadSnapshot(response.data.FileName());
+        }
+        else // no selected snapshot to load -> we should save a new one
+        {
+            cocos2d::Director* d = cocos2d::Director::getInstance();
+            if ( d )
             {
-                s->performFunctionInCocosThread([=](){
-                    CCLOGERROR("EMITTING GPGSManager::SnapshotSelected");
-                    event_manager->emit<GPGSManager::SnapshotSelected>(true,response.data.FileName(), response.data.Description(), response.data.PlayedTime(), response.data.LastModifiedTime());
-                });
+                cocos2d::Scheduler* s = d->getScheduler();
+                if (s)
+                {
+                    s->performFunctionInCocosThread([=](){
+                        CCLOGERROR("EMITTING GPGSManager::SnapshotSaveRequested");
+                        event_manager->emit<GPGSManager::SnapshotSaveRequested>();
+                    });
+                }
             }
         }
     }
     else if (response.status == gpg::UIStatus::ERROR_INTERNAL)
     {
-        LOGI("Snapshot ReadResponse ERROR_INTERNAL");
+        LOGI("Snapshot SelectUIResponse ERROR_INTERNAL");
     }
     else if (response.status == gpg::UIStatus::ERROR_NOT_AUTHORIZED)
     {
-        LOGI("Snapshot ReadResponse ERROR_NOT_AUTHORIZED");
+        LOGI("Snapshot SelectUIResponse ERROR_NOT_AUTHORIZED");
     }
     else if (response.status == gpg::UIStatus::ERROR_VERSION_UPDATE_REQUIRED)
     {
-        LOGI("Snapshot ReadResponse ERROR_VERSION_UPDATE_REQUIRED");
+        LOGI("Snapshot SelectUIResponse ERROR_VERSION_UPDATE_REQUIRED");
     }
     else if (response.status == gpg::UIStatus::ERROR_TIMEOUT)
     {
-        LOGI("Snapshot ReadResponse ERROR_TIMEOUT");
+        LOGI("Snapshot SelectUIResponse ERROR_TIMEOUT");
     }
     else if (response.status == gpg::UIStatus::ERROR_CANCELED)
     {
-        LOGI("Snapshot ReadResponse ERROR_CANCELED");
+        LOGI("Snapshot SelectUIResponse ERROR_CANCELED");
     }
     else if (response.status == gpg::UIStatus::ERROR_UI_BUSY)
     {
-        LOGI("Snapshot ReadResponse ERROR_UI_BUSY");
+        LOGI("Snapshot SelectUIResponse ERROR_UI_BUSY");
     }
     else if (response.status == gpg::UIStatus::ERROR_LEFT_ROOM)
     {
-        LOGI("Snapshot ReadResponse ERROR_LEFT_ROOM");
+        LOGI("Snapshot SelectUIResponse ERROR_LEFT_ROOM");
     }
 }
 

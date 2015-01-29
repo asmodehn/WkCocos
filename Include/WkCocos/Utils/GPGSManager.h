@@ -81,22 +81,10 @@ public:
 
     };
 
-    struct SnapshotSelected : public entityx::Event < SnapshotSelected >
+    struct SnapshotSaveRequested : public entityx::Event < SnapshotSaveRequested >
     {
-        bool mSuccess;
-        std::string mFileName;
-        std::string mDescription;
-        std::chrono::milliseconds mPlayedTime;
-        std::chrono::milliseconds mModifiedTime;
-
-        SnapshotSelected(bool success, std::string filename, std::string desc, std::chrono::milliseconds playtime, std::chrono::milliseconds modtime)
-        : mSuccess(success)
-        , mFileName(filename)
-        , mDescription(desc)
-        , mPlayedTime(playtime)
-        , mModifiedTime(modtime)
+        SnapshotSaveRequested()
         {}
-
     };
 
     struct SnapshotLoaded : public entityx::Event < SnapshotLoaded >
@@ -144,7 +132,6 @@ private:
     void loadedSnapshot(gpg::SnapshotManager::ReadResponse const & response);
     void committedSnapshot(gpg::SnapshotManager::CommitResponse const & response);
     void selectedSnapshot(gpg::SnapshotManager::SnapshotSelectUIResponse const & response);
-
 
     std::unique_ptr<gpg::GameServices> gameServices;
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32 || CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)

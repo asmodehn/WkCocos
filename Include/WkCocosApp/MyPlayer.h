@@ -7,6 +7,7 @@
 
 #include "WkCocos/Shop/Inventory.h"
 
+#include "WkCocos/Utils/GPGSManager.h"
 
 /**
 * This is the game player
@@ -41,6 +42,8 @@ public:
 	void receive(const WkCocos::Save::Loaded& loaded);
 	void receive(const WkCocos::Save::Saved& saved);
 	void receive(const WkCocos::Save::Error & save_err);
+
+    void receive(const GPGSManager::SnapshotLoaded & snaploaded);
 
 	//ingame currency
 	WkCocos::StrongBox::StrongBox m_gold;
@@ -129,6 +132,8 @@ private:
 	const char * sCurrency = "currency";
 	const char * sGem = "gem";
 	const char * sGold = "gold";
+
+    void setData(std::string d);
 
 	WkCocos::Save m_save;
 

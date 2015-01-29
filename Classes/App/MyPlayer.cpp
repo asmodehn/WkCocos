@@ -82,8 +82,8 @@ void MyPlayer::saveData(bool snapshot)
 	if (snapshot)
     {//save to google snapshot
         std::vector<uint8_t> snapshot(datastr.begin(), datastr.end());
-
-        GPGSManager::getInstance()->saveSnapshot("playerdata", "Player Data", (std::chrono::milliseconds)(0), std::vector<uint8_t>() , snapshot);
+        std::string desc = WkCocos::ToolBox::to_string(m_gem.get<int>()) + " gems, " + WkCocos::ToolBox::to_string(m_gold.get<int>()) + " gold";
+        GPGSManager::getInstance()->saveSnapshot("wkcocos_save", desc, (std::chrono::milliseconds)(0), std::vector<uint8_t>() , snapshot);
     }
 #endif
 }
@@ -95,7 +95,7 @@ void MyPlayer::loadData(bool snapshot)
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
 	if (snapshot)
     {
-        GPGSManager::getInstance()->loadSnapshot("playerdata");
+        GPGSManager::getInstance()->loadSnapshot("wkcocos_save");
         //we need to load locally in receive
     }
     else
@@ -147,37 +147,7 @@ void MyPlayer::receive(const WkCocos::Save::Loaded& loaded_evt)
 {
 	if (m_save.getName() == loaded_evt.m_name)
 	{
-		rapidjson::Document doc;
-
-		//we get data
-		if (m_save.getData().empty())
-		{
-			doc.SetObject();
-		}
-		else
-		{
-			doc.Parse<0>(m_save.getData().c_str());
-			if (doc.HasParseError())
-			{
-				//if parse error (also empty string), we ignore existing data.
-				doc.SetObject();
-			}
-		}
-
-		if (doc.HasMember(sCurrency))
-		{
-			rapidjson::Value& currencyvalue = doc[sCurrency];
-			if (!currencyvalue.IsNull()){
-				if (currencyvalue.HasMember(sGold) && currencyvalue[sGold].IsInt())
-				{
-					m_gold.set<int>(currencyvalue[sGold].GetInt());
-				}
-				if (currencyvalue.HasMember(sGem) && currencyvalue[sGem].IsInt())
-				{
-					m_gem.set<int>(currencyvalue[sGem].GetInt());
-				}
-			}
-		}
+        setData(m_save.getData());
 
 		if (m_loggingIn)
 		{
@@ -187,6 +157,16 @@ void MyPlayer::receive(const WkCocos::Save::Loaded& loaded_evt)
 
 		getEventManager()->emit<MyPlayer::Loaded>(getId());
 	}
+}
+
+void MyPlayer::receive(const GPGSManager::SnapshotLoaded & snaploaded)
+{
+    if ( snaploaded.mSuccess )
+    {
+        std::string data(reinterpret_cast<const char*>(&(snaploaded.mSnapData[0])),snaploaded.mSnapData.size());
+
+        setData(data);
+    }
 }
 
 void MyPlayer::receive(const WkCocos::Save::Saved& saved_evt)
@@ -218,3 +198,36 @@ void MyPlayer::receive(const WkCocos::Save::Error& save_err)
 	}
 }
 
+void MyPlayer::setData(std::string d)
+{
+    rapidjson::Document doc;
+    //we get data
+    if (d.empty())
+    {
+        doc.SetObject();
+    }
+    else
+    {
+        doc.Parse<0>(d.c_str());
+        if (doc.HasParseError())
+        {
+            //if parse error (also empty string), we ignore existing data.
+            doc.SetObject();
+        }
+    }
+
+    if (doc.HasMember(sCurrency))
+    {
+        rapidjson::Value& currencyvalue = doc[sCurrency];
+        if (!currencyvalue.IsNull()){
+            if (currencyvalue.HasMember(sGold) && currencyvalue[sGold].IsInt())
+            {
+                m_gold.set<int>(currencyvalue[sGold].GetInt());
+            }
+            if (currencyvalue.HasMember(sGem) && currencyvalue[sGem].IsInt())
+            {
+                m_gem.set<int>(currencyvalue[sGem].GetInt());
+            }
+        }
+    }
+}

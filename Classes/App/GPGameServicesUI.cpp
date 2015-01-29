@@ -50,6 +50,9 @@ GPGameServicesUI::GPGameServicesUI()
             CCLOGERROR("SUBSCRIBING");
             gpgs->getEventManager()->subscribe<GPGSManager::SignedIn>(*this);
             gpgs->getEventManager()->subscribe<GPGSManager::SignedOut>(*this);
+            gpgs->getEventManager()->subscribe<GPGSManager::SnapshotSaveRequested>(*this);
+            //subscribing the player so he knows what to load and when.
+            gpgs->getEventManager()->subscribe<GPGSManager::SnapshotLoaded>(g_gameLogic->getPlayer());
         }
 	}
 }
@@ -186,6 +189,9 @@ void GPGameServicesUI::receive(const GPGSManager::SignedOut&)
     m_widget->removeChild(m_SaveLabel);
     m_widget->removeChild(m_SaveButton);
 
+    m_widget->removeChild(m_SelectLabel);
+    m_widget->removeChild(m_SelectButton);
+
     m_widget->removeChild(m_ach5Label);
     m_widget->removeChild(m_ach5Button);
 
@@ -202,6 +208,29 @@ void GPGameServicesUI::receive(const GPGSManager::SignedOut&)
     m_widget->removeChild(m_ach1Button);
 }
 
+void GPGameServicesUI::receive(const GPGSManager::SnapshotSaveRequested&)
+{
+    CCLOG("Save Requested");
+
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+    if (gpgs && gpgs->IsSignedIn() )
+    {
+        g_gameLogic->getPlayer().saveData(true);
+    }
+#endif
+}
+
+void GPGameServicesUI::receive(const GPGSManager::SnapshotLoaded&)
+{
+	CCLOG("Loaded");
+
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+    if (gpgs && gpgs->IsSignedIn() )
+    {
+        g_gameLogic->getPlayer().loadData(true);
+    }
+#endif
+}
 
 void GPGameServicesUI::ach1Unlock(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input)
 {
@@ -321,7 +350,7 @@ void GPGameServicesUI::selectCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widg
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     if (gpgs && gpgs->IsSignedIn() )
         {
-            gpgs->selectSnapshot("SnapTest",8);
+            gpgs->selectSnapshot("Google Snapshot Test",8);
         }
 #endif
 	}
