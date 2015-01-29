@@ -41,6 +41,10 @@ public:
     void ach4Unlock(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input);
     void ach5Unlock(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input);
 
+    void loadCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input);
+    void saveCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input);
+    void selectCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input);
+
     void receive(const GPGSManager::SignedIn&);
     void receive(const GPGSManager::SignedOut&);
 
@@ -63,6 +67,13 @@ protected:
 	cocos2d::ui::Text* m_ach4Label;
 	cocos2d::ui::Button* m_ach5Button;
 	cocos2d::ui::Text* m_ach5Label;
+
+	cocos2d::ui::Button* m_SaveButton;
+	cocos2d::ui::Text* m_SaveLabel;
+	cocos2d::ui::Button* m_LoadButton;
+	cocos2d::ui::Text* m_LoadLabel;
+	cocos2d::ui::Button* m_SelectButton;
+	cocos2d::ui::Text* m_SelectLabel;
 };
 
 

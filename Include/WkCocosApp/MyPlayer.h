@@ -17,7 +17,7 @@ class MyPlayer : public WkCocos::Actor
 	WkCocos::Player m_player;
 
 public:
-	
+
 	std::shared_ptr<entityx::EventManager> getEventManager()
 	{
 		return m_player.getEventManager();
@@ -51,10 +51,10 @@ public:
 	void login();
 
 	//save Data for test
-	void saveData();
+	void saveData(bool snapshot = false);
 
 	//load Data for test
-	void loadData();
+	void loadData(bool snapshot = false);
 
 
 	struct LoggedIn : public WkCocos::Event < LoggedIn >
@@ -131,7 +131,7 @@ private:
 	const char * sGold = "gold";
 
 	WkCocos::Save m_save;
-	
+
 	bool m_loggingIn;
 
 };

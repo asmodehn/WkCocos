@@ -4,6 +4,8 @@
 #include "json/stringbuffer.h"
 #include "json/writer.h"
 
+#include "WkCocos/Utils/GPGSManager.h"
+
 #define SAVENAME "MySave"
 
 MyPlayer::MyPlayer(std::shared_ptr<WkCocos::Timer::Timer> timermgr, std::shared_ptr<WkCocos::LocalData::LocalDataManager> localdatamngr, std::function<std::string(std::string userid)> pw_gen_cb)
@@ -31,7 +33,7 @@ MyPlayer::MyPlayer(std::shared_ptr<WkCocos::Timer::Timer> timermgr, std::shared_
 {
 	m_gem.set(42);
 	m_gold.set(424242);
-	
+
 	m_save.setLocalDataMgr(m_player.getLocalDatamgr());
 	m_save.setOnlineDataMgr(m_player.getOnlineDatamgr());
 	WkCocos::Save::getEventManager()->subscribe<WkCocos::Save::Loaded>(*this);
@@ -52,7 +54,7 @@ void MyPlayer::login()
 }
 
 //save Data for test
-void MyPlayer::saveData()
+void MyPlayer::saveData(bool snapshot)
 {
 	m_player.saveData();
 
@@ -72,14 +74,36 @@ void MyPlayer::saveData()
 	rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
 	doc.Accept(writer);
 
-	m_save.requestSaveData(strbuf.GetString());
+    std::string datastr = strbuf.GetString();
+	m_save.requestSaveData(datastr);
+
+
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+	if (snapshot)
+    {//save to google snapshot
+        std::vector<uint8_t> snapshot(datastr.begin(), datastr.end());
+
+        GPGSManager::getInstance()->saveSnapshot("playerdata", "Player Data", (std::chrono::milliseconds)(0), std::vector<uint8_t>() , snapshot);
+    }
+#endif
 }
 
 //load Data for test
-void MyPlayer::loadData()
+void MyPlayer::loadData(bool snapshot)
 {
-	m_player.loadData();
-	m_save.requestLoadData();
+
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+	if (snapshot)
+    {
+        GPGSManager::getInstance()->loadSnapshot("playerdata");
+        //we need to load locally in receive
+    }
+    else
+#endif
+    {
+        m_player.loadData();
+        m_save.requestLoadData();
+	}
 }
 
 bool MyPlayer::getAllDocsPaging(int quantity, int offset)
