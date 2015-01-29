@@ -302,7 +302,7 @@ android.buildTypes.all { buildType ->
         into 'assets'
         exclude { details -> details.file.name == 'manifest.json' } // not needed for apk expansion
         destinationDir = file('build/outputs/xapk')
-        baseName = 'main.' + android.defaultConfig.versionCode + '.' + android.defaultConfig.applicationId + (buildType.applicationIdSuffix?buildType.applicationIdSuffix:'')
+        baseName = 'main.' + android.defaultConfig.versionCode + '.' + android.defaultConfig.applicationId
         appendix = ''
         version = ''
         classifier = ''
@@ -321,7 +321,7 @@ android.buildTypes.all { buildType ->
     //custom free task to deploy obb
     task("deployObb${buildType.name}",type:Exec, dependsOn:"zipDLC${buildType.name}") {
         def sourceObb = file(obbFilePath).absolutePath
-        def targetObb = '/mnt/sdcard/Android/obb/' + android.defaultConfig.applicationId + (buildType.applicationIdSuffix?buildType.applicationIdSuffix:'') + '/' + obbFileName
+        def targetObb = '/mnt/sdcard/Android/obb/' + android.defaultConfig.applicationId + '/' + obbFileName
 
         if (System.properties['os.name'].toLowerCase().contains('windows')) {
             //windows
