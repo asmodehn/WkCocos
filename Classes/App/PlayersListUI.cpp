@@ -30,15 +30,15 @@ PlayersListUI::PlayersListUI()
 		m_refreshButton->setPosition(cocos2d::Vec2(m_widgetSize.width / 4, m_widgetSize.height / 5));
 		m_widget->addChild(m_refreshButton);
 
-		m_refreshLabel = cocos2d::ui::Text::create("page", "Thonburi", 21);
+		m_refreshLabel = cocos2d::ui::Text::create("page", "fonts/Marker Felt.ttf", 21);
 		m_refreshLabel->setPosition(m_refreshButton->getPosition() + cocos2d::Vec2(0, m_refreshButton->getContentSize().height));
 		m_widget->addChild(m_refreshLabel);
 
-		m_enemyData = cocos2d::ui::Text::create("... GEMS and ... GOLD", "Thonburi", 21);
+		m_enemyData = cocos2d::ui::Text::create("... GEMS and ... GOLD", "fonts/Marker Felt.ttf", 21);
 		m_enemyData->setPosition(cocos2d::Vec2(m_widgetSize.width / 4, -m_widgetSize.height / 5));
 		m_widget->addChild(m_enemyData);
 
-		m_enemyLabel = cocos2d::ui::Text::create("player ... has", "Thonburi", 15);
+		m_enemyLabel = cocos2d::ui::Text::create("player ... has", "fonts/Marker Felt.ttf", 15);
 		m_enemyLabel->setPosition(m_enemyData->getPosition() + cocos2d::Vec2(0, m_enemyData->getContentSize().height));
 		m_widget->addChild(m_enemyLabel);
 

@@ -58,7 +58,7 @@ bool TestScene::init()
 	m_prevButton->setScaleX(-1);
 	addChild(m_prevButton);
 
-	m_prevLabel = cocos2d::ui::Text::create("PREV", "Thonburi", 21);
+	m_prevLabel = cocos2d::ui::Text::create("PREV", "fonts/Marker Felt.ttf", 21);
 	m_prevLabel->setPosition(m_prevButton->getPosition() + cocos2d::Vec2(m_prevButton->getContentSize().width + m_prevLabel->getContentSize().width, 0));
 	addChild(m_prevLabel);
 
@@ -67,11 +67,11 @@ bool TestScene::init()
 	m_nextButton->setPosition(cocos2d::Vec2(visibleSize.width - m_nextButton->getContentSize().width / 2, m_prevButton->getContentSize().height / 2));
 	addChild(m_nextButton);
 
-	m_nextLabel = cocos2d::ui::Text::create("NEXT", "Thonburi", 21);
+	m_nextLabel = cocos2d::ui::Text::create("NEXT", "fonts/Marker Felt.ttf", 21);
 	m_nextLabel->setPosition(m_nextButton->getPosition() - cocos2d::Vec2(m_nextLabel->getContentSize().width + m_nextButton->getContentSize().width, 0));
 	addChild(m_nextLabel);
 
-	m_titleLabel = cocos2d::ui::Text::create("ID", "Thonburi", 21);
+	m_titleLabel = cocos2d::ui::Text::create("ID", "fonts/Marker Felt.ttf", 21);
 	m_titleLabel->setPosition((m_nextButton->getPosition() + m_prevButton->getPosition()) / 2);
 	addChild(m_titleLabel);
 
@@ -171,7 +171,7 @@ bool TestScene::init()
 	currentUI = SavingUI::id;
 	m_titleLabel->setString(currentUI);
 
-	m_time = cocos2d::ui::Text::create("", "Thonburi", 20);
+	m_time = cocos2d::ui::Text::create("", "fonts/Marker Felt.ttf", 20);
 	m_time->setPosition(cocos2d::Vec2(visibleSize.width * 0.5f, /*closeItem->getPositionY()*/ visibleSize.height - 20));
 	addChild(m_time);
 
