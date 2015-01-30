@@ -276,22 +276,6 @@ public abstract class MainActivity extends Cocos2dxActivity {
         nativeOnActivityDestroyed(this);
         if ( ad != null ) ad.destroy();
 
-        if(pm.isScreenOn()) {
-            Log.e(TAG, "Destroy : SCREEN STATE IS ON");
-        } else {
-            // this is when onPause() is called when the screen goes black
-            Log.e(TAG, "Destroy : SCREEN STATE IS OFF");
-        }
-        // only when screen turns on
-        if (!mScreenWasOn) {
-            // this is when onResume() is called due to a screen state change
-            Log.e(TAG, "Destroy : SCREEN STATE WAS OFF");
-        } else {
-            // this is when onResume() is called when the screen state has not changed
-            Log.e(TAG, "Destroy : SCREEN STATE WAS ON");
-
-        }
-
         super.onDestroy();
     }
 
