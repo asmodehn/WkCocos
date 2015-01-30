@@ -27,7 +27,7 @@ namespace WkCocos
 			cocos2d::JniMethodInfo j_scheduleMI;
 			jobject instance = WkCocos::Utils::WkJniHelper::getPushNotificationManager();
 			std::string clss = std::string(PACKAGE_NAME_JNI) + "/PushNotificationsManager";
-            CCLOG("Calling %s/schedule(JLjava/lang/String;Ljava/lang/String;)I", clss.c_str());
+            CCLOG("Calling %s/schedule(IJLjava/lang/String;Ljava/lang/String;)", clss.c_str());
             if (instance && cocos2d::JniHelper::getMethodInfo(j_scheduleMI, clss.c_str(), "schedule", "(IJLjava/lang/String;Ljava/lang/String;)V"))
             {
                 //building arguments
@@ -41,6 +41,21 @@ namespace WkCocos
                 j_scheduleMI.env->DeleteLocalRef(jtitle);
                 j_scheduleMI.env->DeleteLocalRef(jmessage);
 
+            }
+            j_scheduleMI.env->DeleteLocalRef(instance);
+		}
+
+        void PushNotifications::cancel(int id)
+		{
+			cocos2d::JniMethodInfo j_scheduleMI;
+			jobject instance = WkCocos::Utils::WkJniHelper::getPushNotificationManager();
+			std::string clss = std::string(PACKAGE_NAME_JNI) + "/PushNotificationsManager";
+            CCLOG("Calling %s/cancel(I)", clss.c_str());
+            if (instance && cocos2d::JniHelper::getMethodInfo(j_scheduleMI, clss.c_str(), "cancel", "(I)V"))
+            {
+                //building arguments
+                jint jid(id);
+                j_scheduleMI.env->CallIntMethod(instance, j_scheduleMI.methodID, jid);
             }
             j_scheduleMI.env->DeleteLocalRef(instance);
 		}

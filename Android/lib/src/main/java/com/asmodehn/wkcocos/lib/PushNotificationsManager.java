@@ -1,6 +1,7 @@
 package com.asmodehn.wkcocos.lib;
 
 import android.app.Activity;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.app.AlarmManager;
@@ -36,6 +37,19 @@ public class PushNotificationsManager{
         PendingIntent PNPI = PendingIntent.getBroadcast(appPNClickActivity, 0, PNIntent, 0);
         am.set(AlarmManager.RTC, time, PNPI);
 
+    }
+
+    public void cancel(int id) {
+
+        //preparing intent for PN alarm
+        Intent PNIntent = new Intent(appPNClickActivity , PushNotificationsReceiver.class);
+        PNIntent.setAction(WKCOCOS_ACTION_GENERIC_PN + id); //setting action to differentiate each PN
+        PendingIntent PNPI = PendingIntent.getBroadcast(appPNClickActivity, 0, PNIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        am.cancel(PNPI);
+
+        //cancel existing matching PN
+        NotificationManager WKNM = (NotificationManager) appPNClickActivity.getSystemService(appPNClickActivity.NOTIFICATION_SERVICE);
+        WKNM.cancel(id);
     }
 
 }

@@ -117,22 +117,6 @@ public abstract class MainActivity extends Cocos2dxActivity {
 
         me = this;
 
-        if (mScreenWasOn) {
-            Log.e(TAG, "Create : SCREEN STATE WAS ON");
-        }
-        //when the screen didnt change state ( and is off )
-        else
-        {
-            Log.e(TAG, "Create : SCREEN STATE WAS OFF");
-        }
-        if (pm.isScreenOn()) {
-            // this is the case when onPause() is called while keeping screen on.
-            Log.e(TAG, "Create : SCREEN STATE IS ON");
-        } else {
-            // this is when onPause() is called when the screen goes black
-            Log.e(TAG, "Create : SCREEN STATE IS OFF");
-        }
-
         nativeInitGPGS(this);
         nativeOnActivityCreated(this, savedInstanceState);
 
@@ -201,27 +185,11 @@ public abstract class MainActivity extends Cocos2dxActivity {
 
         nativeOnActivityPaused(this);
 
-        if (pm.isScreenOn()) {
-            // this is the case when onPause() is called while keeping screen on.
-            Log.e(TAG, "Pause : SCREEN STATE IS ON");
-        } else {
-            // this is when onPause() is called when the screen goes black
-            Log.e(TAG, "Pause : SCREEN STATE IS OFF");
-        }
-
         // when the screen is about to turn off this is still true ( power button press ).
         // also true when the screen stays on ( home button press )
         if (! mHiddenCycle) {
-            Log.e(TAG, "Pause : SCREEN STATE WAS ON");
-
             ad.pause();
         }
-        //when the screen didnt change state ( and is off )
-        else
-        {
-            Log.e(TAG, "Pause : SCREEN STATE WAS OFF");
-        }
-
 
         super.onPause();
     }
@@ -294,33 +262,8 @@ public abstract class MainActivity extends Cocos2dxActivity {
         } else {
 
             if (! mHiddenCycle) {
-                //TODO : JNI binding to remove this from here and make it doable in C++ testapp
-                NotificationManager WKNM = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-                WKNM.cancelAll();
                 ad.resume();
             }
-
-
-            //We want to run this only while screen is on.
-            if(pm.isScreenOn()) {
-
-
-                // this is the case when onPause() is called while keeping screen on.
-                Log.e(TAG, "Resume : SCREEN STATE IS ON");
-            } else {
-                // this is when onPause() is called when the screen goes black
-                Log.e(TAG, "Resume : SCREEN STATE IS OFF");
-            }
-            // only when screen turns on
-            if (!mScreenWasOn) {
-                // this is when onResume() is called due to a screen state change
-                Log.e(TAG, "Resume : SCREEN STATE WAS OFF");
-            } else {
-                // this is when onResume() is called when the screen state has not changed
-                Log.e(TAG, "Resume : SCREEN STATE WAS ON");
-
-            }
-
         }
     }
 
@@ -355,23 +298,6 @@ public abstract class MainActivity extends Cocos2dxActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
-        if(pm.isScreenOn()) {
-            Log.e(TAG, "Start : SCREEN STATE IS ON");
-        } else {
-            // this is when onPause() is called when the screen goes black
-            Log.e(TAG, "Start : SCREEN STATE IS OFF");
-        }
-        // only when screen turns on
-        if (!mScreenWasOn) {
-            // this is when onResume() is called due to a screen state change
-            Log.e(TAG, "Start : SCREEN STATE WAS OFF");
-        } else {
-            // this is when onResume() is called when the screen state has not changed
-            Log.e(TAG, "Start : SCREEN STATE WAS ON");
-
-        }
-
         nativeOnActivityStarted(this);
     }
 
@@ -379,22 +305,6 @@ public abstract class MainActivity extends Cocos2dxActivity {
     @Override
     protected void onStop() {
         nativeOnActivityStopped(this);
-        if(pm.isScreenOn()) {
-            Log.e(TAG, "Stop : SCREEN STATE IS ON");
-        } else {
-            // this is when onPause() is called when the screen goes black
-            Log.e(TAG, "Stop : SCREEN STATE IS OFF");
-        }
-        // only when screen turns on
-        if (!mScreenWasOn) {
-            // this is when onResume() is called due to a screen state change
-            Log.e(TAG, "Stop : SCREEN STATE WAS OFF");
-        } else {
-            // this is when onResume() is called when the screen state has not changed
-            Log.e(TAG, "Stop : SCREEN STATE WAS ON");
-
-        }
-
         super.onStop();
     }
 

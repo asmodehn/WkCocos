@@ -12,6 +12,7 @@ namespace WkCocos
 		{
 		public:
 			static void schedule(int id, long when, std::string title, std::string message);
+			static void cancel(int id);
 
 		};
 
