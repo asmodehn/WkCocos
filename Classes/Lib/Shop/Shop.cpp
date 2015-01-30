@@ -2,6 +2,7 @@
 
 using cocos2d::Ref;
 
+#define TAG "Shop"
 namespace WkCocos
 {
 

@@ -10,7 +10,6 @@
 #include "WkCocos/Shop/Assets.h"
 #include "WkCocos/Shop/SOOMLA/ShopEventHandler.h"
 
-#define TAG "Shop"
 namespace WkCocos
 {
 	namespace Shop
