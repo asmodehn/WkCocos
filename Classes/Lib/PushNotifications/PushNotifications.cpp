@@ -69,6 +69,11 @@ namespace WkCocos
 
 			//TODO ( REST calls ?? )
 		}
+
+		void PushNotifications::cancel(int id)
+		{
+
+		}
 #endif
 
 	} // namespace PushNotifications
