@@ -126,11 +126,7 @@ public class WkDownloaderActivity extends Activity implements IDownloaderClient 
             {
                 mainXAPK.setFilePath(mexpFilePath);
                 Cocos2dxHelper.nativeSetMainXApkPath(mainXAPK.getFilePath());
-            }else{
-                //we fail to find the file ( after download ), no point in attempting to validate
-                MainActivity.mainXAPKValid = false;
             }
-
         }
 
         if (patchXAPK != null ) {
@@ -141,9 +137,6 @@ public class WkDownloaderActivity extends Activity implements IDownloaderClient 
             {
                 patchXAPK.setFilePath(pexpFilePath);
                 Cocos2dxHelper.nativeSetPatchXApkPath(patchXAPK.getFilePath());
-            }else {
-                //we fail to find the file( after download ), no point in attempting to validate
-                MainActivity.patchXAPKValid = false;
             }
         }
 
@@ -451,12 +444,10 @@ public class WkDownloaderActivity extends Activity implements IDownloaderClient 
                     initializeDownloadUI();
                     return;
                 } else {
-                    // otherwise, download not needed so we fall through to
-                    // starting the movie
+                    // otherwise, download not needed so we fall through to starting the movie
                     Log.e(TAG, "XAPK Download not required ( already started, or files already exists ).");
-                    //break out of starting flow. it will remove broken files on exit.
-                    MainActivity.mainXAPKValid = false;
-                    MainActivity.patchXAPKValid = false;
+                    //google play cache says that the obb download was already started once.
+                    //since we re here, we should just attempt to start the app.
                     finish();
                 }
             } catch (PackageManager.NameNotFoundException e) {
