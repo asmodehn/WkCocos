@@ -4,6 +4,8 @@
 #include "json/stringbuffer.h"
 #include "json/writer.h"
 
+#include "WkCocos/Utils/GPGSManager.h"
+
 #define SAVENAME "MySave"
 
 MyPlayer::MyPlayer(std::shared_ptr<WkCocos::Timer::Timer> timermgr, std::shared_ptr<WkCocos::LocalData::LocalDataManager> localdatamngr, std::function<std::string(std::string userid)> pw_gen_cb)
@@ -31,7 +33,7 @@ MyPlayer::MyPlayer(std::shared_ptr<WkCocos::Timer::Timer> timermgr, std::shared_
 {
 	m_gem.set(42);
 	m_gold.set(424242);
-	
+
 	m_save.setLocalDataMgr(m_player.getLocalDatamgr());
 	m_save.setOnlineDataMgr(m_player.getOnlineDatamgr());
 	WkCocos::Save::getEventManager()->subscribe<WkCocos::Save::Loaded>(*this);
@@ -52,7 +54,7 @@ void MyPlayer::login()
 }
 
 //save Data for test
-void MyPlayer::saveData()
+void MyPlayer::saveData(bool snapshot)
 {
 	m_player.saveData();
 
@@ -72,14 +74,36 @@ void MyPlayer::saveData()
 	rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
 	doc.Accept(writer);
 
-	m_save.requestSaveData(strbuf.GetString());
+    std::string datastr = strbuf.GetString();
+	m_save.requestSaveData(datastr);
+
+
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+	if (snapshot)
+    {//save to google snapshot
+        std::vector<uint8_t> snapshot(datastr.begin(), datastr.end());
+        std::string desc = WkCocos::ToolBox::to_string(m_gem.get<int>()) + " gems, " + WkCocos::ToolBox::to_string(m_gold.get<int>()) + " gold";
+        GPGSManager::getInstance()->saveSnapshot("wkcocos_save", desc, (std::chrono::milliseconds)(0), std::vector<uint8_t>() , snapshot);
+    }
+#endif
 }
 
 //load Data for test
-void MyPlayer::loadData()
+void MyPlayer::loadData(bool snapshot)
 {
-	m_player.loadData();
-	m_save.requestLoadData();
+
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+	if (snapshot)
+    {
+        GPGSManager::getInstance()->loadSnapshot("wkcocos_save");
+        //we need to load locally in receive
+    }
+    else
+#endif
+    {
+        m_player.loadData();
+        m_save.requestLoadData();
+	}
 }
 
 bool MyPlayer::getAllDocsPaging(int quantity, int offset)
@@ -123,37 +147,7 @@ void MyPlayer::receive(const WkCocos::Save::Loaded& loaded_evt)
 {
 	if (m_save.getName() == loaded_evt.m_name)
 	{
-		rapidjson::Document doc;
-
-		//we get data
-		if (m_save.getData().empty())
-		{
-			doc.SetObject();
-		}
-		else
-		{
-			doc.Parse<0>(m_save.getData().c_str());
-			if (doc.HasParseError())
-			{
-				//if parse error (also empty string), we ignore existing data.
-				doc.SetObject();
-			}
-		}
-
-		if (doc.HasMember(sCurrency))
-		{
-			rapidjson::Value& currencyvalue = doc[sCurrency];
-			if (!currencyvalue.IsNull()){
-				if (currencyvalue.HasMember(sGold) && currencyvalue[sGold].IsInt())
-				{
-					m_gold.set<int>(currencyvalue[sGold].GetInt());
-				}
-				if (currencyvalue.HasMember(sGem) && currencyvalue[sGem].IsInt())
-				{
-					m_gem.set<int>(currencyvalue[sGem].GetInt());
-				}
-			}
-		}
+        setData(m_save.getData());
 
 		if (m_loggingIn)
 		{
@@ -163,6 +157,16 @@ void MyPlayer::receive(const WkCocos::Save::Loaded& loaded_evt)
 
 		getEventManager()->emit<MyPlayer::Loaded>(getId());
 	}
+}
+
+void MyPlayer::receive(const GPGSManager::SnapshotLoaded & snaploaded)
+{
+    if ( snaploaded.mSuccess )
+    {
+        std::string data(reinterpret_cast<const char*>(&(snaploaded.mSnapData[0])),snaploaded.mSnapData.size());
+
+        setData(data);
+    }
 }
 
 void MyPlayer::receive(const WkCocos::Save::Saved& saved_evt)
@@ -194,3 +198,36 @@ void MyPlayer::receive(const WkCocos::Save::Error& save_err)
 	}
 }
 
+void MyPlayer::setData(std::string d)
+{
+    rapidjson::Document doc;
+    //we get data
+    if (d.empty())
+    {
+        doc.SetObject();
+    }
+    else
+    {
+        doc.Parse<0>(d.c_str());
+        if (doc.HasParseError())
+        {
+            //if parse error (also empty string), we ignore existing data.
+            doc.SetObject();
+        }
+    }
+
+    if (doc.HasMember(sCurrency))
+    {
+        rapidjson::Value& currencyvalue = doc[sCurrency];
+        if (!currencyvalue.IsNull()){
+            if (currencyvalue.HasMember(sGold) && currencyvalue[sGold].IsInt())
+            {
+                m_gold.set<int>(currencyvalue[sGold].GetInt());
+            }
+            if (currencyvalue.HasMember(sGem) && currencyvalue[sGem].IsInt())
+            {
+                m_gem.set<int>(currencyvalue[sGem].GetInt());
+            }
+        }
+    }
+}

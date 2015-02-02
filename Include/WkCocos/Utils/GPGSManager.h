@@ -26,7 +26,7 @@ class GPGSManager
     GPGSManager()
     : event_manager(entityx::EventManager::make())
     , isSignedIn(false)
-    #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     , gameServices()
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32 || CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
 //TODO
@@ -61,6 +61,10 @@ public:
 	void incrementAchievement(const std::string & achievement_id, int step);
 	void showAchievements();
 
+    void saveSnapshot(std::string filename, std::string description, std::chrono::milliseconds playtime, std::vector<uint8_t> png_data, std::vector< uint8_t > snapData);
+    void loadSnapshot(std::string filename);
+    void selectSnapshot(std::string title, uint32_t max_snapshots, bool allow_delete = true, bool allow_create = true);
+
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32 || CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
 
 //TODO
@@ -77,6 +81,42 @@ public:
 
     };
 
+    struct SnapshotSaveRequested : public entityx::Event < SnapshotSaveRequested >
+    {
+        SnapshotSaveRequested()
+        {}
+    };
+
+    struct SnapshotLoaded : public entityx::Event < SnapshotLoaded >
+    {
+        bool mSuccess;
+        std::vector< uint8_t > mSnapData;
+
+        SnapshotLoaded(bool success, std::vector<uint8_t> data)
+        : mSuccess(success)
+        , mSnapData(data)
+        {}
+
+    };
+
+    struct SnapshotSaved : public entityx::Event < SnapshotSaved >
+    {
+        bool mSuccess;
+        std::string mFileName;
+        std::string mDescription;
+        std::chrono::milliseconds mPlayedTime;
+        std::chrono::milliseconds mModifiedTime;
+
+        SnapshotSaved(bool success, std::string filename, std::string desc, std::chrono::milliseconds playtime, std::chrono::milliseconds modtime)
+        : mSuccess(success)
+        , mFileName(filename)
+        , mDescription(desc)
+        , mPlayedTime(playtime)
+        , mModifiedTime(modtime)
+        {}
+
+    };
+
     entityx::ptr<entityx::EventManager> getEventManager()
     {
         return event_manager;
@@ -88,6 +128,10 @@ private:
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     void OnAuthActionStarted(gpg::AuthOperation op);
     void OnAuthActionFinished(gpg::AuthOperation op, gpg::AuthStatus status);
+
+    void loadedSnapshot(gpg::SnapshotManager::ReadResponse const & response);
+    void committedSnapshot(gpg::SnapshotManager::CommitResponse const & response);
+    void selectedSnapshot(gpg::SnapshotManager::SnapshotSelectUIResponse const & response);
 
     std::unique_ptr<gpg::GameServices> gameServices;
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32 || CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)

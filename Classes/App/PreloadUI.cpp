@@ -28,7 +28,7 @@ PreloadUI::PreloadUI()
 		m_widget->addChild(loadingbar);
 
 		//BIG button to start preload
-        auto dlLabel = cocos2d::ui::Text::create("Preload", "Thonburi", 21);
+        auto dlLabel = cocos2d::ui::Text::create("Preload", "fonts/Marker Felt.ttf", 21);
         auto button = cocos2d::ui::Button::create("SkipNormal.png", "SkipSelected.png");
 		button->addTouchEventListener(CC_CALLBACK_2(PreloadUI::PLCallback, this));
 		button->setPosition(cocos2d::Vec2(button->getContentSize().width / 2, -button->getContentSize().height / 2));

@@ -7,6 +7,7 @@
 
 #include "WkCocos/Shop/Inventory.h"
 
+#include "WkCocos/Utils/GPGSManager.h"
 
 /**
 * This is the game player
@@ -17,7 +18,7 @@ class MyPlayer : public WkCocos::Actor
 	WkCocos::Player m_player;
 
 public:
-	
+
 	std::shared_ptr<entityx::EventManager> getEventManager()
 	{
 		return m_player.getEventManager();
@@ -42,6 +43,8 @@ public:
 	void receive(const WkCocos::Save::Saved& saved);
 	void receive(const WkCocos::Save::Error & save_err);
 
+    void receive(const GPGSManager::SnapshotLoaded & snaploaded);
+
 	//ingame currency
 	WkCocos::StrongBox::StrongBox m_gold;
 	//premium currency
@@ -51,10 +54,10 @@ public:
 	void login();
 
 	//save Data for test
-	void saveData();
+	void saveData(bool snapshot = false);
 
 	//load Data for test
-	void loadData();
+	void loadData(bool snapshot = false);
 
 
 	struct LoggedIn : public WkCocos::Event < LoggedIn >
@@ -130,8 +133,10 @@ private:
 	const char * sGem = "gem";
 	const char * sGold = "gold";
 
+    void setData(std::string d);
+
 	WkCocos::Save m_save;
-	
+
 	bool m_loggingIn;
 
 };
