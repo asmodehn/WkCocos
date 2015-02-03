@@ -13,7 +13,10 @@ namespace WkCocos
 
 			m_gameclock.reset(new WkCocos::Timer::Timer());
 
-            m_gameclock->getEventManager()->emit<Timer::Events::TimerInit>();
+			m_gameclock->getEventManager()->emit<Timer::Events::TimerInit>();
+
+			m_saveManager.reset(new SaveManager());
+			m_saveManager->configure();
 		}
 
 		GameLogic::GameLogic(std::string app_access_key, std::string app_secret_key)
@@ -32,6 +35,9 @@ namespace WkCocos
 
 				m_gameclock->getEventManager()->emit<Timer::Events::TimerInit>();
 			});
+
+			m_saveManager.reset(new SaveManager());
+			m_saveManager->configure();
 		}
 
 

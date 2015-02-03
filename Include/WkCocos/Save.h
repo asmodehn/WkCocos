@@ -211,6 +211,7 @@ namespace WkCocos
 		inline void setName(const std::string& name){ m_name = name; }
 
 		inline std::string getData(){ return m_rawData; }
+		inline std::string getKey() const { return m_key; }
 
 	private:
 		/**

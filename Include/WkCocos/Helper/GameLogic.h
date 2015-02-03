@@ -5,6 +5,7 @@
 #include "WkCocos/OnlineData/OnlineDataManager.h"
 #include "WkCocos/Timer/Timer.h"
 #include "WkCocos/Actor.h"
+#include "WkCocos/SaveManager.h"
 
 namespace WkCocos
 {
@@ -41,6 +42,11 @@ namespace WkCocos
 				return m_onlinedatamngr;
 			}
 
+			std::shared_ptr<SaveManager> getSaveManager()
+			{
+				return m_saveManager;
+			}
+
 			/**
 			* constructor for online game
 			* This will trigger TimerInit upon completion
@@ -56,9 +62,11 @@ namespace WkCocos
 
 		protected:
 			std::shared_ptr<Timer::Timer> m_gameclock;
+			std::shared_ptr<SaveManager> m_saveManager;
 
 			std::shared_ptr<WkCocos::LocalData::LocalDataManager> m_localdatamngr;
 			std::shared_ptr<WkCocos::OnlineData::OnlineDataManager> m_onlinedatamngr;
+
 		};
 	} // namespace Helper
 } //namespace WkCocos

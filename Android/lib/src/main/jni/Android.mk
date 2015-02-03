@@ -66,7 +66,8 @@ LOCAL_SRC_FILES := jni.cpp \
                    ../../../../../Classes/Lib/WebView/UIWebView.cpp \
                    ../../../../../Classes/Lib/WebView/UIWebViewImpl-android.cpp \
                    ../../../../../Classes/Lib/Helper/GameLogic.cpp \
-                   ../../../../../Classes/Lib/PushNotifications/PushNotifications.cpp
+                   ../../../../../Classes/Lib/PushNotifications/PushNotifications.cpp \
+                   ../../../../../Classes/Lib/SaveManager.cpp
 
 #do not include this file, it's already in libcurl
 #                   ../../../../../Classes/Lib/Utils/md5.c \
