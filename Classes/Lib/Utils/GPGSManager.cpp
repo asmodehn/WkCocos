@@ -346,11 +346,11 @@ void GPGSManager::saveSnapshot(std::string description, std::chrono::millisecond
             time (&tt);
             timeinfo = localtime (&rawtime);
 
-            strftime (buffer,32,"wkcocos_%Y%m%d%H%M%S",timeinfo);
+            strftime (buffer,32,"save_%Y%m%d%H%M%S",timeinfo);
 
             //put_time not available in GCC < 5.0
             //std::ostringstream snapshot_name;
-            //snapshot_name << std::put_time(ctime(&tt),"wkcocos_%Y%m%d%H%M%S");
+            //snapshot_name << std::put_time(ctime(&tt),"save_%Y%m%d%H%M%S");
             currentSnapshot.assign(buffer,32);
             LOGI("new snapshot name is: %s",currentSnapshot.c_str());
         }
