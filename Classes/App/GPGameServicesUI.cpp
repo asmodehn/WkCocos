@@ -149,23 +149,13 @@ void GPGameServicesUI::receive(const GPGSManager::SignedIn&)
 
     //SAVE
     m_SaveButton = cocos2d::ui::Button::create("SkipNormal.png", "SkipSelected.png");
-    m_SaveButton->addTouchEventListener(CC_CALLBACK_2(GPGameServicesUI::saveCallback, this));
+    m_SaveButton->addTouchEventListener(CC_CALLBACK_2(GPGameServicesUI::autosaveCallback, this));
     m_SaveButton->setPosition(cocos2d::Vec2(widgetSize.width * (3) / 10, - widgetSize.height *3/ 6));
     m_widget->addChild(m_SaveButton);
 
-    m_SaveLabel = cocos2d::ui::Text::create("Save", "fonts/Marker Felt.ttf", 21);
+    m_SaveLabel = cocos2d::ui::Text::create("AutoSave", "fonts/Marker Felt.ttf", 21);
     m_SaveLabel->setPosition(m_SaveButton->getPosition() + cocos2d::Vec2(0, m_SaveButton->getContentSize().height));
     m_widget->addChild(m_SaveLabel);
-
-    //LOAD
-    m_LoadButton = cocos2d::ui::Button::create("SkipNormal.png", "SkipSelected.png");
-    m_LoadButton->addTouchEventListener(CC_CALLBACK_2(GPGameServicesUI::loadCallback, this));
-    m_LoadButton->setPosition(cocos2d::Vec2(- widgetSize.width * (3) / 10, - widgetSize.height *3/ 6));
-    m_widget->addChild(m_LoadButton);
-
-    m_LoadLabel = cocos2d::ui::Text::create("Load", "fonts/Marker Felt.ttf", 21);
-    m_LoadLabel->setPosition(m_LoadButton->getPosition() + cocos2d::Vec2(0, m_LoadButton->getContentSize().height));
-    m_widget->addChild(m_LoadLabel);
 
     //SELECT
     m_SelectButton = cocos2d::ui::Button::create("SkipNormal.png", "SkipSelected.png");
@@ -182,9 +172,6 @@ void GPGameServicesUI::receive(const GPGSManager::SignedIn&)
 void GPGameServicesUI::receive(const GPGSManager::SignedOut&)
 {
     CCLOGERROR("SIGNEDOUT EVENT RECEIVED");
-
-    m_widget->removeChild(m_LoadLabel);
-    m_widget->removeChild(m_LoadButton);
 
     m_widget->removeChild(m_SaveLabel);
     m_widget->removeChild(m_SaveButton);
@@ -216,18 +203,6 @@ void GPGameServicesUI::receive(const GPGSManager::SnapshotSaveRequested&)
     if (gpgs && gpgs->IsSignedIn() )
     {
         g_gameLogic->getPlayer().saveData(true);
-    }
-#endif
-}
-
-void GPGameServicesUI::receive(const GPGSManager::SnapshotLoaded&)
-{
-	CCLOG("Loaded");
-
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    if (gpgs && gpgs->IsSignedIn() )
-    {
-        g_gameLogic->getPlayer().loadData(true);
     }
 #endif
 }
@@ -311,7 +286,7 @@ void GPGameServicesUI::ach5Unlock(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::
 	}
 }
 
-void GPGameServicesUI::saveCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input)
+void GPGameServicesUI::autosaveCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input)
 {
 	if (input == cocos2d::ui::Widget::TouchEventType::ENDED)
 	{
@@ -321,21 +296,6 @@ void GPGameServicesUI::saveCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget
     if (gpgs && gpgs->IsSignedIn() )
         {
             g_gameLogic->getPlayer().saveData(true);
-        }
-#endif
-	}
-}
-
-void GPGameServicesUI::loadCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::TouchEventType input)
-{
-	if (input == cocos2d::ui::Widget::TouchEventType::ENDED)
-	{
-		CCLOG("Load BUTTON CLICKED");
-
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    if (gpgs && gpgs->IsSignedIn() )
-        {
-            g_gameLogic->getPlayer().loadData(true);
         }
 #endif
 	}
