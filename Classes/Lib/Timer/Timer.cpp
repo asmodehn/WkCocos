@@ -139,6 +139,11 @@ namespace WkCocos
 		
 		}
 
+		void Timer::reset()
+		{
+			entity_manager->destroy_all();
+		}
+
 	} //namespace Timer
 }//namespace WkCocos
 

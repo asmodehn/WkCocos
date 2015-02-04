@@ -129,6 +129,7 @@ namespace WkCocos
 
 			}
 
+			void reset();
 
 			///Get Current Time
 			static struct tm getDeviceLocalTime();

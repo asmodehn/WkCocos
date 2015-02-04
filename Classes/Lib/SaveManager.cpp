@@ -5,6 +5,7 @@ namespace WkCocos
 {
 	SaveManager::SaveManager()
 		: m_descCallback(nullptr)
+		, m_confirmLoading(nullptr)
 	{}
 
 	SaveManager::~SaveManager()
@@ -22,6 +23,7 @@ namespace WkCocos
 
 	void SaveManager::createBackup()
 	{
+		CCLOG("Create save backup for google play");
 		std::vector<uint8_t> snapshot;
 		int size = m_managedSave.size();
 		char* ptr = reinterpret_cast<char*>(&size);
@@ -78,7 +80,14 @@ namespace WkCocos
 
 	void SaveManager::receive(const GPGSManager::SnapshotLoaded& evt)
 	{
-		dispatchBackup(evt.mSnapData);
+		if (!m_confirmLoading)
+		{
+			dispatchBackup(evt.mSnapData);
+		}
+		else
+		{
+			m_confirmLoading(evt.mSnapData);
+		}
 	}
 
 }//namespace WkCocos

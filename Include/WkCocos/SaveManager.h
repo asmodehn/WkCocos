@@ -67,6 +67,11 @@ namespace WkCocos
 		* Set description callback
 		*/
 		inline void setDescCallback(std::function<void(SaveInfo&)> cb) { m_descCallback = cb; }
+
+		/**
+		* Set Confirm loading callback
+		*/
+		inline void setConfirmLoadCallback(std::function<void(const std::vector<uint8_t>& snapshot)> cb) { m_confirmLoading = cb; }
 		
 	private:
 		/**
@@ -78,6 +83,11 @@ namespace WkCocos
 		* Function callback to get the description
 		*/
 		std::function<void(SaveInfo&)>		m_descCallback;
+
+		/**
+		* Callback prior to reload the save
+		*/
+		std::function<void(const std::vector<uint8_t>& snapshot)>		m_confirmLoading;
 	};
 
 }//namespace WkCocos
