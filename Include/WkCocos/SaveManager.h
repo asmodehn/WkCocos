@@ -67,18 +67,8 @@ namespace WkCocos
 		* Set description callback
 		*/
 		inline void setDescCallback(std::function<void(SaveInfo&)> cb) { m_descCallback = cb; }
-
-		/**
-		* Set the save name
-		*/
-		inline void setSaveName(const std::string& name) { m_saveName = name; }
-
+		
 	private:
-		/**
-		* Name of the save
-		*/
-		std::string			m_saveName;
-
 		/**
 		* Vector of save managed
 		*/

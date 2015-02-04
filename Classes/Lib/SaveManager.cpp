@@ -42,10 +42,9 @@ namespace WkCocos
 		{
 			m_descCallback(info);
 		}
-		assert(!m_saveName.empty());
 		
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-		GPGSManager::getInstance()->saveSnapshot(m_saveName, info.m_desc, info.m_timePlayedms, info.m_icon, snapshot);
+		GPGSManager::getInstance()->saveSnapshot(info.m_desc, info.m_timePlayedms, info.m_icon, snapshot);
 #endif
 	}
 
