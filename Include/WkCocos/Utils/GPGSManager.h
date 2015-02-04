@@ -26,6 +26,7 @@ class GPGSManager
     GPGSManager()
     : event_manager(entityx::EventManager::make())
     , isSignedIn(false)
+    , currentSnapshot("")
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     , gameServices()
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32 || CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
@@ -61,8 +62,7 @@ public:
 	void incrementAchievement(const std::string & achievement_id, int step);
 	void showAchievements();
 
-    void saveSnapshot(std::string filename, std::string description, std::chrono::milliseconds playtime, std::vector<uint8_t> png_data, std::vector< uint8_t > snapData);
-    void loadSnapshot(std::string filename);
+    void saveSnapshot(std::string description, std::chrono::milliseconds playtime, std::vector<uint8_t> png_data, std::vector< uint8_t > snapData);
     void selectSnapshot(std::string title, uint32_t max_snapshots, bool allow_delete = true, bool allow_create = true);
 
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32 || CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
@@ -102,14 +102,12 @@ public:
     struct SnapshotSaved : public entityx::Event < SnapshotSaved >
     {
         bool mSuccess;
-        std::string mFileName;
         std::string mDescription;
         std::chrono::milliseconds mPlayedTime;
         std::chrono::milliseconds mModifiedTime;
 
-        SnapshotSaved(bool success, std::string filename, std::string desc, std::chrono::milliseconds playtime, std::chrono::milliseconds modtime)
+        SnapshotSaved(bool success, std::string desc, std::chrono::milliseconds playtime, std::chrono::milliseconds modtime)
         : mSuccess(success)
-        , mFileName(filename)
         , mDescription(desc)
         , mPlayedTime(playtime)
         , mModifiedTime(modtime)
@@ -124,6 +122,7 @@ public:
 private:
 
     bool isSignedIn;
+    std::string currentSnapshot;
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     void OnAuthActionStarted(gpg::AuthOperation op);

@@ -57,7 +57,7 @@ public:
 	void saveData(bool snapshot = false);
 
 	//load Data for test
-	void loadData(bool snapshot = false);
+	void loadData();
 
 
 	struct LoggedIn : public WkCocos::Event < LoggedIn >

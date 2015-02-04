@@ -83,27 +83,16 @@ void MyPlayer::saveData(bool snapshot)
     {//save to google snapshot
         std::vector<uint8_t> snapshot(datastr.begin(), datastr.end());
         std::string desc = WkCocos::ToolBox::to_string(m_gem.get<int>()) + " gems, " + WkCocos::ToolBox::to_string(m_gold.get<int>()) + " gold";
-        GPGSManager::getInstance()->saveSnapshot("wkcocos_save", desc, (std::chrono::milliseconds)(0), std::vector<uint8_t>() , snapshot);
+        GPGSManager::getInstance()->saveSnapshot(desc, (std::chrono::milliseconds)(0), std::vector<uint8_t>() , snapshot);
     }
 #endif
 }
 
 //load Data for test
-void MyPlayer::loadData(bool snapshot)
+void MyPlayer::loadData()
 {
-
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-	if (snapshot)
-    {
-        GPGSManager::getInstance()->loadSnapshot("wkcocos_save");
-        //we need to load locally in receive
-    }
-    else
-#endif
-    {
-        m_player.loadData();
-        m_save.requestLoadData();
-	}
+    m_player.loadData();
+    m_save.requestLoadData();
 }
 
 bool MyPlayer::getAllDocsPaging(int quantity, int offset)

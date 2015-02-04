@@ -21,9 +21,10 @@ const int32_t BUFFER_SIZE = 256;
 
 #endif
 
-#include "cocos2d.h"
-#include "json/rapidjson.h"
-#include "json/document.h"
+#include <ctime>
+#include <chrono>
+#include <sstream>
+#include <iomanip>
 
 GPGSManager* GPGSManager::instance = nullptr;
 
@@ -206,7 +207,7 @@ void GPGSManager::committedSnapshot(gpg::SnapshotManager::CommitResponse const &
             {
                 s->performFunctionInCocosThread([=](){
                     CCLOGERROR("EMITTING GPGSManager::SnapshotSaved");
-                    event_manager->emit<GPGSManager::SnapshotSaved>(true, response.data.FileName(), response.data.Description(), response.data.PlayedTime(), response.data.LastModifiedTime());
+                    event_manager->emit<GPGSManager::SnapshotSaved>(true, response.data.Description(), response.data.PlayedTime(), response.data.LastModifiedTime());
                 });
             }
         }
@@ -266,10 +267,22 @@ void GPGSManager::selectedSnapshot(gpg::SnapshotManager::SnapshotSelectUIRespons
 
         if ( response.data.Valid() )
         {
-            loadSnapshot(response.data.FileName());
+            currentSnapshot = response.data.FileName();
+            if (gameServices)
+            {
+                LOGI("Loading Snapshot %s",currentSnapshot.c_str());
+                gameServices->Snapshots().Open(response.data.FileName(),
+                    gpg::SnapshotConflictPolicy::LONGEST_PLAYTIME,
+                    [this](gpg::SnapshotManager::OpenResponse const & response)
+                    {
+                        LOGI("Reading file");
+                        gameServices->Snapshots().Read(response.data, std::bind(&GPGSManager::loadedSnapshot, this, std::placeholders::_1));
+                    });
+            }
         }
         else // no selected snapshot to load -> we should save a new one
         {
+            currentSnapshot.clear();
             cocos2d::Director* d = cocos2d::Director::getInstance();
             if ( d )
             {
@@ -314,31 +327,38 @@ void GPGSManager::selectedSnapshot(gpg::SnapshotManager::SnapshotSelectUIRespons
     }
 }
 
-void GPGSManager::loadSnapshot(std::string filename)
+void GPGSManager::saveSnapshot(std::string description, std::chrono::milliseconds playtime, std::vector<uint8_t> png_data, std::vector< uint8_t > snapData)
 {
     if (gameServices)
 	{
-    LOGI("Loading Snapshot");
-	    LOGI("%s",filename.c_str());
-  gameServices->Snapshots().Open(filename,
-                                gpg::SnapshotConflictPolicy::MANUAL,
-                                [this](gpg::SnapshotManager::OpenResponse const & response)
-                                {
-                                    LOGI("Reading file");
-                                    gameServices->Snapshots().Read(response.data, std::bind(&GPGSManager::loadedSnapshot, this, std::placeholders::_1));
-                                });
-	}
-}
+	    //if we do not have current snapshot we generate the filename
+	    if (currentSnapshot.empty())
+        {
 
-void GPGSManager::saveSnapshot(std::string filename, std::string description, std::chrono::milliseconds playtime, std::vector<uint8_t> png_data, std::vector< uint8_t > snapData)
-{
-    if (gameServices)
-	{
-	    LOGI("Saving Snapshot");
-	    LOGI("%s",filename.c_str());
+            std::chrono::system_clock::time_point today = std::chrono::system_clock::now();
+            std::time_t tt = std::chrono::system_clock::to_time_t ( today );
+
+            //using strftime
+            time_t rawtime;
+            struct tm * timeinfo;
+            char buffer [32];
+
+            time (&tt);
+            timeinfo = localtime (&rawtime);
+
+            strftime (buffer,32,"save_%Y%m%d%H%M%S",timeinfo);
+
+            //put_time not available in GCC < 5.0
+            //std::ostringstream snapshot_name;
+            //snapshot_name << std::put_time(ctime(&tt),"save_%Y%m%d%H%M%S");
+            currentSnapshot.assign(buffer,32);
+            LOGI("new snapshot name is: %s",currentSnapshot.c_str());
+        }
+
+	    LOGI("Saving Snapshot %s",currentSnapshot.c_str());
 	    LOGI("%s",description.c_str());
-        gameServices->Snapshots().Open(filename,
-            gpg::SnapshotConflictPolicy::MANUAL,
+        gameServices->Snapshots().Open(currentSnapshot,
+            gpg::SnapshotConflictPolicy::LONGEST_PLAYTIME,
             [this, description, playtime, png_data, snapData](gpg::SnapshotManager::OpenResponse const &response)
             {
                 gpg::SnapshotMetadata metadata;
