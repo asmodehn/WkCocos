@@ -47,7 +47,6 @@ namespace WkCocos
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
 		GPGSManager::getInstance()->saveSnapshot(m_saveName, info.m_desc, info.m_timePlayedms, info.m_icon, snapshot);
 #endif
-		dispatchBackup(snapshot);
 	}
 
 	void SaveManager::dispatchBackup(const std::vector<uint8_t>& snapshot)
