@@ -394,10 +394,17 @@ void GPGSManager::selectSnapshot(std::string title, uint32_t max_snapshots, bool
 {
     if (gameServices)
 	{
-	    LOGI("Listing Snapshot");
-	    LOGI("%s",title.c_str());
+		if(!isSignedIn)
+		{
+			BeginUserInitiatedSignIn();
+		}
+		else
+		{
+			LOGI("Listing Snapshot");
+			LOGI("%s",title.c_str());
 
-        gameServices->Snapshots().ShowSelectUIOperation( allow_create, allow_delete, max_snapshots, title, std::bind(&GPGSManager::selectedSnapshot, this, std::placeholders::_1) );
+			gameServices->Snapshots().ShowSelectUIOperation( allow_create, allow_delete, max_snapshots, title, std::bind(&GPGSManager::selectedSnapshot, this, std::placeholders::_1) );
+		}
     }
 }
 
