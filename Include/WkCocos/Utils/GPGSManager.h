@@ -79,13 +79,19 @@ public:
     struct SignedOut : public entityx::Event < SignedOut >
     {
 
-    };
+	};
 
-    struct SnapshotSaveRequested : public entityx::Event < SnapshotSaveRequested >
-    {
-        SnapshotSaveRequested()
-        {}
-    };
+	struct SnapshotSaveRequested : public entityx::Event < SnapshotSaveRequested >
+	{
+		SnapshotSaveRequested()
+		{}
+	};
+
+	struct SnapshotLoadRequested : public entityx::Event < SnapshotLoadRequested >
+	{
+		SnapshotLoadRequested()
+		{}
+	};
 
     struct SnapshotLoaded : public entityx::Event < SnapshotLoaded >
     {

@@ -270,7 +270,8 @@ void GPGSManager::selectedSnapshot(gpg::SnapshotManager::SnapshotSelectUIRespons
             currentSnapshot = response.data.FileName();
             if (gameServices)
             {
-                LOGI("Loading Snapshot %s",currentSnapshot.c_str());
+				LOGI("Loading Snapshot %s",currentSnapshot.c_str());
+				event_manager->emit<GPGSManager::SnapshotLoadRequested>();
                 gameServices->Snapshots().Open(response.data.FileName(),
                     gpg::SnapshotConflictPolicy::LONGEST_PLAYTIME,
                     [this](gpg::SnapshotManager::OpenResponse const & response)
