@@ -340,12 +340,11 @@ void GPGSManager::saveSnapshot(std::string description, std::chrono::millisecond
             std::time_t tt = std::chrono::system_clock::to_time_t ( today );
 
             //using strftime
-            time_t rawtime;
             struct tm * timeinfo;
             char buffer [32];
 
-            time (&tt);
-            timeinfo = localtime (&rawtime);
+            //LOGI("Save time is: %d", tt);
+            timeinfo = localtime (&tt);
 
             strftime (buffer,32,"save_%Y%m%d%H%M%S",timeinfo);
 
