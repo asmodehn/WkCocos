@@ -4,7 +4,7 @@
 
 #include "WkCocos/Utils/WkJniHelper.h"
 #include "WkCocos/PushNotifications/PushNotifications.h"
-
+#include <fstream>
 USING_NS_CC;
 
 AppDelegate::AppDelegate()
@@ -13,14 +13,19 @@ AppDelegate::AppDelegate()
 , m_cocosApp(nullptr)
 {
     //WARNING : On Android, XAPK files are not loaded yet here. Do not use any resource from them.
-
+    std::ofstream myFile("iamhere.txt");
+    myFile.close();
 	//initializing search paths for different platforms
 #if CC_TARGET_PLATFORM == CC_PLATFORM_WIN32
-	cocos2d::FileUtils::getInstance()->addSearchPath("Resources");
+    cocos2d::FileUtils::getInstance()->addSearchPath("Resources");
 #elif CC_TARGET_PLATFORM == CC_PLATFORM_LINUX
-	//somehow on linux the folder is not the folder where the app is run from (build/)
-	// but the folder where the exe is located (build/Tests).
-	cocos2d::FileUtils::getInstance()->addSearchPath("../Resources");
+    //somehow on linux the folder is not the folder where the app is run from (build/)
+    // but the folder where the exe is located (build/Tests).
+    cocos2d::FileUtils::getInstance()->addSearchPath("../Resources");
+#elif CC_TARGET_PLATFORM == CC_PLATFORM_MAC
+    //somehow on mac the folder is not the folder where the app is run from (build/)
+    // but the folder where the exe is located (build/Tests/Debug).
+    cocos2d::FileUtils::getInstance()->addSearchPath("../../Resources");
 #elif CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
 	//NOT NEEDED. COCOS DOES IT ALREADY.
 	//cocos2d::FileUtils::getInstance()->addSearchPath("assets");

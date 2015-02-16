@@ -23,7 +23,7 @@
  ****************************************************************************/
 
 #include "cocos/base/CCPlatformConfig.h"
-#if CC_TARGET_PLATFORM == CC_PLATFORM_LINUX
+#if CC_TARGET_PLATFORM == CC_PLATFORM_LINUX || CC_TARGET_PLATFORM == CC_PLATFORM_MAC
 
 #include "WkCocos/WebView/UIWebViewImpl-linux.h"
 

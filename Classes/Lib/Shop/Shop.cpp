@@ -41,7 +41,7 @@ namespace WkCocos
             if (assets && mi)
             {
                 std::string productID = mi->getProductId()->getCString();
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32 || CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32 || CC_TARGET_PLATFORM == CC_PLATFORM_LINUX || CC_TARGET_PLATFORM == CC_PLATFORM_MAC)
                 std::string marketPrice = "test";
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID || CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
                 std::string marketPrice = mi->getMarketPrice()->getCString();

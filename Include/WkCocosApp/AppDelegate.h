@@ -38,6 +38,12 @@ public:
     @param  the pointer of the application
     */
     virtual void applicationWillEnterForeground();
+    
+    /**
+     @brief Called whenever the renderer needs to be recreated
+     *
+     */
+    virtual void applicationRendererRecreated(cocos2d::EventCustom*) {};
 
 	/**
 	* triggered after game logic is setup

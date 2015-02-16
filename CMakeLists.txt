@@ -157,6 +157,16 @@ elseif(APPLE)
   include_directories(
   	${COCOS2D_ROOT}/external-bin/curl/include/${PLATFORM_FOLDER}
   )
+  link_directories(
+    /usr/local/lib
+    ${COCOS2D_ROOT}/external-bin/jpeg/prebuilt/${PLATFORM_FOLDER}
+    ${COCOS2D_ROOT}/external-bin/tiff/prebuilt/${PLATFORM_FOLDER}
+    ${COCOS2D_ROOT}/external-bin/webp/prebuilt/${PLATFORM_FOLDER}
+    ${COCOS2D_ROOT}/external-bin/png/prebuilt/${PLATFORM_FOLDER}
+    ${COCOS2D_ROOT}/external-bin/freetype2/prebuilt/${PLATFORM_FOLDER}
+    ${COCOS2D_ROOT}/external-bin/glfw3/prebuilt/${PLATFORM_FOLDER}
+    ${COCOS2D_ROOT}/external-bin/websockets/prebuilt/${PLATFORM_FOLDER}
+  )
 elseif(UNIX AND NOT CMAKE_TOOLCHAIN_FILE) #assumed linux
 include_directories (
     /usr/include
@@ -229,6 +239,10 @@ if(WIN32)
   endif(MSVC)
 elseif(APPLE)
 
+  ADD_DEFINITIONS(-DCC_TARGET_OS_MAC)
+  ADD_DEFINITIONS (-DUSE_FILE32API)
+  #WkAddCXXFlags(-DCC_TARGET_OS_MAC)
+  #WkAddCXXFlags (-DUSE_FILE32API)
 
 else()#Linux
 
@@ -282,7 +296,7 @@ if ( ${PROJECT_NAME} STREQUAL ${CMAKE_PROJECT_NAME} )
 	target_link_libraries(WkCocosApp
 	  Rpcrt4.lib #needed for UUID computation on Win32 only
 	)
-	elseif (UNIX)
+	elseif (LINUX)
 	target_link_libraries(WkCocosApp
 	  uuid #needed for UUID computation on Linux only
 	)

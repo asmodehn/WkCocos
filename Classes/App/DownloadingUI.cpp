@@ -8,7 +8,7 @@
 //TMP
 #include "WkCocos/Download/Systems/ProgressUpdate.h"
 
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32 || CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32 || CC_TARGET_PLATFORM == CC_PLATFORM_LINUX || CC_TARGET_PLATFORM == CC_PLATFORM_MAC)
 #include "WkPlatform_WkCocos.h"
 #endif
 
@@ -70,7 +70,7 @@ void DownloadingUI::DLCallback(cocos2d::Ref* widgetRef, cocos2d::ui::Widget::Tou
     {
         if (m_dlmgr)
         {
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32 || CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32 || CC_TARGET_PLATFORM == CC_PLATFORM_LINUX || CC_TARGET_PLATFORM == CC_PLATFORM_MAC)
 		WkCocos::Download::Version curVersion("v" + std::string(WK_WkCocos_VERSION));
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
         WkCocos::Download::Version curVersion("v" + WkCocos::Utils::WkJniHelper::getVersionName());

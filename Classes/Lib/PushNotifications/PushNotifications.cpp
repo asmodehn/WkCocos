@@ -60,7 +60,7 @@ namespace WkCocos
             j_scheduleMI.env->DeleteLocalRef(instance);
 		}
 
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32 || CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32 || CC_TARGET_PLATFORM == CC_PLATFORM_LINUX || CC_TARGET_PLATFORM == CC_PLATFORM_MAC)
 
 		//PN on Win32 (HOW TO ?)
 

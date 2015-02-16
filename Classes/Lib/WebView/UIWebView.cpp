@@ -28,7 +28,7 @@
 #include "WkCocos/WebView/UIWebViewImpl-android.h"
 #include "WkCocos/WebView/UIWebView-inl.h"
 
-#elif (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX || CC_TARGET_PLATFORM == CC_PLATFORM_MAC)
 
 #include "WkCocos/WebView/UIWebViewImpl-linux.h"
 #include "WkCocos/WebView/UIWebView-inl.h"

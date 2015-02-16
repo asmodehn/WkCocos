@@ -29,7 +29,7 @@
 
 #include "cocos/base/CCPlatformConfig.h"
 
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID || CC_TARGET_PLATFORM == CC_PLATFORM_IOS || CC_TARGET_PLATFORM == CC_PLATFORM_WIN32 || CC_TARGET_PLATFORM == CC_PLATFORM_LINUX )
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID || CC_TARGET_PLATFORM == CC_PLATFORM_IOS || CC_TARGET_PLATFORM == CC_PLATFORM_WIN32 || CC_TARGET_PLATFORM == CC_PLATFORM_LINUX || CC_TARGET_PLATFORM == CC_PLATFORM_MAC )
 
 #include "ui/UIWidget.h"
 #include "ui/GUIExport.h"
@@ -37,7 +37,8 @@
 
 NS_CC_BEGIN
 namespace experimental{
-    namespace ui{
+    namespace ui
+    {
 
 class WebViewImpl;
 
@@ -202,7 +203,7 @@ private:
 
       } // namespace ui
    } // namespace experimental
-}//namespace cocos2d
+NS_CC_END//namespace cocos2d
 
 #endif
 

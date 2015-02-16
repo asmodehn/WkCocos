@@ -1,9 +1,10 @@
 
 #include "WkCocos/Utils/Crypto.h"
 
-extern "C" {
 #include "WkCocos/Utils/libb64.h"
 #include "WkCocos/Utils/md5.h"
+
+extern "C" {
 #include "WkCocos/Utils/sha1.h"
 }
 
