@@ -17,7 +17,9 @@ void ShopEventHandler::onBillingSupported() {
 }
 
 void ShopEventHandler::onCurrencyBalanceChanged(soomla::CCVirtualCurrency *virtualCurrency, int balance, int amountAdded) {
-	soomla::CCStoreUtils::logDebug(TAG, "CurrencyBalanceChanged");
+    std::ostringstream os;
+	os << "CurrencyBalanceChanged " << virtualCurrency->getItemId()->getCString() <<" +" << amountAdded << " =>" << balance;
+    soomla::CCStoreUtils::logDebug(TAG, os.str().c_str());
 	cocos2d::Director::getInstance()->getEventDispatcher()->dispatchCustomEvent(EVENT_ON_CURRENCY_BALANCE_CHANGED, cocos2d::CCInteger::create(balance));
 	events()->emit(WkCocos::Shop::Shop::CurrencyBalanceChanged(virtualCurrency, balance, amountAdded));
 }
@@ -48,32 +50,44 @@ void ShopEventHandler::onGoodUpgrade(soomla::CCVirtualGood *virtualGood, soomla:
 }
 
 void ShopEventHandler::onItemPurchased(soomla::CCPurchasableVirtualItem *purchasableVirtualItem) {
-	soomla::CCStoreUtils::logDebug(TAG, "ItemPurchased");
+    std::ostringstream os;
+	os << "ItemPurchased " << purchasableVirtualItem->getItemId()->getCString();
+    soomla::CCStoreUtils::logDebug(TAG, os.str().c_str());
 	events()->emit(WkCocos::Shop::Shop::ItemPurchased(purchasableVirtualItem));
 }
 
 void ShopEventHandler::onItemPurchaseStarted(soomla::CCPurchasableVirtualItem *purchasableVirtualItem) {
-	soomla::CCStoreUtils::logDebug(TAG, "ItemPurchaseStarted");
+    std::ostringstream os;
+	os << "ItemPurchaseStarted " << purchasableVirtualItem->getItemId()->getCString();
+    soomla::CCStoreUtils::logDebug(TAG, os.str().c_str());
 	events()->emit(WkCocos::Shop::Shop::ItemPurchaseStarted(purchasableVirtualItem));
 }
 
 void ShopEventHandler::onMarketPurchaseCancelled(soomla::CCPurchasableVirtualItem *purchasableVirtualItem) {
-	soomla::CCStoreUtils::logDebug(TAG, "MarketPurchaseCancelled");
+    std::ostringstream os;
+	os << "MarketPurchaseCancelled " << purchasableVirtualItem->getItemId()->getCString();
+    soomla::CCStoreUtils::logDebug(TAG, os.str().c_str());
 	events()->emit(WkCocos::Shop::Shop::MarketPurchaseCancelled(purchasableVirtualItem));
 }
 
 void ShopEventHandler::onMarketPurchase(soomla::CCPurchasableVirtualItem *purchasableVirtualItem, cocos2d::__String *token, cocos2d::__String *payload) {
-	soomla::CCStoreUtils::logDebug(TAG, "MarketPurchase");
+    std::ostringstream os;
+	os << "MarketPurchase " << purchasableVirtualItem->getItemId()->getCString();
+    soomla::CCStoreUtils::logDebug(TAG, os.str().c_str());
 	events()->emit(WkCocos::Shop::Shop::MarketPurchase(purchasableVirtualItem, token, payload));
 }
 
 void ShopEventHandler::onMarketPurchaseStarted(soomla::CCPurchasableVirtualItem *purchasableVirtualItem) {
-	soomla::CCStoreUtils::logDebug(TAG, "MarketPurchaseStarted");
+    std::ostringstream os;
+	os << "MarketPurchaseStarted " << purchasableVirtualItem->getItemId()->getCString();
+    soomla::CCStoreUtils::logDebug(TAG, os.str().c_str());
 	events()->emit(WkCocos::Shop::Shop::MarketPurchaseStarted(purchasableVirtualItem));
 }
 
 void ShopEventHandler::onMarketPurchaseVerification(soomla::CCPurchasableVirtualItem *purchasableVirtualItem) {
-	soomla::CCStoreUtils::logDebug(TAG, "MarketPurchaseVerification");
+    std::ostringstream os;
+	os << "MarketPurchaseVerification " << purchasableVirtualItem->getItemId()->getCString();
+    soomla::CCStoreUtils::logDebug(TAG, os.str().c_str());
 	events()->emit(WkCocos::Shop::Shop::MarketPurchaseVerification(purchasableVirtualItem));
 }
 
