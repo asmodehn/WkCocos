@@ -47,7 +47,7 @@ namespace WkCocos
 				mCategories->retain();
 				mNonConsumableItems = cocos2d::CCArray::create();
 				mNonConsumableItems->retain();
-				
+
 			}
 
 			bool ShopAssets::addVirtualCurrency(soomla::CCVirtualCurrency * vc)
@@ -132,7 +132,8 @@ namespace WkCocos
 
 			int ShopAssets::getVersion() {
 				//increase version erase DB content.
-				return 0;
+				//need to be upgraded everytime you wish to change the shop assets ( they are kept in DB over multiple runs )
+				return 1;
 			}
 
 			cocos2d::CCArray *ShopAssets::getCurrencies() {
