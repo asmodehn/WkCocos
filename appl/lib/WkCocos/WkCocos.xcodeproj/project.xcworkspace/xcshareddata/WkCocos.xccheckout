@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>4B2D6176-CD13-4B95-8597-EF7C18C8724D</string>
+	<key>IDESourceControlProjectName</key>
+	<string>WkCocos</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>1700917ACA8DDA9B1CB46AF7CDEB090C16FB1C78</key>
+		<string>ssh://bitbucket.org/gps_df/dragonfall_game.git</string>
+		<key>852ED3691A47A99B0D19C820A500AE9772B2A44E</key>
+		<string>https://github.com/asmodehn/cocos2d-x.git</string>
+		<key>BF3C1EAB77E9354EB3F61A4936F6680425C9F8F5</key>
+		<string>git://github.com/asmodehn/WkCocos.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>appl/lib/WkCocos/WkCocos.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>1700917ACA8DDA9B1CB46AF7CDEB090C16FB1C78</key>
+		<string>../../../../../..</string>
+		<key>852ED3691A47A99B0D19C820A500AE9772B2A44E</key>
+		<string>../../../../..depends/cocos2d-x</string>
+		<key>BF3C1EAB77E9354EB3F61A4936F6680425C9F8F5</key>
+		<string>../../../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>git://github.com/asmodehn/WkCocos.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>BF3C1EAB77E9354EB3F61A4936F6680425C9F8F5</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>1700917ACA8DDA9B1CB46AF7CDEB090C16FB1C78</string>
+			<key>IDESourceControlWCCName</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>852ED3691A47A99B0D19C820A500AE9772B2A44E</string>
+			<key>IDESourceControlWCCName</key>
+			<string>cocos2d-x</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>BF3C1EAB77E9354EB3F61A4936F6680425C9F8F5</string>
+			<key>IDESourceControlWCCName</key>
+			<string>WkCocos</string>
+		</dict>
+	</array>
+</dict>
+</plist>
