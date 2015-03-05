@@ -7,6 +7,90 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F33E68EB1AA7854D0057C88C /* AdUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E68031AA7854D0057C88C /* AdUI.cpp */; };
+		F33E68EC1AA7854D0057C88C /* AppDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E68041AA7854D0057C88C /* AppDelegate.cpp */; };
+		F33E68ED1AA7854D0057C88C /* AppInterface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E68051AA7854D0057C88C /* AppInterface.cpp */; };
+		F33E68EE1AA7854D0057C88C /* DocsListUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E68071AA7854D0057C88C /* DocsListUI.cpp */; };
+		F33E68EF1AA7854D0057C88C /* DownloadingUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E68081AA7854D0057C88C /* DownloadingUI.cpp */; };
+		F33E68F01AA7854D0057C88C /* ErrorUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E68091AA7854D0057C88C /* ErrorUI.cpp */; };
+		F33E68F11AA7854D0057C88C /* GameLogic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E680A1AA7854D0057C88C /* GameLogic.cpp */; };
+		F33E68F21AA7854D0057C88C /* GameUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E680B1AA7854D0057C88C /* GameUI.cpp */; };
+		F33E68F31AA7854D0057C88C /* GPGameServicesUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E680C1AA7854D0057C88C /* GPGameServicesUI.cpp */; };
+		F33E68F41AA7854D0057C88C /* LogUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E680D1AA7854D0057C88C /* LogUI.cpp */; };
+		F33E68F51AA7854D0057C88C /* MyOptions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E680E1AA7854D0057C88C /* MyOptions.cpp */; };
+		F33E68F61AA7854D0057C88C /* MyPlayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E680F1AA7854D0057C88C /* MyPlayer.cpp */; };
+		F33E68F71AA7854D0057C88C /* PlayersListUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E68101AA7854D0057C88C /* PlayersListUI.cpp */; };
+		F33E68F81AA7854D0057C88C /* PreloadUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E68111AA7854D0057C88C /* PreloadUI.cpp */; };
+		F33E68F91AA7854D0057C88C /* SavingUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E68121AA7854D0057C88C /* SavingUI.cpp */; };
+		F33E68FA1AA7854D0057C88C /* ShopUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E68131AA7854D0057C88C /* ShopUI.cpp */; };
+		F33E68FB1AA7854D0057C88C /* TestScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E68141AA7854D0057C88C /* TestScene.cpp */; };
+		F33E68FC1AA7854D0057C88C /* TimerUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E68151AA7854D0057C88C /* TimerUI.cpp */; };
+		F33E68FD1AA7854D0057C88C /* WebUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E68161AA7854D0057C88C /* WebUI.cpp */; };
+		F33E68FE1AA7854D0057C88C /* NodeAction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E68191AA7854D0057C88C /* NodeAction.cpp */; };
+		F33E68FF1AA7854D0057C88C /* UIAction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E681A1AA7854D0057C88C /* UIAction.cpp */; };
+		F33E69001AA7854D0057C88C /* Actor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E681B1AA7854D0057C88C /* Actor.cpp */; };
+		F33E69011AA7854D0057C88C /* Download.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E681E1AA7854D0057C88C /* Download.cpp */; };
+		F33E69021AA7854D0057C88C /* CurlDL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E68201AA7854D0057C88C /* CurlDL.cpp */; };
+		F33E69031AA7854D0057C88C /* DLCchecking.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E68211AA7854D0057C88C /* DLCchecking.cpp */; };
+		F33E69041AA7854D0057C88C /* DLClisting.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E68221AA7854D0057C88C /* DLClisting.cpp */; };
+		F33E69051AA7854D0057C88C /* DLvalidating.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E68231AA7854D0057C88C /* DLvalidating.cpp */; };
+		F33E69061AA7854D0057C88C /* MD5checking.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E68241AA7854D0057C88C /* MD5checking.cpp */; };
+		F33E69071AA7854D0057C88C /* ProgressUpdate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E68251AA7854D0057C88C /* ProgressUpdate.cpp */; };
+		F33E69081AA7854D0057C88C /* Version.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E68261AA7854D0057C88C /* Version.cpp */; };
+		F33E69091AA7854D0057C88C /* GameLogic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E68281AA7854D0057C88C /* GameLogic.cpp */; };
+		F33E690A1AA7854D0057C88C /* Interface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E68291AA7854D0057C88C /* Interface.cpp */; };
+		F33E690B1AA7854D0057C88C /* LocalDataManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E682B1AA7854D0057C88C /* LocalDataManager.cpp */; };
+		F33E690C1AA7854D0057C88C /* JSONLoginID.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E682D1AA7854D0057C88C /* JSONLoginID.cpp */; };
+		F33E690D1AA7854D0057C88C /* JSONPlayerData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E682E1AA7854D0057C88C /* JSONPlayerData.cpp */; };
+		F33E690E1AA7854D0057C88C /* JSONReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E682F1AA7854D0057C88C /* JSONReader.cpp */; };
+		F33E690F1AA7854D0057C88C /* JSONWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E68301AA7854D0057C88C /* JSONWriter.cpp */; };
+		F33E69101AA7854D0057C88C /* OnlineData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E68331AA7854D0057C88C /* OnlineData.cpp */; };
+		F33E69111AA7854D0057C88C /* OnlineDataManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E68341AA7854D0057C88C /* OnlineDataManager.cpp */; };
+		F33E69121AA7854D0057C88C /* Storage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E68361AA7854D0057C88C /* Storage.cpp */; };
+		F33E69131AA7854D0057C88C /* Timer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E68371AA7854D0057C88C /* Timer.cpp */; };
+		F33E69141AA7854D0057C88C /* User.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E68381AA7854D0057C88C /* User.cpp */; };
+		F33E69151AA7854D0057C88C /* Options.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E68391AA7854D0057C88C /* Options.cpp */; };
+		F33E69161AA7854D0057C88C /* Player.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E683A1AA7854D0057C88C /* Player.cpp */; };
+		F33E69171AA7854D0057C88C /* Preload.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E683C1AA7854D0057C88C /* Preload.cpp */; };
+		F33E69181AA7854D0057C88C /* ASyncLoading.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E683E1AA7854D0057C88C /* ASyncLoading.cpp */; };
+		F33E69191AA7854D0057C88C /* DataEval.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E683F1AA7854D0057C88C /* DataEval.cpp */; };
+		F33E691A1AA7854D0057C88C /* ProgressUpdate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E68401AA7854D0057C88C /* ProgressUpdate.cpp */; };
+		F33E691B1AA7854D0057C88C /* SyncLoading.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E68411AA7854D0057C88C /* SyncLoading.cpp */; };
+		F33E691C1AA7854D0057C88C /* PushNotifications.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E68431AA7854D0057C88C /* PushNotifications.cpp */; };
+		F33E691D1AA7854D0057C88C /* Save.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E68441AA7854D0057C88C /* Save.cpp */; };
+		F33E691E1AA7854D0057C88C /* SaveManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E68451AA7854D0057C88C /* SaveManager.cpp */; };
+		F33E691F1AA7854D0057C88C /* Scene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E68461AA7854D0057C88C /* Scene.cpp */; };
+		F33E69201AA7854D0057C88C /* Assets.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E68481AA7854D0057C88C /* Assets.cpp */; };
+		F33E69211AA7854D0057C88C /* Inventory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E68491AA7854D0057C88C /* Inventory.cpp */; };
+		F33E69221AA7854D0057C88C /* Shop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E684A1AA7854D0057C88C /* Shop.cpp */; };
+		F33E69231AA7854D0057C88C /* ShopAssets.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E684C1AA7854D0057C88C /* ShopAssets.cpp */; };
+		F33E69241AA7854D0057C88C /* ShopEventHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E684D1AA7854D0057C88C /* ShopEventHandler.cpp */; };
+		F33E69251AA7854D0057C88C /* StrongBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E684F1AA7854D0057C88C /* StrongBox.cpp */; };
+		F33E69261AA7854D0057C88C /* AlarmDestructor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E68521AA7854D0057C88C /* AlarmDestructor.cpp */; };
+		F33E69271AA7854D0057C88C /* AlarmRinger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E68531AA7854D0057C88C /* AlarmRinger.cpp */; };
+		F33E69281AA7854D0057C88C /* TimeUpdater.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E68541AA7854D0057C88C /* TimeUpdater.cpp */; };
+		F33E69291AA7854D0057C88C /* Timer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E68551AA7854D0057C88C /* Timer.cpp */; };
+		F33E692A1AA7854D0057C88C /* CocosAppender.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E68571AA7854D0057C88C /* CocosAppender.cpp */; };
+		F33E692B1AA7854D0057C88C /* Crypto.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E68581AA7854D0057C88C /* Crypto.cpp */; };
+		F33E692C1AA7854D0057C88C /* GPGSManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E68591AA7854D0057C88C /* GPGSManager.cpp */; };
+		F33E692D1AA7854D0057C88C /* libb64.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E685A1AA7854D0057C88C /* libb64.cpp */; };
+		F33E692E1AA7854D0057C88C /* logappender.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E685C1AA7854D0057C88C /* logappender.cpp */; };
+		F33E692F1AA7854D0057C88C /* loglevel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E685D1AA7854D0057C88C /* loglevel.cpp */; };
+		F33E69301AA7854D0057C88C /* logstream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E685E1AA7854D0057C88C /* logstream.cpp */; };
+		F33E69311AA7854D0057C88C /* logstreambuf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E685F1AA7854D0057C88C /* logstreambuf.cpp */; };
+		F33E69321AA7854D0057C88C /* nullstream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E68601AA7854D0057C88C /* nullstream.cpp */; };
+		F33E69331AA7854D0057C88C /* nullstreambuf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E68611AA7854D0057C88C /* nullstreambuf.cpp */; };
+		F33E69341AA7854D0057C88C /* md5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E68621AA7854D0057C88C /* md5.cpp */; };
+		F33E69351AA7854D0057C88C /* sha1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E68631AA7854D0057C88C /* sha1.cpp */; };
+		F33E69361AA7854D0057C88C /* ToolBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E68641AA7854D0057C88C /* ToolBox.cpp */; };
+		F33E69371AA7854D0057C88C /* UUID.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E68651AA7854D0057C88C /* UUID.cpp */; };
+		F33E69381AA7854D0057C88C /* WkJniHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E68661AA7854D0057C88C /* WkJniHelper.cpp */; };
+		F33E693A1AA7854D0057C88C /* UIWebView.mm in Sources */ = {isa = PBXBuildFile; fileRef = F33E68691AA7854D0057C88C /* UIWebView.mm */; };
+		F33E693B1AA7854D0057C88C /* UIWebViewImpl-android.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E686A1AA7854D0057C88C /* UIWebViewImpl-android.cpp */; };
+		F33E693C1AA7854D0057C88C /* UIWebViewImpl-ios.mm in Sources */ = {isa = PBXBuildFile; fileRef = F33E686B1AA7854D0057C88C /* UIWebViewImpl-ios.mm */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		F33E693D1AA7854D0057C88C /* UIWebViewImpl-linux.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E686C1AA7854D0057C88C /* UIWebViewImpl-linux.cpp */; };
+		F33E693E1AA7854D0057C88C /* UIWebViewImpl-win32.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E686D1AA7854D0057C88C /* UIWebViewImpl-win32.cpp */; };
+		F33E693F1AA7854D0057C88C /* World.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E686E1AA7854D0057C88C /* World.cpp */; };
 		F39296021AA61573009D55C4 /* WkCocos.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = F39296011AA61573009D55C4 /* WkCocos.h */; };
 		F39296041AA61573009D55C4 /* WkCocos.m in Sources */ = {isa = PBXBuildFile; fileRef = F39296031AA61573009D55C4 /* WkCocos.m */; };
 		F392960A1AA61573009D55C4 /* libWkCocos.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F39295FE1AA61573009D55C4 /* libWkCocos.a */; };
@@ -190,6 +274,186 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		F33E68031AA7854D0057C88C /* AdUI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AdUI.cpp; sourceTree = "<group>"; };
+		F33E68041AA7854D0057C88C /* AppDelegate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AppDelegate.cpp; sourceTree = "<group>"; };
+		F33E68051AA7854D0057C88C /* AppInterface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AppInterface.cpp; sourceTree = "<group>"; };
+		F33E68061AA7854D0057C88C /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
+		F33E68071AA7854D0057C88C /* DocsListUI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DocsListUI.cpp; sourceTree = "<group>"; };
+		F33E68081AA7854D0057C88C /* DownloadingUI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DownloadingUI.cpp; sourceTree = "<group>"; };
+		F33E68091AA7854D0057C88C /* ErrorUI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ErrorUI.cpp; sourceTree = "<group>"; };
+		F33E680A1AA7854D0057C88C /* GameLogic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameLogic.cpp; sourceTree = "<group>"; };
+		F33E680B1AA7854D0057C88C /* GameUI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameUI.cpp; sourceTree = "<group>"; };
+		F33E680C1AA7854D0057C88C /* GPGameServicesUI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GPGameServicesUI.cpp; sourceTree = "<group>"; };
+		F33E680D1AA7854D0057C88C /* LogUI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LogUI.cpp; sourceTree = "<group>"; };
+		F33E680E1AA7854D0057C88C /* MyOptions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MyOptions.cpp; sourceTree = "<group>"; };
+		F33E680F1AA7854D0057C88C /* MyPlayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MyPlayer.cpp; sourceTree = "<group>"; };
+		F33E68101AA7854D0057C88C /* PlayersListUI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PlayersListUI.cpp; sourceTree = "<group>"; };
+		F33E68111AA7854D0057C88C /* PreloadUI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PreloadUI.cpp; sourceTree = "<group>"; };
+		F33E68121AA7854D0057C88C /* SavingUI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SavingUI.cpp; sourceTree = "<group>"; };
+		F33E68131AA7854D0057C88C /* ShopUI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ShopUI.cpp; sourceTree = "<group>"; };
+		F33E68141AA7854D0057C88C /* TestScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TestScene.cpp; sourceTree = "<group>"; };
+		F33E68151AA7854D0057C88C /* TimerUI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TimerUI.cpp; sourceTree = "<group>"; };
+		F33E68161AA7854D0057C88C /* WebUI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WebUI.cpp; sourceTree = "<group>"; };
+		F33E68191AA7854D0057C88C /* NodeAction.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NodeAction.cpp; sourceTree = "<group>"; };
+		F33E681A1AA7854D0057C88C /* UIAction.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UIAction.cpp; sourceTree = "<group>"; };
+		F33E681B1AA7854D0057C88C /* Actor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Actor.cpp; sourceTree = "<group>"; };
+		F33E681C1AA7854D0057C88C /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
+		F33E681E1AA7854D0057C88C /* Download.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Download.cpp; sourceTree = "<group>"; };
+		F33E68201AA7854D0057C88C /* CurlDL.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CurlDL.cpp; sourceTree = "<group>"; };
+		F33E68211AA7854D0057C88C /* DLCchecking.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DLCchecking.cpp; sourceTree = "<group>"; };
+		F33E68221AA7854D0057C88C /* DLClisting.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DLClisting.cpp; sourceTree = "<group>"; };
+		F33E68231AA7854D0057C88C /* DLvalidating.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DLvalidating.cpp; sourceTree = "<group>"; };
+		F33E68241AA7854D0057C88C /* MD5checking.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MD5checking.cpp; sourceTree = "<group>"; };
+		F33E68251AA7854D0057C88C /* ProgressUpdate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ProgressUpdate.cpp; sourceTree = "<group>"; };
+		F33E68261AA7854D0057C88C /* Version.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Version.cpp; sourceTree = "<group>"; };
+		F33E68281AA7854D0057C88C /* GameLogic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameLogic.cpp; sourceTree = "<group>"; };
+		F33E68291AA7854D0057C88C /* Interface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Interface.cpp; sourceTree = "<group>"; };
+		F33E682B1AA7854D0057C88C /* LocalDataManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LocalDataManager.cpp; sourceTree = "<group>"; };
+		F33E682D1AA7854D0057C88C /* JSONLoginID.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = JSONLoginID.cpp; sourceTree = "<group>"; };
+		F33E682E1AA7854D0057C88C /* JSONPlayerData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = JSONPlayerData.cpp; sourceTree = "<group>"; };
+		F33E682F1AA7854D0057C88C /* JSONReader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = JSONReader.cpp; sourceTree = "<group>"; };
+		F33E68301AA7854D0057C88C /* JSONWriter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = JSONWriter.cpp; sourceTree = "<group>"; };
+		F33E68331AA7854D0057C88C /* OnlineData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OnlineData.cpp; sourceTree = "<group>"; };
+		F33E68341AA7854D0057C88C /* OnlineDataManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OnlineDataManager.cpp; sourceTree = "<group>"; };
+		F33E68361AA7854D0057C88C /* Storage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Storage.cpp; sourceTree = "<group>"; };
+		F33E68371AA7854D0057C88C /* Timer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Timer.cpp; sourceTree = "<group>"; };
+		F33E68381AA7854D0057C88C /* User.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = User.cpp; sourceTree = "<group>"; };
+		F33E68391AA7854D0057C88C /* Options.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Options.cpp; sourceTree = "<group>"; };
+		F33E683A1AA7854D0057C88C /* Player.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Player.cpp; sourceTree = "<group>"; };
+		F33E683C1AA7854D0057C88C /* Preload.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Preload.cpp; sourceTree = "<group>"; };
+		F33E683E1AA7854D0057C88C /* ASyncLoading.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ASyncLoading.cpp; sourceTree = "<group>"; };
+		F33E683F1AA7854D0057C88C /* DataEval.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DataEval.cpp; sourceTree = "<group>"; };
+		F33E68401AA7854D0057C88C /* ProgressUpdate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ProgressUpdate.cpp; sourceTree = "<group>"; };
+		F33E68411AA7854D0057C88C /* SyncLoading.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SyncLoading.cpp; sourceTree = "<group>"; };
+		F33E68431AA7854D0057C88C /* PushNotifications.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PushNotifications.cpp; sourceTree = "<group>"; };
+		F33E68441AA7854D0057C88C /* Save.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Save.cpp; sourceTree = "<group>"; };
+		F33E68451AA7854D0057C88C /* SaveManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SaveManager.cpp; sourceTree = "<group>"; };
+		F33E68461AA7854D0057C88C /* Scene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Scene.cpp; sourceTree = "<group>"; };
+		F33E68481AA7854D0057C88C /* Assets.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Assets.cpp; sourceTree = "<group>"; };
+		F33E68491AA7854D0057C88C /* Inventory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Inventory.cpp; sourceTree = "<group>"; };
+		F33E684A1AA7854D0057C88C /* Shop.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Shop.cpp; sourceTree = "<group>"; };
+		F33E684C1AA7854D0057C88C /* ShopAssets.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ShopAssets.cpp; sourceTree = "<group>"; };
+		F33E684D1AA7854D0057C88C /* ShopEventHandler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ShopEventHandler.cpp; sourceTree = "<group>"; };
+		F33E684F1AA7854D0057C88C /* StrongBox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = StrongBox.cpp; sourceTree = "<group>"; };
+		F33E68521AA7854D0057C88C /* AlarmDestructor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AlarmDestructor.cpp; sourceTree = "<group>"; };
+		F33E68531AA7854D0057C88C /* AlarmRinger.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AlarmRinger.cpp; sourceTree = "<group>"; };
+		F33E68541AA7854D0057C88C /* TimeUpdater.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TimeUpdater.cpp; sourceTree = "<group>"; };
+		F33E68551AA7854D0057C88C /* Timer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Timer.cpp; sourceTree = "<group>"; };
+		F33E68571AA7854D0057C88C /* CocosAppender.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CocosAppender.cpp; sourceTree = "<group>"; };
+		F33E68581AA7854D0057C88C /* Crypto.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Crypto.cpp; sourceTree = "<group>"; };
+		F33E68591AA7854D0057C88C /* GPGSManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GPGSManager.cpp; sourceTree = "<group>"; };
+		F33E685A1AA7854D0057C88C /* libb64.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = libb64.cpp; sourceTree = "<group>"; };
+		F33E685C1AA7854D0057C88C /* logappender.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = logappender.cpp; sourceTree = "<group>"; };
+		F33E685D1AA7854D0057C88C /* loglevel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = loglevel.cpp; sourceTree = "<group>"; };
+		F33E685E1AA7854D0057C88C /* logstream.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = logstream.cpp; sourceTree = "<group>"; };
+		F33E685F1AA7854D0057C88C /* logstreambuf.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = logstreambuf.cpp; sourceTree = "<group>"; };
+		F33E68601AA7854D0057C88C /* nullstream.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nullstream.cpp; sourceTree = "<group>"; };
+		F33E68611AA7854D0057C88C /* nullstreambuf.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nullstreambuf.cpp; sourceTree = "<group>"; };
+		F33E68621AA7854D0057C88C /* md5.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = md5.cpp; sourceTree = "<group>"; };
+		F33E68631AA7854D0057C88C /* sha1.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sha1.cpp; sourceTree = "<group>"; };
+		F33E68641AA7854D0057C88C /* ToolBox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ToolBox.cpp; sourceTree = "<group>"; };
+		F33E68651AA7854D0057C88C /* UUID.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UUID.cpp; sourceTree = "<group>"; };
+		F33E68661AA7854D0057C88C /* WkJniHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WkJniHelper.cpp; sourceTree = "<group>"; };
+		F33E68681AA7854D0057C88C /* UIWebView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UIWebView.cpp; sourceTree = "<group>"; };
+		F33E68691AA7854D0057C88C /* UIWebView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = UIWebView.mm; sourceTree = "<group>"; };
+		F33E686A1AA7854D0057C88C /* UIWebViewImpl-android.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "UIWebViewImpl-android.cpp"; sourceTree = "<group>"; };
+		F33E686B1AA7854D0057C88C /* UIWebViewImpl-ios.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "UIWebViewImpl-ios.mm"; sourceTree = "<group>"; };
+		F33E686C1AA7854D0057C88C /* UIWebViewImpl-linux.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "UIWebViewImpl-linux.cpp"; sourceTree = "<group>"; };
+		F33E686D1AA7854D0057C88C /* UIWebViewImpl-win32.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "UIWebViewImpl-win32.cpp"; sourceTree = "<group>"; };
+		F33E686E1AA7854D0057C88C /* World.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = World.cpp; sourceTree = "<group>"; };
+		F33E68701AA7854D0057C88C /* NodeAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NodeAction.h; sourceTree = "<group>"; };
+		F33E68711AA7854D0057C88C /* UIAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIAction.h; sourceTree = "<group>"; };
+		F33E68721AA7854D0057C88C /* Actor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Actor.h; path = ../../../../Include/WkCocos/Actor.h; sourceTree = "<group>"; };
+		F33E68741AA7854D0057C88C /* Readme.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Readme.txt; sourceTree = "<group>"; };
+		F33E68771AA7854D0057C88C /* CurlDL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CurlDL.h; sourceTree = "<group>"; };
+		F33E68781AA7854D0057C88C /* DataLoad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataLoad.h; sourceTree = "<group>"; };
+		F33E68791AA7854D0057C88C /* FileMD5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileMD5.h; sourceTree = "<group>"; };
+		F33E687A1AA7854D0057C88C /* LoadFunc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadFunc.h; sourceTree = "<group>"; };
+		F33E687B1AA7854D0057C88C /* ProgressValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProgressValue.h; sourceTree = "<group>"; };
+		F33E687C1AA7854D0057C88C /* Download.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Download.h; sourceTree = "<group>"; };
+		F33E687E1AA7854D0057C88C /* DownloadAdvised.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadAdvised.h; sourceTree = "<group>"; };
+		F33E687F1AA7854D0057C88C /* Downloaded.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Downloaded.h; sourceTree = "<group>"; };
+		F33E68801AA7854D0057C88C /* DownloadOptions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadOptions.h; sourceTree = "<group>"; };
+		F33E68811AA7854D0057C88C /* Error.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Error.h; sourceTree = "<group>"; };
+		F33E68831AA7854D0057C88C /* CurlDL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CurlDL.h; sourceTree = "<group>"; };
+		F33E68841AA7854D0057C88C /* DLCchecking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DLCchecking.h; sourceTree = "<group>"; };
+		F33E68851AA7854D0057C88C /* DLClisting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DLClisting.h; sourceTree = "<group>"; };
+		F33E68861AA7854D0057C88C /* DLvalidating.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DLvalidating.h; sourceTree = "<group>"; };
+		F33E68871AA7854D0057C88C /* MD5checking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MD5checking.h; sourceTree = "<group>"; };
+		F33E68881AA7854D0057C88C /* ProgressUpdate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProgressUpdate.h; sourceTree = "<group>"; };
+		F33E68891AA7854D0057C88C /* Version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Version.h; sourceTree = "<group>"; };
+		F33E688B1AA7854D0057C88C /* GameLogic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameLogic.h; sourceTree = "<group>"; };
+		F33E688C1AA7854D0057C88C /* Readme.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Readme.txt; sourceTree = "<group>"; };
+		F33E688D1AA7854D0057C88C /* Interface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Interface.h; path = ../../../../Include/WkCocos/Interface.h; sourceTree = "<group>"; };
+		F33E688F1AA7854D0057C88C /* Config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Config.h; sourceTree = "<group>"; };
+		F33E68921AA7854D0057C88C /* LocalData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalData.h; sourceTree = "<group>"; };
+		F33E68941AA7854D0057C88C /* Error.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Error.h; sourceTree = "<group>"; };
+		F33E68951AA7854D0057C88C /* LocalDataManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalDataManager.h; sourceTree = "<group>"; };
+		F33E68971AA7854D0057C88C /* JSONLoginID.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONLoginID.h; sourceTree = "<group>"; };
+		F33E68981AA7854D0057C88C /* JSONPlayerData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONPlayerData.h; sourceTree = "<group>"; };
+		F33E68991AA7854D0057C88C /* JSONReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONReader.h; sourceTree = "<group>"; };
+		F33E689A1AA7854D0057C88C /* JSONWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONWriter.h; sourceTree = "<group>"; };
+		F33E689D1AA7854D0057C88C /* OnlineData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OnlineData.h; sourceTree = "<group>"; };
+		F33E689F1AA7854D0057C88C /* DocsList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DocsList.h; sourceTree = "<group>"; };
+		F33E68A01AA7854D0057C88C /* Error.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Error.h; sourceTree = "<group>"; };
+		F33E68A11AA7854D0057C88C /* PlayersList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayersList.h; sourceTree = "<group>"; };
+		F33E68A21AA7854D0057C88C /* OnlineDataManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OnlineDataManager.h; sourceTree = "<group>"; };
+		F33E68A41AA7854D0057C88C /* Storage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Storage.h; sourceTree = "<group>"; };
+		F33E68A51AA7854D0057C88C /* Timer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Timer.h; sourceTree = "<group>"; };
+		F33E68A61AA7854D0057C88C /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = "<group>"; };
+		F33E68A71AA7854D0057C88C /* Options.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Options.h; path = ../../../../Include/WkCocos/Options.h; sourceTree = "<group>"; };
+		F33E68A81AA7854D0057C88C /* Player.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Player.h; path = ../../../../Include/WkCocos/Player.h; sourceTree = "<group>"; };
+		F33E68AB1AA7854D0057C88C /* DataLoad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataLoad.h; sourceTree = "<group>"; };
+		F33E68AC1AA7854D0057C88C /* LoadFunc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadFunc.h; sourceTree = "<group>"; };
+		F33E68AD1AA7854D0057C88C /* ProgressValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProgressValue.h; sourceTree = "<group>"; };
+		F33E68AF1AA7854D0057C88C /* Error.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Error.h; sourceTree = "<group>"; };
+		F33E68B01AA7854D0057C88C /* Loaded.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Loaded.h; sourceTree = "<group>"; };
+		F33E68B11AA7854D0057C88C /* Preload.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Preload.h; sourceTree = "<group>"; };
+		F33E68B31AA7854D0057C88C /* ASyncLoading.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASyncLoading.h; sourceTree = "<group>"; };
+		F33E68B41AA7854D0057C88C /* DataEval.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataEval.h; sourceTree = "<group>"; };
+		F33E68B51AA7854D0057C88C /* ProgressUpdate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProgressUpdate.h; sourceTree = "<group>"; };
+		F33E68B61AA7854D0057C88C /* SyncLoading.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyncLoading.h; sourceTree = "<group>"; };
+		F33E68B81AA7854D0057C88C /* PushNotifications.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PushNotifications.h; sourceTree = "<group>"; };
+		F33E68B91AA7854D0057C88C /* Save.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Save.h; path = ../../../../Include/WkCocos/Save.h; sourceTree = "<group>"; };
+		F33E68BA1AA7854D0057C88C /* SaveManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SaveManager.h; path = ../../../../Include/WkCocos/SaveManager.h; sourceTree = "<group>"; };
+		F33E68BB1AA7854D0057C88C /* Scene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Scene.h; path = ../../../../Include/WkCocos/Scene.h; sourceTree = "<group>"; };
+		F33E68BD1AA7854D0057C88C /* Assets.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Assets.h; sourceTree = "<group>"; };
+		F33E68BE1AA7854D0057C88C /* Inventory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Inventory.h; sourceTree = "<group>"; };
+		F33E68BF1AA7854D0057C88C /* Shop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Shop.h; sourceTree = "<group>"; };
+		F33E68C11AA7854D0057C88C /* ShopAssets.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShopAssets.h; sourceTree = "<group>"; };
+		F33E68C21AA7854D0057C88C /* ShopEventHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShopEventHandler.h; sourceTree = "<group>"; };
+		F33E68C41AA7854D0057C88C /* StrongBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StrongBox.h; sourceTree = "<group>"; };
+		F33E68C71AA7854D0057C88C /* TimeValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimeValue.h; sourceTree = "<group>"; };
+		F33E68C91AA7854D0057C88C /* AlarmOff.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlarmOff.h; sourceTree = "<group>"; };
+		F33E68CA1AA7854D0057C88C /* TimerInit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimerInit.h; sourceTree = "<group>"; };
+		F33E68CB1AA7854D0057C88C /* TimerUpdate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimerUpdate.h; sourceTree = "<group>"; };
+		F33E68CD1AA7854D0057C88C /* AlarmDestructor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlarmDestructor.h; sourceTree = "<group>"; };
+		F33E68CE1AA7854D0057C88C /* AlarmRinger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlarmRinger.h; sourceTree = "<group>"; };
+		F33E68CF1AA7854D0057C88C /* TimeUpdater.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimeUpdater.h; sourceTree = "<group>"; };
+		F33E68D01AA7854D0057C88C /* Timer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Timer.h; sourceTree = "<group>"; };
+		F33E68D21AA7854D0057C88C /* CocosAppender.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocosAppender.h; sourceTree = "<group>"; };
+		F33E68D31AA7854D0057C88C /* Crypto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Crypto.h; sourceTree = "<group>"; };
+		F33E68D41AA7854D0057C88C /* GPGSManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPGSManager.h; sourceTree = "<group>"; };
+		F33E68D51AA7854D0057C88C /* libb64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = libb64.h; sourceTree = "<group>"; };
+		F33E68D71AA7854D0057C88C /* logappender.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = logappender.h; sourceTree = "<group>"; };
+		F33E68D81AA7854D0057C88C /* loglevel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = loglevel.h; sourceTree = "<group>"; };
+		F33E68D91AA7854D0057C88C /* logstream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = logstream.h; sourceTree = "<group>"; };
+		F33E68DA1AA7854D0057C88C /* logstreambuf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = logstreambuf.h; sourceTree = "<group>"; };
+		F33E68DB1AA7854D0057C88C /* nullstream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nullstream.h; sourceTree = "<group>"; };
+		F33E68DC1AA7854D0057C88C /* nullstreambuf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nullstreambuf.h; sourceTree = "<group>"; };
+		F33E68DD1AA7854D0057C88C /* md5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = md5.h; sourceTree = "<group>"; };
+		F33E68DE1AA7854D0057C88C /* sha1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sha1.h; sourceTree = "<group>"; };
+		F33E68DF1AA7854D0057C88C /* ToolBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToolBox.h; sourceTree = "<group>"; };
+		F33E68E01AA7854D0057C88C /* UUID.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UUID.h; sourceTree = "<group>"; };
+		F33E68E11AA7854D0057C88C /* WkJniHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WkJniHelper.h; sourceTree = "<group>"; };
+		F33E68E31AA7854D0057C88C /* UIWebView-inl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIWebView-inl.h"; sourceTree = "<group>"; };
+		F33E68E41AA7854D0057C88C /* UIWebView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIWebView.h; sourceTree = "<group>"; };
+		F33E68E51AA7854D0057C88C /* UIWebViewImpl-android.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIWebViewImpl-android.h"; sourceTree = "<group>"; };
+		F33E68E61AA7854D0057C88C /* UIWebViewImpl-ios.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIWebViewImpl-ios.h"; sourceTree = "<group>"; };
+		F33E68E71AA7854D0057C88C /* UIWebViewImpl-linux.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIWebViewImpl-linux.h"; sourceTree = "<group>"; };
+		F33E68E81AA7854D0057C88C /* UIWebViewImpl-win32.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIWebViewImpl-win32.h"; sourceTree = "<group>"; };
+		F33E68E91AA7854D0057C88C /* WkCocos.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WkCocos.h; path = ../../../../Include/WkCocos/WkCocos.h; sourceTree = "<group>"; };
+		F33E68EA1AA7854D0057C88C /* World.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = World.h; path = ../../../../Include/WkCocos/World.h; sourceTree = "<group>"; };
 		F39295FE1AA61573009D55C4 /* libWkCocos.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libWkCocos.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		F39296011AA61573009D55C4 /* WkCocos.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WkCocos.h; sourceTree = "<group>"; };
 		F39296031AA61573009D55C4 /* WkCocos.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WkCocos.m; sourceTree = "<group>"; };
@@ -244,6 +508,601 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		F33E68021AA7854D0057C88C /* App */ = {
+			isa = PBXGroup;
+			children = (
+				F33E68031AA7854D0057C88C /* AdUI.cpp */,
+				F33E68041AA7854D0057C88C /* AppDelegate.cpp */,
+				F33E68051AA7854D0057C88C /* AppInterface.cpp */,
+				F33E68061AA7854D0057C88C /* CMakeLists.txt */,
+				F33E68071AA7854D0057C88C /* DocsListUI.cpp */,
+				F33E68081AA7854D0057C88C /* DownloadingUI.cpp */,
+				F33E68091AA7854D0057C88C /* ErrorUI.cpp */,
+				F33E680A1AA7854D0057C88C /* GameLogic.cpp */,
+				F33E680B1AA7854D0057C88C /* GameUI.cpp */,
+				F33E680C1AA7854D0057C88C /* GPGameServicesUI.cpp */,
+				F33E680D1AA7854D0057C88C /* LogUI.cpp */,
+				F33E680E1AA7854D0057C88C /* MyOptions.cpp */,
+				F33E680F1AA7854D0057C88C /* MyPlayer.cpp */,
+				F33E68101AA7854D0057C88C /* PlayersListUI.cpp */,
+				F33E68111AA7854D0057C88C /* PreloadUI.cpp */,
+				F33E68121AA7854D0057C88C /* SavingUI.cpp */,
+				F33E68131AA7854D0057C88C /* ShopUI.cpp */,
+				F33E68141AA7854D0057C88C /* TestScene.cpp */,
+				F33E68151AA7854D0057C88C /* TimerUI.cpp */,
+				F33E68161AA7854D0057C88C /* WebUI.cpp */,
+			);
+			name = App;
+			path = ../../../../Classes/App;
+			sourceTree = "<group>";
+		};
+		F33E68171AA7854D0057C88C /* Lib */ = {
+			isa = PBXGroup;
+			children = (
+				F33E68181AA7854D0057C88C /* Action */,
+				F33E681B1AA7854D0057C88C /* Actor.cpp */,
+				F33E681C1AA7854D0057C88C /* CMakeLists.txt */,
+				F33E681D1AA7854D0057C88C /* Download */,
+				F33E68271AA7854D0057C88C /* Helper */,
+				F33E68291AA7854D0057C88C /* Interface.cpp */,
+				F33E682A1AA7854D0057C88C /* LocalData */,
+				F33E68311AA7854D0057C88C /* OnlineData */,
+				F33E68391AA7854D0057C88C /* Options.cpp */,
+				F33E683A1AA7854D0057C88C /* Player.cpp */,
+				F33E683B1AA7854D0057C88C /* Preload */,
+				F33E68421AA7854D0057C88C /* PushNotifications */,
+				F33E68441AA7854D0057C88C /* Save.cpp */,
+				F33E68451AA7854D0057C88C /* SaveManager.cpp */,
+				F33E68461AA7854D0057C88C /* Scene.cpp */,
+				F33E68471AA7854D0057C88C /* Shop */,
+				F33E684E1AA7854D0057C88C /* StrongBox */,
+				F33E68501AA7854D0057C88C /* Timer */,
+				F33E68561AA7854D0057C88C /* Utils */,
+				F33E68671AA7854D0057C88C /* WebView */,
+				F33E686E1AA7854D0057C88C /* World.cpp */,
+			);
+			name = Lib;
+			path = ../../../../Classes/Lib;
+			sourceTree = "<group>";
+		};
+		F33E68181AA7854D0057C88C /* Action */ = {
+			isa = PBXGroup;
+			children = (
+				F33E68191AA7854D0057C88C /* NodeAction.cpp */,
+				F33E681A1AA7854D0057C88C /* UIAction.cpp */,
+			);
+			path = Action;
+			sourceTree = "<group>";
+		};
+		F33E681D1AA7854D0057C88C /* Download */ = {
+			isa = PBXGroup;
+			children = (
+				F33E681E1AA7854D0057C88C /* Download.cpp */,
+				F33E681F1AA7854D0057C88C /* Systems */,
+				F33E68261AA7854D0057C88C /* Version.cpp */,
+			);
+			path = Download;
+			sourceTree = "<group>";
+		};
+		F33E681F1AA7854D0057C88C /* Systems */ = {
+			isa = PBXGroup;
+			children = (
+				F33E68201AA7854D0057C88C /* CurlDL.cpp */,
+				F33E68211AA7854D0057C88C /* DLCchecking.cpp */,
+				F33E68221AA7854D0057C88C /* DLClisting.cpp */,
+				F33E68231AA7854D0057C88C /* DLvalidating.cpp */,
+				F33E68241AA7854D0057C88C /* MD5checking.cpp */,
+				F33E68251AA7854D0057C88C /* ProgressUpdate.cpp */,
+			);
+			path = Systems;
+			sourceTree = "<group>";
+		};
+		F33E68271AA7854D0057C88C /* Helper */ = {
+			isa = PBXGroup;
+			children = (
+				F33E68281AA7854D0057C88C /* GameLogic.cpp */,
+			);
+			path = Helper;
+			sourceTree = "<group>";
+		};
+		F33E682A1AA7854D0057C88C /* LocalData */ = {
+			isa = PBXGroup;
+			children = (
+				F33E682B1AA7854D0057C88C /* LocalDataManager.cpp */,
+				F33E682C1AA7854D0057C88C /* Systems */,
+			);
+			path = LocalData;
+			sourceTree = "<group>";
+		};
+		F33E682C1AA7854D0057C88C /* Systems */ = {
+			isa = PBXGroup;
+			children = (
+				F33E682D1AA7854D0057C88C /* JSONLoginID.cpp */,
+				F33E682E1AA7854D0057C88C /* JSONPlayerData.cpp */,
+				F33E682F1AA7854D0057C88C /* JSONReader.cpp */,
+				F33E68301AA7854D0057C88C /* JSONWriter.cpp */,
+			);
+			path = Systems;
+			sourceTree = "<group>";
+		};
+		F33E68311AA7854D0057C88C /* OnlineData */ = {
+			isa = PBXGroup;
+			children = (
+				F33E68321AA7854D0057C88C /* Comp */,
+				F33E68341AA7854D0057C88C /* OnlineDataManager.cpp */,
+				F33E68351AA7854D0057C88C /* Systems */,
+			);
+			path = OnlineData;
+			sourceTree = "<group>";
+		};
+		F33E68321AA7854D0057C88C /* Comp */ = {
+			isa = PBXGroup;
+			children = (
+				F33E68331AA7854D0057C88C /* OnlineData.cpp */,
+			);
+			path = Comp;
+			sourceTree = "<group>";
+		};
+		F33E68351AA7854D0057C88C /* Systems */ = {
+			isa = PBXGroup;
+			children = (
+				F33E68361AA7854D0057C88C /* Storage.cpp */,
+				F33E68371AA7854D0057C88C /* Timer.cpp */,
+				F33E68381AA7854D0057C88C /* User.cpp */,
+			);
+			path = Systems;
+			sourceTree = "<group>";
+		};
+		F33E683B1AA7854D0057C88C /* Preload */ = {
+			isa = PBXGroup;
+			children = (
+				F33E683C1AA7854D0057C88C /* Preload.cpp */,
+				F33E683D1AA7854D0057C88C /* Systems */,
+			);
+			path = Preload;
+			sourceTree = "<group>";
+		};
+		F33E683D1AA7854D0057C88C /* Systems */ = {
+			isa = PBXGroup;
+			children = (
+				F33E683E1AA7854D0057C88C /* ASyncLoading.cpp */,
+				F33E683F1AA7854D0057C88C /* DataEval.cpp */,
+				F33E68401AA7854D0057C88C /* ProgressUpdate.cpp */,
+				F33E68411AA7854D0057C88C /* SyncLoading.cpp */,
+			);
+			path = Systems;
+			sourceTree = "<group>";
+		};
+		F33E68421AA7854D0057C88C /* PushNotifications */ = {
+			isa = PBXGroup;
+			children = (
+				F33E68431AA7854D0057C88C /* PushNotifications.cpp */,
+			);
+			path = PushNotifications;
+			sourceTree = "<group>";
+		};
+		F33E68471AA7854D0057C88C /* Shop */ = {
+			isa = PBXGroup;
+			children = (
+				F33E68481AA7854D0057C88C /* Assets.cpp */,
+				F33E68491AA7854D0057C88C /* Inventory.cpp */,
+				F33E684A1AA7854D0057C88C /* Shop.cpp */,
+				F33E684B1AA7854D0057C88C /* SOOMLA */,
+			);
+			path = Shop;
+			sourceTree = "<group>";
+		};
+		F33E684B1AA7854D0057C88C /* SOOMLA */ = {
+			isa = PBXGroup;
+			children = (
+				F33E684C1AA7854D0057C88C /* ShopAssets.cpp */,
+				F33E684D1AA7854D0057C88C /* ShopEventHandler.cpp */,
+			);
+			path = SOOMLA;
+			sourceTree = "<group>";
+		};
+		F33E684E1AA7854D0057C88C /* StrongBox */ = {
+			isa = PBXGroup;
+			children = (
+				F33E684F1AA7854D0057C88C /* StrongBox.cpp */,
+			);
+			path = StrongBox;
+			sourceTree = "<group>";
+		};
+		F33E68501AA7854D0057C88C /* Timer */ = {
+			isa = PBXGroup;
+			children = (
+				F33E68511AA7854D0057C88C /* Systems */,
+				F33E68551AA7854D0057C88C /* Timer.cpp */,
+			);
+			path = Timer;
+			sourceTree = "<group>";
+		};
+		F33E68511AA7854D0057C88C /* Systems */ = {
+			isa = PBXGroup;
+			children = (
+				F33E68521AA7854D0057C88C /* AlarmDestructor.cpp */,
+				F33E68531AA7854D0057C88C /* AlarmRinger.cpp */,
+				F33E68541AA7854D0057C88C /* TimeUpdater.cpp */,
+			);
+			path = Systems;
+			sourceTree = "<group>";
+		};
+		F33E68561AA7854D0057C88C /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				F33E68571AA7854D0057C88C /* CocosAppender.cpp */,
+				F33E68581AA7854D0057C88C /* Crypto.cpp */,
+				F33E68591AA7854D0057C88C /* GPGSManager.cpp */,
+				F33E685A1AA7854D0057C88C /* libb64.cpp */,
+				F33E685B1AA7854D0057C88C /* log */,
+				F33E68621AA7854D0057C88C /* md5.cpp */,
+				F33E68631AA7854D0057C88C /* sha1.cpp */,
+				F33E68641AA7854D0057C88C /* ToolBox.cpp */,
+				F33E68651AA7854D0057C88C /* UUID.cpp */,
+				F33E68661AA7854D0057C88C /* WkJniHelper.cpp */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		F33E685B1AA7854D0057C88C /* log */ = {
+			isa = PBXGroup;
+			children = (
+				F33E685C1AA7854D0057C88C /* logappender.cpp */,
+				F33E685D1AA7854D0057C88C /* loglevel.cpp */,
+				F33E685E1AA7854D0057C88C /* logstream.cpp */,
+				F33E685F1AA7854D0057C88C /* logstreambuf.cpp */,
+				F33E68601AA7854D0057C88C /* nullstream.cpp */,
+				F33E68611AA7854D0057C88C /* nullstreambuf.cpp */,
+			);
+			path = log;
+			sourceTree = "<group>";
+		};
+		F33E68671AA7854D0057C88C /* WebView */ = {
+			isa = PBXGroup;
+			children = (
+				F33E68681AA7854D0057C88C /* UIWebView.cpp */,
+				F33E68691AA7854D0057C88C /* UIWebView.mm */,
+				F33E686A1AA7854D0057C88C /* UIWebViewImpl-android.cpp */,
+				F33E686B1AA7854D0057C88C /* UIWebViewImpl-ios.mm */,
+				F33E686C1AA7854D0057C88C /* UIWebViewImpl-linux.cpp */,
+				F33E686D1AA7854D0057C88C /* UIWebViewImpl-win32.cpp */,
+			);
+			path = WebView;
+			sourceTree = "<group>";
+		};
+		F33E686F1AA7854D0057C88C /* Action */ = {
+			isa = PBXGroup;
+			children = (
+				F33E68701AA7854D0057C88C /* NodeAction.h */,
+				F33E68711AA7854D0057C88C /* UIAction.h */,
+			);
+			name = Action;
+			path = ../../../../Include/WkCocos/Action;
+			sourceTree = "<group>";
+		};
+		F33E68731AA7854D0057C88C /* Backend */ = {
+			isa = PBXGroup;
+			children = (
+				F33E68741AA7854D0057C88C /* Readme.txt */,
+			);
+			name = Backend;
+			path = ../../../../Include/WkCocos/Backend;
+			sourceTree = "<group>";
+		};
+		F33E68751AA7854D0057C88C /* Download */ = {
+			isa = PBXGroup;
+			children = (
+				F33E68761AA7854D0057C88C /* Comp */,
+				F33E687C1AA7854D0057C88C /* Download.h */,
+				F33E687D1AA7854D0057C88C /* Events */,
+				F33E68821AA7854D0057C88C /* Systems */,
+				F33E68891AA7854D0057C88C /* Version.h */,
+			);
+			name = Download;
+			path = ../../../../Include/WkCocos/Download;
+			sourceTree = "<group>";
+		};
+		F33E68761AA7854D0057C88C /* Comp */ = {
+			isa = PBXGroup;
+			children = (
+				F33E68771AA7854D0057C88C /* CurlDL.h */,
+				F33E68781AA7854D0057C88C /* DataLoad.h */,
+				F33E68791AA7854D0057C88C /* FileMD5.h */,
+				F33E687A1AA7854D0057C88C /* LoadFunc.h */,
+				F33E687B1AA7854D0057C88C /* ProgressValue.h */,
+			);
+			path = Comp;
+			sourceTree = "<group>";
+		};
+		F33E687D1AA7854D0057C88C /* Events */ = {
+			isa = PBXGroup;
+			children = (
+				F33E687E1AA7854D0057C88C /* DownloadAdvised.h */,
+				F33E687F1AA7854D0057C88C /* Downloaded.h */,
+				F33E68801AA7854D0057C88C /* DownloadOptions.h */,
+				F33E68811AA7854D0057C88C /* Error.h */,
+			);
+			path = Events;
+			sourceTree = "<group>";
+		};
+		F33E68821AA7854D0057C88C /* Systems */ = {
+			isa = PBXGroup;
+			children = (
+				F33E68831AA7854D0057C88C /* CurlDL.h */,
+				F33E68841AA7854D0057C88C /* DLCchecking.h */,
+				F33E68851AA7854D0057C88C /* DLClisting.h */,
+				F33E68861AA7854D0057C88C /* DLvalidating.h */,
+				F33E68871AA7854D0057C88C /* MD5checking.h */,
+				F33E68881AA7854D0057C88C /* ProgressUpdate.h */,
+			);
+			path = Systems;
+			sourceTree = "<group>";
+		};
+		F33E688A1AA7854D0057C88C /* Helper */ = {
+			isa = PBXGroup;
+			children = (
+				F33E688B1AA7854D0057C88C /* GameLogic.h */,
+				F33E688C1AA7854D0057C88C /* Readme.txt */,
+			);
+			name = Helper;
+			path = ../../../../Include/WkCocos/Helper;
+			sourceTree = "<group>";
+		};
+		F33E688E1AA7854D0057C88C /* internal */ = {
+			isa = PBXGroup;
+			children = (
+				F33E688F1AA7854D0057C88C /* Config.h */,
+			);
+			name = internal;
+			path = ../../../../Include/WkCocos/internal;
+			sourceTree = "<group>";
+		};
+		F33E68901AA7854D0057C88C /* LocalData */ = {
+			isa = PBXGroup;
+			children = (
+				F33E68911AA7854D0057C88C /* Comp */,
+				F33E68931AA7854D0057C88C /* Events */,
+				F33E68951AA7854D0057C88C /* LocalDataManager.h */,
+				F33E68961AA7854D0057C88C /* Systems */,
+			);
+			name = LocalData;
+			path = ../../../../Include/WkCocos/LocalData;
+			sourceTree = "<group>";
+		};
+		F33E68911AA7854D0057C88C /* Comp */ = {
+			isa = PBXGroup;
+			children = (
+				F33E68921AA7854D0057C88C /* LocalData.h */,
+			);
+			path = Comp;
+			sourceTree = "<group>";
+		};
+		F33E68931AA7854D0057C88C /* Events */ = {
+			isa = PBXGroup;
+			children = (
+				F33E68941AA7854D0057C88C /* Error.h */,
+			);
+			path = Events;
+			sourceTree = "<group>";
+		};
+		F33E68961AA7854D0057C88C /* Systems */ = {
+			isa = PBXGroup;
+			children = (
+				F33E68971AA7854D0057C88C /* JSONLoginID.h */,
+				F33E68981AA7854D0057C88C /* JSONPlayerData.h */,
+				F33E68991AA7854D0057C88C /* JSONReader.h */,
+				F33E689A1AA7854D0057C88C /* JSONWriter.h */,
+			);
+			path = Systems;
+			sourceTree = "<group>";
+		};
+		F33E689B1AA7854D0057C88C /* OnlineData */ = {
+			isa = PBXGroup;
+			children = (
+				F33E689C1AA7854D0057C88C /* Comp */,
+				F33E689E1AA7854D0057C88C /* Events */,
+				F33E68A21AA7854D0057C88C /* OnlineDataManager.h */,
+				F33E68A31AA7854D0057C88C /* Systems */,
+			);
+			name = OnlineData;
+			path = ../../../../Include/WkCocos/OnlineData;
+			sourceTree = "<group>";
+		};
+		F33E689C1AA7854D0057C88C /* Comp */ = {
+			isa = PBXGroup;
+			children = (
+				F33E689D1AA7854D0057C88C /* OnlineData.h */,
+			);
+			path = Comp;
+			sourceTree = "<group>";
+		};
+		F33E689E1AA7854D0057C88C /* Events */ = {
+			isa = PBXGroup;
+			children = (
+				F33E689F1AA7854D0057C88C /* DocsList.h */,
+				F33E68A01AA7854D0057C88C /* Error.h */,
+				F33E68A11AA7854D0057C88C /* PlayersList.h */,
+			);
+			path = Events;
+			sourceTree = "<group>";
+		};
+		F33E68A31AA7854D0057C88C /* Systems */ = {
+			isa = PBXGroup;
+			children = (
+				F33E68A41AA7854D0057C88C /* Storage.h */,
+				F33E68A51AA7854D0057C88C /* Timer.h */,
+				F33E68A61AA7854D0057C88C /* User.h */,
+			);
+			path = Systems;
+			sourceTree = "<group>";
+		};
+		F33E68A91AA7854D0057C88C /* Preload */ = {
+			isa = PBXGroup;
+			children = (
+				F33E68AA1AA7854D0057C88C /* Comp */,
+				F33E68AE1AA7854D0057C88C /* Events */,
+				F33E68B11AA7854D0057C88C /* Preload.h */,
+				F33E68B21AA7854D0057C88C /* Systems */,
+			);
+			name = Preload;
+			path = ../../../../Include/WkCocos/Preload;
+			sourceTree = "<group>";
+		};
+		F33E68AA1AA7854D0057C88C /* Comp */ = {
+			isa = PBXGroup;
+			children = (
+				F33E68AB1AA7854D0057C88C /* DataLoad.h */,
+				F33E68AC1AA7854D0057C88C /* LoadFunc.h */,
+				F33E68AD1AA7854D0057C88C /* ProgressValue.h */,
+			);
+			path = Comp;
+			sourceTree = "<group>";
+		};
+		F33E68AE1AA7854D0057C88C /* Events */ = {
+			isa = PBXGroup;
+			children = (
+				F33E68AF1AA7854D0057C88C /* Error.h */,
+				F33E68B01AA7854D0057C88C /* Loaded.h */,
+			);
+			path = Events;
+			sourceTree = "<group>";
+		};
+		F33E68B21AA7854D0057C88C /* Systems */ = {
+			isa = PBXGroup;
+			children = (
+				F33E68B31AA7854D0057C88C /* ASyncLoading.h */,
+				F33E68B41AA7854D0057C88C /* DataEval.h */,
+				F33E68B51AA7854D0057C88C /* ProgressUpdate.h */,
+				F33E68B61AA7854D0057C88C /* SyncLoading.h */,
+			);
+			path = Systems;
+			sourceTree = "<group>";
+		};
+		F33E68B71AA7854D0057C88C /* PushNotifications */ = {
+			isa = PBXGroup;
+			children = (
+				F33E68B81AA7854D0057C88C /* PushNotifications.h */,
+			);
+			name = PushNotifications;
+			path = ../../../../Include/WkCocos/PushNotifications;
+			sourceTree = "<group>";
+		};
+		F33E68BC1AA7854D0057C88C /* Shop */ = {
+			isa = PBXGroup;
+			children = (
+				F33E68BD1AA7854D0057C88C /* Assets.h */,
+				F33E68BE1AA7854D0057C88C /* Inventory.h */,
+				F33E68BF1AA7854D0057C88C /* Shop.h */,
+				F33E68C01AA7854D0057C88C /* SOOMLA */,
+			);
+			name = Shop;
+			path = ../../../../Include/WkCocos/Shop;
+			sourceTree = "<group>";
+		};
+		F33E68C01AA7854D0057C88C /* SOOMLA */ = {
+			isa = PBXGroup;
+			children = (
+				F33E68C11AA7854D0057C88C /* ShopAssets.h */,
+				F33E68C21AA7854D0057C88C /* ShopEventHandler.h */,
+			);
+			path = SOOMLA;
+			sourceTree = "<group>";
+		};
+		F33E68C31AA7854D0057C88C /* StrongBox */ = {
+			isa = PBXGroup;
+			children = (
+				F33E68C41AA7854D0057C88C /* StrongBox.h */,
+			);
+			name = StrongBox;
+			path = ../../../../Include/WkCocos/StrongBox;
+			sourceTree = "<group>";
+		};
+		F33E68C51AA7854D0057C88C /* Timer */ = {
+			isa = PBXGroup;
+			children = (
+				F33E68C61AA7854D0057C88C /* Comp */,
+				F33E68C81AA7854D0057C88C /* Events */,
+				F33E68CC1AA7854D0057C88C /* Systems */,
+				F33E68D01AA7854D0057C88C /* Timer.h */,
+			);
+			name = Timer;
+			path = ../../../../Include/WkCocos/Timer;
+			sourceTree = "<group>";
+		};
+		F33E68C61AA7854D0057C88C /* Comp */ = {
+			isa = PBXGroup;
+			children = (
+				F33E68C71AA7854D0057C88C /* TimeValue.h */,
+			);
+			path = Comp;
+			sourceTree = "<group>";
+		};
+		F33E68C81AA7854D0057C88C /* Events */ = {
+			isa = PBXGroup;
+			children = (
+				F33E68C91AA7854D0057C88C /* AlarmOff.h */,
+				F33E68CA1AA7854D0057C88C /* TimerInit.h */,
+				F33E68CB1AA7854D0057C88C /* TimerUpdate.h */,
+			);
+			path = Events;
+			sourceTree = "<group>";
+		};
+		F33E68CC1AA7854D0057C88C /* Systems */ = {
+			isa = PBXGroup;
+			children = (
+				F33E68CD1AA7854D0057C88C /* AlarmDestructor.h */,
+				F33E68CE1AA7854D0057C88C /* AlarmRinger.h */,
+				F33E68CF1AA7854D0057C88C /* TimeUpdater.h */,
+			);
+			path = Systems;
+			sourceTree = "<group>";
+		};
+		F33E68D11AA7854D0057C88C /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				F33E68D21AA7854D0057C88C /* CocosAppender.h */,
+				F33E68D31AA7854D0057C88C /* Crypto.h */,
+				F33E68D41AA7854D0057C88C /* GPGSManager.h */,
+				F33E68D51AA7854D0057C88C /* libb64.h */,
+				F33E68D61AA7854D0057C88C /* log */,
+				F33E68DD1AA7854D0057C88C /* md5.h */,
+				F33E68DE1AA7854D0057C88C /* sha1.h */,
+				F33E68DF1AA7854D0057C88C /* ToolBox.h */,
+				F33E68E01AA7854D0057C88C /* UUID.h */,
+				F33E68E11AA7854D0057C88C /* WkJniHelper.h */,
+			);
+			name = Utils;
+			path = ../../../../Include/WkCocos/Utils;
+			sourceTree = "<group>";
+		};
+		F33E68D61AA7854D0057C88C /* log */ = {
+			isa = PBXGroup;
+			children = (
+				F33E68D71AA7854D0057C88C /* logappender.h */,
+				F33E68D81AA7854D0057C88C /* loglevel.h */,
+				F33E68D91AA7854D0057C88C /* logstream.h */,
+				F33E68DA1AA7854D0057C88C /* logstreambuf.h */,
+				F33E68DB1AA7854D0057C88C /* nullstream.h */,
+				F33E68DC1AA7854D0057C88C /* nullstreambuf.h */,
+			);
+			path = log;
+			sourceTree = "<group>";
+		};
+		F33E68E21AA7854D0057C88C /* WebView */ = {
+			isa = PBXGroup;
+			children = (
+				F33E68E31AA7854D0057C88C /* UIWebView-inl.h */,
+				F33E68E41AA7854D0057C88C /* UIWebView.h */,
+				F33E68E51AA7854D0057C88C /* UIWebViewImpl-android.h */,
+				F33E68E61AA7854D0057C88C /* UIWebViewImpl-ios.h */,
+				F33E68E71AA7854D0057C88C /* UIWebViewImpl-linux.h */,
+				F33E68E81AA7854D0057C88C /* UIWebViewImpl-win32.h */,
+			);
+			name = WebView;
+			path = ../../../../Include/WkCocos/WebView;
+			sourceTree = "<group>";
+		};
 		F39295F51AA61573009D55C4 = {
 			isa = PBXGroup;
 			children = (
@@ -270,6 +1129,31 @@
 		F39296001AA61573009D55C4 /* WkCocos */ = {
 			isa = PBXGroup;
 			children = (
+				F33E68021AA7854D0057C88C /* App */,
+				F33E68171AA7854D0057C88C /* Lib */,
+				F33E686F1AA7854D0057C88C /* Action */,
+				F33E68721AA7854D0057C88C /* Actor.h */,
+				F33E68731AA7854D0057C88C /* Backend */,
+				F33E68751AA7854D0057C88C /* Download */,
+				F33E688A1AA7854D0057C88C /* Helper */,
+				F33E688D1AA7854D0057C88C /* Interface.h */,
+				F33E688E1AA7854D0057C88C /* internal */,
+				F33E68901AA7854D0057C88C /* LocalData */,
+				F33E689B1AA7854D0057C88C /* OnlineData */,
+				F33E68A71AA7854D0057C88C /* Options.h */,
+				F33E68A81AA7854D0057C88C /* Player.h */,
+				F33E68A91AA7854D0057C88C /* Preload */,
+				F33E68B71AA7854D0057C88C /* PushNotifications */,
+				F33E68B91AA7854D0057C88C /* Save.h */,
+				F33E68BA1AA7854D0057C88C /* SaveManager.h */,
+				F33E68BB1AA7854D0057C88C /* Scene.h */,
+				F33E68BC1AA7854D0057C88C /* Shop */,
+				F33E68C31AA7854D0057C88C /* StrongBox */,
+				F33E68C51AA7854D0057C88C /* Timer */,
+				F33E68D11AA7854D0057C88C /* Utils */,
+				F33E68E21AA7854D0057C88C /* WebView */,
+				F33E68E91AA7854D0057C88C /* WkCocos.h */,
+				F33E68EA1AA7854D0057C88C /* World.h */,
 				F39296011AA61573009D55C4 /* WkCocos.h */,
 				F39296031AA61573009D55C4 /* WkCocos.m */,
 			);
@@ -659,7 +1543,91 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F33E68FE1AA7854D0057C88C /* NodeAction.cpp in Sources */,
+				F33E68FF1AA7854D0057C88C /* UIAction.cpp in Sources */,
+				F33E69001AA7854D0057C88C /* Actor.cpp in Sources */,
+				F33E69011AA7854D0057C88C /* Download.cpp in Sources */,
+				F33E69021AA7854D0057C88C /* CurlDL.cpp in Sources */,
+				F33E69031AA7854D0057C88C /* DLCchecking.cpp in Sources */,
+				F33E69041AA7854D0057C88C /* DLClisting.cpp in Sources */,
+				F33E69051AA7854D0057C88C /* DLvalidating.cpp in Sources */,
+				F33E69061AA7854D0057C88C /* MD5checking.cpp in Sources */,
+				F33E691A1AA7854D0057C88C /* ProgressUpdate.cpp in Sources */,
+				F33E69081AA7854D0057C88C /* Version.cpp in Sources */,
+				F33E69091AA7854D0057C88C /* GameLogic.cpp in Sources */,
+				F33E690A1AA7854D0057C88C /* Interface.cpp in Sources */,
+				F33E690B1AA7854D0057C88C /* LocalDataManager.cpp in Sources */,
+				F33E690C1AA7854D0057C88C /* JSONLoginID.cpp in Sources */,
+				F33E690D1AA7854D0057C88C /* JSONPlayerData.cpp in Sources */,
+				F33E690E1AA7854D0057C88C /* JSONReader.cpp in Sources */,
+				F33E690F1AA7854D0057C88C /* JSONWriter.cpp in Sources */,
+				F33E69101AA7854D0057C88C /* OnlineData.cpp in Sources */,
+				F33E69111AA7854D0057C88C /* OnlineDataManager.cpp in Sources */,
+				F33E69121AA7854D0057C88C /* Storage.cpp in Sources */,
+				F33E69291AA7854D0057C88C /* Timer.cpp in Sources */,
+				F33E69141AA7854D0057C88C /* User.cpp in Sources */,
+				F33E69151AA7854D0057C88C /* Options.cpp in Sources */,
+				F33E69161AA7854D0057C88C /* Player.cpp in Sources */,
+				F33E69171AA7854D0057C88C /* Preload.cpp in Sources */,
+				F33E69181AA7854D0057C88C /* ASyncLoading.cpp in Sources */,
+				F33E69191AA7854D0057C88C /* DataEval.cpp in Sources */,
+				F33E69071AA7854D0057C88C /* ProgressUpdate.cpp in Sources */,
+				F33E691B1AA7854D0057C88C /* SyncLoading.cpp in Sources */,
+				F33E691C1AA7854D0057C88C /* PushNotifications.cpp in Sources */,
+				F33E691D1AA7854D0057C88C /* Save.cpp in Sources */,
+				F33E691E1AA7854D0057C88C /* SaveManager.cpp in Sources */,
+				F33E691F1AA7854D0057C88C /* Scene.cpp in Sources */,
+				F33E69201AA7854D0057C88C /* Assets.cpp in Sources */,
+				F33E69211AA7854D0057C88C /* Inventory.cpp in Sources */,
+				F33E69231AA7854D0057C88C /* ShopAssets.cpp in Sources */,
+				F33E69241AA7854D0057C88C /* ShopEventHandler.cpp in Sources */,
+				F33E69221AA7854D0057C88C /* Shop.cpp in Sources */,
+				F33E69251AA7854D0057C88C /* StrongBox.cpp in Sources */,
+				F33E69261AA7854D0057C88C /* AlarmDestructor.cpp in Sources */,
+				F33E69271AA7854D0057C88C /* AlarmRinger.cpp in Sources */,
+				F33E69281AA7854D0057C88C /* TimeUpdater.cpp in Sources */,
+				F33E69131AA7854D0057C88C /* Timer.cpp in Sources */,
+				F33E692A1AA7854D0057C88C /* CocosAppender.cpp in Sources */,
+				F33E692B1AA7854D0057C88C /* Crypto.cpp in Sources */,
+				F33E692C1AA7854D0057C88C /* GPGSManager.cpp in Sources */,
+				F33E69361AA7854D0057C88C /* ToolBox.cpp in Sources */,
+				F33E69371AA7854D0057C88C /* UUID.cpp in Sources */,
+				F33E69381AA7854D0057C88C /* WkJniHelper.cpp in Sources */,
+				F33E692D1AA7854D0057C88C /* libb64.cpp in Sources */,
+				F33E692E1AA7854D0057C88C /* logappender.cpp in Sources */,
+				F33E692F1AA7854D0057C88C /* loglevel.cpp in Sources */,
+				F33E69301AA7854D0057C88C /* logstream.cpp in Sources */,
+				F33E69311AA7854D0057C88C /* logstreambuf.cpp in Sources */,
+				F33E69321AA7854D0057C88C /* nullstream.cpp in Sources */,
+				F33E69331AA7854D0057C88C /* nullstreambuf.cpp in Sources */,
+				F33E69341AA7854D0057C88C /* md5.cpp in Sources */,
+				F33E69351AA7854D0057C88C /* sha1.cpp in Sources */,
+				F33E693A1AA7854D0057C88C /* UIWebView.mm in Sources */,
+				F33E693B1AA7854D0057C88C /* UIWebViewImpl-android.cpp in Sources */,
+				F33E693D1AA7854D0057C88C /* UIWebViewImpl-linux.cpp in Sources */,
+				F33E693E1AA7854D0057C88C /* UIWebViewImpl-win32.cpp in Sources */,
+				F33E693C1AA7854D0057C88C /* UIWebViewImpl-ios.mm in Sources */,
+				F33E693F1AA7854D0057C88C /* World.cpp in Sources */,
+				F33E68F71AA7854D0057C88C /* PlayersListUI.cpp in Sources */,
+				F33E68EF1AA7854D0057C88C /* DownloadingUI.cpp in Sources */,
+				F33E68F01AA7854D0057C88C /* ErrorUI.cpp in Sources */,
+				F33E68F91AA7854D0057C88C /* SavingUI.cpp in Sources */,
+				F33E68EB1AA7854D0057C88C /* AdUI.cpp in Sources */,
+				F33E68F81AA7854D0057C88C /* PreloadUI.cpp in Sources */,
+				F33E68FD1AA7854D0057C88C /* WebUI.cpp in Sources */,
+				F33E68FB1AA7854D0057C88C /* TestScene.cpp in Sources */,
 				F39296041AA61573009D55C4 /* WkCocos.m in Sources */,
+				F33E68EC1AA7854D0057C88C /* AppDelegate.cpp in Sources */,
+				F33E68F61AA7854D0057C88C /* MyPlayer.cpp in Sources */,
+				F33E68F41AA7854D0057C88C /* LogUI.cpp in Sources */,
+				F33E68F21AA7854D0057C88C /* GameUI.cpp in Sources */,
+				F33E68FC1AA7854D0057C88C /* TimerUI.cpp in Sources */,
+				F33E68ED1AA7854D0057C88C /* AppInterface.cpp in Sources */,
+				F33E68F51AA7854D0057C88C /* MyOptions.cpp in Sources */,
+				F33E68F11AA7854D0057C88C /* GameLogic.cpp in Sources */,
+				F33E68FA1AA7854D0057C88C /* ShopUI.cpp in Sources */,
+				F33E68F31AA7854D0057C88C /* GPGameServicesUI.cpp in Sources */,
+				F33E68EE1AA7854D0057C88C /* DocsListUI.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -802,18 +1770,26 @@
 		F39296131AA61573009D55C4 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+					CC_TARGET_OS_IPHONE,
+				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/.. $(SRCROOT)/../../../depends/cocos2d-x $(SRCROOT)/../../../depends/cocos2d-x/cocos $(SRCROOT)/../../../depends/cocos2d-x/cocos/platform $(SRCROOT)/../../../depends/cocos2d-x/cocos/platform/ios $(SRCROOT)/../../../depends/cocos2dx-store $(SRCROOT)/../../../depends/cocos2dx-store/Soomla/** $(SRCROOT)/../../../depends/cocos2dx-store/submodules/** $(SRCROOT)/../../../depends/cocos2dx-store/submodules/soomla-cocos2dx-store/Soomla/domain $(SRCROOT)/../../../depends/App42_Cocos2DX_SDK/V_1.6/App42_Cocos2dX_SDK/Common $(SRCROOT)/../../../depends/App42_Cocos2DX_SDK/V_1.6/App42_Cocos2dX_SDK/** $(SRCROOT)/../../../depends/App42_Cocos2DX_SDK/V_1.6/App42_Cocos2dX_SDK/UserService $(SRCROOT)/../../../depends/App42_Cocos2DX_SDK/V_1.6/App42_Cocos2dX_SDK/StorageService $(SRCROOT)/../../../depends/entityx $(SRCROOT)/../../../depends/cocos2d-x/cocos/editor-support $(SRCROOT)/../../../depends/cocos2d-x/extensions $(SRCROOT)/../../../depends/cocos2d-x/external $(SRCROOT)/../../../depends/cocos2d-x/external-bin/curl/include/ios $(SRCROOT)/../../../depends/cocos2d-x/external/chipmunk/include/chipmunk $(SRCROOT)/../../../Include/** $(SRCROOT)/../../Classes";
 			};
 			name = Debug;
 		};
 		F39296141AA61573009D55C4 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = CC_TARGET_OS_IPHONE;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/.. $(SRCROOT)/../../../depends/cocos2d-x $(SRCROOT)/../../../depends/cocos2d-x/cocos $(SRCROOT)/../../../depends/cocos2d-x/cocos/platform $(SRCROOT)/../../../depends/cocos2d-x/cocos/platform/ios $(SRCROOT)/../../../depends/cocos2dx-store $(SRCROOT)/../../../depends/cocos2dx-store/Soomla/** $(SRCROOT)/../../../depends/cocos2dx-store/submodules/** $(SRCROOT)/../../../depends/cocos2dx-store/submodules/soomla-cocos2dx-store/Soomla/domain $(SRCROOT)/../../../depends/App42_Cocos2DX_SDK/V_1.6/App42_Cocos2dX_SDK/Common $(SRCROOT)/../../../depends/App42_Cocos2DX_SDK/V_1.6/App42_Cocos2dX_SDK/** $(SRCROOT)/../../../depends/App42_Cocos2DX_SDK/V_1.6/App42_Cocos2dX_SDK/UserService $(SRCROOT)/../../../depends/App42_Cocos2DX_SDK/V_1.6/App42_Cocos2dX_SDK/StorageService $(SRCROOT)/../../../depends/entityx $(SRCROOT)/../../../depends/cocos2d-x/cocos/editor-support $(SRCROOT)/../../../depends/cocos2d-x/extensions $(SRCROOT)/../../../depends/cocos2d-x/external $(SRCROOT)/../../../depends/cocos2d-x/external-bin/curl/include/ios $(SRCROOT)/../../../depends/cocos2d-x/external/chipmunk/include/chipmunk $(SRCROOT)/../../../Include/** $(SRCROOT)/../../Classes";
 			};
 			name = Release;
 		};
@@ -950,6 +1926,7 @@
 				F39296531AA62428009D55C4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
 		};
 		F39296541AA62428009D55C4 /* Build configuration list for PBXNativeTarget "WkIosAppTests" */ = {
 			isa = XCConfigurationList;
@@ -958,6 +1935,7 @@
 				F39296561AA62428009D55C4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
 	};

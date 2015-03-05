@@ -26,6 +26,7 @@
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID || CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
 
 #include "WkCocos/WebView/UIWebViewImpl-android.h"
+#include "WkCocos/WebView/UIWebViewImpl-ios.h"
 #include "WkCocos/WebView/UIWebView-inl.h"
 
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX || CC_TARGET_PLATFORM == CC_PLATFORM_MAC)

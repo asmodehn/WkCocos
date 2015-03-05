@@ -22,9 +22,9 @@
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>1700917ACA8DDA9B1CB46AF7CDEB090C16FB1C78</key>
-		<string>../../../../../../..</string>
+		<string>../../../../../..</string>
 		<key>852ED3691A47A99B0D19C820A500AE9772B2A44E</key>
-		<string>../../../../..depends/cocos2d-x/</string>
+		<string>../../../../..depends/cocos2d-x</string>
 		<key>BF3C1EAB77E9354EB3F61A4936F6680425C9F8F5</key>
 		<string>../../../../..</string>
 	</dict>
@@ -42,7 +42,7 @@
 			<key>IDESourceControlWCCIdentifierKey</key>
 			<string>1700917ACA8DDA9B1CB46AF7CDEB090C16FB1C78</string>
 			<key>IDESourceControlWCCName</key>
-			<string>..</string>
+			<string></string>
 		</dict>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
