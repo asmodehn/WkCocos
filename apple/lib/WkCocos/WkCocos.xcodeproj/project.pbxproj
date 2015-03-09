@@ -91,6 +91,9 @@
 		F33E693D1AA7854D0057C88C /* UIWebViewImpl-linux.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E686C1AA7854D0057C88C /* UIWebViewImpl-linux.cpp */; };
 		F33E693E1AA7854D0057C88C /* UIWebViewImpl-win32.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E686D1AA7854D0057C88C /* UIWebViewImpl-win32.cpp */; };
 		F33E693F1AA7854D0057C88C /* World.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F33E686E1AA7854D0057C88C /* World.cpp */; };
+		F33E69471AA8B1690057C88C /* UnitTest.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = F33E69461AA8B1690057C88C /* UnitTest.h */; };
+		F33E69491AA8B1690057C88C /* UnitTest.m in Sources */ = {isa = PBXBuildFile; fileRef = F33E69481AA8B1690057C88C /* UnitTest.m */; };
+		F33E694F1AA8B1690057C88C /* libUnitTest.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F33E69441AA8B1690057C88C /* libUnitTest.a */; };
 		F39296021AA61573009D55C4 /* WkCocos.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = F39296011AA61573009D55C4 /* WkCocos.h */; };
 		F39296041AA61573009D55C4 /* WkCocos.m in Sources */ = {isa = PBXBuildFile; fileRef = F39296031AA61573009D55C4 /* WkCocos.m */; };
 		F392960A1AA61573009D55C4 /* libWkCocos.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F39295FE1AA61573009D55C4 /* libWkCocos.a */; };
@@ -104,6 +107,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		F33E69501AA8B1690057C88C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F39295F61AA61573009D55C4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F33E69431AA8B1690057C88C;
+			remoteInfo = UnitTest;
+		};
 		F392960B1AA61573009D55C4 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = F39295F61AA61573009D55C4 /* Project object */;
@@ -261,6 +271,16 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		F33E69421AA8B1690057C88C /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/$(PRODUCT_NAME)";
+			dstSubfolderSpec = 16;
+			files = (
+				F33E69471AA8B1690057C88C /* UnitTest.h in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F39295FC1AA61573009D55C4 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -454,6 +474,11 @@
 		F33E68E81AA7854D0057C88C /* UIWebViewImpl-win32.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIWebViewImpl-win32.h"; sourceTree = "<group>"; };
 		F33E68E91AA7854D0057C88C /* WkCocos.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WkCocos.h; path = ../../../../Include/WkCocos/WkCocos.h; sourceTree = "<group>"; };
 		F33E68EA1AA7854D0057C88C /* World.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = World.h; path = ../../../../Include/WkCocos/World.h; sourceTree = "<group>"; };
+		F33E69441AA8B1690057C88C /* libUnitTest.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libUnitTest.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		F33E69461AA8B1690057C88C /* UnitTest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UnitTest.h; sourceTree = "<group>"; };
+		F33E69481AA8B1690057C88C /* UnitTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UnitTest.m; sourceTree = "<group>"; };
+		F33E694E1AA8B1690057C88C /* UnitTestTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UnitTestTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F33E69541AA8B1690057C88C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F39295FE1AA61573009D55C4 /* libWkCocos.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libWkCocos.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		F39296011AA61573009D55C4 /* WkCocos.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WkCocos.h; sourceTree = "<group>"; };
 		F39296031AA61573009D55C4 /* WkCocos.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WkCocos.m; sourceTree = "<group>"; };
@@ -476,6 +501,21 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		F33E69411AA8B1690057C88C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F33E694B1AA8B1690057C88C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F33E694F1AA8B1690057C88C /* libUnitTest.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F39295FB1AA61573009D55C4 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -1103,6 +1143,31 @@
 			path = ../../../../Include/WkCocos/WebView;
 			sourceTree = "<group>";
 		};
+		F33E69451AA8B1690057C88C /* UnitTest */ = {
+			isa = PBXGroup;
+			children = (
+				F33E69461AA8B1690057C88C /* UnitTest.h */,
+				F33E69481AA8B1690057C88C /* UnitTest.m */,
+			);
+			path = UnitTest;
+			sourceTree = "<group>";
+		};
+		F33E69521AA8B1690057C88C /* UnitTestTests */ = {
+			isa = PBXGroup;
+			children = (
+				F33E69531AA8B1690057C88C /* Supporting Files */,
+			);
+			path = UnitTestTests;
+			sourceTree = "<group>";
+		};
+		F33E69531AA8B1690057C88C /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				F33E69541AA8B1690057C88C /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
 		F39295F51AA61573009D55C4 = {
 			isa = PBXGroup;
 			children = (
@@ -1111,6 +1176,8 @@
 				F392960D1AA61573009D55C4 /* WkCocosTests */,
 				F39296321AA62427009D55C4 /* WkIosApp */,
 				F392964C1AA62428009D55C4 /* WkIosAppTests */,
+				F33E69451AA8B1690057C88C /* UnitTest */,
+				F33E69521AA8B1690057C88C /* UnitTestTests */,
 				F39295FF1AA61573009D55C4 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -1122,6 +1189,8 @@
 				F39296091AA61573009D55C4 /* WkCocosTests.xctest */,
 				F39296311AA62427009D55C4 /* WkIosApp.app */,
 				F39296491AA62428009D55C4 /* WkIosAppTests.xctest */,
+				F33E69441AA8B1690057C88C /* libUnitTest.a */,
+				F33E694E1AA8B1690057C88C /* UnitTestTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1247,6 +1316,41 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		F33E69431AA8B1690057C88C /* UnitTest */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F33E69551AA8B1690057C88C /* Build configuration list for PBXNativeTarget "UnitTest" */;
+			buildPhases = (
+				F33E69401AA8B1690057C88C /* Sources */,
+				F33E69411AA8B1690057C88C /* Frameworks */,
+				F33E69421AA8B1690057C88C /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = UnitTest;
+			productName = UnitTest;
+			productReference = F33E69441AA8B1690057C88C /* libUnitTest.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		F33E694D1AA8B1690057C88C /* UnitTestTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F33E69581AA8B1690057C88C /* Build configuration list for PBXNativeTarget "UnitTestTests" */;
+			buildPhases = (
+				F33E694A1AA8B1690057C88C /* Sources */,
+				F33E694B1AA8B1690057C88C /* Frameworks */,
+				F33E694C1AA8B1690057C88C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F33E69511AA8B1690057C88C /* PBXTargetDependency */,
+			);
+			name = UnitTestTests;
+			productName = UnitTestTests;
+			productReference = F33E694E1AA8B1690057C88C /* UnitTestTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		F39295FD1AA61573009D55C4 /* WkCocos */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = F39296121AA61573009D55C4 /* Build configuration list for PBXNativeTarget "WkCocos" */;
@@ -1326,6 +1430,12 @@
 				LastUpgradeCheck = 0610;
 				ORGANIZATIONNAME = seunghwanpark;
 				TargetAttributes = {
+					F33E69431AA8B1690057C88C = {
+						CreatedOnToolsVersion = 6.1.1;
+					};
+					F33E694D1AA8B1690057C88C = {
+						CreatedOnToolsVersion = 6.1.1;
+					};
 					F39295FD1AA61573009D55C4 = {
 						CreatedOnToolsVersion = 6.1.1;
 					};
@@ -1364,6 +1474,8 @@
 				F39296081AA61573009D55C4 /* WkCocosTests */,
 				F39296301AA62427009D55C4 /* WkIosApp */,
 				F39296481AA62428009D55C4 /* WkIosAppTests */,
+				F33E69431AA8B1690057C88C /* UnitTest */,
+				F33E694D1AA8B1690057C88C /* UnitTestTests */,
 			);
 		};
 /* End PBXProject section */
@@ -1512,6 +1624,13 @@
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
+		F33E694C1AA8B1690057C88C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F39296071AA61573009D55C4 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1539,6 +1658,21 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		F33E69401AA8B1690057C88C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F33E69491AA8B1690057C88C /* UnitTest.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F33E694A1AA8B1690057C88C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F39295FA1AA61573009D55C4 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1659,6 +1793,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		F33E69511AA8B1690057C88C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F33E69431AA8B1690057C88C /* UnitTest */;
+			targetProxy = F33E69501AA8B1690057C88C /* PBXContainerItemProxy */;
+		};
 		F392960C1AA61573009D55C4 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = F39295FD1AA61573009D55C4 /* WkCocos */;
@@ -1691,6 +1830,62 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		F33E69561AA8B1690057C88C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		F33E69571AA8B1690057C88C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		F33E69591AA8B1690057C88C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = UnitTestTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		F33E695A1AA8B1690057C88C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = UnitTestTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		F39296101AA61573009D55C4 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1892,6 +2087,24 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		F33E69551AA8B1690057C88C /* Build configuration list for PBXNativeTarget "UnitTest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F33E69561AA8B1690057C88C /* Debug */,
+				F33E69571AA8B1690057C88C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		F33E69581AA8B1690057C88C /* Build configuration list for PBXNativeTarget "UnitTestTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F33E69591AA8B1690057C88C /* Debug */,
+				F33E695A1AA8B1690057C88C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
 		F39295F91AA61573009D55C4 /* Build configuration list for PBXProject "WkCocos" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

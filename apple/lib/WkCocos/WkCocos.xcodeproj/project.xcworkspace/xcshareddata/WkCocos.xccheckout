@@ -16,6 +16,8 @@
 		<string>https://github.com/asmodehn/cocos2d-x.git</string>
 		<key>BF3C1EAB77E9354EB3F61A4936F6680425C9F8F5</key>
 		<string>https://github.com/asmodehn/WkCocos.git</string>
+		<key>C4FADAC7DF4F4B157B3620643035CEBED0C79157</key>
+		<string>https://github.com/asmodehn/unittest-cpp.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>apple/lib/WkCocos/WkCocos.xcodeproj</string>
@@ -27,6 +29,8 @@
 		<string>../../../../..depends/cocos2d-x</string>
 		<key>BF3C1EAB77E9354EB3F61A4936F6680425C9F8F5</key>
 		<string>../../../../..</string>
+		<key>C4FADAC7DF4F4B157B3620643035CEBED0C79157</key>
+		<string>../../../../../depends/unittest-cpp</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>https://github.com/asmodehn/WkCocos.git</string>
@@ -51,6 +55,14 @@
 			<string>852ED3691A47A99B0D19C820A500AE9772B2A44E</string>
 			<key>IDESourceControlWCCName</key>
 			<string>cocos2d-x</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>C4FADAC7DF4F4B157B3620643035CEBED0C79157</string>
+			<key>IDESourceControlWCCName</key>
+			<string>unittest-cpp</string>
 		</dict>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
