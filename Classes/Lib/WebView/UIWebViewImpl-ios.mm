@@ -29,7 +29,7 @@
 #include "UIWebViewImpl-ios.h"
 #include "renderer/CCRenderer.h"
 #include "base/CCDirector.h"
-#include "platform/CCGLView.h"
+#include "ios/CCGLView.h"
 #include "platform/ios/CCEAGLView.h"
 #include "platform/CCFileUtils.h"
 #include "UIWebView.h"
